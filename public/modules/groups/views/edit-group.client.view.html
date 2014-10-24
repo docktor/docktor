@@ -1,0 +1,35 @@
+<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+	<div class="page-header">
+		<h1>Edit Group</h1>
+	</div>
+	<div class="col-md-12">
+		<form name="groupForm" class="form-horizontal" data-ng-submit="update(groupForm.$valid)" novalidate>
+			<fieldset>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && groupForm.title.$invalid}">
+					<label class="control-label" for="title">Title</label>
+					<div class="controls">
+						<input name="title" type="text" data-ng-model="group.title" id="title" class="form-control" placeholder="Title" required>
+					</div>
+					<div ng-show="submitted && groupForm.title.$invalid" class="help-block">
+						<p ng-show="groupForm.title.$error.required" class="text-danger">Title is required</p>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && groupForm.description.$invalid}">
+					<label class="control-label" for="description">Description</label>
+					<div class="controls">
+						<input type="text" name="description" data-ng-model="group.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description" required />
+					</div>
+					<div ng-show="submitted && groupForm.description.$invalid" class="help-block">
+						<p ng-show="groupForm.description.$error.required" class="text-danger">Description is required</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Update" class="btn btn-default">
+				</div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>
