@@ -47,6 +47,11 @@ var DaemonSchema = new Schema({
         default: '',
         trim: true
     },
+    volume: { // directory witch contains data of services for each groups
+        type: String,
+        default: '',
+        trim: true
+    },
 	description: {
 		type: String,
 		default: '',

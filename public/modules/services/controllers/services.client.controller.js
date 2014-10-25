@@ -57,7 +57,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
 
         $scope.removeImage = function(imgId) {
-            console.log('remove image: ' + imgId);
             for (var i = 0; i < $scope.service.images.length; i++) {
                 if ($scope.service.images[i]._id === imgId) {
                     $scope.service.images.splice(i, 1);
@@ -66,15 +65,14 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         };
 
         $scope.addImage = function(isValid){
-            console.log('add image: ' + $scope.imageName);
             if (isValid) {
                 $scope.service.images.push({
                     name: $scope.imageName,
-                    active: $scope.imageIsActive
+                    active: true
                 });
             }
             $scope.imageName = '';
-            $scope.imageIsActive = '';
+            $scope.imageIsActive = true;
         };
 
     }

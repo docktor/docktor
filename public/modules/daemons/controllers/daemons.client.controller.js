@@ -12,6 +12,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 ca: this.ca,
                 cert: this.cert,
                 key: this.key,
+                volume: this.volume,
                 description: this.description
             });
             daemon.$save(function (response) {
@@ -23,6 +24,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 $scope.ca = '';
                 $scope.cert = '';
                 $scope.key = '';
+                $scope.volume = '';
                 $scope.description = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -72,6 +74,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             $scope.daemon = Daemons.get({
                 daemonId: $stateParams.daemonId
             });
+
 
             DaemonsDocker.info($stateParams.daemonId).
                 success(function (info) {

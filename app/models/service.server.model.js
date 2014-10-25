@@ -7,6 +7,48 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 /**
+ * Port Schema, not useful outside Image
+ */
+var PortSchema = new Schema({
+    internalPort: {
+        type: Number,
+        trim: true,
+        required: 'internalPort cannot be blank'
+    },
+    externalPort: {
+        type: Number,
+        trim: true,
+        required: 'externalPort cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
+ * Volume Schema, not useful outside Image
+ */
+var VolumeSchema = new Schema({
+    internalVolume: {
+        type: String,
+        trim: true,
+        required: 'internalVolume cannot be blank'
+    },
+    externalVolume: {
+        type: String,
+        trim: true,
+        required: 'externalVolume cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
  * Image Schema, not useful outside Service
  */
 var ImageSchema = new Schema({
@@ -15,6 +57,8 @@ var ImageSchema = new Schema({
         trim: true,
         required: 'Name cannot be blank'
     },
+    ports: [PortSchema],
+    volumes: [VolumeSchema],
     active: {
         type: Boolean,
         required: 'Active or not is required'
