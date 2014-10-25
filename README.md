@@ -1,9 +1,10 @@
 ## Dev In Progress !
 
-[![MEAN.JS Logo](http://meanjs.org/img/logo-small.png)](http://meanjs.org/)
-
 [![Build Status](https://travis-ci.org/yesnault/docktor.svg?branch=master)](https://travis-ci.org/yesnault/docktor)
 [![Dependencies Status](https://david-dm.org/yesnault/docktor.svg)](https://david-dm.org/yesnault/docktor)
+
+
+Notes below are for developers only. Docktor is not ready for production now.
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
@@ -11,7 +12,6 @@ Before you begin we recommend you read about the basic building blocks that asse
 * Express - The best way to understand express is through its [Official Website](http://expressjs.com/), particularly [The Express Guide](http://expressjs.com/guide.html); you can also go through this [StackOverflow Thread](http://stackoverflow.com/questions/8144214/learning-express-for-node-js) for more resources.
 * AngularJS - Angular's [Official Website](http://angularjs.org/) is a great starting point. You can also use [Thinkster Popular Guide](http://www.thinkster.io/), and the [Egghead Videos](https://egghead.io/).
 * Node.js - Start by going through [Node.js Official Website](http://nodejs.org/) and this [StackOverflow Thread](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js), which should get you going with the Node.js platform in no time.
-
 
 ## Prerequisites
 Make sure you have installed all these prerequisites on your development machine.
@@ -38,7 +38,7 @@ This will clone the latest version of the docktor repository to a **docktor** fo
 
 
 ## Quick Install
-Once you've downloaded the boilerplate and installed all the prerequisites, you're just a few steps away from starting to develop docktor application.
+Once you've installed all the prerequisites, you're just a few steps away from starting to develop docktor application.
 
 The first thing you should do is install the Node.js dependencies. The boilerplate comes pre-bundled with a package.json file that contains the list of modules you need to start your application, to learn more about the modules installed visit the NPM & Package.json section.
 
@@ -53,17 +53,16 @@ This command does a few things:
 * If you're running in a development environment, it will then also install development dependencies needed for testing and running your application.
 * Finally, when the install process is over, npm will initiate a bower installcommand to install all the front-end modules needed for the application
 
-## Running Your Application
+## Running Docktor
 After the install process is over, you'll be able to run your application using Grunt, just run grunt default task:
 
 ```
 $ grunt
 ```
 
-Your application should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
+Docktor should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
                             
 That's it! your application should be running by now, to proceed with your development check the other sections in this documentation. 
-If you encounter any problem try the Troubleshooting section.
 
 ## Development and deployment With Docker
 
@@ -80,17 +79,12 @@ $ fig up
 $ docker build -t mean .
 $ docker run -p 27017:27017 -d --name db mongo
 $ docker run -p 3000:3000 --link db:db_1 mean
-$
 ```
 
 * To enable live reload forward 35729 port and mount /app and /public as volumes:
 ```bash
 $ docker run -p 3000:3000 -p 35729:35729 -v /Users/mdl/workspace/mean-stack/mean/public:/home/mean/public -v /Users/mdl/workspa/mean-stack/mean/app:/home/mean/app --link db:db_1 mean
 ```
-
-## Getting Started With MEAN.JS
-You have your application running but there are a lot of stuff to understand, we recommend you'll go over the [Offical Documentation](http://meanjs.org/docs.html). 
-In the docs we'll try to explain both general concepts of MEAN components and give you some guidelines to help you improve your development procees. We tried covering as many aspects as possible, and will keep update it by your request, you can also help us develop the documentation better by checking out the *gh-pages* branch of this repository.
 
 ## Credits
 Inspired by the great work of [Madhusudhan Srinivasa](https://github.com/madhums/)
