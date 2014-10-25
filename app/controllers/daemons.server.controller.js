@@ -5,102 +5,102 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Node = mongoose.model('Node'),
+	Daemon = mongoose.model('Daemon'),
 	_ = require('lodash');
 
 /**
- * Create a node
+ * Create a daemon
  */
 exports.create = function(req, res) {
-	var node = new Node(req.body);
-	node.user = req.user;
+	var daemon = new Daemon(req.body);
+	daemon.user = req.user;
 
-	node.save(function(err) {
+	daemon.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(node);
+			res.jsonp(daemon);
 		}
 	});
 };
 
 /**
- * Show the current node
+ * Show the current daemon
  */
 exports.read = function(req, res) {
-	res.jsonp(req.node);
+	res.jsonp(req.daemon);
 };
 
 /**
- * Update a node
+ * Update a daemon
  */
 exports.update = function(req, res) {
-	var node = req.node;
+	var daemon = req.daemon;
 
-	node = _.extend(node, req.body);
+	daemon = _.extend(daemon, req.body);
 
-	node.save(function(err) {
+	daemon.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(node);
+			res.jsonp(daemon);
 		}
 	});
 };
 
 /**
- * Delete an node
+ * Delete an daemon
  */
 exports.delete = function(req, res) {
-	var node = req.node;
+	var daemon = req.daemon;
 
-	node.remove(function(err) {
+	daemon.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(node);
+			res.jsonp(daemon);
 		}
 	});
 };
 
 /**
- * List of Nodes
+ * List of Daemons
  */
 exports.list = function(req, res) {
-	Node.find().sort('-created').populate('user', 'displayName').exec(function(err, nodes) {
+	Daemon.find().sort('-created').populate('user', 'displayName').exec(function(err, daemons) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(nodes);
+			res.jsonp(daemons);
 		}
 	});
 };
 
 /**
- * Node middleware
+ * Daemon middleware
  */
-exports.nodeByID = function(req, res, next, id) {
-	Node.findById(id).populate('user', 'displayName').exec(function(err, node) {
+exports.daemonByID = function(req, res, next, id) {
+	Daemon.findById(id).populate('user', 'displayName').exec(function(err, daemon) {
 		if (err) return next(err);
-		if (!node) return next(new Error('Failed to load node ' + id));
-		req.node = node;
+		if (!daemon) return next(new Error('Failed to load daemon ' + id));
+		req.daemon = daemon;
 		next();
 	});
 };
 
 /**
- * Node authorization middleware
+ * Daemon authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.node.user.id !== req.user.id) {
+	if (req.daemon.user.id !== req.user.id) {
 		return res.status(403).send({
 			message: 'User is not authorized'
 		});

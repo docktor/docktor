@@ -1,0 +1,35 @@
+<section data-ng-controller="DaemonsController" data-ng-init="findOne()">
+	<div class="page-header">
+		<h1>Edit Daemon</h1>
+	</div>
+	<div class="col-md-12">
+		<form name="daemonForm" class="form-horizontal" data-ng-submit="update(daemonForm.$valid)" novalidate>
+			<fieldset>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && daemonForm.url.$invalid}">
+					<label class="control-label" for="url">Url</label>
+					<div class="controls">
+						<input name="url" type="text" data-ng-model="daemon.url" id="url" class="form-control" placeholder="Url" required>
+					</div>
+					<div ng-show="submitted && daemonForm.url.$invalid" class="help-block">
+						<p ng-show="daemonForm.url.$error.required" class="text-danger">Url is required</p>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && daemonForm.description.$invalid}">
+					<label class="control-label" for="description">Description</label>
+					<div class="controls">
+						<input type="text" name="description" data-ng-model="daemon.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description" required />
+					</div>
+					<div ng-show="submitted && daemonForm.description.$invalid" class="help-block">
+						<p ng-show="daemonForm.description.$error.required" class="text-danger">Description is required</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Update" class="btn btn-default">
+				</div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>

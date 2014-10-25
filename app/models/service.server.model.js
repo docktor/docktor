@@ -19,7 +19,7 @@ var ImageSchema = new Schema({
         type: Boolean,
         required: 'Active or not is required'
     }
-})
+});
 
 /**
  * Service Schema

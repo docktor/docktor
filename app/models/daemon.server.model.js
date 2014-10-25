@@ -7,9 +7,9 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 /**
- * Node Schema
+ * Daemon Schema
  */
-var NodeSchema = new Schema({
+var DaemonSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
@@ -31,4 +31,4 @@ var NodeSchema = new Schema({
 	}
 });
 
-mongoose.model('Node', NodeSchema);
+mongoose.model('Daemon', DaemonSchema);
