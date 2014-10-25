@@ -2,7 +2,7 @@
 	"name": "docktor",
 	"description": "Docker Monitoring",
 	"version": "0.0.1",
-	"author": "Yesnault",
+	"author": "Yvonnick Esnault - yesnault",
 	"engines": {
 		"node": "0.10.x",
 		"npm": "1.4.x"
