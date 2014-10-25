@@ -54,5 +54,28 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 				serviceId: $stateParams.serviceId
 			});
 		};
-	}
+
+
+        $scope.removeImage = function(imgId) {
+            console.log('remove image: ' + imgId);
+            for (var i = 0; i < $scope.service.images.length; i++) {
+                if ($scope.service.images[i]._id === imgId) {
+                    $scope.service.images.splice(i, 1);
+                }
+            }
+        };
+
+        $scope.addImage = function(isValid){
+            console.log('add image: ' + $scope.imageName);
+            if (isValid) {
+                $scope.service.images.push({
+                    name: $scope.imageName,
+                    active: $scope.imageIsActive
+                });
+            }
+            $scope.imageName = '';
+            $scope.imageIsActive = '';
+        };
+
+    }
 ]);

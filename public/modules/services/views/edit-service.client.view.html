@@ -16,14 +16,6 @@
 				</div>
 
 				<div class="form-group">
-					<label class="control-label" for="content">Image</label>
-					<div class="controls"  data-ng-repeat="image in service.images">
-						<input type="text" data-ng-model="image.name" class="form-control" required />
-                        <input type="text" data-ng-model="image.active" class="form-control" required />
-					</div>
-				</div>
-
-				<div class="form-group">
 					<input type="submit" value="Update" class="btn btn-default">
 				</div>
 				<div data-ng-show="error" class="text-danger">
@@ -31,5 +23,51 @@
 				</div>
 			</fieldset>
 		</form>
+
+        <form name="imageForm" id="imageForm"  class="smart-form"  data-ng-submit="addImage(imageForm.$valid)" novalidate autocomplete="off">
+            <fieldset>
+
+                <h4>Insert Image</h4>
+                <section ng-class="{ 'has-error' : submitted && imageForm.name.$invalid}">
+                    <label>Image Name</label>
+                    <label class="input">
+                        <input name="imageName" type="text" data-ng-model="imageName" id="name" placeholder="Image Name" required>
+                    </label>
+                    <div ng-show="submitted && imageForm.name.$invalid" class="help-block">
+                        <p ng-show="imageForm.name.$error.required"><i class="fa fa-warning"> Image Name is required</i></p>
+                    </div>
+                </section>
+                <section ng-class="{ 'has-error' : submitted && imageForm.imageIsActive.$invalid}">
+                    <label>Image active ?</label>
+                    <label class="input">
+                        <input name="imageIsActive" type="text" data-ng-model="imageIsActive" id="imageIsActive" placeholder="true or false" required>
+                    </label>
+                    <div ng-show="submitted && imageForm.imageIsActive.$invalid" class="help-block">
+                        <p ng-show="imageForm.imageIsActive.$error.required"><i class="fa fa-warning"> Image active or not is required</i></p>
+                    </div>
+                </section>
+                <footer>
+                    <button data-ng-click="addImage(imageForm.$valid)" class="btn btn-primary">
+                        Insert Image
+                    </button>
+                </footer>
+            </fieldset>
+        </form>
+
+        <h4>Images</h4>
+        <table ng-table="tableParams" show-filter="true" id="dt_basic" class="table table-striped table-bordered table-hover" data-ng-submit="addImage(imageForm.$valid)">
+            <tbody>
+            <tr data-ng-repeat="image in service.images">
+                <td style="width: 30px;">
+                    <div>
+                        <a data-ng-click="removeImage(image._id);"><i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete" tooltip-popup-delay='750'></i></a>
+                    </div>
+                </td>
+                <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'"><span ng-bind="image.name"></span></td>
+                <td data-title="'Is Active'"><span ng-bind="image.active"></span></td>
+            </tr>
+            </tbody>
+        </table>
+
 	</div>
 </section>
