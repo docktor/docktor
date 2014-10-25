@@ -12,7 +12,10 @@ module.exports = function(app) {
 		.get(daemons.list)
 		.post(users.requiresLogin, daemons.create);
 
-	app.route('/daemons/:daemonId')
+    app.route('/daemons/docker/info/:daemonId')
+        .get(daemons.info);
+
+    app.route('/daemons/:daemonId')
 		.get(daemons.read)
 		.put(users.requiresLogin, daemons.hasAuthorization, daemons.update)
 		.delete(users.requiresLogin, daemons.hasAuthorization, daemons.delete);

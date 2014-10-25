@@ -2,6 +2,7 @@
 	<div class="page-header">
 		<h1>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
         <span>{{daemon.description}}</span>
+        <pre>{{dockerInfo}}</pre>
 	</div>
 	<div class="pull-right" data-ng-show="authentication.user._id == daemon.user._id">
 		<a class="btn btn-primary" href="/#!/daemons/{{daemon._id}}/edit">

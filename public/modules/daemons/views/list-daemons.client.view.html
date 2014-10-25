@@ -2,20 +2,37 @@
 	<div class="page-header">
 		<h1>Daemons</h1>
 	</div>
-	<div class="list-group">
-		<a data-ng-repeat="daemon in daemons" data-ng-href="#!/daemons/{{daemon._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Created on
-				<span data-ng-bind="daemon.created | date:'mediumDate'"></span>
-				by
-				<span data-ng-bind="daemon.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading">
+
+    <table st-table="rowCollection" class="table table-striped">
+        <thead>
+        <tr>
+            <th st-sort="host">Daemon</th>
+            <th st-sort="dockerInfo.Containers">Containers</th>
+            <th st-sort="dockerInfo.Images">Images</th>
+            <th st-sort="dockerInfo.OperatingSystem">OS</th>
+            <th st-sort="dockerInfo.KernelVersion">Kernel</th>
+            <th>Edit</th>
+        </tr>
+        <tr>
+            <th colspan="5"><input st-search="" class="form-control" placeholder="global search ..." type="text"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="daemon in daemons">
+            <td>
                 {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
-			</h4>
-			<p class="list-group-item-text" data-ng-bind="daemon.description"></p>
-		</a>
-	</div>
+                <small><p class="list-group-item-text" data-ng-bind="daemon.description"></p></small>
+            </td>
+            <td>{{daemon.dockerInfo.Containers}}</td>
+            <td>{{daemon.dockerInfo.Images}}</td>
+            <td>{{daemon.dockerInfo.OperatingSystem}}</td>
+            <td>{{daemon.dockerInfo.KernelVersion}}</td>
+            <td>
+                <a href="#!/daemons/{{daemon._id}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 	<div class="alert alert-warning text-center" data-ng-if="daemons.$resolved && !daemons.length">
 		No daemons yet, why don't you <a href="/#!/daemons/create">create one</a>?
 	</div>

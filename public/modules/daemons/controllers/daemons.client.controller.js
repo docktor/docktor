@@ -1,68 +1,85 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons',
-	function($scope, $stateParams, $location, Authentication, Daemons) {
-		$scope.authentication = Authentication;
+angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker) {
+        $scope.authentication = Authentication;
 
-		$scope.create = function() {
-			var daemon = new Daemons({
-				protocol: this.protocol,
-				host: this.host,
-				port: this.port,
-				ca: this.ca,
-				cert: this.cert,
-				key: this.key,
-				description: this.description
-			});
-			daemon.$save(function(response) {
-				$location.path('daemons/' + response._id);
+        $scope.create = function () {
+            var daemon = new Daemons({
+                protocol: this.protocol,
+                host: this.host,
+                port: this.port,
+                ca: this.ca,
+                cert: this.cert,
+                key: this.key,
+                description: this.description
+            });
+            daemon.$save(function (response) {
+                $location.path('daemons/' + response._id);
 
-				$scope.protocol = '';
-				$scope.host = '';
-				$scope.port = '';
-				$scope.ca = '';
-				$scope.cert = '';
-				$scope.key = '';
-				$scope.description = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+                $scope.protocol = '';
+                $scope.host = '';
+                $scope.port = '';
+                $scope.ca = '';
+                $scope.cert = '';
+                $scope.key = '';
+                $scope.description = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 
-		$scope.remove = function(daemon) {
-			if (daemon) {
-				daemon.$remove();
+        $scope.remove = function (daemon) {
+            if (daemon) {
+                daemon.$remove();
+                for (var i in $scope.daemons) {
+                    if ($scope.daemons[i] === daemon) {
+                        $scope.daemons.splice(i, 1);
+                    }
+                }
+            } else {
+                $scope.daemon.$remove(function () {
+                    $location.path('daemons');
+                });
+            }
+        };
 
-				for (var i in $scope.daemons) {
-					if ($scope.daemons[i] === daemon) {
-						$scope.daemons.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.daemon.$remove(function() {
-					$location.path('daemons');
-				});
-			}
-		};
+        $scope.update = function () {
+            var daemon = $scope.daemon;
+            daemon.$update(function () {
+                $location.path('daemons/' + daemon._id);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 
-		$scope.update = function() {
-			var daemon = $scope.daemon;
+        $scope.find = function () {
+            $scope.daemons = Daemons.query(function() {
+                angular.forEach($scope.daemons, function () {
+                    var daemon = $scope.daemons[0];
+                    DaemonsDocker.info(daemon._id).
+                        success(function (info) {
+                            daemon.dockerInfo = info;
+                        })
+                        .error(function (resp) {
+                            console.log("Error with DaemonsDocker.info on :" + daemon._id + ":" + resp);
+                        });
+                });
+            });
+        };
 
-			daemon.$update(function() {
-				$location.path('daemons/' + daemon._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+        $scope.findOne = function () {
+            $scope.daemon = Daemons.get({
+                daemonId: $stateParams.daemonId
+            });
 
-		$scope.find = function() {
-			$scope.daemons = Daemons.query();
-		};
-
-		$scope.findOne = function() {
-			$scope.daemon = Daemons.get({
-				daemonId: $stateParams.daemonId
-			});
-		};
-	}
+            DaemonsDocker.info($stateParams.daemonId).
+                success(function (info) {
+                    $scope.dockerInfo = JSON.stringify(info, undefined, 3);
+                })
+                .error(function (resp) {
+                    console.log("Error with DaemonsDocker.info:" + resp);
+                });
+        };
+    }
 ]);
