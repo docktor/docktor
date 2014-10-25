@@ -6,13 +6,23 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
 		$scope.create = function() {
 			var daemon = new Daemons({
-				url: this.url,
+				protocol: this.protocol,
+				host: this.host,
+				port: this.port,
+				ca: this.ca,
+				cert: this.cert,
+				key: this.key,
 				description: this.description
 			});
 			daemon.$save(function(response) {
 				$location.path('daemons/' + response._id);
 
-				$scope.url = '';
+				$scope.protocol = '';
+				$scope.host = '';
+				$scope.port = '';
+				$scope.ca = '';
+				$scope.cert = '';
+				$scope.key = '';
 				$scope.description = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;

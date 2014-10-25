@@ -10,7 +10,9 @@
 				by
 				<span data-ng-bind="daemon.user.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="daemon.url"></h4>
+			<h4 class="list-group-item-heading">
+                {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+			</h4>
 			<p class="list-group-item-text" data-ng-bind="daemon.description"></p>
 		</a>
 	</div>
