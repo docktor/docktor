@@ -16,7 +16,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 description: this.description
             });
             daemon.$save(function (response) {
-                $location.path('daemons/' + response._id);
+                $location.path('daemons/view/' + response._id);
 
                 $scope.protocol = '';
                 $scope.host = '';
@@ -49,14 +49,14 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.update = function () {
             var daemon = $scope.daemon;
             daemon.$update(function () {
-                $location.path('daemons/' + daemon._id);
+                $location.path('daemons/view/' + daemon._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
         };
 
         $scope.find = function () {
-            $scope.daemons = Daemons.query(function() {
+            $scope.daemons = Daemons.query(function () {
                 angular.forEach($scope.daemons, function () {
                     var daemon = $scope.daemons[0];
                     DaemonsDocker.info(daemon._id).
@@ -64,7 +64,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                             daemon.dockerInfo = info;
                         })
                         .error(function (resp) {
-                            console.log("Error with DaemonsDocker.info on :" + daemon._id + ":" + resp);
+                            console.log('Error with DaemonsDocker.info on :' + daemon._id + ':' + resp);
                         });
                 });
             });
@@ -78,10 +78,10 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
             DaemonsDocker.info($stateParams.daemonId).
                 success(function (info) {
-                    $scope.dockerInfo = JSON.stringify(info, undefined, 3);
+                    $scope.dockerInfo = info;
                 })
                 .error(function (resp) {
-                    console.log("Error with DaemonsDocker.info:" + resp);
+                    console.log('Error with DaemonsDocker.info:' + resp);
                 });
         };
     }

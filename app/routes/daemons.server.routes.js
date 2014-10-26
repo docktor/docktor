@@ -15,6 +15,9 @@ module.exports = function(app) {
     app.route('/daemons/docker/info/:daemonId')
         .get(daemons.info);
 
+    app.route('/daemons/docker/listContainers/:daemonId')
+        .get(daemons.listContainers);
+
     app.route('/daemons/:daemonId')
 		.get(daemons.read)
 		.put(users.requiresLogin, daemons.hasAuthorization, daemons.update)

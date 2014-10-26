@@ -95,7 +95,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removePort = function (image, port) {
             image.ports.splice(image.ports.indexOf(port), 1);
-        }
+        };
 
     }
 ]);

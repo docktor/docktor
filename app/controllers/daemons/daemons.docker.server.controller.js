@@ -26,3 +26,21 @@ exports.info = function(req, res) {
         }
     });
 };
+
+/**
+ * List containers of one docker daemon.
+ */
+exports.listContainers = function(req, res) {
+    var daemon = req.daemon;
+
+    var daemonDocker = new Docker({protocol:daemon.protocol, host: daemon.host, port: daemon.port});
+    daemonDocker.listContainers(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(data);
+        }
+    });
+};

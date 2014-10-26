@@ -18,6 +18,9 @@ angular.module('daemons').factory('DaemonsDocker', ['$http',
         return {
             info: function (daemonId) {
                 return $http.get('/daemons/docker/info/' + daemonId);
+            },
+            listContainers: function(daemonId) {
+                return $http.get('/daemons/docker/listContainers/' + daemonId);
             }
         };
     }

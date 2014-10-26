@@ -1,0 +1,8 @@
+<section data-ng-controller="DaemonsContainersController" data-ng-init="findOne()">
+	<div class="page-header">
+		<h1>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+        <p>{{daemon.description}}</p>
+
+        <pre>{{containers | json}}</pre>
+	</div>
+</section>

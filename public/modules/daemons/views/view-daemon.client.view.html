@@ -3,10 +3,10 @@
 		<h1>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
         <p>{{daemon.description}}</p>
         <p>Docker info : </p>
-        <pre>{{dockerInfo}}</pre>
+        <pre>{{dockerInfo | json}}</pre>
 	</div>
 	<div class="pull-right" data-ng-show="authentication.user._id == daemon.user._id">
-		<a class="btn btn-primary" href="/#!/daemons/{{daemon._id}}/edit">
+		<a class="btn btn-primary" href="/#!/daemons/edit/{{daemon._id}}">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
 		<a class="btn btn-primary" data-ng-click="remove();">
