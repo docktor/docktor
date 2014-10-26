@@ -1,8 +1,37 @@
 <section data-ng-controller="DaemonsContainersController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+    <div class="page-header">
+        <h1>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+
         <p>{{daemon.description}}</p>
 
-        <pre>{{containers | json}}</pre>
-	</div>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th st-sort="Id">Id</th>
+                <th st-sort="Command">Command</th>
+                <th st-sort="Created">Created</th>
+                <th st-sort="Image">Image</th>
+                <th st-sort="Names">Names</th>
+                <th st-sort="Ports">Ports</th>
+                <th st-sort="Status">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="container in containers">
+                <td>{{container.Id | limitTo:12}}</td>
+                <td>{{container.Command}}</td>
+                <td>{{container.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+                <td>{{container.Image}}</td>
+                <td>{{container.Names}}</td>
+                <td>{{container.Ports}}</td>
+                <td>{{container.Status}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
+
+        <pre ng-show="viewRawJson">{{containers | json}}</pre>
+
+    </div>
 </section>

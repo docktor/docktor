@@ -3,6 +3,8 @@
 angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker',
     function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker) {
 
+        $scope.viewRawJson = false;
+
         $scope.findOne = function () {
             $scope.daemon = Daemons.get({
                 daemonId: $stateParams.daemonId
