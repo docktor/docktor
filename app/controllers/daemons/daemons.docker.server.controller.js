@@ -44,3 +44,21 @@ exports.listContainers = function(req, res) {
         }
     });
 };
+
+/**
+ * List images of one docker daemon.
+ */
+exports.listImages = function(req, res) {
+    var daemon = req.daemon;
+
+    var daemonDocker = new Docker({protocol:daemon.protocol, host: daemon.host, port: daemon.port});
+    daemonDocker.listImages(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(data);
+        }
+    });
+};

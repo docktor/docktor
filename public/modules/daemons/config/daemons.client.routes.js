@@ -17,6 +17,10 @@ angular.module('daemons').config(['$stateProvider',
                 url: '/daemons/view/containers/:daemonId',
                 templateUrl: 'modules/daemons/views/view-containers-daemon.client.view.html'
             }).
+            state('viewImages', {
+                url: '/daemons/view/images/:daemonId',
+                templateUrl: 'modules/daemons/views/view-images-daemon.client.view.html'
+            }).
             state('viewDaemon', {
                 url: '/daemons/view/:daemonId',
                 templateUrl: 'modules/daemons/views/view-daemon.client.view.html'

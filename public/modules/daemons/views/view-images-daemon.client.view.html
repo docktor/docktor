@@ -1,0 +1,8 @@
+<section data-ng-controller="DaemonsImagesController" data-ng-init="findOne()">
+	<div class="page-header">
+		<h1>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+        <p>{{daemon.description}}</p>
+
+        <pre>{{images | json}}</pre>
+	</div>
+</section>
