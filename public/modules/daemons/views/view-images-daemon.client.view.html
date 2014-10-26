@@ -1,8 +1,35 @@
 <section data-ng-controller="DaemonsImagesController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+    <div class="page-header">
+        <h1>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+
         <p>{{daemon.description}}</p>
 
-        <pre>{{images | json}}</pre>
-	</div>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th st-sort="Id">Id</th>
+                <th st-sort="Created">Created</th>
+                <th st-sort="RepoTags">RepoTags</th>
+                <th st-sort="Size">Size</th>
+                <th st-sort="VirtualSize">VirtualSize</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="image in images">
+                <td>{{image.Id | limitTo:12}}</td>
+                <td>{{image.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+                <td>
+                    <pre>{{image.RepoTags | json}}</pre>
+                </td>
+                <td>{{image.Size}}</td>
+                <td>{{image.VirtualSize}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
+
+        <pre ng-show="viewRawJson">{{images | json}}</pre>
+
+    </div>
 </section>
