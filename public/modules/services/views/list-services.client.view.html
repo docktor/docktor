@@ -2,19 +2,31 @@
     <div class="page-header">
         <h1>Services</h1>
     </div>
-    <div class="list-group">
-        <a data-ng-repeat="service in services" data-ng-href="#!/services/{{service._id}}" class="list-group-item">
-            <small class="list-group-item-text">
-                Posted on
+
+    <table st-table="rowCollection" class="table table-striped">
+        <thead>
+        <tr>
+            <th st-sort="title">Title</th>
+            <th st-sort="created">Creation</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="service in services">
+            <td>
+                {{service.title}}
+            </td>
+            <td>
+                Created at
                 <span data-ng-bind="service.created | date:'mediumDate'"></span>
                 by
                 <span data-ng-bind="service.user.displayName"></span>
-            </small>
-            <h4 class="list-group-item-heading" data-ng-bind="service.title"></h4>
+            </td>
+            <td><a href="#!/services/{{service._id}}">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
 
-            <p class="list-group-item-text" data-ng-bind="service.content"></p>
-        </a>
-    </div>
     <div class="alert alert-warning text-center" data-ng-if="services.$resolved && !services.length">
         No services yet, why don't you <a href="/#!/services/create">create one</a>?
     </div>

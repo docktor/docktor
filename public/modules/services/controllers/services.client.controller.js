@@ -12,14 +12,11 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.create = function () {
             var service = new Services({
-                title: this.title,
-                content: this.content
+                title: this.title
             });
             service.$save(function (response) {
                 $location.path('services/' + response._id);
-
                 $scope.title = '';
-                $scope.content = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
