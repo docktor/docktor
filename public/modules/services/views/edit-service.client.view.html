@@ -84,7 +84,7 @@
                 <td>{{image.active}}</td>
                 <td>
                     <ul data-ng-repeat="volume in image.volumes">
-                        <li>-v {{volume.internalVolume}}:{{volume.externalVolume}}
+                        <li>-v {{volume.internalVolume}}:&lg;externalVolume-attributed-on-group&gt;
                             <small><i>{{volume.description}}</i></small>
                             <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                                 <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
@@ -109,8 +109,6 @@
                         <fieldset>
                             <input type="text" name="internalVolume" data-ng-model="volume.internalVolume"
                                    placeholder="internalVolume" class="form-control" ng-required="true">
-                            <input type="text" name="externalVolume" data-ng-model="volume.externalVolume"
-                                   placeholder="externalVolume" class="form-control" required>
                             <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                                    placeholder="description"
                                    class="form-control">
@@ -123,7 +121,7 @@
                 </td>
                 <td>
                     <ul data-ng-repeat="port in image.ports">
-                        <li>-p {{port.internalPort}}:{{port.externalPort}}
+                        <li>-p {{port.internalPort}}:&lg;externalPort-attributed-on-group&gt;
                             <small><i>{{port.description}}</i></small>
                             <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                                 <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -148,8 +146,6 @@
                         <fieldset>
                             <input type="number" name="internalPort" data-ng-model="port.internalPort"
                                    placeholder="internalPort" class="form-control" ng-required="true">
-                            <input type="number" name="externalPort" data-ng-model="port.externalPort"
-                                   placeholder="externalPort" class="form-control" required>
                             <input type="text" name="descriptionPort" data-ng-model="port.description"
                                    placeholder="description"
                                    class="form-control">

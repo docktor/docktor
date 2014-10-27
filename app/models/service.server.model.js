@@ -15,11 +15,6 @@ var PortSchema = new Schema({
         trim: true,
         required: 'internalPort cannot be blank'
     },
-    externalPort: {
-        type: Number,
-        trim: true,
-        required: 'externalPort cannot be blank'
-    },
     description: {
         type: String,
         default: '',
@@ -35,11 +30,6 @@ var VolumeSchema = new Schema({
         type: String,
         trim: true,
         required: 'internalVolume cannot be blank'
-    },
-    externalVolume: {
-        type: String,
-        trim: true,
-        required: 'externalVolume cannot be blank'
     },
     description: {
         type: String,
