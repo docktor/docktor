@@ -1,25 +1,27 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+    <div class="page-header">
+        <h1>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+
         <p>{{daemon.description}}</p>
+
         <p>Docker info : </p>
         <pre>{{dockerInfo | json}}</pre>
-	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == daemon.user._id">
-		<a class="btn btn-primary" href="/#!/daemons/edit/{{daemon._id}}">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
-	<small>
-		<em class="text-muted">
-			Created on
-			<span data-ng-bind="daemon.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="daemon.user.displayName"></span>
-		</em>
-	</small>
-	<p class="lead" data-ng-bind="daemon.content"></p>
+    </div>
+    <div class="pull-right" data-ng-show="authentication.user._id == daemon.user._id">
+        <a class="btn btn-primary" href="/#!/daemons/edit/{{daemon._id}}">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
+    <small>
+        <em class="text-muted">
+            Created on
+            <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
+            by
+            <span data-ng-bind="daemon.user.displayName"></span>
+        </em>
+    </small>
+    <p class="lead" data-ng-bind="daemon.content"></p>
 </section>

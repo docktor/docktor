@@ -1,65 +1,82 @@
 <section data-ng-controller="DaemonsController">
-	<div class="page-header">
-		<h1>New Daemon</h1>
-	</div>
-	<div class="col-md-12">
-		<form name="daemonForm" class="form-horizontal" data-ng-submit="create()" novalidate>
-			<fieldset>
-				<div class="form-group" ng-class="{ 'has-error': daemonForm.protocol.$dirty && daemonForm.protocol.$invalid }">
-					<label class="control-label" for="protocol">Protocol</label>
-					<div class="controls">
-						<input name="protocol" type="text" data-ng-model="protocol" id="protocol" class="form-control" placeholder="http or https" required>
-					</div>
-				</div>
+    <div class="page-header">
+        <h1>New Daemon</h1>
+    </div>
+    <div class="col-md-12">
+        <form name="daemonForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+            <fieldset>
+                <div class="form-group"
+                     ng-class="{ 'has-error': daemonForm.protocol.$dirty && daemonForm.protocol.$invalid }">
+                    <label class="control-label" for="protocol">Protocol</label>
+
+                    <div class="controls">
+                        <input name="protocol" type="text" data-ng-model="protocol" id="protocol" class="form-control"
+                               placeholder="http or https" required>
+                    </div>
+                </div>
                 <div class="form-group" ng-class="{ 'has-error': daemonForm.host.$dirty && daemonForm.host.$invalid }">
                     <label class="control-label" for="host">Host</label>
+
                     <div class="controls">
-                        <input name="host" type="text" data-ng-model="host" id="host" class="form-control" placeholder="ip or hostname" required>
+                        <input name="host" type="text" data-ng-model="host" id="host" class="form-control"
+                               placeholder="ip or hostname" required>
                     </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': daemonForm.port.$dirty && daemonForm.port.$invalid }">
                     <label class="control-label" for="port">Port</label>
+
                     <div class="controls">
-                        <input name="port" type="number" data-ng-model="port" id="port" class="form-control" placeholder="port" required>
+                        <input name="port" type="number" data-ng-model="port" id="port" class="form-control"
+                               placeholder="port" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="ca">CA</label>
+
                     <div class="controls">
-                        <textarea name="ca" data-ng-model="ca" id="ca" class="form-control" cols="30" rows="10" placeholder="CA Content File"></textarea>
+                        <textarea name="ca" data-ng-model="ca" id="ca" class="form-control" cols="30" rows="10"
+                                  placeholder="CA Content File"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="cert">CERT</label>
+
                     <div class="controls">
-                        <textarea name="cert" data-ng-model="cert" id="cert" class="form-control" cols="30" rows="10" placeholder="CERT Content File"></textarea>
+                        <textarea name="cert" data-ng-model="cert" id="cert" class="form-control" cols="30" rows="10"
+                                  placeholder="CERT Content File"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="cert">Key</label>
+
                     <div class="controls">
-                        <textarea name="key" data-ng-model="key" id="key" class="form-control" cols="30" rows="10" placeholder="KEY Content File"></textarea>
+                        <textarea name="key" data-ng-model="key" id="key" class="form-control" cols="30" rows="10"
+                                  placeholder="KEY Content File"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="volume">Volume</label>
+
                     <div class="controls">
-                        <input type="text" name="volume" data-ng-model="volume" id="volume" class="form-control" placeholder="/data" />
+                        <input type="text" name="volume" data-ng-model="volume" id="volume" class="form-control"
+                               placeholder="/data"/>
                     </div>
                 </div>
-				<div class="form-group">
-					<label class="control-label" for="description">Description</label>
-					<div class="controls">
-						<input type="text" name="description" data-ng-model="description" id="description" class="form-control" placeholder="Description" />
-					</div>
-				</div>
-				<div class="form-group">
-					<input type="submit" class="btn btn-default">
-				</div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-			</fieldset>
-		</form>
-	</div>
+                <div class="form-group">
+                    <label class="control-label" for="description">Description</label>
+
+                    <div class="controls">
+                        <input type="text" name="description" data-ng-model="description" id="description"
+                               class="form-control" placeholder="Description"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default">
+                </div>
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 </section>
