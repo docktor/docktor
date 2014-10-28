@@ -3,8 +3,18 @@
 [![Build Status](https://travis-ci.org/yesnault/docktor.svg?branch=master)](https://travis-ci.org/yesnault/docktor)
 [![Dependencies Status](https://david-dm.org/yesnault/docktor.svg)](https://david-dm.org/yesnault/docktor)
 
-
 Notes below are for developers only. Docktor is not ready for production now.
+
+## Roadmap
+* Deploy a new service for a group : new container from a image
+* Check all services (up, down) for a group
+* Action on a container (pause, start, stop, pull, change service)
+* Monitoring Containers
+* Monitoring Daemons
+* Display a map of Daemons (GPS infos)
+* Delete a service : check if there is no container (started or not) before delete it
+* Update a image : same
+* REST Api
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
