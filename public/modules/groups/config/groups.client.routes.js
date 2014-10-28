@@ -9,6 +9,10 @@ angular.module('groups').config(['$stateProvider',
                 url: '/groups',
                 templateUrl: 'modules/groups/views/list-groups.client.view.html'
             }).
+            state('deployServiceGroup', {
+                url: '/groups/:groupId/deploy/service',
+                templateUrl: 'modules/groups/views/deploy-service-group.client.view.html'
+            }).
             state('createGroup', {
                 url: '/groups/create',
                 templateUrl: 'modules/groups/views/create-group.client.view.html'

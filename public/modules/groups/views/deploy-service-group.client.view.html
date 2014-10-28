@@ -1,0 +1,37 @@
+<section data-ng-controller="ServicesGroupsController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1 data-ng-bind="group.title"></h1>
+    </div>
+
+    <p class="lead" data-ng-bind="group.description"></p>
+
+    Select a service :
+
+    <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;">
+        <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
+        </ui-select-match>
+        <ui-select-choices repeat="service in services.all">
+            <div ng-bind-html="service.title | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
+
+    <div ng-show="services.select">
+        Select an image of service {{services.select.title}} :
+
+        <ui-select ng-model="services.selectImage" theme="bootstrap" style="min-width: 300px;">
+            <ui-select-match placeholder="Select or search a image in the list...">{{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices repeat="image in services.select.images">
+                <div ng-bind-html="image.name | highlight: $select.search"></div>
+                <small>
+                    Created {{image.created | date:'mediumDate'}}
+                </small>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+
+    <div ng-show="services.selectImage">
+        <b>Todo : Put Volumes and Ports for the group</b>
+    </div>
+
+</section>

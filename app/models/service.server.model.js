@@ -47,6 +47,10 @@ var ImageSchema = new Schema({
         trim: true,
         required: 'Name cannot be blank'
     },
+    created: {
+        type: Date,
+        default: Date.now
+    },
     ports: [PortSchema],
     volumes: [VolumeSchema],
     active: {
