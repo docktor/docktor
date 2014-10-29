@@ -5,18 +5,32 @@
 
     <p class="lead" data-ng-bind="group.description"></p>
 
-    Select a service :
+    <h4>Select a daemon :</h4>
 
-    <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;">
-        <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
+    <ui-select ng-model="daemons.select" theme="bootstrap" style="min-width: 300px;">
+        <ui-select-match placeholder="Select or search a daemon in the list...">
+            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
         </ui-select-match>
-        <ui-select-choices repeat="service in services.all">
-            <div ng-bind-html="service.title | highlight: $select.search"></div>
+        <ui-select-choices repeat="daemon in daemons.all">
+            {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
         </ui-select-choices>
     </ui-select>
 
+    <div ng-show="daemons.select">
+
+        <h4>Select a service :</h4>
+
+        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;">
+            <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
+            </ui-select-match>
+            <ui-select-choices repeat="service in services.all">
+                <div ng-bind-html="service.title | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+
     <div ng-show="services.select">
-        Select an image of service {{services.select.title}} :
+        <h4>Select an image of service {{services.select.title}} :</h4>
 
         <ui-select ng-model="services.selectImage" theme="bootstrap" style="min-width: 300px;">
             <ui-select-match placeholder="Select or search a image in the list...">{{$select.selected.name}}
@@ -30,8 +44,65 @@
         </ui-select>
     </div>
 
+
     <div ng-show="services.selectImage">
-        <b>Todo : Put Volumes and Ports for the group</b>
+        <form name="deployForm" class="form-horizontal" novalidate>
+            <h4>Volumes :</h4>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Internal</th>
+                    <th>External</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="volume in services.selectImage.volumes">
+                    <td>
+                        {{volume.description}}
+                    </td>
+                    <td>
+                        {{volume.internal}}
+                    </td>
+                    <td>
+                        <input type="text" ng-model="volume.external" class="form-control" required>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4>Ports</h4>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Internal</th>
+                    <th>External</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="port in services.selectImage.ports">
+                    <td>
+                        {{port.description}}
+                    </td>
+                    <td>
+                        {{port.internal}}
+                    </td>
+                    <td>
+                        <input type="text" ng-model="port.external" class="form-control" required>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button ng-disabled="deployForm.$invalid"
+                    data-ng-click="addImageToGroup(daemons.select, services.selectImage)" class="btn btn-primary">
+                Deploy Service
+            </button>
+
+        </form>
     </div>
 
 </section>

@@ -84,7 +84,7 @@
                 <td>{{image.active}}</td>
                 <td>
                     <ul data-ng-repeat="volume in image.volumes">
-                        <li>-v {{volume.internalVolume}}:&lg;externalVolume-attributed-on-group&gt;
+                        <li>-v {{volume.internal}}:&lg;externalVolume-attributed-on-group&gt;
                             <small><i>{{volume.description}}</i></small>
                             <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                                 <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
@@ -107,8 +107,8 @@
 
                     <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate autocomplete="off">
                         <fieldset>
-                            <input type="text" name="internalVolume" data-ng-model="volume.internalVolume"
-                                   placeholder="internalVolume" class="form-control" ng-required="true">
+                            <input type="text" name="internal" data-ng-model="volume.internal"
+                                   placeholder="internal" class="form-control" ng-required="true">
                             <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                                    placeholder="description"
                                    class="form-control">
@@ -121,7 +121,7 @@
                 </td>
                 <td>
                     <ul data-ng-repeat="port in image.ports">
-                        <li>-p {{port.internalPort}}:&lg;externalPort-attributed-on-group&gt;
+                        <li>-p {{port.internal}}:&lg;externalPort-attributed-on-group&gt;
                             <small><i>{{port.description}}</i></small>
                             <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                                 <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -144,8 +144,8 @@
 
                     <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
                         <fieldset>
-                            <input type="number" name="internalPort" data-ng-model="port.internalPort"
-                                   placeholder="internalPort" class="form-control" ng-required="true">
+                            <input type="number" name="internal" data-ng-model="port.internal"
+                                   placeholder="internal" class="form-control" ng-required="true">
                             <input type="text" name="descriptionPort" data-ng-model="port.description"
                                    placeholder="description"
                                    class="form-control">

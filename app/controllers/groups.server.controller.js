@@ -84,6 +84,11 @@ exports.list = function(req, res) {
 	});
 };
 
+exports.addImage = function(req, res) {
+    var group = req.group;
+
+};
+
 /**
  * Group middleware
  */

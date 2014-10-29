@@ -10,10 +10,10 @@ var mongoose = require('mongoose'),
  * Port Schema, not useful outside Image
  */
 var PortSchema = new Schema({
-    internalPort: {
+    internal: {
         type: Number,
         trim: true,
-        required: 'internalPort cannot be blank'
+        required: 'internal Port cannot be blank'
     },
     description: {
         type: String,
@@ -26,10 +26,10 @@ var PortSchema = new Schema({
  * Volume Schema, not useful outside Image
  */
 var VolumeSchema = new Schema({
-    internalVolume: {
+    internal: {
         type: String,
         trim: true,
-        required: 'internalVolume cannot be blank'
+        required: 'internal Volume cannot be blank'
     },
     description: {
         type: String,

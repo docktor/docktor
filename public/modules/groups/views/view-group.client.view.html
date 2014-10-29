@@ -2,6 +2,7 @@
     <div class="page-header">
         <h1 data-ng-bind="group.title"></h1>
         <small>
+            <p data-ng-bind="group.description"></p>
             <em class="text-muted">
                 Created on
                 <span data-ng-bind="group.created | date:'mediumDate'"></span>
@@ -10,6 +11,46 @@
             </em>
         </small>
     </div>
+
+    <h4>Services</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Daemon</th>
+            <th>Volumes</th>
+            <th>Ports</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="container in group.containers">
+            <td>
+                {{container.name}}
+            </td>
+            <td>
+                {{container.daemon.protocol}}://{{container.daemon.host}}:{{container.daemon.port}}
+            </td>
+            <td>
+                <span ng-repeat="volume in container.volumes">
+                    -v {{volume.internal}}:{{volume.external}}
+                </span>
+            </td>
+            <td>
+                <span ng-repeat="port in container.ports">
+                    -v {{port.internal}}:{{port.external}}
+                </span>
+            </td>
+            <td></td>
+            <td>
+                <button class="btn btn-default"><i class="fa fa-play"></i> Start</button>
+                <button class="btn btn-default"><i class="fa fa-stop"></i> Stop</button>
+                <button class="btn btn-default"><i class="fa fa-pause"></i> Pause</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <div data-ng-show="authentication.user._id == group.user._id">
         <a class="btn btn-success" href="/#!/groups/{{group._id}}/deploy/service">
@@ -22,5 +63,5 @@
             <i class="fa fa-trash"> Delete this group</i>
         </a>
     </div>
-    <p class="lead" data-ng-bind="group.description"></p>
+
 </section>

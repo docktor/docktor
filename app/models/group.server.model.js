@@ -6,37 +6,17 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-var DaemonContainerSchema = new Schema({
-    protocol: {
-        type: String,
-        default: '',
-        trim: true,
-        required: 'Protocol cannot be blank'
-    },
-    host: {
-        type: String,
-        default: '',
-        trim: true,
-        required: 'Host cannot be blank'
-    },
-    port: {
-        type: Number,
-        default: '',
-        trim: true,
-        required: 'Port cannot be blank'
-    }
-});
 
 /**
  * Port Schema, not useful outside Image
  */
 var PortContainerSchema = new Schema({
-    internalPortContainer: {
+    internal: {
         type: Number,
         trim: true,
         required: 'internalPortContainer cannot be blank'
     },
-    externalPortContainer: {
+    external: {
         type: Number,
         trim: true,
         required: 'externalPortContainer cannot be blank'
@@ -47,12 +27,12 @@ var PortContainerSchema = new Schema({
  * Volume Schema, not useful outside Image
  */
 var VolumeContainerSchema = new Schema({
-    internalVolumeContainer: {
+    internal: {
         type: String,
         trim: true,
         required: 'internalVolumeContainer cannot be blank'
     },
-    externalVolumeContainer: {
+    external: {
         type: String,
         trim: true,
         required: 'externalVolumeContainer cannot be blank'
@@ -68,9 +48,28 @@ var ContainerSchema = new Schema({
         trim: true,
         required: 'Name cannot be blank'
     },
-    portsContainer: [PortContainerSchema],
-    volumesContainer: [VolumeContainerSchema],
-    daemonContainer: [DaemonContainerSchema],
+    ports: [PortContainerSchema],
+    volumes: [VolumeContainerSchema],
+    daemon: {
+        protocol: {
+            type: String,
+            default: '',
+            trim: true,
+            required: 'Protocol cannot be blank'
+        },
+        host: {
+            type: String,
+            default: '',
+            trim: true,
+            required: 'Host cannot be blank'
+        },
+        port: {
+            type: Number,
+            default: '',
+            trim: true,
+            required: 'Port cannot be blank'
+        }
+    },
     active: {
         type: Boolean,
         required: 'Active or not is required'

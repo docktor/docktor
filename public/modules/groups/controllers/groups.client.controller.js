@@ -54,5 +54,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 groupId: $stateParams.groupId
             });
         };
+
+
     }
 ]);
