@@ -12,8 +12,14 @@ module.exports = function(app) {
 		.get(groups.list)
 		.post(users.requiresLogin, groups.create);
 
+    app.route('/groups/container/create/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.createContainer);
+
     app.route('/groups/container/start/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.startContainer);
+
+    app.route('/groups/container/stop/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.stopContainer);
 
 	app.route('/groups/:groupId')
 		.get(groups.read)

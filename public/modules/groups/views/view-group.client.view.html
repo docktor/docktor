@@ -17,6 +17,8 @@
         <thead>
         <tr>
             <th>Name</th>
+            <th>Image</th>
+            <th>Id</th>
             <th>Daemon</th>
             <th>Volumes</th>
             <th>Ports</th>
@@ -28,6 +30,12 @@
         <tr ng-repeat="container in group.containers">
             <td>
                 {{container.name}}
+            </td>
+            <td>
+                {{container.image}}
+            </td>
+            <td>
+                {{container.containerId | limitTo:12}}
             </td>
             <td>
                 {{container.daemon.protocol}}://{{container.daemon.host}}:{{container.daemon.port}}
@@ -44,9 +52,10 @@
             </td>
             <td></td>
             <td>
-                <button class="btn btn-default" ng-click="start(container)"><i class="fa fa-play"></i> Start</button>
-                <button class="btn btn-default" ng-click="stop(container)"><i class="fa fa-stop"></i> Stop</button>
-                <button class="btn btn-default" ng-click="pause(container)"><i class="fa fa-pause"></i> Pause</button>
+                <button class="btn btn-default" ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create</button>
+                <button class="btn btn-default" ng-click="startContainer(container)"><i class="fa fa-play"></i> Start</button>
+                <button class="btn btn-default" ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop</button>
+                <button class="btn btn-default" ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause</button>
             </td>
         </tr>
         </tbody>

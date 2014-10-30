@@ -16,11 +16,17 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             $scope.daemons.all = Daemons.query();
         };
 
-        $scope.addImageToGroup = function(daemon, image) {
+        $scope.addImageToGroup = function (daemon, image) {
             var group = $scope.group;
+            var containerName = image.name.replace('/', '-');
+            if (containerName.indexOf(':') > 1) {
+                containerName = containerName.substring(0, image.name.indexOf(':'));
+            }
 
             group.containers.push({
-                name: image.name,
+                name: containerName,
+                hostname: containerName, // todo add daemon.title
+                image: image.name,
                 ports: image.ports,
                 volumes: image.volumes,
                 daemon: {

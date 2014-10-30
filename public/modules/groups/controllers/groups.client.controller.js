@@ -55,15 +55,19 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.start = function(container) {
+        $scope.createContainer = function(container) {
+            GroupsServices.create($scope.group._id, container._id);
+        };
+
+        $scope.startContainer = function(container) {
             GroupsServices.start($scope.group._id, container._id);
         };
 
-        $scope.stop = function(container) {
+        $scope.stopContainer = function(container) {
             GroupsServices.stop($scope.group._id, container._id);
         };
 
-        $scope.pause = function(container) {
+        $scope.pauseContainer = function(container) {
             GroupsServices.pause($scope.group._id, container._id);
         };
     }

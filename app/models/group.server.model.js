@@ -48,6 +48,20 @@ var ContainerSchema = new Schema({
         trim: true,
         required: 'Name cannot be blank'
     },
+    hostname: {
+        type: String,
+        trim: true,
+        required: 'Hostname cannot be blank'
+    },
+    image: {
+        type: String,
+        trim: true,
+        required: 'Image cannot be blank'
+    },
+    containerId: {
+        type: String,
+        trim: true
+    },
     ports: [PortContainerSchema],
     volumes: [VolumeContainerSchema],
     daemon: {
