@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups',
-    function ($scope, $stateParams, $location, Authentication, Groups) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices) {
         $scope.authentication = Authentication;
 
         $scope.create = function () {
@@ -55,6 +55,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
+        $scope.start = function(container) {
+            GroupsServices.start($scope.group._id, container._id);
+        };
 
+        $scope.stop = function(container) {
+            GroupsServices.stop($scope.group._id, container._id);
+        };
+
+        $scope.pause = function(container) {
+            GroupsServices.pause($scope.group._id, container._id);
+        };
     }
 ]);

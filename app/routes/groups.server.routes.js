@@ -12,9 +12,8 @@ module.exports = function(app) {
 		.get(groups.list)
 		.post(users.requiresLogin, groups.create);
 
-    app.route('/groups/image/add')
-        .get(groups.addImage)
-        .post(users.requiresLogin, groups.create);
+    app.route('/groups/container/start/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.startContainer);
 
 	app.route('/groups/:groupId')
 		.get(groups.read)
@@ -22,5 +21,6 @@ module.exports = function(app) {
 		.delete(users.requiresLogin, groups.hasAuthorization, groups.delete);
 
 	// Finish by binding the group middleware
-	app.param('groupId', groups.groupByID);
+	app.param('groupId', groups.groupById);
+	app.param('containerId', groups.containerById);
 };

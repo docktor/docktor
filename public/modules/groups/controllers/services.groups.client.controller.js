@@ -30,14 +30,12 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 },
                 active: true
             });
-            console.log('AA');
-            console.log(group);
 
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
-        }
+        };
     }
 ]);
