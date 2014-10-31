@@ -45,7 +45,7 @@ exports.createContainer = function (req, res) {
             Group.update({_id: group._id, 'containers._id': container._id},
                 {$set: setToUpdate},
                 function (err, numAffected) {
-                    if (err || numAffected != 1) {
+                    if (err || numAffected !== 1) {
                         return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)
                         });
@@ -85,7 +85,7 @@ exports.startContainer = function (req, res) {
         Binds: volumes,
         PortBindings: ports
     }, function (err, containerStarted) {
-        if (err) {s
+        if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
@@ -108,6 +108,74 @@ exports.stopContainer = function (req, res) {
             });
         } else {
             res.jsonp(containerStopped);
+        }
+    });
+};
+
+exports.pauseContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.pause({}, function (err, containerPaused) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(containerPaused);
+        }
+    });
+};
+
+exports.unpauseContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.pause({}, function (err, containerUnpaused) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(containerUnpaused);
+        }
+    });
+};
+
+exports.removeContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.remove({}, function (err, containerRemoved) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(containerRemoved);
+        }
+    });
+};
+
+exports.killContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.kill(function (err, containerKilled) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(containerKilled);
         }
     });
 };

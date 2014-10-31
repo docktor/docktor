@@ -70,5 +70,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.pauseContainer = function(container) {
             GroupsServices.pause($scope.group._id, container._id);
         };
+
+        $scope.unpauseContainer = function(container) {
+            GroupsServices.unpause($scope.group._id, container._id);
+        };
+
+        $scope.removeContainer = function(container) {
+            GroupsServices.remove($scope.group._id, container._id);
+        };
+
+        $scope.killContainer = function(container) {
+            GroupsServices.kill($scope.group._id, container._id);
+        };
     }
 ]);
