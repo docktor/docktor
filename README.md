@@ -6,15 +6,17 @@
 Notes below are for developers only. Docktor is not ready for production now.
 
 ## Roadmap
-* Deploy a new service for a group : new container from a image
-* Check all services (up, down) for a group
-* Action on a container (pause, start, stop, pull, change service)
+* ~~Deploy a new service for a group : new container from a image~~ Done
+* ~~Check all services (up, down) for a group~~ Done
+* ~~Action on a container (pause, start, stop, kill, remove)~~ Done
 * Monitoring Containers
 * Monitoring Daemons
 * Display a map of Daemons (GPS infos)
 * Delete a service : check if there is no container (started or not) before delete it
 * Update a image : same
 * REST Api
+* Add image : get internal port from Docker Image selected
+* Admin users :  admin / user of group
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
