@@ -135,7 +135,7 @@ exports.unpauseContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
 
-    dockerContainer.pause({}, function (err, containerUnpaused) {
+    dockerContainer.unpause({}, function (err, containerUnpaused) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
