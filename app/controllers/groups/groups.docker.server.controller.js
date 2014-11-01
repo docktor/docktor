@@ -147,6 +147,7 @@ exports.unpauseContainer = function (req, res) {
 };
 
 exports.removeContainer = function (req, res) {
+    var group = req.group;
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
@@ -158,6 +159,7 @@ exports.removeContainer = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+            Group.resetContainerId(group._id, container._id);
             res.jsonp(containerRemoved);
         }
     });
@@ -181,6 +183,7 @@ exports.killContainer = function (req, res) {
 };
 
 exports.inspectContainer = function (req, res) {
+    var group = req.group;
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
@@ -188,6 +191,10 @@ exports.inspectContainer = function (req, res) {
 
     dockerContainer.inspect(function (err, info) {
         if (err) {
+            if (err.statusCode) {
+                Group.resetContainerId(group._id, container._id);
+            }
+
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });

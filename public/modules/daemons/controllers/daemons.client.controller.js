@@ -6,6 +6,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.create = function () {
             var daemon = new Daemons({
+                name: this.name,
                 protocol: this.protocol,
                 host: this.host,
                 port: this.port,
@@ -18,6 +19,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             daemon.$save(function (response) {
                 $location.path('daemons/view/' + response._id);
 
+                $scope.name = '';
                 $scope.protocol = '';
                 $scope.host = '';
                 $scope.port = '';

@@ -30,6 +30,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 ports: image.ports,
                 volumes: image.volumes,
                 daemon: {
+                    name: daemon.name,
                     protocol: daemon.protocol,
                     host: daemon.host,
                     port: daemon.port

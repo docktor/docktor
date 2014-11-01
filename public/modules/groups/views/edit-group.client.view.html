@@ -30,6 +30,9 @@
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
+                    <a class="btn btn-warning" data-ng-click="remove();">
+                        <i class="fa fa-trash"> Delete this group</i>
+                    </a>
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

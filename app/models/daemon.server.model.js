@@ -14,7 +14,13 @@ var DaemonSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	protocol: {
+    name: {
+        type: String,
+        default: '',
+        trim: true,
+        required: 'Name cannot be blank'
+    },
+    protocol: {
 		type: String,
 		default: '',
 		trim: true,

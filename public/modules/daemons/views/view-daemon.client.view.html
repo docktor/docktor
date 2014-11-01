@@ -1,6 +1,7 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+        <h1>{{daemon.name}}</h1>
+        <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
 

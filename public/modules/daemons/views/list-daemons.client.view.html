@@ -6,6 +6,7 @@
     <table st-table="rowCollection" class="table table-striped">
         <thead>
         <tr>
+            <th st-sort="host">Name</th>
             <th st-sort="host">Daemon</th>
             <th st-sort="dockerInfo.Containers">Containers</th>
             <th st-sort="dockerInfo.Images">Images</th>
@@ -16,6 +17,9 @@
         </thead>
         <tbody>
         <tr ng-repeat="daemon in daemons">
+            <td>
+                {{daemon.name}}
+            </td>
             <td>
                 {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
                 <small><p class="list-group-item-text" data-ng-bind="daemon.description"></p></small>

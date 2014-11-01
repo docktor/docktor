@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+    Schema = mongoose.Schema;
 
 
 /**
@@ -65,6 +65,12 @@ var ContainerSchema = new Schema({
     ports: [PortContainerSchema],
     volumes: [VolumeContainerSchema],
     daemon: {
+        name: {
+            type: String,
+            default: '',
+            trim: true,
+            required: 'Name cannot be blank'
+        },
         protocol: {
             type: String,
             default: '',
@@ -94,26 +100,37 @@ var ContainerSchema = new Schema({
  * Group Schema
  */
 var GroupSchema = new Schema({
-	created: {
-		type: Date,
-		default: Date.now
-	},
-	title: {
-		type: String,
-		default: '',
-		trim: true,
-		required: 'Title cannot be blank'
-	},
-	description: {
-		type: String,
-		default: '',
-		trim: true
-	},
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    title: {
+        type: String,
+        default: '',
+        trim: true,
+        required: 'Title cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    },
     containers: [ContainerSchema],
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    }
 });
+
+GroupSchema.statics.resetContainerId = function (idGroup, idContainer) {
+    var _this = this;
+    var setToUpdate = {};
+    setToUpdate['containers.$.containerId'] = null;
+    _this.update({_id: idGroup, 'containers._id': idContainer},
+        {$set: setToUpdate},
+        function (err) {
+            if (err) console.log('Erreur while updating container : ' + err);
+        });
+};
 
 mongoose.model('Group', GroupSchema);

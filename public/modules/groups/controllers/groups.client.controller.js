@@ -52,21 +52,23 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 groupId: $stateParams.groupId
             }, function (group) {
                 $scope.group = group;
-                $scope.group.containers.forEach(function(container) {
+                $scope.group.containers.forEach(function (container) {
                     $scope.inspect(container);
                 });
             });
         };
 
         $scope.inspect = function (container) {
-            GroupsServices.inspect($scope.group._id, container._id).
-                success(function (data, status, headers, config) {
-                    container.inspect = data;
-                }).
-                error(function (data, status, headers, config) {
-                    console.log('Error:');
-                    console.log(data);
-                });
+            if (container.containerId) {
+                GroupsServices.inspect($scope.group._id, container._id).
+                    success(function (data, status, headers, config) {
+                        container.inspect = data;
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log('Error:');
+                        console.log(data);
+                    });
+            }
         };
 
         $scope.callbackError = function (data) {
@@ -75,7 +77,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.createContainer = function (container) {
-            GroupsServices.action('create', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('create', $scope.group._id, container, $scope.findOne, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
@@ -95,7 +97,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.removeContainer = function (container) {
-            GroupsServices.action('remove', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.findOne, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
