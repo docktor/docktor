@@ -33,7 +33,10 @@ module.exports = function(app) {
     app.route('/groups/container/kill/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.killContainer);
 
-	app.route('/groups/:groupId')
+    app.route('/groups/container/inspect/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.inspectContainer);
+
+    app.route('/groups/:groupId')
 		.get(groups.read)
 		.put(users.requiresLogin, groups.hasAuthorization, groups.update)
 		.delete(users.requiresLogin, groups.hasAuthorization, groups.delete);

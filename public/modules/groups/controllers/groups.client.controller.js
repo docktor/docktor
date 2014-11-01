@@ -22,7 +22,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.remove = function (group) {
             if (group) {
                 group.$remove();
-
                 for (var i in $scope.groups) {
                     if ($scope.groups[i] === group) {
                         $scope.groups.splice(i, 1);
@@ -37,7 +36,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.update = function () {
             var group = $scope.group;
-
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
@@ -50,37 +48,58 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.findOne = function () {
-            $scope.group = Groups.get({
+            Groups.get({
                 groupId: $stateParams.groupId
+            }, function (group) {
+                $scope.group = group;
+                $scope.group.containers.forEach(function(container) {
+                    $scope.inspect(container);
+                });
             });
         };
 
-        $scope.createContainer = function(container) {
-            GroupsServices.create($scope.group._id, container._id);
+        $scope.inspect = function (container) {
+            GroupsServices.inspect($scope.group._id, container._id).
+                success(function (data, status, headers, config) {
+                    container.inspect = data;
+                }).
+                error(function (data, status, headers, config) {
+                    console.log('Error:');
+                    console.log(data);
+                });
         };
 
-        $scope.startContainer = function(container) {
-            GroupsServices.start($scope.group._id, container._id);
+        $scope.callbackError = function (data) {
+            console.log('Error:');
+            console.log(data);
         };
 
-        $scope.stopContainer = function(container) {
-            GroupsServices.stop($scope.group._id, container._id);
+        $scope.createContainer = function (container) {
+            GroupsServices.action('create', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
 
-        $scope.pauseContainer = function(container) {
-            GroupsServices.pause($scope.group._id, container._id);
+        $scope.startContainer = function (container) {
+            GroupsServices.action('start', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
 
-        $scope.unpauseContainer = function(container) {
-            GroupsServices.unpause($scope.group._id, container._id);
+        $scope.stopContainer = function (container) {
+            GroupsServices.action('stop', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
 
-        $scope.removeContainer = function(container) {
-            GroupsServices.remove($scope.group._id, container._id);
+        $scope.pauseContainer = function (container) {
+            GroupsServices.action('pause', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
 
-        $scope.killContainer = function(container) {
-            GroupsServices.kill($scope.group._id, container._id);
+        $scope.unpauseContainer = function (container) {
+            GroupsServices.action('unpause', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+        };
+
+        $scope.removeContainer = function (container) {
+            GroupsServices.action('remove', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+        };
+
+        $scope.killContainer = function (container) {
+            GroupsServices.action('kill', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
     }
 ]);

@@ -180,6 +180,23 @@ exports.killContainer = function (req, res) {
     });
 };
 
+exports.inspectContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.inspect(function (err, info) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(info);
+        }
+    });
+};
+
 /**
  * Group middleware
  */

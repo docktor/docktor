@@ -1,5 +1,6 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
     <div class="page-header">
+
         <h1 data-ng-bind="group.title"></h1>
         <small>
             <p data-ng-bind="group.description"></p>
@@ -41,24 +42,42 @@
                 {{container.daemon.protocol}}://{{container.daemon.host}}:{{container.daemon.port}}
             </td>
             <td>
-                <span ng-repeat="volume in container.volumes">
-                    -v {{volume.internal}}:{{volume.external}}
-                </span>
+                <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="glyphicon glyphicon-eye-open"> </i>
+                </button>
             </td>
             <td>
-                <span ng-repeat="port in container.ports">
-                    -v {{port.internal}}:{{port.external}}
-                </span>
+                <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="glyphicon glyphicon-eye-open"> </i>
+                </button>
             </td>
-            <td></td>
             <td>
-                <button class="btn btn-default" ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create</button>
-                <button class="btn btn-default" ng-click="startContainer(container)"><i class="fa fa-play"></i> Start</button>
-                <button class="btn btn-default" ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop</button>
-                <button class="btn btn-default" ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause</button>
-                <button class="btn btn-default" ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Unpause</button>
-                <button class="btn btn-default" ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Remove</button>
-                <button class="btn btn-default" ng-click="killContainer(container)"><i class="fa fa-trash"></i> Kill</button>
+                <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
+                <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
+                <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
+
+                <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}"  tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="glyphicon glyphicon-eye-open"> </i>
+                </button>
+
+            </td>
+            <td>
+                <button ng-hide="container._id" class="btn btn-default btn-sm" ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create</button>
+
+                <span ng-show="container._id">
+
+                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm" ng-click="startContainer(container)"><i class="fa fa-play"></i> Start</button>
+
+                    <span ng-show="container.inspect.State.Running">
+                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop</button>
+                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause</button>
+                        <button ng-show="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Unpause</button>
+                        <button class="btn btn-default btn-sm" ng-click="killContainer(container)"><i class="fa fa-crosshairs"></i> Kill</button>
+                    </span>
+
+                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm" ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Remove</button>
+                </span>
+
             </td>
         </tr>
         </tbody>
