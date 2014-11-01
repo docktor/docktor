@@ -9,6 +9,8 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Deploy a new service for a group : new container from a image~~ Done
 * ~~Check all services (up, down) for a group~~ Done
 * ~~Action on a container (pause, start, stop, kill, remove)~~ Done
+* ~~Action on container (from daemon UI, without group)~~
+* Action on image (from daemon UI, without group)
 * Monitoring Containers
 * Monitoring Daemons
 * Display a map of Daemons (GPS infos)
@@ -17,6 +19,7 @@ Notes below are for developers only. Docktor is not ready for production now.
 * REST Api
 * Add image : get internal port from Docker Image selected
 * Admin users :  admin / user of group
+* Improve UI
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 

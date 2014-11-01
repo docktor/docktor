@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors'),
     Daemon = mongoose.model('Daemon'),
+    Docker = require('dockerode'),
     _ = require('lodash');
 
 
@@ -93,6 +94,7 @@ exports.daemonByID = function(req, res, next, id) {
         if (err) return next(err);
         if (!daemon) return next(new Error('Failed to load daemon ' + id));
         req.daemon = daemon;
+        req.daemonDocker = new Docker({protocol: daemon.protocol, host: daemon.host, port: daemon.port});
         next();
     });
 };

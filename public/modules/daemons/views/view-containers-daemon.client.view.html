@@ -1,6 +1,7 @@
 <section data-ng-controller="DaemonsContainersController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+        <h1>{{daemon.name}}</h1>
+        <h3>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
 
@@ -9,22 +10,54 @@
             <tr>
                 <th st-sort="Id">Id</th>
                 <th st-sort="Command">Command</th>
-                <th st-sort="Created">Created</th>
                 <th st-sort="Image">Image</th>
                 <th st-sort="Names">Names</th>
+                <th st-sort="Ports">Volumes</th>
                 <th st-sort="Ports">Ports</th>
                 <th st-sort="Status">Status</th>
+                <th st-sort="Status">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="container in containers">
                 <td>{{container.Id | limitTo:12}}</td>
                 <td>{{container.Command}}</td>
-                <td>{{container.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
                 <td>{{container.Image}}</td>
-                <td>{{container.Names}}</td>
-                <td>{{container.Ports}}</td>
-                <td>{{container.Status}}</td>
+                <td>{{container.inspect.Name}}</td>
+                <td>
+                    <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
+                        <i class="glyphicon glyphicon-eye-open"> </i>
+                    </button>
+                </td>
+                <td>
+                    <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
+                        <i class="glyphicon glyphicon-eye-open"> </i>
+                    </button>
+                </td>
+                <td>
+                    <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
+                    <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
+                    <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
+
+                    <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"  tooltip-trigger="focus" tooltip-placement="left">
+                        <i class="glyphicon glyphicon-eye-open"> </i>
+                    </button>
+
+                </td>
+                <td>
+
+                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm" ng-click="startContainer(container)"><i class="fa fa-play"></i> Start</button>
+
+                    <span ng-show="container.inspect.State.Running">
+                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop</button>
+                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause</button>
+                        <button ng-show="container.inspect.State.Paused" class="btn btn-default btn-sm" ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Unpause</button>
+                        <button class="btn btn-default btn-sm" ng-click="killContainer(container)"><i class="fa fa-crosshairs"></i> Kill</button>
+                    </span>
+
+                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm" ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Remove</button>
+
+                </td>
             </tr>
             </tbody>
         </table>

@@ -26,6 +26,30 @@ module.exports = function(app) {
 		.put(users.requiresLogin, daemons.hasAuthorization, daemons.update)
 		.delete(users.requiresLogin, daemons.hasAuthorization, daemons.delete);
 
-	// Finish by binding the daemon middleware
+    app.route('/daemons/docker/container/inspect/:daemonId/:containerDockerId')
+        .get(daemons.inspectContainer);
+
+    app.route('/daemons/docker/container/start/:daemonId/:containerDockerId')
+        .get(daemons.startContainer);
+
+    app.route('/daemons/docker/container/stop/:daemonId/:containerDockerId')
+        .get(daemons.stopContainer);
+
+    app.route('/daemons/docker/container/pause/:daemonId/:containerDockerId')
+        .get(daemons.pauseContainer);
+
+    app.route('/daemons/docker/container/unpause/:daemonId/:containerDockerId')
+        .get(daemons.unpauseContainer);
+
+    app.route('/daemons/docker/container/remove/:daemonId/:containerDockerId')
+        .get(daemons.removeContainer);
+
+    app.route('/daemons/docker/container/kill/:daemonId/:containerDockerId')
+        .get(daemons.killContainer);
+
+    // Finish by binding the daemon middleware
 	app.param('daemonId', daemons.daemonByID);
+
+    app.param('containerDockerId', daemons.containerDocker);
+
 };
