@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('../errors'),
     Daemon = mongoose.model('Daemon'),
     Docker = require('dockerode'),
+    Request = require('request'),
     _ = require('lodash');
 
 /**
@@ -118,7 +119,45 @@ exports.killContainer = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(container);
+            res.send(container);
+        }
+    });
+};
+
+
+exports.statsContainer = function (req, res) {
+    Request(req.daemon.cadvisorApi + '/containers/docker/' + req.containerDocker.id, function (err, response, body) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.send(body);
+        }
+    });
+};
+
+
+exports.statsDeamon = function (req, res) {
+    Request(req.daemon.cadvisorApi + '/containers/', function (err, response, body) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.send(body);
+        }
+    });
+};
+
+exports.machineInfo = function (req, res) {
+    Request(req.daemon.cadvisorApi + '/machine', function (err, response, body) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.send(body);
         }
     });
 };
@@ -144,6 +183,7 @@ exports.listImages = function (req, res) {
 
 /**
  * Daemon middleware
+ * id : docker container Id
  */
 exports.containerDocker = function (req, res, next, id) {
     req.containerDocker = req.daemonDocker.getContainer(id);

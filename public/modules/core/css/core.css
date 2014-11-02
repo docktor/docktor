@@ -17,3 +17,12 @@
 .ng-valid.ng-dirty {
     border-color: #78FA89;
 }
+
+.gaugeSmall {
+    width:100px;
+    height:80px;
+}
+
+.table-containers {
+    font-size: 12px;
+}

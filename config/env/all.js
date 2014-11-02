@@ -29,7 +29,10 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-ui-select/dist/select.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-                'public/lib/angular-smart-table/dist/smart-table.min.js'
+                'public/lib/angular-smart-table/dist/smart-table.min.js',
+                'public/lib/raphael/raphael-min.js',
+                'public/lib/justgage-toorshia/justgage.js',
+                'public/lib/angular-justgage/ng-justgage.js'
 			]
 		},
 		css: [
