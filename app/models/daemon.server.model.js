@@ -63,6 +63,11 @@ var DaemonSchema = new Schema({
 		default: '',
 		trim: true
 	},
+    cadvisorApi: {
+        type: String,
+        default: '',
+        trim: true
+    },
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'

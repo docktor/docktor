@@ -11,7 +11,7 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Action on a container (pause, start, stop, kill, remove)~~ Done
 * ~~Action on container (from daemon UI, without group)~~
 * Action on image (from daemon UI, without group)
-* Monitoring Containers
+* Monitoring Containers --> With cAdvisor's API
 * Monitoring Daemons
 * Display a map of Daemons (GPS infos)
 * Delete a service : check if there is no container (started or not) before delete it

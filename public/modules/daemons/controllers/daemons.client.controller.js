@@ -14,6 +14,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 cert: this.cert,
                 key: this.key,
                 volume: this.volume,
+                cadvisorApi: this.cadvisorApi,
                 description: this.description
             });
             daemon.$save(function (response) {
@@ -27,6 +28,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 $scope.cert = '';
                 $scope.key = '';
                 $scope.volume = '';
+                $scope.cadvisorApi = '';
                 $scope.description = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;

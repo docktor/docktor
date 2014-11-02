@@ -70,6 +70,14 @@
                                placeholder="/data"/>
                     </div>
                 </div>
+                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.cadvisorApi.$invalid }">
+                    <label class="control-label" for="cadvisorApi">URL cAdvisor Api</label>
+
+                    <div class="controls">
+                        <input name="cadvisorApi" type="text" data-ng-model="daemon.cadvisorApi" id="cadvisorApi" class="form-control"
+                               placeholder="http://<host>:<port>/api/v1.0/containers/" required>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="description">Description</label>
 
