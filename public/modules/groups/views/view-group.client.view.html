@@ -53,12 +53,12 @@
             </td>
             <td>
                 <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="glyphicon glyphicon-eye-open"> </i>
+                    <i class="fa fa-eye"> </i>
                 </button>
             </td>
             <td>
                 <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"  tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="glyphicon glyphicon-eye-open"> </i>
+                    <i class="fa fa-eye"> </i>
                 </button>
             </td>
             <td>
@@ -67,7 +67,7 @@
                 <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
 
                 <button type="text" class="btn btn-default btn-xs" value="Click me!" tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}"  tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="glyphicon glyphicon-eye-open"> </i>
+                    <i class="fa fa-eye"> </i>
                 </button>
 
             </td>

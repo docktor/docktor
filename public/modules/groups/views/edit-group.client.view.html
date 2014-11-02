@@ -30,9 +30,19 @@
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
-                    <a class="btn btn-warning" data-ng-click="remove();">
-                        <i class="fa fa-trash"> Delete this group</i>
-                    </a>
+
+                    <button class="btn btn-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
+                        <i class="fa fa-trash-o" tooltip="Delete Daemon"
+                           tooltip-popup-delay='750'> Delete Deamon</i>
+                    </button>
+                    <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="remove();" ng-show="askDeleteGroup"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

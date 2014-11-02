@@ -6,11 +6,13 @@
     <table st-table="rowCollection" class="table table-striped">
         <thead>
         <tr>
-            <th st-sort="host">Name</th>
-            <th st-sort="host">Daemon</th>
-            <th st-sort="dockerInfo.Containers">Containers</th>
-            <th st-sort="dockerInfo.Images">Images</th>
-            <th st-sort="dockerVersion.Version">Docker Version</th>
+            <th>Name</th>
+            <th>Daemon</th>
+            <th>Docker Version</th>
+            <th>CPU</th>
+            <th>Memory</th>
+            <th>Containers</th>
+            <th>Images</th>
             <th>Details</th>
         </tr>
         </thead>
@@ -20,20 +22,36 @@
                 {{daemon.name}}
             </td>
             <td>
-                {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+                <a href="{{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}/info">{{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</a>
                 <small><p class="list-group-item-text" data-ng-bind="daemon.description"></p></small>
-            </td>
-            <td>
-                <a href="/#!/daemons/view/containers/{{daemon._id}}">View {{daemon.dockerInfo.Containers}}
-                    container(s)</a>
-            </td>
-            <td>
-                <a href="/#!/daemons/view/images/{{daemon._id}}">View {{daemon.dockerInfo.Images}}
-                    image(s)</a>
+                <a ng-show="daemon.cadvisorApi" href="{{daemon.cadvisorUrl}}">cAdvisor</a>
+
             </td>
             <td>{{daemon.dockerVersion.Version}}</td>
+            <td style="text-align:center">
+                <just-gage id="gaugeCPU{{daemon._id}}" class="gaugeSmall"
+                           min=0 max=100 value="daemon.stats.cpuUsagePercent" title="CPU"></just-gage>
+                <small>{{daemon.machineInfo.num_cores}} cores</small>
+            </td>
+            <td style="text-align:center">
+                <just-gage id="gaugeMem{{daemon._id}}" class="gaugeSmall"
+                           min=0 max=100 value="daemon.stats.memoryUsagePercent" title="Memory"></just-gage>
+                <small>{{daemon.stats.memoryUsage}} Mo</small>
+
+            </td>
             <td>
-                <a href="#!/daemons/view/{{daemon._id}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                <a class="btn btn-default btn-xs" href="/#!/daemons/view/containers/{{daemon._id}}">View
+                    {{daemon.dockerInfo.Containers}}
+                    containers</a><br>
+            </td>
+            <td>
+                <a class="btn btn-default btn-xs" href="/#!/daemons/view/images/{{daemon._id}}">View
+                    {{daemon.dockerInfo.Images}}
+                    images</a>
+            </td>
+            <td>
+                <a class="btn btn-default btn-xs" href="#!/daemons/view/{{daemon._id}}"><i
+                        class="fa fa-eye"></i> Details</a> <br>
             </td>
         </tr>
         </tbody>

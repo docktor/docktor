@@ -53,7 +53,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                         if (containerInfo.spec.has_cpu && containerInfo.stats.length >= 2) {
                             var prev = containerInfo.stats[containerInfo.stats.length - 2];
                             var rawUsage = cur.cpu.usage.total - prev.cpu.usage.total;
-                            var intervalInNs = $scope.getInterval(cur.timestamp, prev.timestamp);
+                            var intervalInNs = DaemonsDocker.getInterval(cur.timestamp, prev.timestamp);
                             // Convert to millicores and take the percentage
                             cpuUsage = Math.round(((rawUsage / intervalInNs) / $scope.machineInfo.num_cores) * 100);
                             if (cpuUsage > 100) {
@@ -62,8 +62,6 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                         }
                         container.stats.cpuUsagePercent = cpuUsage;
 
-                        var memoryUsagePercent = 0;
-                        var memoryUsage = 0;
                         if (containerInfo.spec.has_memory) {
                             // Saturate to the machine size.
                             var limit = containerInfo.spec.memory.limit;
@@ -80,14 +78,6 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                         console.log(data);
                     });
             }
-        };
-
-        // Gets the length of the interval in nanoseconds.
-        $scope.getInterval = function (current, previous) {
-            var cur = new Date(current);
-            var prev = new Date(previous);
-            // ms -> ns.
-            return (cur.getTime() - prev.getTime()) * 1000000;
         };
 
         $scope.callbackError = function (data) {

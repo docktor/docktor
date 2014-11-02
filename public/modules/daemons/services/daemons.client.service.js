@@ -16,6 +16,12 @@ angular.module('daemons').factory('Daemons', ['$resource',
 angular.module('daemons').factory('DaemonsDocker', ['$http',
     function ($http) {
         return {
+            getInterval: function (current, previous) {
+                var cur = new Date(current);
+                var prev = new Date(previous);
+                // ms -> ns.
+                return (cur.getTime() - prev.getTime()) * 1000000;
+            },
             info: function (daemonId) {
                 return $http.get('/daemons/docker/info/' + daemonId);
             },
