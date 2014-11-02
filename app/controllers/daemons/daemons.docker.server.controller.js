@@ -25,6 +25,18 @@ exports.info = function (req, res) {
     });
 };
 
+exports.version = function (req, res) {
+    req.daemonDocker.version(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(data);
+        }
+    });
+};
+
 /**
  * List containers of one docker daemon.
  */

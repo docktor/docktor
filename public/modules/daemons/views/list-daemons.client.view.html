@@ -10,8 +10,7 @@
             <th st-sort="host">Daemon</th>
             <th st-sort="dockerInfo.Containers">Containers</th>
             <th st-sort="dockerInfo.Images">Images</th>
-            <th st-sort="dockerInfo.OperatingSystem">OS</th>
-            <th st-sort="dockerInfo.KernelVersion">Kernel</th>
+            <th st-sort="dockerVersion.Version">Docker Version</th>
             <th>Details</th>
         </tr>
         </thead>
@@ -32,8 +31,7 @@
                 <a href="/#!/daemons/view/images/{{daemon._id}}">View {{daemon.dockerInfo.Images}}
                     image(s)</a>
             </td>
-            <td>{{daemon.dockerInfo.OperatingSystem}}</td>
-            <td>{{daemon.dockerInfo.KernelVersion}}</td>
+            <td>{{daemon.dockerVersion.Version}}</td>
             <td>
                 <a href="#!/daemons/view/{{daemon._id}}"><i class="glyphicon glyphicon-eye-open"></i></a>
             </td>

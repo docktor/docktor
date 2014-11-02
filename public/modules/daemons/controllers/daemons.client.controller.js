@@ -70,6 +70,13 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                         .error(function (resp) {
                             console.log('Error with DaemonsDocker.info on :' + daemon._id + ':' + resp);
                         });
+                    DaemonsDocker.version(daemon._id).
+                        success(function (version) {
+                            daemon.dockerVersion = version;
+                        })
+                        .error(function (resp) {
+                            console.log('Error with DaemonsDocker.version on :' + daemon._id + ':' + resp);
+                        });
                 });
             });
         };
