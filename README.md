@@ -12,12 +12,12 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Action on container (from daemon UI, without group)~~ Done
 * ~~Monitoring Containers --> With cAdvisor's API~~ Done
 * ~~Monitoring Daemons~~ Done
-* Action on image (from daemon UI, without group)
+* ~~Action on image (from daemon UI, without group)~~ Done
+* Add image : get internal port from Docker Image selected
 * Display a map of Daemons (GPS infos)
 * Delete a service : check if there is no container (started or not) before delete it
-* Update a image : same
+* Update a image in a group : same
 * REST Api
-* Add image : get internal port from Docker Image selected
 * Admin users :  admin / user of group
 * Improve UI
 

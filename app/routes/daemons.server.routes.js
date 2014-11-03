@@ -21,9 +21,6 @@ module.exports = function (app) {
     app.route('/daemons/docker/listContainers/:daemonId')
         .get(daemons.listContainers);
 
-    app.route('/daemons/docker/listImages/:daemonId')
-        .get(daemons.listImages);
-
     app.route('/daemons/:daemonId')
         .get(daemons.read)
         .put(users.requiresLogin, daemons.hasAuthorization, daemons.update)
@@ -56,9 +53,18 @@ module.exports = function (app) {
     app.route('/daemons/docker/machineInfo/:daemonId')
         .get(daemons.machineInfo);
 
-    // Finish by binding the daemon middleware
-    app.param('daemonId', daemons.daemonByID);
+    app.route('/daemons/docker/listImages/:daemonId')
+        .get(daemons.listImages);
 
+    app.route('/daemons/docker/image/remove/:daemonId/:imageDockerId')
+        .get(daemons.removeImage);
+
+    app.route('/daemons/docker/image/inspect/:daemonId/:imageDockerId')
+        .get(daemons.inspectImage);
+
+    // Finish by binding with middleware
+    app.param('daemonId', daemons.daemonByID);
     app.param('containerDockerId', daemons.containerDocker);
+    app.param('imageDockerId', daemons.imageDocker);
 
 };

@@ -1,28 +1,53 @@
 <section data-ng-controller="DaemonsImagesController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h1>
+        <h1>{{daemon.name}}</h1>
+        <h3>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
 
-        <table st-table="rowCollection" class="table table-striped">
+        <table st-table="rowCollection" class="table table-striped table-condensed table-small-text">
             <thead>
             <tr>
-                <th st-sort="Id">Id</th>
-                <th st-sort="Created">Created</th>
-                <th st-sort="RepoTags">RepoTags</th>
-                <th st-sort="Size">Size</th>
-                <th st-sort="VirtualSize">VirtualSize</th>
+                <th>Info</th>
+                <th>Version</th>
+                <th>RepoTags</th>
+                <th>Volumes</th>
+                <th>Ports</th>
+                <th>Sizes</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="image in images">
-                <td>{{image.Id | limitTo:12}}</td>
-                <td>{{image.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
                 <td>
-                    <pre>{{image.RepoTags | json}}</pre>
+                    {{image.Id | limitTo:12}}<br>
+                    {{image.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}<br>
+                    {{image.inspect.Author}}
                 </td>
-                <td>{{image.Size}}</td>
-                <td>{{image.VirtualSize}}</td>
+                <td>
+                    {{image.inspect.DockerVersion}}<br>
+                </td>
+                <td>
+                    <div ng-repeat="tag in image.RepoTags">{{tag}}</div>
+                </td>
+                </td>
+                <td>
+                    <div ng-repeat="(volume,val) in image.inspect.Config.Volumes">{{volume}}</div>
+                </td>
+                <td>
+                    <div ng-repeat="(port,val) in image.inspect.Config.ExposedPorts">{{port}}</div>
+                </td>
+                <td>
+                    Virtual:
+                    <span ng-show="image.Size===0">{{image.Size}} Mo</span>
+                    <span ng-show="image.Size">{{image.Size / 1000000 | number:4}} Mo</span><br>
+                    Virtual:{{image.VirtualSize / 1000000 | number:0}} Mo
+                </td>
+                <td>
+                    <button class="btn btn-default btn-xs" ng-click="removeImage(image)"><i class="fa fa-trash"></i>
+                        Remove
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>

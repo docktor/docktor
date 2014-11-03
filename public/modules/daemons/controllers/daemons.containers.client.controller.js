@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker',
-    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker) {
+angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Containers',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Containers) {
 
         $scope.viewRawJson = false;
 
@@ -31,7 +31,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
         };
 
         $scope.inspect = function (container) {
-            DaemonsDocker.inspect($scope.daemon._id, container.Id).
+            Containers.inspectContainer($scope.daemon._id, container.Id).
                 success(function (data, status, headers, config) {
                     container.inspect = data;
                     $scope.stats(container);
@@ -44,7 +44,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
 
         $scope.stats = function(container) {
             if (container.inspect.State.Running === true) {
-                DaemonsDocker.statsContainer($scope.daemon._id, container.Id).
+                Containers.statsContainer($scope.daemon._id, container.Id).
                     success(function (containerInfo, status, headers, config) {
                         container.stats = containerInfo.stats;
 
@@ -86,31 +86,31 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
         };
 
         $scope.createContainer = function (container) {
-            DaemonsDocker.actionContainer('create', $scope.daemon._id, container, $scope.findOne, $scope.callbackError);
+            Containers.actionContainer('create', $scope.daemon._id, container, $scope.findOne, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
-            DaemonsDocker.actionContainer('start', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
+            Containers.actionContainer('start', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
         };
 
         $scope.stopContainer = function (container) {
-            DaemonsDocker.actionContainer('stop', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
+            Containers.actionContainer('stop', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
         };
 
         $scope.pauseContainer = function (container) {
-            DaemonsDocker.actionContainer('pause', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
+            Containers.actionContainer('pause', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
         };
 
         $scope.unpauseContainer = function (container) {
-            DaemonsDocker.actionContainer('unpause', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
+            Containers.actionContainer('unpause', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
         };
 
         $scope.removeContainer = function (container) {
-            DaemonsDocker.actionContainer('remove', $scope.daemon._id, container, $scope.findOne, $scope.callbackError);
+            Containers.actionContainer('remove', $scope.daemon._id, container, $scope.findOne, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
-            DaemonsDocker.actionContainer('kill', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
+            Containers.actionContainer('kill', $scope.daemon._id, container, $scope.inspect, $scope.callbackError);
         };
     }
 ]);

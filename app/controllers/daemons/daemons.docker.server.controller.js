@@ -179,10 +179,7 @@ exports.machineInfo = function (req, res) {
  * List images of one docker daemon.
  */
 exports.listImages = function (req, res) {
-    var daemon = req.daemon;
-
-    var daemonDocker = new Docker({protocol: daemon.protocol, host: daemon.host, port: daemon.port});
-    daemonDocker.listImages(function (err, data) {
+    req.daemonDocker.listImages(function (err, data) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -193,11 +190,40 @@ exports.listImages = function (req, res) {
     });
 };
 
+exports.inspectImage = function (req, res) {
+    req.imageDocker.inspect(function (err, info) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(info);
+        }
+    });
+};
+
+exports.removeImage = function (req, res) {
+    req.imageDocker.remove({},function (err, info) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(info);
+        }
+    });
+};
+
 /**
  * Daemon middleware
  * id : docker container Id
  */
 exports.containerDocker = function (req, res, next, id) {
     req.containerDocker = req.daemonDocker.getContainer(id);
+    next();
+};
+
+exports.imageDocker = function (req, res, next, id) {
+    req.imageDocker = req.daemonDocker.getImage(id);
     next();
 };
