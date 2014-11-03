@@ -9,10 +9,10 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Deploy a new service for a group : new container from a image~~ Done
 * ~~Check all services (up, down) for a group~~ Done
 * ~~Action on a container (pause, start, stop, kill, remove)~~ Done
-* ~~Action on container (from daemon UI, without group)~~
+* ~~Action on container (from daemon UI, without group)~~ Done
+* ~~Monitoring Containers --> With cAdvisor's API~~ Done
+* ~~Monitoring Daemons~~ Done
 * Action on image (from daemon UI, without group)
-* Monitoring Containers --> With cAdvisor's API
-* Monitoring Daemons
 * Display a map of Daemons (GPS infos)
 * Delete a service : check if there is no container (started or not) before delete it
 * Update a image : same
