@@ -6,28 +6,29 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
         $scope.viewRawJson = false;
 
         $scope.findOne = function () {
-            $scope.daemon = Daemons.get({
+            Daemons.get({
                 daemonId: $stateParams.daemonId
-            });
-
-            DaemonsDocker.machineInfo($stateParams.daemonId).
-                success(function (machineInfo) {
-                    $scope.machineInfo = machineInfo;
-                })
-                .error(function (resp) {
-                    console.log('Error with DaemonsDocker.machineInfo:' + resp);
-                });
-
-            DaemonsDocker.listContainers($stateParams.daemonId).
-                success(function (containers) {
-                    $scope.containers = containers;
-                    $scope.containers.forEach(function (container) {
-                        $scope.inspect(container);
+            }, function (daemon) {
+                $scope.daemon = daemon;
+                DaemonsDocker.machineInfo($scope.daemon._id).
+                    success(function (machineInfo) {
+                        $scope.machineInfo = machineInfo;
+                    })
+                    .error(function (resp) {
+                        console.log('Error with DaemonsDocker.machineInfo:' + resp);
                     });
-                })
-                .error(function (resp) {
-                    console.log('Error with DaemonsDocker.info:' + resp);
-                });
+
+                DaemonsDocker.listContainers($scope.daemon._id).
+                    success(function (containers) {
+                        $scope.containers = containers;
+                        $scope.containers.forEach(function (container) {
+                            $scope.inspect(container);
+                        });
+                    })
+                    .error(function (resp) {
+                        console.log('Error with DaemonsDocker.info:' + resp);
+                    });
+            });
         };
 
         $scope.inspect = function (container) {
@@ -42,7 +43,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                 });
         };
 
-        $scope.stats = function(container) {
+        $scope.stats = function (container) {
             if (container.inspect.State.Running === true) {
                 Containers.statsContainer($scope.daemon._id, container.Id).
                     success(function (containerInfo, status, headers, config) {
