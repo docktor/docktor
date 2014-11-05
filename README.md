@@ -13,13 +13,17 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Monitoring Containers --> With cAdvisor's API~~ Done
 * ~~Monitoring Daemons~~ Done
 * ~~Action on image (from daemon UI, without group)~~ Done
-* Add image : get internal port from Docker Image selected
+* Deploy : display image inspect (volume / port) if present
+* Daemon : pull an image (without group UI) on setected daemons
 * Display a map of Daemons (GPS infos)
 * Delete a service : check if there is no container (started or not) before delete it
 * Update a image in a group : same
 * REST Api
 * Admin users :  admin / user of group
-* Improve UI
+* Improve UI (
+    * Pipeline Add / Deploy service : pull, create, start
+    * Display all Json Returns (error or not)
+    * New Bootstrap theme
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
