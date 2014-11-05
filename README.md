@@ -13,14 +13,20 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Monitoring Containers --> With cAdvisor's API~~ Done
 * ~~Monitoring Daemons~~ Done
 * ~~Action on image (from daemon UI, without group)~~ Done
-* Deploy : display image inspect (volume / port) if present
-* Daemon : pull an image (without group UI) on setected daemons
-* Display a map of Daemons (GPS infos)
-* Delete a service : check if there is no container (started or not) before delete it
-* Update a image in a group : same
+* Deploy : 
+    * Add parameters
+    * Display image inspect (volume / port) if present
+* Daemon : 
+    * pull an image (without group UI) on setected daemons
+    * Display a map of Daemons (GPS infos)
+    * Update a image in a group : check deploy service before
+* Service : 
+    * Check if there is no container (started or not) before delete it
 * REST Api
-* Admin users :  admin / user of group
-* Improve UI (
+* Admin : 
+    * admin / user of group
+    * Check all access on UI
+* Improve UI
     * Pipeline Add / Deploy service : pull, create, start
     * Display all Json Returns (error or not)
     * New Bootstrap theme
