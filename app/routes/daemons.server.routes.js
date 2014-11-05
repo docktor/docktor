@@ -62,6 +62,9 @@ module.exports = function (app) {
     app.route('/daemons/docker/image/inspect/:daemonId/:imageDockerId')
         .get(daemons.inspectImage);
 
+    app.route('/daemons/docker/image/pull/:daemonId')
+        .post(daemons.pullImage);
+
     // Finish by binding with middleware
     app.param('daemonId', daemons.daemonByID);
     app.param('containerDockerId', daemons.containerDocker);

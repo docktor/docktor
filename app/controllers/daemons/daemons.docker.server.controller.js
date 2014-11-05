@@ -138,7 +138,7 @@ exports.killContainer = function (req, res) {
 
 
 exports.statsContainer = function (req, res) {
-    Request(req.daemon.cadvisorApi + '/containers/docker/' + req.containerDocker.id, function (err, response, body) {
+    new Request(req.daemon.cadvisorApi + '/containers/docker/' + req.containerDocker.id, function (err, response, body) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -151,7 +151,7 @@ exports.statsContainer = function (req, res) {
 
 
 exports.statsDeamon = function (req, res) {
-    Request(req.daemon.cadvisorApi + '/containers/', function (err, response, body) {
+    new Request(req.daemon.cadvisorApi + '/containers/', function (err, response, body) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -163,7 +163,7 @@ exports.statsDeamon = function (req, res) {
 };
 
 exports.machineInfo = function (req, res) {
-    Request(req.daemon.cadvisorApi + '/machine', function (err, response, body) {
+    new Request(req.daemon.cadvisorApi + '/machine', function (err, response, body) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -202,8 +202,27 @@ exports.inspectImage = function (req, res) {
     });
 };
 
+exports.pullImage = function (req, res) {
+    req.daemonDocker.pull(req.body.name, function (err, stream) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var string = [];
+            stream.on('data', function (buffer) {
+                var part = buffer;
+                string.push(JSON.parse(part.toString()));
+            });
+            stream.on('end', function () {
+                res.jsonp(string);
+            });
+        }
+    });
+};
+
 exports.removeImage = function (req, res) {
-    req.imageDocker.remove({},function (err, info) {
+    req.imageDocker.remove({}, function (err, info) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

@@ -33,9 +33,43 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
                 });
         };
 
+        $scope.callbackError = function (data) {
+            console.log('Error:');
+            console.log(data);
+        };
+
         $scope.removeImage = function (image) {
             Images.removeImage($scope.daemon._id, image, $scope.findOne, $scope.callbackError);
         };
+
+        $scope.runPullImage = function () {
+            $scope.pullImage.pulled = true;
+            var info = { 'status': 'Running docker pull ' + $scope.pullImage.name + '...'};
+            $scope.pullImage.output = [info];
+            Images.pullImage($scope.daemon._id, $scope.pullImage.name).
+                success(function (data) {
+                    $scope.findOne();
+                    $scope.pullImage.typeAlert = 'success';
+                    $scope.pullImage.output = data;
+                })
+                .error(function (resp) {
+                    $scope.pullImage.typeAlert = 'danger';
+                    $scope.pullImage.output = 'Internal Error';
+                    console.log(resp);
+                });
+        };
+
+        $scope.initPullImage = function () {
+            $scope.pullImage = {
+                name : '',
+                askToPull: false,
+                output: '',
+                typeAlert: 'info',
+                pulled: false
+            };
+        };
+
+        $scope.initPullImage();
 
     }
 ]);

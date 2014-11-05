@@ -17,6 +17,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Add parameters
     * Display image inspect (volume / port) if present
 * Daemon : 
+    * ~~pull an image (without group UI) on one daemons~~ Done
     * pull an image (without group UI) on setected daemons
     * Display a map of Daemons (GPS infos)
     * Update a image in a group : check deploy service before
@@ -26,6 +27,7 @@ Notes below are for developers only. Docktor is not ready for production now.
 * Admin : 
     * admin / user of group
     * Check all access on UI
+    * Log all actions on Docktor (history page)
 * Improve UI
     * Pipeline Add / Deploy service : pull, create, start
     * Display all Json Returns (error or not)
