@@ -4,7 +4,17 @@
         <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
+        <small>
+            <em class="text-muted">
+                Created on
+                <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
+                by
+                <span data-ng-bind="daemon.user.displayName"></span>
+            </em>
+        </small>
+        <br>
 
+        <h2>Actions</h2>
         <a class="btn btn-primary" href="/#!/daemons/edit/{{daemon._id}}">
             <i class="fa fa-edit"> Edit Daemon</i>
         </a>
@@ -22,17 +32,12 @@
         </button>
 
     </div>
+    <h2>Status</h2>
     <div>
-        <p>Docker info : </p>
-        <pre>{{dockerInfo | json}}</pre>
+        <span ng-show="daemon.dockerUp" class="label label-success">Docker UP on this node</span>
+        <span ng-hide="daemon.dockerUp" class="label label-danger">Docker Down on this node</span>
+        <p ng-show="daemon.dockerUp">Docker info : </p>
+        <pre ng-show="daemon.dockerUp">{{dockerInfo | json}}</pre>
     </div>
-    <small>
-        <em class="text-muted">
-            Created on
-            <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
-            by
-            <span data-ng-bind="daemon.user.displayName"></span>
-        </em>
-    </small>
     <p class="lead" data-ng-bind="daemon.content"></p>
 </section>
