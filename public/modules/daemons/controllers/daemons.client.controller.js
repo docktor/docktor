@@ -10,6 +10,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 protocol: this.protocol,
                 host: this.host,
                 port: this.port,
+                timedout: this.timedout,
                 ca: this.ca,
                 cert: this.cert,
                 key: this.key,
@@ -24,6 +25,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 $scope.protocol = '';
                 $scope.host = '';
                 $scope.port = '';
+                $scope.timedout = 5000;
                 $scope.ca = '';
                 $scope.cert = '';
                 $scope.key = '';
@@ -135,12 +137,11 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             $scope.daemon = Daemons.get({
                 daemonId: $stateParams.daemonId
             });
-
             DaemonsDocker.info($stateParams.daemonId).
                 success(function (info) {
                     $scope.dockerInfo = info;
-                })
-                .error(function (resp) {
+                }).
+                error(function (data, status, headers, config) {
                     console.log('Error with DaemonsDocker.info:' + resp);
                 });
         };

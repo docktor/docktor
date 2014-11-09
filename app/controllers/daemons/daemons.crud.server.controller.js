@@ -13,11 +13,11 @@ var mongoose = require('mongoose'),
 /**
  * Create a daemon
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
     var daemon = new Daemon(req.body);
     daemon.user = req.user;
 
-    daemon.save(function(err) {
+    daemon.save(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -31,19 +31,19 @@ exports.create = function(req, res) {
 /**
  * Show the current daemon
  */
-exports.read = function(req, res) {
+exports.read = function (req, res) {
     res.jsonp(req.daemon);
 };
 
 /**
  * Update a daemon
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
     var daemon = req.daemon;
 
     daemon = _.extend(daemon, req.body);
 
-    daemon.save(function(err) {
+    daemon.save(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -57,10 +57,10 @@ exports.update = function(req, res) {
 /**
  * Delete an daemon
  */
-exports.delete = function(req, res) {
+exports.delete = function (req, res) {
     var daemon = req.daemon;
 
-    daemon.remove(function(err) {
+    daemon.remove(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -74,8 +74,8 @@ exports.delete = function(req, res) {
 /**
  * List of Daemons
  */
-exports.list = function(req, res) {
-    Daemon.find().sort('-created').populate('user', 'displayName').exec(function(err, daemons) {
+exports.list = function (req, res) {
+    Daemon.find().sort('-created').populate('user', 'displayName').exec(function (err, daemons) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -89,12 +89,17 @@ exports.list = function(req, res) {
 /**
  * Daemon middleware
  */
-exports.daemonByID = function(req, res, next, id) {
-    Daemon.findById(id).populate('user', 'displayName').exec(function(err, daemon) {
+exports.daemonByID = function (req, res, next, id) {
+    Daemon.findById(id).populate('user', 'displayName').exec(function (err, daemon) {
         if (err) return next(err);
         if (!daemon) return next(new Error('Failed to load daemon ' + id));
         req.daemon = daemon;
-        req.daemonDocker = new Docker({protocol: daemon.protocol, host: daemon.host, port: daemon.port});
+        req.daemonDocker = new Docker({
+            protocol: daemon.protocol,
+            host: daemon.host,
+            port: daemon.port,
+            timeout: daemon.timedout
+        });
         next();
     });
 };
@@ -102,7 +107,7 @@ exports.daemonByID = function(req, res, next, id) {
 /**
  * Daemon authorization middleware
  */
-exports.hasAuthorization = function(req, res, next) {
+exports.hasAuthorization = function (req, res, next) {
     if (req.daemon.user.id !== req.user.id) {
         return res.status(403).send({
             message: 'User is not authorized'

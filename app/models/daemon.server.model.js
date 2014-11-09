@@ -38,6 +38,11 @@ var DaemonSchema = new Schema({
         trim: true,
         required: 'Port cannot be blank'
     },
+    timedout: {
+        type: Number,
+        default: 5000,
+        required: 'Timeout in ms'
+    },
     ca: {
         type: String,
         default: '',

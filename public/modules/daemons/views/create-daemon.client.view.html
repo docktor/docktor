@@ -39,6 +39,15 @@
                                placeholder="port" required>
                     </div>
                 </div>
+                <div class="form-group"
+                     ng-class="{ 'has-error': daemonForm.timedout.$dirty && daemonForm.timedout.$invalid }">
+                    <label class="control-label" for="timedout">Timeout in ms</label>
+
+                    <div class="controls">
+                        <input name="timedout" type="number" data-ng-model="timedout" id="timedout" class="form-control"
+                               placeholder="timedout" required>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="ca">CA</label>
 
@@ -75,7 +84,8 @@
                     <label class="control-label" for="cadvisorApi">URL cAdvisor Api</label>
 
                     <div class="controls">
-                        <input type="text" name="cadvisorApi" data-ng-model="cadvisorApi" id="cadvisorApi" class="form-control"
+                        <input type="text" name="cadvisorApi" data-ng-model="cadvisorApi" id="cadvisorApi"
+                               class="form-control"
                                placeholder="http://<host>:<port>/api/v1.0/containers/"/>
                     </div>
                 </div>
@@ -88,7 +98,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-default">
+                    <input type="submit" class="btn btn-primary" value="Create">
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

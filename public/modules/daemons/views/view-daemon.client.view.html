@@ -1,6 +1,7 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
     <div class="page-header">
         <h1>{{daemon.name}}</h1>
+
         <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
@@ -33,9 +34,11 @@
 
     </div>
     <h2>Status</h2>
+
     <div>
         <span ng-show="daemon.dockerUp" class="label label-success">Docker UP on this node</span>
         <span ng-hide="daemon.dockerUp" class="label label-danger">Docker Down on this node</span>
+
         <p ng-show="daemon.dockerUp">Docker info : </p>
         <pre ng-show="daemon.dockerUp">{{dockerInfo | json}}</pre>
     </div>

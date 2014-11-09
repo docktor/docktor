@@ -1,6 +1,7 @@
 <section data-ng-controller="DaemonsImagesController" data-ng-init="findOne()">
     <div class="page-header">
         <h1>{{daemon.name}}</h1>
+
         <h3>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
         <p>{{daemon.description}}</p>
@@ -10,17 +11,22 @@
                tooltip-popup-delay='750'> Pull an image</i>
         </button>
 
-        <input type="text" ng-show="pullImage.askToPull" ng-model="pullImage.name" class="form-control" placeholder="image:version">
+        <input type="text" ng-show="pullImage.askToPull" ng-model="pullImage.name" class="form-control"
+               placeholder="image:version">
 
-        <button ng-click="pullImage.askToPull=false" ng-show="pullImage.askToPull" class="btn btn-warning" ng-disabled="pullImage.pulled">
+        <button ng-click="pullImage.askToPull=false" ng-show="pullImage.askToPull" class="btn btn-warning"
+                ng-disabled="pullImage.pulled">
             Cancel <i class="fa fa-reply"></i>
         </button>
-        <button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="btn btn-primary" ng-disabled="pullImage.pulled">
+        <button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="btn btn-primary"
+                ng-disabled="pullImage.pulled">
             Pull <i class="fa fa-check"></i>
         </button>
 
         <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
-            <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}} {{line.id}}</div>
+            <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
+                {{line.id}}
+            </div>
             <button ng-click="initPullImage()" class="btn btn-warning">Close</button>
         </alert>
 
