@@ -44,7 +44,7 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
 
         $scope.runPullImage = function () {
             $scope.pullImage.pulled = true;
-            var info = { 'status': 'Running docker pull ' + $scope.pullImage.name + '...'};
+            var info = {'status': 'Running docker pull ' + $scope.pullImage.name + '...'};
             $scope.pullImage.output = [info];
             Images.pullImage($scope.daemon._id, $scope.pullImage.name).
                 success(function (data) {
@@ -61,7 +61,7 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
 
         $scope.initPullImage = function () {
             $scope.pullImage = {
-                name : '',
+                name: '',
                 askToPull: false,
                 output: '',
                 typeAlert: 'info',

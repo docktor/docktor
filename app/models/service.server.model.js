@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+    Schema = mongoose.Schema;
 
 /**
  * Port Schema, not useful outside Image
@@ -63,21 +63,21 @@ var ImageSchema = new Schema({
  * Service Schema
  */
 var ServiceSchema = new Schema({
-	created: {
-		type: Date,
-		default: Date.now
-	},
-	title: {
-		type: String,
-		default: '',
-		trim: true,
-		required: 'Title cannot be blank'
-	},
-	images: [ImageSchema],
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    title: {
+        type: String,
+        default: '',
+        trim: true,
+        required: 'Title cannot be blank'
+    },
+    images: [ImageSchema],
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    }
 });
 
 mongoose.model('Service', ServiceSchema);

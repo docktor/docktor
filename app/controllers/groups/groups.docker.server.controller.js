@@ -77,7 +77,7 @@ exports.startContainer = function (req, res) {
 
     container.ports.forEach(function (port) {
         ports[port.internal] = [
-            { 'HostPort': '' + port.external + ''}
+            {'HostPort': '' + port.external + ''}
         ];
     });
 
@@ -212,7 +212,11 @@ exports.containerById = function (req, res, next, id) {
     var container = req.group.containers.id(containerId);
     if (!container) return next(new Error('Failed to load container ' + containerId));
     req.container = container;
-    var daemonDocker = new Docker({protocol: container.daemon.protocol, host: container.daemon.host, port: container.daemon.port});
+    var daemonDocker = new Docker({
+        protocol: container.daemon.protocol,
+        host: container.daemon.host,
+        port: container.daemon.port
+    });
     req.daemonDocker = daemonDocker;
     next();
 };

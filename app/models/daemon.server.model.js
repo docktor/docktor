@@ -4,16 +4,16 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+    Schema = mongoose.Schema;
 
 /**
  * Daemon Schema
  */
 var DaemonSchema = new Schema({
-	created: {
-		type: Date,
-		default: Date.now
-	},
+    created: {
+        type: Date,
+        default: Date.now
+    },
     name: {
         type: String,
         default: '',
@@ -21,11 +21,11 @@ var DaemonSchema = new Schema({
         required: 'Name cannot be blank'
     },
     protocol: {
-		type: String,
-		default: '',
-		trim: true,
-		required: 'Protocol cannot be blank'
-	},
+        type: String,
+        default: '',
+        trim: true,
+        required: 'Protocol cannot be blank'
+    },
     host: {
         type: String,
         default: '',
@@ -63,20 +63,20 @@ var DaemonSchema = new Schema({
         default: '',
         trim: true
     },
-	description: {
-		type: String,
-		default: '',
-		trim: true
-	},
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    },
     cadvisorApi: {
         type: String,
         default: '',
         trim: true
     },
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    }
 });
 
 mongoose.model('Daemon', DaemonSchema);
