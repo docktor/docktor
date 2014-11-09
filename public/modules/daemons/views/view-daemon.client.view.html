@@ -36,11 +36,16 @@
     <h2>Status</h2>
 
     <div>
-        <span ng-show="daemon.dockerUp" class="label label-success">Docker UP on this node</span>
-        <span ng-hide="daemon.dockerUp" class="label label-danger">Docker Down on this node</span>
+        <div ng-switch="daemon.dockerStatus">
+            <span ng-switch-when="checking" class="label label-default">
+                <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+            </span>
+            <span ng-switch-when="down" class="label label-danger">Down</span>
+            <span ng-switch-when="up" class="label label-success">UP</span>
 
-        <p ng-show="daemon.dockerUp">Docker info : </p>
-        <pre ng-show="daemon.dockerUp">{{dockerInfo | json}}</pre>
+            <p ng-switch-when="up">Docker info : </p>
+            <pre ng-switch-when="up">{{dockerInfo | json}}</pre>
+        </div>
     </div>
     <p class="lead" data-ng-bind="daemon.content"></p>
 </section>

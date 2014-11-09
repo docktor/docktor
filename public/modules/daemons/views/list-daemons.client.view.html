@@ -7,6 +7,7 @@
         <thead>
         <tr>
             <th>Name</th>
+            <th>Status</th>
             <th>Daemon</th>
             <th>Docker Version</th>
             <th>CPU</th>
@@ -20,8 +21,13 @@
         <tr ng-repeat="daemon in daemons">
             <td>
                 {{daemon.name}}
-                <span ng-show="daemon.dockerUp" class="label label-success">UP</span>
-                <span ng-hide="daemon.dockerUp" class="label label-danger">Down</span>
+            </td>
+            <td>
+                <span ng-switch="daemon.dockerStatus">
+                    <span ng-switch-when="checking" class="label label-default"> <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking </span>
+                    <span ng-switch-when="down" class="label label-danger">Down</span>
+                    <span ng-switch-when="up" class="label label-success">UP</span>
+                </span>
             </td>
             <td>
                 <a href="{{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}/info">{{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</a>

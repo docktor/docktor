@@ -62,17 +62,16 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.find = function () {
-            $scope.daemons = Daemons.query(function () {
-                angular.forEach($scope.daemons, function () {
-                    var daemon = $scope.daemons[0];
-
+            Daemons.query(function (daemons) {
+                $scope.daemons = daemons;
+                angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
-                    daemon.dockerUp = false;
+                    daemon.dockerStatus = 'checking';
 
                     DaemonsDocker.info(daemon._id).
                         success(function (info) {
                             daemon.dockerInfo = info;
-                            daemon.dockerUp = true;
+                            daemon.dockerStatus = 'up';
 
                             DaemonsDocker.version(daemon._id).
                                 success(function (version) {
@@ -126,6 +125,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                                 });
                         })
                         .error(function (resp) {
+                            daemon.dockerStatus = 'down';
                             console.log('Error with DaemonsDocker.info on :' + daemon._id + ':' + resp);
                         });
 
@@ -134,16 +134,21 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.findOne = function () {
-            $scope.daemon = Daemons.get({
+            Daemons.get({
                 daemonId: $stateParams.daemonId
+            }, function (daemon) {
+                $scope.daemon = daemon;
+                $scope.daemon.dockerStatus = 'checking';
+                DaemonsDocker.info($stateParams.daemonId).
+                    success(function (info) {
+                        $scope.dockerInfo = info;
+                        $scope.daemon.dockerStatus = 'up';
+                    }).
+                    error(function (data, status, headers, config) {
+                        $scope.daemon.dockerStatus = 'down';
+                        console.log('Error with DaemonsDocker.info:' + resp);
+                    });
             });
-            DaemonsDocker.info($stateParams.daemonId).
-                success(function (info) {
-                    $scope.dockerInfo = info;
-                }).
-                error(function (data, status, headers, config) {
-                    console.log('Error with DaemonsDocker.info:' + resp);
-                });
         };
     }
 ]);
