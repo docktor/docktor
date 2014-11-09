@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-var users = require('../../app/controllers/users'),
-    groups = require('../../app/controllers/groups');
+var users = require('../../app/controllers/users.server.controller'),
+    groups = require('../../app/controllers/groups.server.controller');
 
 module.exports = function (app) {
     // Group Routes

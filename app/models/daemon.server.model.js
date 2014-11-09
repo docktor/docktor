@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    Docker = require('dockerode'),
     Schema = mongoose.Schema;
 
 /**
@@ -79,4 +80,14 @@ var DaemonSchema = new Schema({
     }
 });
 
+DaemonSchema.methods.getDaemonDocker = function () {
+    return new Docker({
+        protocol: this.protocol,
+        host: this.host,
+        port: this.port,
+        timeout: this.timedout
+    });
+};
+
 mongoose.model('Daemon', DaemonSchema);
+

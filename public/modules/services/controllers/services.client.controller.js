@@ -5,10 +5,12 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.authentication = Authentication;
 
         $scope.displayFormImage = false;
-        $scope.volume = {};
-        $scope.displayFormVolume = false;
         $scope.port = {};
         $scope.displayFormPort = false;
+        $scope.variable = {};
+        $scope.displayFormVariable = false;
+        $scope.volume = {};
+        $scope.displayFormVolume = false;
 
         $scope.create = function () {
             var service = new Services({
@@ -76,15 +78,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.imageIsActive = true;
         };
 
-        $scope.addVolume = function (image) {
-            image.volumes.push($scope.volume);
-            $scope.volume = {};
-        };
-
-        $scope.removeVolume = function (image, volume) {
-            image.volumes.splice(image.volumes.indexOf(volume), 1);
-        };
-
         $scope.addPort = function (image) {
             image.ports.push($scope.port);
             $scope.port = {};
@@ -92,6 +85,24 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removePort = function (image, port) {
             image.ports.splice(image.ports.indexOf(port), 1);
+        };
+
+        $scope.addVariable = function (image) {
+            image.variables.push($scope.variable);
+            $scope.variable = {};
+        };
+
+        $scope.removeVariable = function (image, variable) {
+            image.variables.splice(image.variables.indexOf(variable), 1);
+        };
+
+        $scope.addVolume = function (image) {
+            image.volumes.push($scope.volume);
+            $scope.volume = {};
+        };
+
+        $scope.removeVolume = function (image, volume) {
+            image.volumes.splice(image.volumes.indexOf(volume), 1);
         };
 
     }

@@ -97,6 +97,31 @@
                 </tbody>
             </table>
 
+            <h4>Variables</h4>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Internal</th>
+                    <th>External</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="variable in services.selectImage.variables">
+                    <td>
+                        {{variable.description}}
+                    </td>
+                    <td>
+                        {{variable.internal}}
+                    </td>
+                    <td>
+                        <input type="text" ng-model="variable.external" class="form-control" required>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
             <button ng-disabled="deployForm.$invalid"
                     data-ng-click="addImageToGroup(daemons.select, services.selectImage)" class="btn btn-primary">
                 Deploy Service

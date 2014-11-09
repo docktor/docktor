@@ -7,6 +7,22 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
+ * Variable Schema, not useful outside Image
+ */
+var VariableSchema = new Schema({
+    internal: {
+        type: String,
+        trim: true,
+        required: 'internal Variable Name cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
  * Port Schema, not useful outside Image
  */
 var PortSchema = new Schema({
@@ -51,6 +67,7 @@ var ImageSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    variables: [VariableSchema],
     ports: [PortSchema],
     volumes: [VolumeSchema],
     active: {

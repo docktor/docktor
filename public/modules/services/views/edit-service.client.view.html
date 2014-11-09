@@ -60,8 +60,9 @@
                 <th></th>
                 <th st-sort="name">Name</th>
                 <th st-sort="active">Is Active</th>
-                <th>Volumes Mapping</th>
                 <th>Ports Mapping</th>
+                <th>Variables Mapping</th>
+                <th>Volumes Mapping</th>
             </tr>
             </thead>
             <tbody>
@@ -82,43 +83,6 @@
                 </td>
                 <td>{{image.name}}</td>
                 <td>{{image.active}}</td>
-                <td>
-                    <ul data-ng-repeat="volume in image.volumes">
-                        <li>-v {{volume.internal}}:&lg;externalVolume-attributed-on-group&gt;
-                            <small><i>{{volume.description}}</i></small>
-                            <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
-                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
-                                   tooltip-popup-delay='750'></i>
-                            </a>
-                            <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume" class="btn btn-danger">
-                                No, I don't want to delete this. <i class="fa fa-reply"></i>
-                            </button>
-                            <button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
-                                    class="btn btn-danger">
-                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                            </button>
-                        </li>
-                    </ul>
-
-                    <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
-                            ng-click="displayFormVolume=!displayFormVolume">
-                        <i class="fa fa-plus-square"></i>
-                    </button>
-
-                    <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate autocomplete="off">
-                        <fieldset>
-                            <input type="text" name="internal" data-ng-model="volume.internal"
-                                   placeholder="internal" class="form-control" ng-required="true">
-                            <input type="text" name="descriptionVolume" data-ng-model="volume.description"
-                                   placeholder="description"
-                                   class="form-control">
-                            <button ng-disabled="volumeForm.$invalid"
-                                    data-ng-click="addVolume(image); displayFormVolume=false" class="btn btn-primary">
-                                Insert Volume
-                            </button>
-                        </fieldset>
-                    </form>
-                </td>
                 <td>
                     <ul data-ng-repeat="port in image.ports">
                         <li>-p {{port.internal}}:&lg;externalPort-attributed-on-group&gt;
@@ -152,6 +116,83 @@
                             <button ng-disabled="portForm.$invalid"
                                     data-ng-click="addPort(image); displayFormPort=false" class="btn btn-primary">
                                 Insert Port
+                            </button>
+                        </fieldset>
+                    </form>
+                </td>
+                <td>
+                    <ul data-ng-repeat="variable in image.variables">
+                        <li>-e {{variable.internal}}:&lg;externalVariable-attributed-on-group&gt;
+                            <small><i>{{variable.description}}</i></small>
+                            <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
+                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
+                                   tooltip-popup-delay='750'></i>
+                            </a>
+                            <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                                    class="btn btn-danger">
+                                No, I don't want to delete this. <i class="fa fa-reply"></i>
+                            </button>
+                            <button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
+                                    class="btn btn-danger">
+                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
+                            ng-click="displayFormVariable=!displayFormVariable">
+                        <i class="fa fa-plus-square"></i>
+                    </button>
+
+                    <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
+                          autocomplete="off">
+                        <fieldset>
+                            <input type="text" name="internal" data-ng-model="variable.internal"
+                                   placeholder="internal" class="form-control" ng-required="true">
+                            <input type="text" name="descriptionVariable" data-ng-model="variable.description"
+                                   placeholder="description"
+                                   class="form-control">
+                            <button ng-disabled="variableForm.$invalid"
+                                    data-ng-click="addVariable(image); displayFormVariable=false"
+                                    class="btn btn-primary">
+                                Insert Variable
+                            </button>
+                        </fieldset>
+                    </form>
+                </td>
+                <td>
+                    <ul data-ng-repeat="volume in image.volumes">
+                        <li>-v {{volume.internal}}:&lg;externalVolume-attributed-on-group&gt;
+                            <small><i>{{volume.description}}</i></small>
+                            <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
+                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
+                                   tooltip-popup-delay='750'></i>
+                            </a>
+                            <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume" class="btn btn-danger">
+                                No, I don't want to delete this. <i class="fa fa-reply"></i>
+                            </button>
+                            <button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
+                                    class="btn btn-danger">
+                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
+                            ng-click="displayFormVolume=!displayFormVolume">
+                        <i class="fa fa-plus-square"></i>
+                    </button>
+
+                    <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate autocomplete="off">
+                        <fieldset>
+                            <input type="text" name="internal" data-ng-model="volume.internal"
+                                   placeholder="internal" class="form-control" ng-required="true">
+                            <input type="text" name="descriptionVolume" data-ng-model="volume.description"
+                                   placeholder="description"
+                                   class="form-control">
+                            <button ng-disabled="volumeForm.$invalid"
+                                    data-ng-click="addVolume(image); displayFormVolume=false" class="btn btn-primary">
+                                Insert Volume
                             </button>
                         </fieldset>
                     </form>

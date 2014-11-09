@@ -64,31 +64,9 @@ var ContainerSchema = new Schema({
     },
     ports: [PortContainerSchema],
     volumes: [VolumeContainerSchema],
-    daemon: {
-        name: {
-            type: String,
-            default: '',
-            trim: true,
-            required: 'Name cannot be blank'
-        },
-        protocol: {
-            type: String,
-            default: '',
-            trim: true,
-            required: 'Protocol cannot be blank'
-        },
-        host: {
-            type: String,
-            default: '',
-            trim: true,
-            required: 'Host cannot be blank'
-        },
-        port: {
-            type: Number,
-            default: '',
-            trim: true,
-            required: 'Port cannot be blank'
-        }
+    daemonId: {
+        type: String,
+        trim: true
     },
     active: {
         type: Boolean,

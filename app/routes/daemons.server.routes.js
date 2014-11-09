@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-var users = require('../../app/controllers/users'),
-    daemons = require('../../app/controllers/daemons');
+var users = require('../../app/controllers/users.server.controller'),
+    daemons = require('../../app/controllers/daemons.server.controller');
 
 module.exports = function (app) {
     // Daemon Routes

@@ -73,7 +73,7 @@ exports.delete = function (req, res) {
  * List of Groups
  */
 exports.list = function (req, res) {
-    Group.find().sort('-created').populate('user', 'displayName').exec(function (err, groups) {
+    Group.find().sort('-created').exec(function (err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

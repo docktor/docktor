@@ -30,8 +30,9 @@
             <th>Image</th>
             <th>Id</th>
             <th>Daemon</th>
-            <th>Volumes</th>
+            <th>Variables</th>
             <th>Ports</th>
+            <th>Volumes</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -48,19 +49,27 @@
                 {{container.containerId | limitTo:12}}
             </td>
             <td>
-                {{container.daemon.name}}
-                {{container.daemon.protocol}}://{{container.daemon.host}}:{{container.daemon.port}}
+                <div ng-switch="container.daemon.dockerStatus">
+                    <span ng-switch-when="checking" class="label label-default">
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+                    </span>
+                    <span ng-switch-when="down" class="label label-danger">Down</span>
+                    <span ng-switch-when="up" class="label label-success">UP</span>
+                </div>
+                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
+
             </td>
+            <td>TODO</td>
             <td>
                 <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
                         tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i>
                 </button>
             </td>
             <td>
                 <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
                         tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i>
                 </button>

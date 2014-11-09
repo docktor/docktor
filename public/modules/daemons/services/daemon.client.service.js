@@ -3,6 +3,19 @@
 angular.module('daemons').factory('Daemon', ['DaemonsDocker',
     function (DaemonsDocker) {
         return {
+            getStatus: function (id, daemon) {
+                daemon.dockerStatus = 'checking';
+                console.log('Call getStatus for : ' + id);
+
+                DaemonsDocker.info(id).
+                    success(function () {
+                        daemon.dockerStatus = 'up';
+                    })
+                    .error(function (resp) {
+                        daemon.dockerStatus = 'down';
+                        console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':' + resp);
+                    });
+            },
             getDetails: function (daemon) {
                 daemon.dockerStatus = 'checking';
 

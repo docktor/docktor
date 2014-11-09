@@ -27,14 +27,10 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 name: containerName,
                 hostname: containerName, // todo add daemon.title
                 image: image.name,
+                variables: image.variables,
                 ports: image.ports,
                 volumes: image.volumes,
-                daemon: {
-                    name: daemon.name,
-                    protocol: daemon.protocol,
-                    host: daemon.host,
-                    port: daemon.port
-                },
+                daemonId: daemon._id,
                 active: true
             });
 

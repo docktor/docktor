@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon) {
         $scope.authentication = Authentication;
 
         $scope.create = function () {
@@ -54,6 +54,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 $scope.group.containers.forEach(function (container) {
                     $scope.inspect(container);
+                    container.daemon = {};
+                    Daemon.getStatus(container.daemonId, container.daemon);
                 });
             });
         };
