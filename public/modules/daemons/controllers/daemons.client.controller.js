@@ -144,7 +144,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                         $scope.dockerInfo = info;
                         $scope.daemon.dockerStatus = 'up';
                     }).
-                    error(function (data, status, headers, config) {
+                    error(function (resp, status, headers, config) {
                         $scope.daemon.dockerStatus = 'down';
                         console.log('Error with DaemonsDocker.info:' + resp);
                     });
