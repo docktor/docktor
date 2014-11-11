@@ -14,7 +14,7 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Monitoring Daemons~~ Done
 * ~~Action on image (from daemon UI, without group)~~ Done
 * Deploy : 
-    * Add variables
+    * ~~Add variables~~ Done
     * Display image inspect (volume / port) if present
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
