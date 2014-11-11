@@ -76,8 +76,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 daemonId: $stateParams.daemonId
             }, function (daemon) {
                 $scope.daemon = daemon;
-                console.log('HOP');
-                console.log(daemon);
                 Daemon.getDetails(daemon);
             });
         };

@@ -10,7 +10,8 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                 console.log('Call getStatus for : ' + id);
 
                 DaemonsDocker.info(id).
-                    success(function () {
+                    success(function (info) {
+                        daemon.dockerInfo = info;
                         daemon.dockerStatus = 'up';
                         daemon.dockerStatusUp = true;
                         if (callbackSuccess) callbackSuccess();

@@ -44,7 +44,7 @@
             <span ng-switch-when="up" class="label label-success">UP</span>
 
             <p ng-switch-when="up">Docker info : </p>
-            <pre ng-switch-when="up">{{dockerInfo | json}}</pre>
+            <pre ng-switch-when="up">{{daemon.dockerInfo | json}}</pre>
         </div>
     </div>
     <p class="lead" data-ng-bind="daemon.content"></p>

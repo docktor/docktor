@@ -75,7 +75,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackError = function (container, err) {
-            $scope.alerts.push({msg: err.message});
+            $scope.alerts.push({type:'danger', msg: err.message});
         };
 
         $scope.closeAlert = function (index) {
