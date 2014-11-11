@@ -54,8 +54,6 @@ exports.createContainer = function (req, res) {
             Group.update({_id: group._id, 'containers._id': container._id},
                 {$set: setToUpdate},
                 function (err, numAffected) {
-                    console.log('ERR B:');
-                    console.log(err);
                     if (err || numAffected !== 1) {
                         return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)

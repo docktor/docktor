@@ -64,12 +64,12 @@
 
             </td>
             <td>
-                <span ng-if="container.daemon.dockerStatusUp">
-                    TODO
-                </span>
-                <span ng-if="!container.daemon.dockerStatusUp">
-                    TODO
-                </span>
+                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
+                        value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.Config.Env | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
             </td>
             <td>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"

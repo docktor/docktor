@@ -23,6 +23,10 @@ var getUniqueErrorMessage = function (err) {
 exports.getErrorMessage = function (err) {
     var message = '';
 
+    console.log('#################');
+    console.log(err);
+    console.log('#################');
+
     if (err.code) {
         switch (err.code) {
             case 11000:
