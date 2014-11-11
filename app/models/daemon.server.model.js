@@ -74,6 +74,12 @@ var DaemonSchema = new Schema({
         default: '',
         trim: true
     },
+    latitude: {
+        type: Number
+    },
+    longitude: {
+        type: Number
+    },
     user: {
         type: Schema.ObjectId,
         ref: 'User'

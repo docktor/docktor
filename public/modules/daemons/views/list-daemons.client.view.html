@@ -64,8 +64,8 @@
                     images</a>
             </td>
             <td>
-                <a class="btn btn-default btn-xs" href="#!/daemons/view/{{daemon._id}}"><i
-                        class="fa fa-eye"></i> Details</a> <br>
+                <a class="btn btn-default btn-xs" href="#!/daemons/view/{{daemon._id}}">
+                    <i class="fa fa-eye"></i> Details</a> <br>
             </td>
         </tr>
         </tbody>
@@ -73,5 +73,8 @@
     <div class="alert alert-warning text-center" data-ng-if="daemons.$resolved && !daemons.length">
         No daemons yet, why don't you <a href="/#!/daemons/create">create one</a>?
     </div>
-    <map center="-34.397, 150.644" zoom="8"></map>
+    {{positions}}
+    <map center="-34.397, 150.644" zoom="5">
+        <!-- ngRepeat: pos in positions -->
+    </map>
 </section>

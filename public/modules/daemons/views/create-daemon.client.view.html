@@ -89,6 +89,22 @@
                                placeholder="http://<host>:<port>/api/v1.0/containers/"/>
                     </div>
                 </div>
+                <div class="form-group" ng-class="{ 'has-error': daemonForm.latitude.$dirty && daemonForm.latitude.$invalid }">
+                    <label class="control-label" for="latitude">Latitude</label>
+
+                    <div class="controls">
+                        <input name="latitude" type="number" data-ng-model="latitude" id="latitude" class="form-control"
+                               placeholder="latitude" required>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error': daemonForm.longitude.$dirty && daemonForm.longitude.$invalid }">
+                    <label class="control-label" for="longitude">Longitude</label>
+
+                    <div class="controls">
+                        <input name="longitude" type="number" data-ng-model="longitude" id="longitude" class="form-control"
+                               placeholder="longitude" required>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="description">Description</label>
 

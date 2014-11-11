@@ -3,6 +3,7 @@
 angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'Daemon',
     function ($scope, $stateParams, $location, Authentication, Daemons, Daemon) {
         $scope.authentication = Authentication;
+        $scope.positions = [];
 
         $scope.create = function () {
             var daemon = new Daemons({
@@ -61,9 +62,11 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             });
         };
 
+        var markers = [];
         $scope.find = function () {
             Daemons.query(function (daemons) {
                 $scope.daemons = daemons;
+                var i = 0;
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
                     Daemon.getDetails(daemon);
@@ -79,5 +82,30 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 Daemon.getDetails(daemon);
             });
         };
+
+        $scope.$on('mapInitialized', function (event, map) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = new google.maps.LatLng(position.coords.latitude,
+                    position.coords.longitude);
+
+                var i = 0;
+                var markers = [];
+                angular.forEach($scope.daemons, function (daemon, key) {
+                    console.log('daemon.latitude:');
+                    console.log(daemon.latitude);
+                    if (daemon.latitude && daemon.longitude) {
+                        markers[i] = new google.maps.Marker({
+                            title: daemon.name
+                        });
+                        var latlng = new google.maps.LatLng(daemon.latitude, daemon.longitude);
+                        markers[i].setPosition(latlng);
+                        markers[i].setMap(map);
+                        i++;
+                    }
+                });
+
+                map.setCenter(pos);
+            });
+        });
     }
 ]);
