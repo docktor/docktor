@@ -35,16 +35,16 @@
                 <small><p class="list-group-item-text" data-ng-bind="daemon.description"></p></small>
                 <a ng-show="daemon.cadvisorApi" href="{{daemon.cadvisorUrl}}">cAdvisor</a>
             </td>
-            <td><span ng-show="daemon.dockerUp">{{daemon.dockerVersion.Version}}</span></td>
+            <td><span ng-show="daemon.dockerStatusUp">{{daemon.dockerVersion.Version}}</span></td>
             <td style="text-align:center">
-                <span ng-show="daemon.dockerUp">
+                <span ng-show="daemon.dockerStatusUp">
                     <just-gage id="gaugeCPU{{daemon._id}}" class="gaugeSmall"
                                min=0 max=100 value="daemon.stats.cpuUsagePercent" title="CPU"></just-gage>
                     <small>{{daemon.machineInfo.num_cores}} cores</small>
                 </span>
             </td>
             <td style="text-align:center">
-                <span ng-show="daemon.dockerUp">
+                <span ng-show="daemon.dockerStatusUp">
                     <just-gage id="gaugeMem{{daemon._id}}" class="gaugeSmall"
                                min=0 max=100 value="daemon.stats.memoryUsagePercent" title="Memory"></just-gage>
                     <small>{{daemon.stats.memoryUsage}} Mo</small>
@@ -52,13 +52,13 @@
 
             </td>
             <td>
-                <a ng-show="daemon.dockerUp" class="btn btn-default btn-xs"
+                <a ng-show="daemon.dockerStatusUp" class="btn btn-default btn-xs"
                    href="/#!/daemons/view/containers/{{daemon._id}}">View
                     {{daemon.dockerInfo.Containers}}
                     containers</a><br>
             </td>
             <td>
-                <a ng-show="daemon.dockerUp" class="btn btn-default btn-xs"
+                <a ng-show="daemon.dockerStatusUp" class="btn btn-default btn-xs"
                    href="/#!/daemons/view/images/{{daemon._id}}">View
                     {{daemon.dockerInfo.Images}}
                     images</a>

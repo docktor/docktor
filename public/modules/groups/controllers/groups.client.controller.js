@@ -55,7 +55,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group.containers.forEach(function (container) {
                     $scope.inspect(container);
                     container.daemon = {};
-                    Daemon.getStatus(container.daemonId, container.daemon);
+                    Daemon.getInfo(container.daemonId, container.daemon);
                 });
             });
         };

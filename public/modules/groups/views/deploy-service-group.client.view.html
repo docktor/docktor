@@ -44,7 +44,6 @@
         </ui-select>
     </div>
 
-
     <div ng-show="services.selectImage">
         <form name="deployForm" class="form-horizontal" novalidate>
             <h4>Volumes :</h4>
@@ -103,8 +102,8 @@
                 <thead>
                 <tr>
                     <th>Description</th>
-                    <th>Internal</th>
-                    <th>External</th>
+                    <th>Name</th>
+                    <th>Value</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -113,10 +112,10 @@
                         {{variable.description}}
                     </td>
                     <td>
-                        {{variable.internal}}
+                        {{variable.name}}
                     </td>
                     <td>
-                        <input type="text" ng-model="variable.external" class="form-control" required>
+                        <input type="text" ng-model="variable.value" class="form-control" required>
                     </td>
                 </tr>
                 </tbody>

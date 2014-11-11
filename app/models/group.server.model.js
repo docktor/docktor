@@ -8,6 +8,22 @@ var mongoose = require('mongoose'),
 
 
 /**
+ * Variable Schema, not useful outside Image
+ */
+var VariableContainerSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'Value cannot be blank'
+    }
+});
+
+/**
  * Port Schema, not useful outside Image
  */
 var PortContainerSchema = new Schema({
@@ -63,6 +79,7 @@ var ContainerSchema = new Schema({
         trim: true
     },
     ports: [PortContainerSchema],
+    variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],
     daemonId: {
         type: String,

@@ -16,8 +16,12 @@ exports.createContainer = function (req, res) {
 
     var volumes = {};
     var ports = {};
+    var variables = [];
 
-    // TODO add variable
+    // Env - A list of environment variables in the form of VAR=value
+    container.variables.forEach(function (variable) {
+        variables.push(variable.name + '=' + variable.value);
+    });
 
     container.volumes.forEach(function (volume) {
         volumes[volume.internal] = {};
@@ -33,7 +37,8 @@ exports.createContainer = function (req, res) {
         Image: container.image,
         name: container.name,
         Volumes: volumes,
-        ExposedPorts: ports
+        ExposedPorts: ports,
+        Env: variables
     }, function (err, containerCreated) {
 
         if (err) {

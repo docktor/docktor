@@ -10,10 +10,10 @@ var mongoose = require('mongoose'),
  * Variable Schema, not useful outside Image
  */
 var VariableSchema = new Schema({
-    internal: {
+    name: {
         type: String,
         trim: true,
-        required: 'internal Variable Name cannot be blank'
+        required: 'Variable Name cannot be blank'
     },
     description: {
         type: String,
