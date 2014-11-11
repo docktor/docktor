@@ -24,6 +24,8 @@ Notes below are for developers only. Docktor is not ready for production now.
 * Group :
     * ~~Service : delete service~~ Done
     * Update a service
+* Container :
+    * use docker top & log
 * Service : 
     * Check if there is no container (started or not) before delete it
 * REST Api
