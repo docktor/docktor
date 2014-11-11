@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
+    Daemon = mongoose.model('Daemon'),
     _ = require('lodash');
 
 
@@ -42,6 +43,8 @@ exports.createContainer = function (req, res) {
     }, function (err, containerCreated) {
 
         if (err) {
+            console.log('ERR A:');
+            console.log(err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
@@ -51,6 +54,8 @@ exports.createContainer = function (req, res) {
             Group.update({_id: group._id, 'containers._id': container._id},
                 {$set: setToUpdate},
                 function (err, numAffected) {
+                    console.log('ERR B:');
+                    console.log(err);
                     if (err || numAffected !== 1) {
                         return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)
@@ -218,7 +223,12 @@ exports.containerById = function (req, res, next, id) {
     var container = req.group.containers.id(containerId);
     if (!container) return next(new Error('Failed to load container ' + containerId));
     req.container = container;
-    var daemon = req.container.daemon;
-    req.daemonDocker = daemon.getDaemonDocker();
-    next();
+
+    Daemon.findById(req.container.daemonId).exec(function (err, daemon) {
+        if (err) return next(err);
+        if (!daemon) return next(new Error('Failed to load daemon ' + id));
+        req.daemon = daemon;
+        req.daemonDocker = daemon.getDaemonDocker();
+        next();
+    });
 };
