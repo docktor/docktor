@@ -19,10 +19,11 @@ Notes below are for developers only. Docktor is not ready for production now.
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
     * pull an image (without group UI) on setected daemons
-    * Display a map of Daemons (GPS infos)
+    * Display a map of Daemons (GPS infos), using https://github.com/angular-ui/angular-google-maps
     * Update a image in a group : check deploy service before
 * Group :
     * ~~Service : delete service~~ Done
+    * Update a service
 * Service : 
     * Check if there is no container (started or not) before delete it
 * REST Api
