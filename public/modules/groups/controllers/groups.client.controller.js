@@ -53,10 +53,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 groupId: $stateParams.groupId
             }, function (group) {
                 $scope.group = group;
+                var daemons = {};
                 $scope.group.containers.forEach(function (container) {
                     $scope.inspect(container);
-                    container.daemon = {};
-                    Daemon.getInfo(container.daemonId, container.daemon);
+                    daemons[container.daemonId] = {};
+                });
+                angular.forEach(daemons, function (daemon, daemonId) {
+                    Daemon.getInfo(daemonId, daemon);
+                });
+                $scope.group.containers.forEach(function (container) {
+                    $scope.inspect(container);
+                    container.daemon = daemons[container.daemonId];
                 });
             });
         };
