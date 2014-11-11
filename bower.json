@@ -17,6 +17,7 @@
         "angular-ui-select": "~0.8.3",
         "angular-smart-table": "~1.4.1",
         "fontawesome": "~4.2.0",
+        "ngmap": "~1.1.5",
         "angular-justgage": "1.0.0"
 
     }

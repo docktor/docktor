@@ -18,8 +18,8 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Display image inspect (volume / port) if present
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
+    * Display a map of Daemons (GPS infos)
     * pull an image (without group UI) on setected daemons
-    * Display a map of Daemons (GPS infos), using https://github.com/angular-ui/angular-google-maps
     * Update a image in a group : check deploy service before
 * Group :
     * ~~Service : delete service~~ Done
