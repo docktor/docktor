@@ -21,6 +21,8 @@ Notes below are for developers only. Docktor is not ready for production now.
     * pull an image (without group UI) on setected daemons
     * Display a map of Daemons (GPS infos)
     * Update a image in a group : check deploy service before
+* Group :
+    * ~~Service : delete service~~ Done
 * Service : 
     * Check if there is no container (started or not) before delete it
 * REST Api
@@ -79,7 +81,7 @@ $ npm install
 This command does a few things:
 * First it will install the dependencies needed for the application to run.
 * If you're running in a development environment, it will then also install development dependencies needed for testing and running your application.
-* Finally, when the install process is over, npm will initiate a bower installcommand to install all the front-end modules needed for the application
+* Finally, when the install process is over, npm will initiate a bower install command to install all the front-end modules needed for the application
 
 ## Running Docktor
 After the install process is over, you'll be able to run your application using Grunt, just run grunt default task:
@@ -90,7 +92,7 @@ $ grunt
 
 Docktor should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
                             
-That's it! your application should be running by now, to proceed with your development check the other sections in this documentation. 
+That's it! your application should be running by now.
 
 ## Development and deployment With Docker
 
@@ -113,10 +115,6 @@ $ docker run -p 3000:3000 --link db:db_1 mean
 ```bash
 $ docker run -p 3000:3000 -p 35729:35729 -v /Users/mdl/workspace/mean-stack/mean/public:/home/mean/public -v /Users/mdl/workspa/mean-stack/mean/app:/home/mean/app --link db:db_1 mean
 ```
-
-## Credits
-Inspired by the great work of [Madhusudhan Srinivasa](https://github.com/madhums/)
-The MEAN name was coined by [Valeri Karpov](http://blog.mongodb.org/post/49262866911/the-mean-stack-mongodb-expressjs-angularjs-and)
 
 ## License
 GNU GENERAL PUBLIC LICENSE 3

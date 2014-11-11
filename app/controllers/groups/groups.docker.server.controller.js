@@ -155,6 +155,23 @@ exports.unpauseContainer = function (req, res) {
     });
 };
 
+exports.removeContainerFromGroup = function (req, res) {
+    var group = req.group;
+    var container = req.container;
+
+    group.containers.id(container._id).remove();
+    group.save(function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(container._id + ' removed from ' + group._id);
+        }
+    });
+};
+
+
 exports.removeContainer = function (req, res) {
     var group = req.group;
     var container = req.container;

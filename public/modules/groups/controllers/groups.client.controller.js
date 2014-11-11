@@ -89,6 +89,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.alerts.splice(index, 1);
         };
 
+        $scope.removeServiceFromGroup = function(container) {
+            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.findOne, $scope.callbackError);
+        };
+
         $scope.createContainer = function (container) {
             GroupsServices.action('create', $scope.group._id, container, $scope.findOne, $scope.callbackError);
         };

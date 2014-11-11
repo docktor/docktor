@@ -102,7 +102,7 @@
             </td>
             <td>
                 <span ng-show="container.daemon.dockerStatusUp">
-                    <button ng-hide="container.containerId" class="btn btn-default btn-sm"
+                    <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
                             ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create
                     </button>
 
@@ -132,6 +132,19 @@
                         </button>
                     </span>
                 </span>
+
+                <button ng-hide="container.containerId || askDeleteService" class="btn btn-default btn-sm"
+                        ng-click="askDeleteService=true"
+                        ng-click="createContainer(container)"><i class="fa fa-trash"></i>
+                </button>
+                <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </button>
+                <button data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService"
+                        class="btn btn-danger">
+                    Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
+                </button>
+
             </td>
         </tr>
         </tbody>

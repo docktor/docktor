@@ -25,7 +25,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
             group.containers.push({
                 name: containerName,
-                hostname: containerName, // todo add daemon.title
+                hostname: containerName,
                 image: image.name,
                 variables: image.variables,
                 ports: image.ports,
