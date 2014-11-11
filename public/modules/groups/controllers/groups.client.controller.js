@@ -3,6 +3,7 @@
 angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon',
     function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon) {
         $scope.authentication = Authentication;
+        $scope.alerts = [];
 
         $scope.create = function () {
             var group = new Groups({
@@ -73,9 +74,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.callbackError = function (data) {
-            console.log('Error:');
-            console.log(data);
+        $scope.callbackError = function (container, err) {
+            $scope.alerts.push({msg: err.message});
+        };
+
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
         };
 
         $scope.createContainer = function (container) {

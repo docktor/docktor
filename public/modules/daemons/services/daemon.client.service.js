@@ -3,7 +3,7 @@
 angular.module('daemons').factory('Daemon', ['DaemonsDocker',
     function (DaemonsDocker) {
         return {
-            getInfo: function (id, daemon, callbackSucess) {
+            getInfo: function (id, daemon, callbackSuccess) {
                 daemon.dockerStatus = 'checking';
                 daemon.dockerStatus = 'checking';
                 daemon.dockerStatusUp = false;
@@ -13,7 +13,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                     success(function () {
                         daemon.dockerStatus = 'up';
                         daemon.dockerStatusUp = true;
-                        callbackSucess();
+                        if (callbackSuccess) callbackSuccess();
                     })
                     .error(function (resp) {
                         daemon.dockerStatus = 'down';
