@@ -18,6 +18,25 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Site</label>
+
+                    <div class="col-sm-5">
+                        <ui-select ng-model="daemon.selectSite" theme="bootstrap" style="min-width: 300px;">
+                            <ui-select-match placeholder="Select or search a site in the list...">
+                                {{$select.selected.title}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="site in sites.all">
+                                <div ng-bind-html="site.title | highlight: $select.search"></div>
+                                <small>
+                                    Created {{site.created | date:'mediumDate'}}
+                                </small>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-5">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-sm-2" for="protocol">Docker Host</label>
 
                     <div class="col-sm-1">
@@ -33,7 +52,7 @@
                                placeholder="port" required>
                     </div>
                     <div class="col-sm-5">
-                        
+
                     </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.timedout.$invalid }">
@@ -94,26 +113,6 @@
                         <input name="cadvisorApi" type="text" data-ng-model="daemon.cadvisorApi" id="cadvisorApi"
                                class="form-control"
                                placeholder="http://<host>:<port>/api/v1.0" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.latitude.$invalid }">
-                    <label class="control-label col-sm-2" for="latitude">Latitude</label>
-
-                    <div class="col-sm-5">
-                        <input name="latitude" type="number" data-ng-model="daemon.latitude" id="latitude" class="form-control"
-                               placeholder="latitude" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.longitude.$invalid }">
-                    <label class="control-label col-sm-2" for="longitude">Longitude</label>
-
-                    <div class="col-sm-5">
-                        <input name="longitude" type="number" data-ng-model="daemon.longitude" id="longitude" class="form-control"
-                               placeholder="longitude" required>
                     </div>
                     <div class="col-sm-5">
                     </div>

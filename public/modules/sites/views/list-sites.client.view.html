@@ -1,0 +1,39 @@
+<section data-ng-controller="SitesController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Sites</h1>
+    </div>
+
+    <table st-table="rowCollection" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Creation</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="site in sites">
+            <td>
+                {{site.title}}
+            </td>
+            <td>
+                Created at
+                <span data-ng-bind="site.created | date:'mediumDate'"></span>
+            </td>
+            <td>
+                {{site.latitude}}
+            </td>
+            <td>
+                {{site.longitude}}
+            </td>
+            <td><a href="#!/sites/{{site._id}}">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-warning text-center" data-ng-if="sites.$resolved && !sites.length">
+        No sites yet, why don't you <a href="/#!/sites/create">create one</a>?
+    </div>
+</section>

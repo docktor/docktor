@@ -21,15 +21,15 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Display image inspect (volume / port) if present
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
-    * ~~Display a map of Daemons (GPS infos)~~ Done
+    * Display a map of Daemons (GPS infos) : use localization of site.
     * pull an image (without group UI) on setected daemons
     * Update a image in a group : check deploy service before
 * Group :
     * ~~Service : delete service~~ Done
     * Update a service
 * Site
-    * a site have on or more daemons
-    * a site have a localization and a name
+    * ~~a site have on or more daemons~~ Done
+    * ~~a site have a localization and a name~~ Done
 * Container :
     * use docker top & log
 * Service :

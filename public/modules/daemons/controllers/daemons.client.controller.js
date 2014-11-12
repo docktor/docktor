@@ -1,12 +1,17 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'Daemon',
-    function ($scope, $stateParams, $location, Authentication, Daemons, Daemon) {
+angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'Daemon', 'Sites',
+    function ($scope, $stateParams, $location, Authentication, Daemons, Daemon, Sites) {
         $scope.authentication = Authentication;
         $scope.positions = [];
 
+        $scope.sites = {};
+        $scope.sites.all = Sites.query();
+
+        $scope.daemon = new Daemons();
+
         $scope.create = function () {
-            var daemon = new Daemons({
+            /*var daemon = new Daemons({
                 name: this.name,
                 protocol: this.protocol,
                 host: this.host,
@@ -18,21 +23,11 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 volume: this.volume,
                 cadvisorApi: this.cadvisorApi,
                 description: this.description
-            });
+            });*/
+            var daemon = $scope.daemon;
+            $scope.daemon.site = $scope.daemon.selectSite._id;
             daemon.$save(function (response) {
                 $location.path('daemons/view/' + response._id);
-
-                $scope.name = '';
-                $scope.protocol = '';
-                $scope.host = '';
-                $scope.port = '';
-                $scope.timedout = 5000;
-                $scope.ca = '';
-                $scope.cert = '';
-                $scope.key = '';
-                $scope.volume = '';
-                $scope.cadvisorApi = '';
-                $scope.description = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -54,6 +49,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.update = function () {
+            $scope.daemon.site = $scope.daemon.selectSite._id;
             var daemon = $scope.daemon;
             daemon.$update(function () {
                 $location.path('daemons/view/' + daemon._id);
@@ -62,7 +58,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             });
         };
 
-        var markers = [];
         $scope.find = function () {
             Daemons.query(function (daemons) {
                 $scope.daemons = daemons;
@@ -79,6 +74,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 daemonId: $stateParams.daemonId
             }, function (daemon) {
                 $scope.daemon = daemon;
+                $scope.daemon.selectSite = $scope.daemon.site;
                 Daemon.getDetails(daemon);
             });
         };

@@ -81,7 +81,7 @@ var ContainerSchema = new Schema({
     ports: [PortContainerSchema],
     variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],
-    daemonId: {
+    daemonId: { // TODO use Schema.ObjectId
         type: String,
         trim: true
     },

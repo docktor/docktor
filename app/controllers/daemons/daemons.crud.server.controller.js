@@ -15,7 +15,7 @@ var mongoose = require('mongoose'),
 exports.create = function (req, res) {
     var daemon = new Daemon(req.body);
     daemon.user = req.user;
-
+    daemon.site = req.body.site;
     daemon.save(function (err) {
         if (err) {
             return res.status(400).send({
@@ -39,9 +39,8 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
     var daemon = req.daemon;
-
     daemon = _.extend(daemon, req.body);
-
+    daemon.site = req.body.site;
     daemon.save(function (err) {
         if (err) {
             return res.status(400).send({
@@ -89,7 +88,7 @@ exports.list = function (req, res) {
  * Daemon middleware
  */
 exports.daemonByID = function (req, res, next, id) {
-    Daemon.findById(id).populate('user', 'displayName').exec(function (err, daemon) {
+    Daemon.findById(id).populate('user', 'displayName').populate('site').exec(function (err, daemon) {
         if (err) return next(err);
         if (!daemon) return next(new Error('Failed to load daemon ' + id));
         req.daemon = daemon;

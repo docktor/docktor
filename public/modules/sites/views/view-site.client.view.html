@@ -1,0 +1,16 @@
+<section data-ng-controller="SitesController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1 data-ng-bind="site.title"></h1>
+    </div>
+    <p>Latitude : {{site.latitude}}</p>
+    <p>Longitude : {{site.longitude}}</p>
+    <small>
+        <em class="text-muted">
+            Created at
+            <span data-ng-bind="site.created | date:'mediumDate'"></span>
+            by
+            <span data-ng-bind="site.user.displayName"></span>
+        </em>
+    </small>
+    <p class="lead" data-ng-bind="site.content"></p>
+</section>
