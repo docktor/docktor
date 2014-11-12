@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="volume">Volume</label>
+                    <label class="control-label" for="volume">Default data volume</label>
 
                     <div class="controls">
                         <input type="text" name="volume" data-ng-model="daemon.volume" id="volume" class="form-control"
@@ -85,7 +85,7 @@
                     <div class="controls">
                         <input name="cadvisorApi" type="text" data-ng-model="daemon.cadvisorApi" id="cadvisorApi"
                                class="form-control"
-                               placeholder="http://<host>:<port>/api/v1.0/containers/" required>
+                               placeholder="http://<host>:<port>/api/v1.0" required>
                     </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.latitude.$invalid }">
