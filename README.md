@@ -16,6 +16,8 @@ Notes below are for developers only. Docktor is not ready for production now.
 * ~~Action on image (from daemon UI, without group)~~ Done
 * Deploy : 
     * ~~Add variables~~ Done
+    * add cpu (-c) and memory (-m)
+    * add other parameters
     * Display image inspect (volume / port) if present
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
@@ -25,9 +27,14 @@ Notes below are for developers only. Docktor is not ready for production now.
 * Group :
     * ~~Service : delete service~~ Done
     * Update a service
+* Site
+    * a site have on or more daemons
+    * a site have a localization and a name
 * Container :
     * use docker top & log
-* Service : 
+* Service :
+    * Default cpu (-c) and memory (-m)
+    * Other default parameter
     * Check if there is no container (started or not) before delete it
 * REST Api
 * Admin : 
