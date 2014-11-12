@@ -91,15 +91,20 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 var i = 0;
                 var markers = [];
                 angular.forEach($scope.daemons, function (daemon, key) {
-                    console.log('daemon.latitude:');
-                    console.log(daemon.latitude);
                     if (daemon.latitude && daemon.longitude) {
+
                         markers[i] = new google.maps.Marker({
                             title: daemon.name
                         });
+
                         var latlng = new google.maps.LatLng(daemon.latitude, daemon.longitude);
                         markers[i].setPosition(latlng);
                         markers[i].setMap(map);
+
+                        google.maps.event.addListener(markers[i], 'click', function () {
+                            alert('TODO');
+                        });
+
                         i++;
                     }
                 });
