@@ -5,111 +5,127 @@
     <div class="col-md-12">
         <form name="daemonForm" class="form-horizontal" data-ng-submit="update(daemonForm.$valid)" novalidate>
             <fieldset>
-                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
-                    <label class="control-label" for="name">Name</label>
 
-                    <div class="controls">
+                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
+                    <label class="control-label col-sm-2" for="name">Name</label>
+
+                    <div class="col-sm-5">
                         <input name="name" type="text" data-ng-model="daemon.name" id="name"
                                class="form-control" placeholder="Name..." required>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
 
-                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.protocol.$invalid }">
-                    <label class="control-label" for="protocol">Protocol</label>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="protocol">Docker Host</label>
 
-                    <div class="controls">
+                    <div class="col-sm-1">
                         <input name="protocol" type="text" data-ng-model="daemon.protocol" id="protocol"
                                class="form-control" placeholder="http or https" required>
                     </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.host.$invalid }">
-                    <label class="control-label" for="host">Host</label>
-
-                    <div class="controls">
+                    <div class="col-sm-2">
                         <input name="host" type="text" data-ng-model="daemon.host" id="host" class="form-control"
                                placeholder="ip or hostname" required>
                     </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.port.$invalid }">
-                    <label class="control-label" for="port">Port</label>
-
-                    <div class="controls">
+                    <div class="col-sm-2">
                         <input name="port" type="number" data-ng-model="daemon.port" id="port" class="form-control"
                                placeholder="port" required>
                     </div>
+                    <div class="col-sm-5">
+                        
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.timedout.$invalid }">
-                    <label class="control-label" for="timedout">Timeout in ms</label>
+                    <label class="control-label col-sm-2" for="timedout">Timeout in ms</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input name="timedout" type="number" data-ng-model="daemon.timedout" id="timedout"
                                class="form-control"
                                placeholder="timedout" required>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="ca">CA</label>
+                    <label class="control-label col-sm-2" for="ca">CA</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <textarea name="ca" data-ng-model="daemon.ca" id="ca" class="form-control" cols="30" rows="10"
                                   placeholder="CA Content File"></textarea>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="cert">CERT</label>
+                    <label class="control-label col-sm-2" for="cert">CERT</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <textarea name="cert" data-ng-model="daemon.cert" id="cert" class="form-control" cols="30"
                                   rows="10" placeholder="CERT Content File"></textarea>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="cert">Key</label>
+                    <label class="control-label col-sm-2" for="cert">Key</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <textarea name="key" data-ng-model="daemon.key" id="key" class="form-control" cols="30"
                                   rows="10" placeholder="KEY Content File"></textarea>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="volume">Default data volume</label>
+                    <label class="control-label col-sm-2" for="volume">Default data volume</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input type="text" name="volume" data-ng-model="daemon.volume" id="volume" class="form-control"
                                placeholder="/data"/>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.cadvisorApi.$invalid }">
-                    <label class="control-label" for="cadvisorApi">URL cAdvisor Api</label>
+                    <label class="control-label col-sm-2" for="cadvisorApi">URL cAdvisor Api</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input name="cadvisorApi" type="text" data-ng-model="daemon.cadvisorApi" id="cadvisorApi"
                                class="form-control"
                                placeholder="http://<host>:<port>/api/v1.0" required>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.latitude.$invalid }">
-                    <label class="control-label" for="latitude">Latitude</label>
+                    <label class="control-label col-sm-2" for="latitude">Latitude</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input name="latitude" type="number" data-ng-model="daemon.latitude" id="latitude" class="form-control"
                                placeholder="latitude" required>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.longitude.$invalid }">
-                    <label class="control-label" for="longitude">Longitude</label>
+                    <label class="control-label col-sm-2" for="longitude">Longitude</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input name="longitude" type="number" data-ng-model="daemon.longitude" id="longitude" class="form-control"
                                placeholder="longitude" required>
                     </div>
+                    <div class="col-sm-5">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="description">Description</label>
+                    <label class="control-label col-sm-2" for="description">Description</label>
 
-                    <div class="controls">
+                    <div class="col-sm-5">
                         <input type="text" name="description" data-ng-model="daemon.description" id="description"
                                class="form-control" cols="30" rows="10" placeholder="Description"/>
+                    </div>
+                    <div class="col-sm-5">
                     </div>
                 </div>
                 <div class="form-group">
