@@ -45,6 +45,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Pipeline Add / Deploy service : pull, create, start
     * Display all Json Returns (error or not)
     * New Bootstrap theme
+    * Merge create-* and edit-* views
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
