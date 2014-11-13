@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <form name="groupForm" class="form-horizontal" data-ng-submit="update(groupForm.$valid)" novalidate>
             <fieldset>
-                <div class="form-group" ng-class="{ 'has-error' : submitted && groupForm.title.$invalid}">
+                <div class="form-group">
                     <label class="control-label" for="title">Title</label>
 
                     <div class="controls">
@@ -16,7 +16,15 @@
                         <p ng-show="groupForm.title.$error.required" class="text-danger">Title is required</p>
                     </div>
                 </div>
-                <div class="form-group" ng-class="{ 'has-error' : submitted && groupForm.description.$invalid}">
+                <div class="form-group">
+                    <label class="control-label" for="contacts">Contacts</label>
+
+                    <div class="controls">
+                        <input name="contacts" type="text" data-ng-model="group.contacts" id="contacts" class="form-control"
+                               placeholder="person@email.com, personB@email.com">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="description">Description</label>
 
                     <div class="controls">
@@ -29,20 +37,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
-
-                    <button class="btn btn-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
-                        <i class="fa fa-trash-o" tooltip="Delete Daemon"
-                           tooltip-popup-delay='750'> Delete Deamon</i>
-                    </button>
-                    <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-danger">
-                        No, I don't want to delete this. <i class="fa fa-reply"></i>
-                    </button>
-                    <button data-ng-click="remove();" ng-show="askDeleteGroup"
-                            class="btn btn-danger">
-                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                    </button>
-
+                    <input type="submit" value="Update" class="btn btn-primary">
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

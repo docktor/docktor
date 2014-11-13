@@ -105,6 +105,11 @@ var GroupSchema = new Schema({
         trim: true,
         required: 'Title cannot be blank'
     },
+    contacts: {
+        type: String,
+        default: '',
+        trim: true
+    },
     description: {
         type: String,
         default: '',
