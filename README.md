@@ -26,6 +26,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Update a image in a group : check deploy service before
 * Group :
     * ~~Service : delete service~~ Done
+    * Add contacts field
     * Update a service
 * Site
     * ~~a site have on or more daemons~~ Done
