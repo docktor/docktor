@@ -10,20 +10,17 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.daemon = new Daemons();
 
+        $scope.submitForm = function () {
+
+            if ($scope.daemon._id) {
+                $scope.update();
+            } else {
+                $scope.create()
+            }
+
+        };
+
         $scope.create = function () {
-            /*var daemon = new Daemons({
-                name: this.name,
-                protocol: this.protocol,
-                host: this.host,
-                port: this.port,
-                timedout: this.timedout,
-                ca: this.ca,
-                cert: this.cert,
-                key: this.key,
-                volume: this.volume,
-                cadvisorApi: this.cadvisorApi,
-                description: this.description
-            });*/
             var daemon = $scope.daemon;
             $scope.daemon.site = $scope.daemon.selectSite._id;
             daemon.$save(function (response) {
@@ -61,7 +58,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.find = function () {
             Daemons.query(function (daemons) {
                 $scope.daemons = daemons;
-                var i = 0;
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
                     Daemon.getDetails(daemon);
@@ -88,7 +84,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 var markers = [];
                 angular.forEach($scope.daemons, function (daemon, key) {
                     if (daemon.latitude && daemon.longitude) {
-
+// TODO use localization of site
                         markers[i] = new google.maps.Marker({
                             title: daemon.name
                         });

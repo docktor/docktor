@@ -11,7 +11,7 @@ angular.module('daemons').config(['$stateProvider',
             }).
             state('createDaemon', {
                 url: '/daemons/create',
-                templateUrl: 'modules/daemons/views/create-daemon.client.view.html'
+                templateUrl: 'modules/daemons/views/edit-daemon.client.view.html'
             }).
             state('viewContainers', {
                 url: '/daemons/view/containers/:daemonId',
