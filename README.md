@@ -21,7 +21,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * Display image inspect (volume / port) if present
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
-    * Display a map of Daemons (GPS infos) : use localization of site.
+    * ~~Display a map of Daemons (GPS infos) : use localization of site.~~ Done
     * pull an image (without group UI) on setected daemons
     * Update a image in a group : check deploy service before
 * Group :

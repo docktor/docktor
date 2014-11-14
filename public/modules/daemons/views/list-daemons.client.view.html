@@ -74,6 +74,15 @@
         No daemons yet, why don't you <a href="/#!/daemons/create">create one</a>?
     </div>
 
+    <button ng-hide="mapView" ng-click="initMap()" class="btn btn-default">View on Map</button>
+
     <h3>Localization</h3>
-    <map center="48.1120266, -1.6884867" zoom="5"></map>
+
+    <div class="col-sm-4">
+        <div ng-bind-html="markerInfo"></div>
+    </div>
+    <div class="col-sm-8">
+        <map center="48.1120266, -1.6884867" zoom="5"></map>
+    </div>
+
 </section>

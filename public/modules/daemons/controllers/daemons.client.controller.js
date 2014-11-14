@@ -3,8 +3,13 @@
 angular.module('daemons').controller('DaemonsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'Daemon', 'Sites',
     function ($scope, $stateParams, $location, Authentication, Daemons, Daemon, Sites) {
         $scope.authentication = Authentication;
-        $scope.positions = [];
+        $scope.positions = {};
 
+        $scope.mapInitialized = false;
+        $scope.mapView = false;
+        $scope.daemonsInitialized = false;
+
+        $scope.markerInfo = '';
         $scope.sites = {};
         $scope.sites.all = Sites.query();
 
@@ -51,16 +56,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             });
         };
 
-        $scope.find = function () {
-            Daemons.query(function (daemons) {
-                $scope.daemons = daemons;
-                angular.forEach($scope.daemons, function (daemon, key) {
-                    daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
-                    Daemon.getDetails(daemon);
-                });
-            });
-        };
-
         $scope.findOne = function () {
             if ($stateParams.daemonId) {
                 Daemons.get({
@@ -75,34 +70,66 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             }
         };
 
-        $scope.$on('mapInitialized', function (event, map) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var pos = new google.maps.LatLng(position.coords.latitude,
-                    position.coords.longitude);
-
-                var i = 0;
-                var markers = [];
+        $scope.find = function () {
+            Daemons.query(function (daemons) {
+                $scope.daemons = daemons;
                 angular.forEach($scope.daemons, function (daemon, key) {
-                    if (daemon.latitude && daemon.longitude) {
-// TODO use localization of site
-                        markers[i] = new google.maps.Marker({
-                            title: daemon.name
-                        });
-
-                        var latlng = new google.maps.LatLng(daemon.latitude, daemon.longitude);
-                        markers[i].setPosition(latlng);
-                        markers[i].setMap(map);
-
-                        google.maps.event.addListener(markers[i], 'click', function () {
-                            alert('TODO');
-                        });
-
-                        i++;
-                    }
+                    daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
+                    Daemon.getDetails(daemon);
+                    if (!$scope.positions[daemon.site._id])
+                        $scope.positions[daemon.site._id] = {};
+                    $scope.positions[daemon.site._id]['site'] = daemon.site;
+                    if (!$scope.positions[daemon.site._id]['daemons'])
+                        $scope.positions[daemon.site._id]['daemons'] = [];
+                    $scope.positions[daemon.site._id]['daemons'].push(daemon);
                 });
-
-                map.setCenter(pos);
+                $scope.daemonsInitialized = true;
             });
+        };
+
+        $scope.$on('mapInitialized', function (event, map) {
+            $scope.map = map;
+            $scope.mapInitialized = true;
         });
+
+        $scope.initMap = function () {
+
+            if ($scope.daemonsInitialized && $scope.mapInitialized) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = new google.maps.LatLng(position.coords.latitude,
+                        position.coords.longitude);
+
+                    var i = 0;
+                    var markers = [];
+                    angular.forEach($scope.positions, function (position, key) {
+                        var site = position.site;
+                        var daemons = position.daemons;
+                        if (site.latitude && site.longitude) {
+                            markers[i] = new google.maps.Marker({
+                                title: site.title
+                            });
+
+                            var latlng = new google.maps.LatLng(site.latitude, site.longitude);
+                            markers[i].setPosition(latlng);
+                            markers[i].setMap($scope.map);
+
+                            google.maps.event.addListener(markers[i], 'click', function () {
+                                var d = '';
+                                angular.forEach(daemons, function (daemon, key) {
+                                    d = d + daemon.name + '<br>';
+                                });
+                                $scope.markerInfo = 'Site ' + site.title + '<hr>' + d;
+                                $scope.$apply();
+                            });
+
+                            i++;
+                        }
+                    });
+
+                    $scope.map.setCenter(pos);
+                });
+                $scope.mapView = true;
+            }
+        }
     }
 ]);

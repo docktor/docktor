@@ -73,22 +73,25 @@ exports.delete = function (req, res) {
  * List of Daemons
  */
 exports.list = function (req, res) {
-    Daemon.find().sort('-created').populate('user', 'displayName').exec(function (err, daemons) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(daemons);
-        }
-    });
+    Daemon.find().sort('-created')
+        .populate('site')
+        .populate('user', 'displayName')
+        .exec(function (err, daemons) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(daemons);
+            }
+        });
 };
 
 /**
  * Daemon middleware
  */
 exports.daemonByID = function (req, res, next, id) {
-    Daemon.findById(id).populate('user', 'displayName').populate('site').exec(function (err, daemon) {
+    Daemon.findById(id).populate('site').populate('user', 'displayName').exec(function (err, daemon) {
         if (err) return next(err);
         if (!daemon) return next(new Error('Failed to load daemon ' + id));
         req.daemon = daemon;
