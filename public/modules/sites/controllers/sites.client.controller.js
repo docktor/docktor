@@ -12,13 +12,27 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         $scope.volume = {};
         $scope.displayFormVolume = false;
 
+        $scope.submitForm = function () {
+            if ($scope.site._id) {
+                $scope.update();
+            } else {
+                $scope.create()
+            }
+        };
+
+        $scope.site = new Sites();
         $scope.create = function () {
-            var site = new Sites({
-                title: this.title
-            });
-            site.$save(function (response) {
+            $scope.site.$save(function (response) {
                 $location.path('sites/' + response._id);
-                $scope.title = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
+        $scope.update = function () {
+            var site = $scope.site;
+            site.$update(function () {
+                $location.path('sites/' + site._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -38,16 +52,6 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
                     $location.path('sites');
                 });
             }
-        };
-
-        $scope.update = function () {
-            var site = $scope.site;
-
-            site.$update(function () {
-                $location.path('sites/' + site._id);
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
         };
 
         $scope.find = function () {

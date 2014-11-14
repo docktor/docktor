@@ -1,9 +1,12 @@
 <section data-ng-controller="SitesController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Edit Site</h1>
+        <h1>
+            <span ng-hide="site._id">Create Site</span>
+            <span ng-show="site._id">Edit Site</span>
+        </h1>
     </div>
     <div class="col-md-12">
-        <form name="siteForm" class="form-horizontal" data-ng-submit="update(siteForm.$valid)" novalidate>
+        <form name="siteForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
             <fieldset>
                 <div class="form-group">
                     <label class="control-label" for="title">Title</label>
@@ -37,7 +40,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
+                    <button type="submit" class="btn btn-primary">
+                        <span ng-hide="site._id">Create</span>
+                        <span ng-show="site._id">Update</span>
+                    </button>
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

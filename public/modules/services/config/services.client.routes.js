@@ -11,7 +11,7 @@ angular.module('services').config(['$stateProvider',
             }).
             state('createService', {
                 url: '/services/create',
-                templateUrl: 'modules/services/views/create-service.client.view.html'
+                templateUrl: 'modules/services/views/edit-service.client.view.html'
             }).
             state('viewService', {
                 url: '/services/:serviceId',

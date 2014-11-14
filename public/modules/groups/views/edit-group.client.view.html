@@ -1,9 +1,12 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Edit Group</h1>
+        <h1>
+            <span ng-hide="group._id">Create Group</span>
+            <span ng-show="group._id">Edit Group</span>
+        </h1>
     </div>
     <div class="col-md-12">
-        <form name="groupForm" class="form-horizontal" data-ng-submit="update(groupForm.$valid)" novalidate>
+        <form name="groupForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
             <fieldset>
                 <div class="form-group">
                     <label class="control-label" for="title">Title</label>
@@ -37,7 +40,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary">
+                        <span ng-hide="group._id">Create</span>
+                        <span ng-show="group._id">Update</span>
+                    </button>
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

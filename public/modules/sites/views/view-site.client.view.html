@@ -4,6 +4,14 @@
     </div>
     <p>Latitude : {{site.latitude}}</p>
     <p>Longitude : {{site.longitude}}</p>
+    <div class="pull-right">
+        <a class="btn btn-primary" href="/#!/sites/{{site._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
     <small>
         <em class="text-muted">
             Created at

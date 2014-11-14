@@ -12,13 +12,29 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.volume = {};
         $scope.displayFormVolume = false;
 
+        $scope.submitForm = function () {
+            if ($scope.service._id) {
+                $scope.update();
+            } else {
+                $scope.create()
+            }
+        };
+
+        $scope.service = new Services();
+
         $scope.create = function () {
-            var service = new Services({
-                title: this.title
-            });
-            service.$save(function (response) {
+            $scope.service.$save(function (response) {
                 $location.path('services/' + response._id);
-                $scope.title = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
+        $scope.update = function () {
+            var service = $scope.service;
+
+            service.$update(function () {
+                $location.path('services/' + service._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -38,16 +54,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
                     $location.path('services');
                 });
             }
-        };
-
-        $scope.update = function () {
-            var service = $scope.service;
-
-            service.$update(function () {
-                $location.path('services/' + service._id);
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
         };
 
         $scope.find = function () {

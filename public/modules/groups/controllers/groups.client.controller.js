@@ -5,16 +5,19 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.authentication = Authentication;
         $scope.alerts = [];
 
-        $scope.create = function () {
-            var group = new Groups({
-                title: this.title,
-                description: this.description
-            });
-            group.$save(function (response) {
-                $location.path('groups/' + response._id);
+        $scope.submitForm = function () {
+            if ($scope.group._id) {
+                $scope.update();
+            } else {
+                $scope.create()
+            }
+        };
 
-                $scope.title = '';
-                $scope.description = '';
+        $scope.group = new Groups();
+
+        $scope.create = function () {
+            $scope.group.$save(function (response) {
+                $location.path('groups/' + response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -82,14 +85,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackError = function (container, err) {
-            $scope.alerts.push({type:'danger', msg: err.message});
+            $scope.alerts.push({type: 'danger', msg: err.message});
         };
 
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.removeServiceFromGroup = function(container) {
+        $scope.removeServiceFromGroup = function (container) {
             GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.findOne, $scope.callbackError);
         };
 

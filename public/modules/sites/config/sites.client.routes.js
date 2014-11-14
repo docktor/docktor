@@ -11,7 +11,7 @@ angular.module('sites').config(['$stateProvider',
             }).
             state('createSite', {
                 url: '/sites/create',
-                templateUrl: 'modules/sites/views/create-site.client.view.html'
+                templateUrl: 'modules/sites/views/edit-site.client.view.html'
             }).
             state('viewSite', {
                 url: '/sites/:siteId',

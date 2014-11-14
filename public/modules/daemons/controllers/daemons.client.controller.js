@@ -11,13 +11,11 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.daemon = new Daemons();
 
         $scope.submitForm = function () {
-
             if ($scope.daemon._id) {
                 $scope.update();
             } else {
                 $scope.create()
             }
-
         };
 
         $scope.create = function () {
