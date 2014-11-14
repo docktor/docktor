@@ -13,8 +13,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.group = new Groups();
-
         $scope.create = function () {
             $scope.group.$save(function (response) {
                 $location.path('groups/' + response._id);
@@ -52,23 +50,27 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.findOne = function () {
-            Groups.get({
-                groupId: $stateParams.groupId
-            }, function (group) {
-                $scope.group = group;
-                var daemons = {};
-                $scope.group.containers.forEach(function (container) {
-                    $scope.inspect(container);
-                    daemons[container.daemonId] = {};
+            if ($stateParams.groupId) {
+                Groups.get({
+                    groupId: $stateParams.groupId
+                }, function (group) {
+                    $scope.group = group;
+                    var daemons = {};
+                    $scope.group.containers.forEach(function (container) {
+                        $scope.inspect(container);
+                        daemons[container.daemonId] = {};
+                    });
+                    angular.forEach(daemons, function (daemon, daemonId) {
+                        Daemon.getInfo(daemonId, daemon);
+                    });
+                    $scope.group.containers.forEach(function (container) {
+                        $scope.inspect(container);
+                        container.daemon = daemons[container.daemonId];
+                    });
                 });
-                angular.forEach(daemons, function (daemon, daemonId) {
-                    Daemon.getInfo(daemonId, daemon);
-                });
-                $scope.group.containers.forEach(function (container) {
-                    $scope.inspect(container);
-                    container.daemon = daemons[container.daemonId];
-                });
-            });
+            } else {
+                $scope.group = new Groups();
+            }
         };
 
         $scope.inspect = function (container) {

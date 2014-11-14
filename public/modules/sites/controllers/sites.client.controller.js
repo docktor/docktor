@@ -20,7 +20,6 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
             }
         };
 
-        $scope.site = new Sites();
         $scope.create = function () {
             $scope.site.$save(function (response) {
                 $location.path('sites/' + response._id);
@@ -41,7 +40,6 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         $scope.remove = function (site) {
             if (site) {
                 site.$remove();
-
                 for (var i in $scope.sites) {
                     if ($scope.sites[i] === site) {
                         $scope.sites.splice(i, 1);
@@ -59,9 +57,13 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         };
 
         $scope.findOne = function () {
-            $scope.site = Sites.get({
-                siteId: $stateParams.siteId
-            });
+            if ($stateParams.siteId) {
+                $scope.site = Sites.get({
+                    siteId: $stateParams.siteId
+                });
+            } else {
+                $scope.site = new Sites();
+            }
         };
 
         $scope.removeImage = function (row) {

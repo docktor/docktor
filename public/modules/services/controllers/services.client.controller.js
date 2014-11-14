@@ -20,8 +20,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             }
         };
 
-        $scope.service = new Services();
-
         $scope.create = function () {
             $scope.service.$save(function (response) {
                 $location.path('services/' + response._id);
@@ -32,7 +30,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.update = function () {
             var service = $scope.service;
-
             service.$update(function () {
                 $location.path('services/' + service._id);
             }, function (errorResponse) {
@@ -61,9 +58,13 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         };
 
         $scope.findOne = function () {
-            $scope.service = Services.get({
-                serviceId: $stateParams.serviceId
-            });
+            if ($stateParams.serviceId) {
+                $scope.service = Services.get({
+                    serviceId: $stateParams.serviceId
+                });
+            } else {
+                $scope.service = new Services();
+            }
         };
 
         $scope.removeImage = function (row) {

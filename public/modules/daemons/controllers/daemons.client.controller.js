@@ -8,8 +8,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.sites = {};
         $scope.sites.all = Sites.query();
 
-        $scope.daemon = new Daemons();
-
         $scope.submitForm = function () {
             if ($scope.daemon._id) {
                 $scope.update();
@@ -64,13 +62,17 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.findOne = function () {
-            Daemons.get({
-                daemonId: $stateParams.daemonId
-            }, function (daemon) {
-                $scope.daemon = daemon;
-                $scope.daemon.selectSite = $scope.daemon.site;
-                Daemon.getDetails(daemon);
-            });
+            if ($stateParams.daemonId) {
+                Daemons.get({
+                    daemonId: $stateParams.daemonId
+                }, function (daemon) {
+                    $scope.daemon = daemon;
+                    $scope.daemon.selectSite = $scope.daemon.site;
+                    Daemon.getDetails(daemon);
+                });
+            } else {
+                $scope.daemon = new Daemons();
+            }
         };
 
         $scope.$on('mapInitialized', function (event, map) {
