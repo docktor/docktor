@@ -33,17 +33,20 @@ exports.createContainer = function (req, res) {
         ports[port.internal] = {};
     });
 
-    daemonDocker.createContainer({
+    var containerParameters = {
         Hostname: container.hostname,
         Image: container.image,
         name: container.name,
         Volumes: volumes,
         ExposedPorts: ports,
-        CpuShares: container.cpuShares,
-        Memory: container.memory,
         Env: variables
-    }, function (err, containerCreated) {
+    };
 
+    container.parameters.forEach(function (parameter) {
+        containerParameters[parameter.name] = parameter.value;
+    });
+
+    daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {
             console.log('ERR createContainer');
             console.log(err);

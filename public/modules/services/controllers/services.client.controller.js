@@ -5,8 +5,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.authentication = Authentication;
 
         $scope.displayFormImage = false;
-        $scope.argument = {};
-        $scope.displayFormArgument = false;
+        $scope.parameter = {};
+        $scope.displayFormParameter = false;
         $scope.port = {};
         $scope.displayFormPort = false;
         $scope.variable = {};
@@ -73,7 +73,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.service.images.push({
                 name: $scope.imageName,
                 active: true,
-                arguments: [],
+                parameters: [],
                 volumes: [],
                 ports: []
             });
@@ -81,13 +81,13 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.imageIsActive = true;
         };
 
-        $scope.addArgument = function (image) {
-            image.arguments.push($scope.argument);
-            $scope.argument = {};
+        $scope.addParameter = function (image) {
+            image.parameters.push($scope.parameter);
+            $scope.parameter = {};
         };
 
-        $scope.removeArgument = function (image, argument) {
-            image.arguments.splice(image.arguments.indexOf(argument), 1);
+        $scope.removeParameter = function (image, parameter) {
+            image.parameters.splice(image.parameters.indexOf(parameter), 1);
         };
 
         $scope.addPort = function (image) {

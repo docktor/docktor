@@ -27,6 +27,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 name: containerName,
                 hostname: containerName,
                 image: image.name,
+                parameters: image.parameters,
                 variables: image.variables,
                 ports: image.ports,
                 volumes: image.volumes,

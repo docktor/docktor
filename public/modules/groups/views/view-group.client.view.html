@@ -44,6 +44,7 @@
             <th>Image</th>
             <th>Id</th>
             <th>Daemon</th>
+            <th>Parameter</th>
             <th>Variables</th>
             <th>Ports</th>
             <th>Volumes</th>
@@ -74,6 +75,14 @@
 
             </td>
             <td>
+                <div ng-repeat="parameter in container.parameters">
+                    {{parameter.name}}:{{parameter.value}}
+                </div>
+            </td>
+            <td>
+                <div ng-repeat="variable in container.variables">
+                    {{variable.name}}:{{variable.value}}
+                </div>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
                         value="Click me!"
                         tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.Config.Env | json | nl2br}}</div>"
@@ -82,6 +91,9 @@
                 </button>
             </td>
             <td>
+                <div ng-repeat="port in container.ports">
+                    -e {{port.internal}}:{{port.external}}
+                </div>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
                         value="Click me!"
                         tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
@@ -90,6 +102,9 @@
                 </button>
             </td>
             <td>
+                <div ng-repeat="volume in container.volumes">
+                    -v {{volume.internal}}:{{volume.external}}
+                </div>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
                         value="Click me!"
                         tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"

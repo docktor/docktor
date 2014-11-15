@@ -6,6 +6,21 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+/**
+ * Parameter Schema, not useful outside Image
+ */
+var ParameterContainerSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Parameter Name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'Parameter Value cannot be blank'
+    }
+});
 
 /**
  * Variable Schema, not useful outside Image
@@ -78,6 +93,7 @@ var ContainerSchema = new Schema({
         type: String,
         trim: true
     },
+    parameters: [ParameterContainerSchema],
     ports: [PortContainerSchema],
     variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],

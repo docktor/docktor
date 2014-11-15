@@ -45,7 +45,7 @@
                     <th></th>
                     <th>Name</th>
                     <th>Is Active</th>
-                    <th>Arguments</th>
+                    <th>Parameters</th>
                     <th>Ports Mapping</th>
                     <th>Variables Mapping</th>
                     <th>Volumes Mapping</th>
@@ -75,40 +75,40 @@
                     <td>{{image.active}}</td>
                     <td>
 
-                        <ul data-ng-repeat="argument in image.arguments">
-                            <li>{{argument.name}}:{{argument.defaultValue}}
-                                <small><i>{{argument.description}}</i></small>
-                                <a ng-click="askDeleteArgument=true" ng-hide="askDeleteArgument">
-                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Argument"
+                        <ul data-ng-repeat="parameter in image.parameters">
+                            <li>{{parameter.name}}:{{parameter.value}}
+                                <small><i>{{parameter.description}}</i></small>
+                                <a ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
+                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
                                        tooltip-popup-delay='750'></i>
                                 </a>
-                                <button ng-click="askDeleteArgument=false" ng-show="askDeleteArgument"
+                                <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
                                         class="btn btn-danger">
                                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                                 </button>
-                                <button data-ng-click="removeArgument(image, variable);" ng-show="askDeleteArgument"
+                                <button data-ng-click="removeParameter(image, variable);" ng-show="askDeleteParameter"
                                         class="btn btn-danger">
                                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                                 </button>
                             </li>
                         </ul>
 
-                        <button class="btn btn-default btn-xs" ng-hide="displayFormArgument"
-                                ng-click="displayFormArgument=!displayFormArgument">
+                        <button class="btn btn-default btn-xs" ng-hide="displayFormParameter"
+                                ng-click="displayFormParameter=!displayFormParameter">
                             <i class="fa fa-plus-square"></i>
                         </button>
 
-                        <form ng-show="displayFormArgument" name="argumentForm" id="argumentForm" novalidate
+                        <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
                               autocomplete="off">
                             <fieldset>
-                                <input type="text" name="name" data-ng-model="argument.name"
+                                <input type="text" name="name" data-ng-model="parameter.name"
                                        placeholder="name" class="form-control" ng-required="true">
-                                <input type="text" name="defaultValue" data-ng-model="argument.defaultValue"
-                                       placeholder="name" class="form-control" ng-required="true">
-                                <input type="text" name="descriptionArgument" data-ng-model="argument.description"
+                                <input type="text" name="value" data-ng-model="parameter.value"
+                                       placeholder="defaultValue" class="form-control" ng-required="true">
+                                <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
                                        placeholder="description" class="form-control">
-                                <button ng-disabled="argumentForm.$invalid" class="btn btn-primary"
-                                        data-ng-click="addArgument(image); displayFormArgument=false">
+                                <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
+                                        data-ng-click="addParameter(image); displayFormParameter=false">
                                     Insert Variable
                                 </button>
                             </fieldset>

@@ -23,18 +23,18 @@ var VariableSchema = new Schema({
 });
 
 /**
- * Argument Schema, not useful outside Image
+ * Parameter Schema, not useful outside Image
  */
-var ArgumentSchema = new Schema({
+var ParameterSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'argument Name cannot be blank'
+        required: 'parameter Name cannot be blank'
     },
-    defaultValue: {
+    value: {
         type: String,
         trim: true,
-        required: 'argument defaultValue cannot be blank'
+        required: 'parameter defaultValue cannot be blank'
     },
     description: {
         type: String,
@@ -91,7 +91,7 @@ var ImageSchema = new Schema({
     variables: [VariableSchema],
     ports: [PortSchema],
     volumes: [VolumeSchema],
-    arguments: [ArgumentSchema],
+    parameters: [ParameterSchema],
     active: {
         type: Boolean,
         required: 'Active or not is required'
