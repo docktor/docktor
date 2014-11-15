@@ -18,7 +18,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             if ($scope.service._id) {
                 $scope.update();
             } else {
-                $scope.create()
+                $scope.create();
             }
         };
 

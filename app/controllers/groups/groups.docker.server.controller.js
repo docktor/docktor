@@ -21,16 +21,22 @@ exports.createContainer = function (req, res) {
 
     // Env - A list of environment variables in the form of VAR=value
     container.variables.forEach(function (variable) {
-        variables.push(variable.name + '=' + variable.value);
+        if (!_.isEmpty(variable.name) && !_.isEmpty(variable.value)) {
+            variables.push(variable.name + '=' + variable.value);
+        }
     });
 
     container.volumes.forEach(function (volume) {
-        volumes[volume.internal] = {};
+        if (_.isString(volume.internal) && !_.isEmpty(volume.internal)) {
+            volumes[volume.internal] = {};
+        }
     });
 
     // example : ExposedPorts: {"80/tcp": {}, "22/tcp" : {}}
     container.ports.forEach(function (port) {
-        ports[port.internal] = {};
+        if (_.isNumber(port.internal)) {
+            ports[port.internal] = {};
+        }
     });
 
     var containerParameters = {
@@ -81,7 +87,9 @@ exports.startContainer = function (req, res) {
     var ports = {};
 
     container.volumes.forEach(function (volume) {
-        volumes.push(volume.internal + ':' + volume.external);
+        if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
+            volumes.push(volume.internal + ':' + volume.external);
+        }
     });
 
     // PortBindings : {
@@ -90,9 +98,11 @@ exports.startContainer = function (req, res) {
     //   }
 
     container.ports.forEach(function (port) {
-        ports[port.internal] = [
-            {'HostPort': '' + port.external + ''}
-        ];
+        if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+            ports[port.internal] = [
+                {'HostPort': '' + port.external + ''}
+            ];
+        }
     });
 
     dockerContainer.start({

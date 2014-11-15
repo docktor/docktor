@@ -9,7 +9,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             if ($scope.group._id) {
                 $scope.update();
             } else {
-                $scope.create()
+                $scope.create();
             }
         };
 

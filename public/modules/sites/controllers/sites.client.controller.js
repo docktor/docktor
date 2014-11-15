@@ -16,7 +16,7 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
             if ($scope.site._id) {
                 $scope.update();
             } else {
-                $scope.create()
+                $scope.create();
             }
         };
 

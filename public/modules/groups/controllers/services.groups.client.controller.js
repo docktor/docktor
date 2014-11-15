@@ -16,6 +16,16 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             $scope.daemons.all = Daemons.query();
         };
 
+        $scope.changeImage = function () {
+            if ($scope.services.selectImage) {
+                console.log('Add Hostname');
+                var parameter = {};
+                parameter.name = 'Hostname';
+                parameter.value = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
+                $scope.services.selectImage.parameters.push(parameter);
+            }
+        };
+
         $scope.addImageToGroup = function (daemon, image) {
             var group = $scope.group;
             var containerName = image.name.replace('/', '-');
@@ -23,14 +33,42 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 containerName = containerName.substring(0, image.name.indexOf(':'));
             }
 
+            var parameters = [];
+            image.parameters.forEach(function (parameter) {
+                if (!_.isEmpty(parameter.name) && !_.isEmpty(parameter.value)) {
+                    parameters.push(parameter);
+                }
+            });
+
+            var variables = [];
+            image.variables.forEach(function (variable) {
+                if (_.isString(variable.name) && _.isString(variable.value) && !_.isEmpty(variable.name) && !_.isEmpty(variable.value)) {
+                    variables.push(variable);
+                }
+            });
+
+            var volumes = [];
+            image.volumes.forEach(function (volume) {
+                if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
+                    volumes.push(volume);
+                }
+            });
+
+            var ports = [];
+            image.ports.forEach(function (port) {
+                if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+                    ports.push(port);
+                }
+            });
+
             group.containers.push({
                 name: containerName,
                 hostname: containerName,
                 image: image.name,
-                parameters: image.parameters,
-                variables: image.variables,
-                ports: image.ports,
-                volumes: image.volumes,
+                parameters: parameters,
+                variables: variables,
+                ports: ports,
+                volumes: volumes,
                 daemonId: daemon._id,
                 active: true
             });

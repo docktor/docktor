@@ -17,7 +17,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             if ($scope.daemon._id) {
                 $scope.update();
             } else {
-                $scope.create()
+                $scope.create();
             }
         };
 
@@ -78,10 +78,10 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                     Daemon.getDetails(daemon);
                     if (!$scope.positions[daemon.site._id])
                         $scope.positions[daemon.site._id] = {};
-                    $scope.positions[daemon.site._id]['site'] = daemon.site;
-                    if (!$scope.positions[daemon.site._id]['daemons'])
-                        $scope.positions[daemon.site._id]['daemons'] = [];
-                    $scope.positions[daemon.site._id]['daemons'].push(daemon);
+                    $scope.positions[daemon.site._id].site = daemon.site;
+                    if (!$scope.positions[daemon.site._id].daemons)
+                        $scope.positions[daemon.site._id].daemons = [];
+                    $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
                 $scope.daemonsInitialized = true;
             });
@@ -130,6 +130,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 });
                 $scope.mapView = true;
             }
-        }
+        };
     }
 ]);
