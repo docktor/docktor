@@ -39,11 +39,13 @@ exports.createContainer = function (req, res) {
         name: container.name,
         Volumes: volumes,
         ExposedPorts: ports,
+        CpuShares: container.cpuShares,
+        Memory: container.memory,
         Env: variables
     }, function (err, containerCreated) {
 
         if (err) {
-            console.log('ERR A:');
+            console.log('ERR createContainer');
             console.log(err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

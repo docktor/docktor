@@ -19,30 +19,30 @@ var DaemonSchema = new Schema({
         type: String,
         default: '',
         trim: true,
-        required: 'Name cannot be blank'
+        required: 'Daemon Name cannot be blank'
     },
     protocol: {
         type: String,
         default: '',
         trim: true,
-        required: 'Protocol cannot be blank'
+        required: 'Daemon Protocol cannot be blank'
     },
     host: {
         type: String,
         default: '',
         trim: true,
-        required: 'Host cannot be blank'
+        required: 'Daemon Host cannot be blank'
     },
     port: {
         type: Number,
         default: '',
         trim: true,
-        required: 'Port cannot be blank'
+        required: 'Daemon Port cannot be blank'
     },
     timedout: {
         type: Number,
         default: 5000,
-        required: 'Timeout in ms'
+        required: 'Daemon Timeout in ms'
     },
     ca: {
         type: String,

@@ -20,10 +20,9 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" ng-hide="service._id">
                     <button type="submit" class="btn btn-primary">
-                        <span ng-hide="service._id">Create</span>
-                        <span ng-show="service._id">Update</span>
+                        Create
                     </button>
                 </div>
                 <div data-ng-show="error" class="text-danger">
@@ -35,38 +34,18 @@
         <div ng-if="service._id">
 
             <h4>Images
-                <button class="btn btn-default btn-xs" ng-hide="displayFormImage"
-                        ng-click="displayFormImage=!displayFormImage">
+                <button class="btn btn-default btn-xs" ng-click="addImage()">
                     <i class="fa fa-plus-square"></i>
                 </button>
             </h4>
-
-            <form ng-show="displayFormImage" name="imageForm" id="imageForm" data-ng-submit="addImage()" novalidate
-                  autocomplete="off" class="form-inline" role="form">
-                <div class="form-group">
-                    <label>Image Name</label>
-                    <label class="input">
-                        <input name="imageName" type="text" data-ng-model="imageName" id="name" class="form-control"
-                               placeholder="Image Name" required>
-                    </label>
-
-                    <div ng-show="submitted && imageForm.name.$invalid" class="help-block">
-                        <p ng-show="imageForm.name.$error.required">
-                            <i class="fa fa-warning"> Image Name is required</i>
-                        </p>
-                    </div>
-                    <button ng-disabled="imageForm.$invalid" data-ng-click="addImage()" class="btn btn-primary">
-                        Insert Image
-                    </button>
-                </div>
-            </form>
 
             <table st-table="rowCollection" class="table table-striped">
                 <thead>
                 <tr>
                     <th></th>
-                    <th st-sort="name">Name</th>
-                    <th st-sort="active">Is Active</th>
+                    <th>Name</th>
+                    <th>Is Active</th>
+                    <th>Arguments</th>
                     <th>Ports Mapping</th>
                     <th>Variables Mapping</th>
                     <th>Volumes Mapping</th>
@@ -88,8 +67,53 @@
                             </button>
                         </div>
                     </td>
-                    <td>{{image.name}}</td>
+                    <td>
+                        <input name="imageName" type="text" data-ng-model="image.name" id="imageName"
+                               class="form-control"
+                               placeholder="imageName">
+                    </td>
                     <td>{{image.active}}</td>
+                    <td>
+
+                        <ul data-ng-repeat="argument in image.arguments">
+                            <li>{{argument.name}}:{{argument.defaultValue}}
+                                <small><i>{{argument.description}}</i></small>
+                                <a ng-click="askDeleteArgument=true" ng-hide="askDeleteArgument">
+                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Argument"
+                                       tooltip-popup-delay='750'></i>
+                                </a>
+                                <button ng-click="askDeleteArgument=false" ng-show="askDeleteArgument"
+                                        class="btn btn-danger">
+                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                                </button>
+                                <button data-ng-click="removeArgument(image, variable);" ng-show="askDeleteArgument"
+                                        class="btn btn-danger">
+                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                                </button>
+                            </li>
+                        </ul>
+
+                        <button class="btn btn-default btn-xs" ng-hide="displayFormArgument"
+                                ng-click="displayFormArgument=!displayFormArgument">
+                            <i class="fa fa-plus-square"></i>
+                        </button>
+
+                        <form ng-show="displayFormArgument" name="argumentForm" id="argumentForm" novalidate
+                              autocomplete="off">
+                            <fieldset>
+                                <input type="text" name="name" data-ng-model="argument.name"
+                                       placeholder="name" class="form-control" ng-required="true">
+                                <input type="text" name="defaultValue" data-ng-model="argument.defaultValue"
+                                       placeholder="name" class="form-control" ng-required="true">
+                                <input type="text" name="descriptionArgument" data-ng-model="argument.description"
+                                       placeholder="description" class="form-control">
+                                <button ng-disabled="argumentForm.$invalid" class="btn btn-primary"
+                                        data-ng-click="addArgument(image); displayFormArgument=false">
+                                    Insert Variable
+                                </button>
+                            </fieldset>
+                        </form>
+                    </td>
                     <td>
                         <ul data-ng-repeat="port in image.ports">
                             <li>-p {{port.internal}}:&lg;externalPort-attributed-on-group&gt;
@@ -207,9 +231,11 @@
                             </fieldset>
                         </form>
                     </td>
+                    </tr>
                 </tr>
                 </tbody>
             </table>
+            <button ng-click="submitForm()" class="btn btn-primary">Save</button>
         </div>
 
     </div>

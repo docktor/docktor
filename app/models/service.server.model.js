@@ -26,10 +26,15 @@ var VariableSchema = new Schema({
  * Argument Schema, not useful outside Image
  */
 var ArgumentSchema = new Schema({
-    defaultArgument: {
+    name: {
         type: String,
         trim: true,
-        required: 'argument cannot be blank'
+        required: 'argument Name cannot be blank'
+    },
+    defaultValue: {
+        type: String,
+        trim: true,
+        required: 'argument defaultValue cannot be blank'
     },
     description: {
         type: String,
@@ -77,7 +82,7 @@ var ImageSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Name cannot be blank'
+        required: 'Image Name cannot be blank'
     },
     created: {
         type: Date,
@@ -87,13 +92,6 @@ var ImageSchema = new Schema({
     ports: [PortSchema],
     volumes: [VolumeSchema],
     arguments: [ArgumentSchema],
-    defaultMemory: {
-        type: String,
-        trim: true
-    },
-    defaultCpu: {
-        type: Number
-    },
     active: {
         type: Boolean,
         required: 'Active or not is required'

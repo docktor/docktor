@@ -5,6 +5,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.authentication = Authentication;
 
         $scope.displayFormImage = false;
+        $scope.argument = {};
+        $scope.displayFormArgument = false;
         $scope.port = {};
         $scope.displayFormPort = false;
         $scope.variable = {};
@@ -67,22 +69,25 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             }
         };
 
-        $scope.removeImage = function (row) {
-            var index = $scope.service.images.indexOf(row);
-            if (index !== -1) {
-                $scope.service.images.splice(index, 1);
-            }
-        };
-
         $scope.addImage = function () {
             $scope.service.images.push({
                 name: $scope.imageName,
                 active: true,
+                arguments: [],
                 volumes: [],
                 ports: []
             });
             $scope.imageName = '';
             $scope.imageIsActive = true;
+        };
+
+        $scope.addArgument = function (image) {
+            image.arguments.push($scope.argument);
+            $scope.argument = {};
+        };
+
+        $scope.removeArgument = function (image, argument) {
+            image.arguments.splice(image.arguments.indexOf(argument), 1);
         };
 
         $scope.addPort = function (image) {

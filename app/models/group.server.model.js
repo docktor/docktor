@@ -14,12 +14,12 @@ var VariableContainerSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Name cannot be blank'
+        required: 'Variable Name cannot be blank'
     },
     value: {
         type: String,
         trim: true,
-        required: 'Value cannot be blank'
+        required: 'Variable Value cannot be blank'
     }
 });
 
@@ -62,12 +62,12 @@ var ContainerSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Name cannot be blank'
+        required: 'Container Name cannot be blank'
     },
     hostname: {
         type: String,
         trim: true,
-        required: 'Hostname cannot be blank'
+        required: 'Container Hostname cannot be blank'
     },
     image: {
         type: String,
