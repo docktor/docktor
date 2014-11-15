@@ -3,6 +3,7 @@
 
 [![Build Status](https://travis-ci.org/yesnault/docktor.svg?branch=master)](https://travis-ci.org/yesnault/docktor)
 [![Dependencies Status](https://david-dm.org/yesnault/docktor.svg)](https://david-dm.org/yesnault/docktor)
+[![devDependency Status](https://david-dm.org/yesnault/docktor/dev-status.svg)](https://david-dm.org/yesnault/docktor#info=devDependencies)
 
 Notes below are for developers only. Docktor is not ready for production now.
 
