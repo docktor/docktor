@@ -1,0 +1,7 @@
+[Site|localization]-*[Daemon|docker]
+[Daemon|docker]run-0..*>[Service|(container)]
+[Group]configure-0..*>[Service]
+[Image Docker]^-[Service]
+[Daemon|docker]-[note:Docker run a service (container) configured for a Group{bg:orange}]
+[Group]-[note:A group could be a Team - a Customer - etc...{bg:orange}]
+[Service|(container)]-[note:Docktor manage (run - pause - kill ...) and makes monitorings on Containers and Daemons{bg:orange}]
