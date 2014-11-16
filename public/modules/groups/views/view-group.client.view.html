@@ -44,6 +44,8 @@
             <th>Image</th>
             <th>Id</th>
             <th>Daemon</th>
+            <th>CPU</th>
+            <th>Mem</th>
             <th>Parameter</th>
             <th>Variables</th>
             <th>Ports</th>
@@ -62,6 +64,18 @@
             </td>
             <td>
                 {{container.containerId | limitTo:12}}
+            </td>
+            <td>
+                <just-gage ng-show="container.inspect.State.Running" id="gaugeCPU{{container.Id}}"
+                           class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                           title="CPU"></just-gage>
+            </td>
+            <td style="text-align:center">
+                <just-gage ng-show="container.inspect.State.Running" id="gaugeMem{{container.Id}}"
+                           class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                           title="Memory"></just-gage>
+                <small>{{container.stats.memoryUsage}} Mo</small>
+
             </td>
             <td>
                 <div ng-switch="container.daemon.dockerStatus">

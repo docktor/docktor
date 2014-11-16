@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker) {
         $scope.authentication = Authentication;
         $scope.alerts = [];
 
@@ -78,10 +78,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
+                        if (container.inspect.State.Running === true) {
+
+                            // TODO make one call per daemon to machineInfo
+                            DaemonsDocker.machineInfo(container.daemonId).
+                                success(function (machineInfo) {
+                                    Containers.statsContainer(container, machineInfo, container.daemonId, container.containerId, $scope.callbackError);
+                                })
+                                .error(function (err) {
+                                    $scope.callbackError(container, err);
+                                });
+                        }
                     }).
-                    error(function (data, status, headers, config) {
-                        console.log('Error:');
-                        console.log(data);
+                    error(function (err, status, headers, config) {
+                        $scope.callbackError(container, err);
                     });
             }
         };
