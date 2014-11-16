@@ -28,8 +28,8 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                         if (containerInfo.spec.has_memory) {
                             // Saturate to the machine size.
                             var limit = containerInfo.spec.memory.limit;
-                            if (limit > $scope.machineInfo.memory_capacity) {
-                                limit = $scope.machineInfo.memory_capacity;
+                            if (limit > machineInfo.memory_capacity) {
+                                limit = machineInfo.memory_capacity;
                             }
                             container.stats.memoryLimit = limit;
                             container.stats.memoryUsage = Math.round(cur.memory.usage / 1000000);

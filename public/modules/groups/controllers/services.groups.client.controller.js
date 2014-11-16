@@ -18,11 +18,15 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
         $scope.changeImage = function () {
             if ($scope.services.selectImage) {
-                console.log('Add Hostname');
+                // Hostname
                 var parameter = {};
                 parameter.name = 'Hostname';
                 parameter.value = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
+                // default external volume
                 $scope.services.selectImage.parameters.push(parameter);
+                $scope.services.selectImage.volumes.forEach(function (volume) {
+                   volume.external = $scope.daemons.select.volume + '/' + $scope.group.title + '/' + $scope.services.select.title + '/' +  volume.internal;
+                });
             }
         };
 
