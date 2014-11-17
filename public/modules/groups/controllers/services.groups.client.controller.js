@@ -21,7 +21,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 // Hostname
                 var parameter = {};
                 parameter.name = 'Hostname';
-                parameter.value = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
+                $scope.hostname = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
+                parameter.value = $scope.hostname;
                 // default external volume
                 $scope.services.selectImage.parameters.push(parameter);
                 $scope.services.selectImage.volumes.forEach(function (volume) {
@@ -64,7 +65,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
             group.containers.push({
                 name: containerName,
-                hostname: containerName,
+                hostname: $scope.hostname,
                 image: image.name,
                 parameters: parameters,
                 variables: variables,
