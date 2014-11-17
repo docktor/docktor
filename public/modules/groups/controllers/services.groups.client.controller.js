@@ -60,9 +60,9 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
             var ports = [];
             image.ports.forEach(function (port) {
-                if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+                //if (_.isNumber(port.internal) && _.isNumber(port.external)) {
                     ports.push(port);
-                }
+                //}
             });
 
             group.containers.push({
