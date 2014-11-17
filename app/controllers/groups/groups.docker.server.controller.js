@@ -42,7 +42,7 @@ exports.createContainer = function (req, res) {
     var containerParameters = {
         Hostname: container.hostname,
         Image: container.image,
-        // Not working name: container.name,
+        name: container.name,
         Volumes: volumes,
         ExposedPorts: ports,
         Env: variables
