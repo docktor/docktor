@@ -106,7 +106,7 @@
             </td>
             <td>
                 <div ng-repeat="port in container.ports">
-                    -e {{port.internal}}:{{port.external}}
+                    -e {{port.external}}:{{port.internal}}
                 </div>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
                         value="Click me!"
@@ -117,7 +117,7 @@
             </td>
             <td>
                 <div ng-repeat="volume in container.volumes">
-                    -v {{volume.internal}}:{{volume.external}}
+                    -v {{volume.external}}:{{volume.internal}}
                 </div>
                 <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
                         value="Click me!"
