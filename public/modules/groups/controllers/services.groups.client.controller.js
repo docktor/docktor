@@ -33,7 +33,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
         $scope.addImageToGroup = function (daemon, image) {
             var group = $scope.group;
-            var containerName = $scope.group.title + '-' + $scope.services.select.title;
+            var containerName = '/' + $scope.group.title + '-' + $scope.services.select.title;
 
             var parameters = [];
             image.parameters.forEach(function (parameter) {
