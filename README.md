@@ -19,6 +19,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * ~~Add variables~~ Done
     * ~~add parameters (CpuShares, Memory...)~~ Done
     * Display image inspect (volume / port) if present
+    * Fix production env (blank page)
 * Daemon : 
     * ~~pull an image (without group UI) on one daemons~~ Done
     * ~~Display a map of Daemons (GPS infos) : use localization of site.~~ Done
@@ -32,7 +33,8 @@ Notes below are for developers only. Docktor is not ready for production now.
     * ~~a site have on or more daemons~~ Done
     * ~~a site have a localization and a name~~ Done
 * Container :
-    * use docker top & log
+    * use Docker top
+    * use Docker log
 * Service :
     * ~~Default cpu (-c) and memory (-m)~~ Done
     * ~~Other default parameter~~ Done
