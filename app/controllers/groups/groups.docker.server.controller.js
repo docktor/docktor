@@ -15,7 +15,6 @@ exports.createContainer = function (req, res) {
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
-    var volumes = {};
     var ports = {};
     var variables = [];
 
@@ -23,12 +22,6 @@ exports.createContainer = function (req, res) {
     container.variables.forEach(function (variable) {
         if (!_.isEmpty(variable.name) && !_.isEmpty(variable.value)) {
             variables.push(variable.name + '=' + variable.value);
-        }
-    });
-
-    container.volumes.forEach(function (volume) {
-        if (_.isString(volume.internal) && !_.isEmpty(volume.internal)) {
-            volumes[volume.internal] = {};
         }
     });
 
@@ -43,7 +36,6 @@ exports.createContainer = function (req, res) {
         Hostname: container.hostname,
         Image: container.image,
         name: container.name,
-        Volumes: volumes,
         ExposedPorts: ports,
         Env: variables
     };
@@ -88,7 +80,7 @@ exports.startContainer = function (req, res) {
 
     container.volumes.forEach(function (volume) {
         if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
-            volumes.push(volume.internal + ':' + volume.external);
+            volumes.push(volume.external + ':' + volume.internal);
         }
     });
 
