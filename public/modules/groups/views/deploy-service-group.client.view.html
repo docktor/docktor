@@ -57,7 +57,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="parameter in services.selectImage.parameters">
+                <tr ng-repeat="parameter in services.selectImage.parameters | orderBy:'name'">
                     <td>
                         {{parameter.description}}
                     </td>
@@ -82,7 +82,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="volume in services.selectImage.volumes">
+                <tr ng-repeat="volume in services.selectImage.volumes | orderBy:'internal'">
                     <td>
                         {{volume.description}}
                     </td>
@@ -107,7 +107,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="port in services.selectImage.ports">
+                <tr ng-repeat="port in services.selectImage.ports | orderBy:'internal'">
                     <td>
                         {{port.description}}
                     </td>
@@ -132,7 +132,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="variable in services.selectImage.variables">
+                <tr ng-repeat="variable in services.selectImage.variables | orderBy:'name'">
                     <td>
                         {{variable.description}}
                     </td>
