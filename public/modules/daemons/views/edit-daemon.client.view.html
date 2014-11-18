@@ -6,7 +6,7 @@
         </h1>
     </div>
     <div class="col-md-12">
-        <form name="daemonForm" class="form-horizontal" data-ng-submit="submitForm(daemonForm.$valid)" novalidate>
+        <form name="daemonForm" class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
                     <label class="control-label col-sm-2" for="name">Name</label>
@@ -129,18 +129,106 @@
                     <div class="col-sm-5">
                     </div>
                 </div>
-                <div class="form-group">
 
-                    <button type="submit" class="btn btn-primary">
-                        <span ng-hide="daemon._id">Create</span>
-                        <span ng-show="daemon._id">Update</span>
-                    </button>
-
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
         </form>
+
+        <div class="form-group">
+            <h3>Parameters</h3>
+
+            <ul data-ng-repeat="parameter in daemon.parameters">
+                <li>{{parameter.name}}:{{parameter.value}}
+                    <small><i>{{parameter.description}}</i></small>
+                    <a ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
+                            class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removeParameter(parameter);" ng-show="askDeleteParameter"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <button class="btn btn-default btn-xs" ng-hide="displayFormParameter"
+                    ng-click="displayFormParameter=!displayFormParameter">
+                <i class="fa fa-plus-square"></i>
+            </button>
+
+            <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
+                  autocomplete="off">
+                <fieldset>
+                    <input type="text" name="name" data-ng-model="parameter.name"
+                           placeholder="name" class="form-control" ng-required="true">
+                    <input type="text" name="value" data-ng-model="parameter.value"
+                           placeholder="defaultValue" class="form-control" ng-required="true">
+                    <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
+                           placeholder="description" class="form-control">
+                    <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
+                            data-ng-click="addParameter(); displayFormParameter=false">
+                        Insert Parameter
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="form-group">
+            <h3>Variables</h3>
+            <ul data-ng-repeat="variable in daemon.variables">
+                <li>-e {{variable.name}}:&lg;nameVariable-attributed-on-group&gt;
+                    <small><i>{{variable.description}}</i></small>
+                    <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                            class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removeVariable(variable);" ng-show="askDeleteVariable"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
+                    ng-click="displayFormVariable=!displayFormVariable">
+                <i class="fa fa-plus-square"></i>
+            </button>
+
+            <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
+                  autocomplete="off">
+                <fieldset>
+                    <input type="text" name="name" data-ng-model="variable.name"
+                           placeholder="name" class="form-control" ng-required="true">
+                    <input type="text" name="descriptionVariable" data-ng-model="variable.description"
+                           placeholder="description"
+                           class="form-control">
+                    <button ng-disabled="variableForm.$invalid"
+                            data-ng-click="addVariable(); displayFormVariable=false"
+                            class="btn btn-primary">
+                        Insert Variable
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+
+
+        <div class="form-group">
+
+            <button type="button" ng-click="submitForm(daemonForm.$valid)" class="btn btn-primary">
+                <span ng-hide="daemon._id">Create Daemon</span>
+                <span ng-show="daemon._id">Update Daemon</span>
+            </button>
+
+        </div>
+        <div data-ng-show="error" class="text-danger">
+            <strong data-ng-bind="error"></strong>
+        </div>
+        </fieldset>
     </div>
 </section>

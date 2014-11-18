@@ -7,6 +7,45 @@ var mongoose = require('mongoose'),
     Docker = require('dockerode'),
     Schema = mongoose.Schema;
 
+
+/**
+ * Variable Schema, not useful outside Image
+ */
+var VariableSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Variable Name cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
+ * Parameter Schema, not useful outside Image
+ */
+var ParameterSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'parameter Name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'parameter defaultValue cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+
 /**
  * Daemon Schema
  */
@@ -81,7 +120,9 @@ var DaemonSchema = new Schema({
     site: {
         type: Schema.ObjectId,
         ref: 'Site'
-    }
+    },
+    variables: [VariableSchema],
+    parameters: [ParameterSchema]
 });
 
 DaemonSchema.methods.getDaemonDocker = function () {

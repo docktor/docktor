@@ -13,6 +13,11 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.sites = {};
         $scope.sites.all = Sites.query();
 
+        $scope.parameter = {};
+        $scope.displayFormParameter = false;
+        $scope.variable = {};
+        $scope.displayFormVariable = false;
+
         $scope.submitForm = function () {
             if ($scope.daemon._id) {
                 $scope.update();
@@ -130,6 +135,25 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 });
                 $scope.mapView = true;
             }
+        };
+
+
+        $scope.addParameter = function () {
+            $scope.daemon.parameters.push($scope.parameter);
+            $scope.parameter = {};
+        };
+
+        $scope.removeParameter = function (parameter) {
+            $scope.daemon.parameters.splice($scope.daemon.parameters.indexOf(parameter), 1);
+        };
+
+        $scope.addVariable = function () {
+            $scope.daemon.variables.push($scope.variable);
+            $scope.variable = {};
+        };
+
+        $scope.removeVariable = function (variable) {
+            $scope.daemon.variables.splice($scope.daemon.variables.indexOf(variable), 1);
         };
     }
 ]);

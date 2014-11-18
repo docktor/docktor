@@ -86,7 +86,7 @@
                                         class="btn btn-danger">
                                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                                 </button>
-                                <button data-ng-click="removeParameter(image, variable);" ng-show="askDeleteParameter"
+                                <button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
                                         class="btn btn-danger">
                                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                                 </button>
@@ -109,7 +109,7 @@
                                        placeholder="description" class="form-control">
                                 <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
                                         data-ng-click="addParameter(image); displayFormParameter=false">
-                                    Insert Variable
+                                    Insert Parameter
                                 </button>
                             </fieldset>
                         </form>
