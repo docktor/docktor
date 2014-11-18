@@ -16,14 +16,12 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 Daemons.query(function (daemons) {
                     $scope.daemons.all = daemons;
                     daemons.forEach(function (daemon) {
-                        if (daemon._id === $scope.group.daemon) {
+                        if (daemon._id === $scope.group.daemon._id) {
                             $scope.daemons.select = daemon;
                         }
                     });
                 });
             });
-
-
         };
 
         $scope.changeImage = function () {

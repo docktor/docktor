@@ -131,6 +131,12 @@ var GroupSchema = new Schema({
         default: '',
         trim: true
     },
+    portminrange: {
+        type: Number
+    },
+    portmaxrange: {
+        type: Number
+    },
     daemon: { // default daemon
         type: Schema.ObjectId,
         ref: 'Daemon'

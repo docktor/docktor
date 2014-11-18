@@ -73,7 +73,7 @@ exports.delete = function (req, res) {
  * List of Groups
  */
 exports.list = function (req, res) {
-    Group.find().sort('-created').exec(function (err, groups) {
+    Group.find().sort('-created').populate('daemon').exec(function (err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -95,7 +95,7 @@ exports.actionContainer = function (req, res) {
  * Group middleware
  */
 exports.groupById = function (req, res, next, id) {
-    Group.findById(id).populate('user', 'displayName').exec(function (err, group) {
+    Group.findById(id).populate('user', 'displayName').populate('daemon').exec(function (err, group) {
         if (err) return next(err);
         if (!group) return next(new Error('Failed to load group ' + id));
         req.group = group;

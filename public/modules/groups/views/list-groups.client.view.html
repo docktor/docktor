@@ -6,9 +6,10 @@
     <table st-table="rowCollection" class="table table-striped">
         <thead>
         <tr>
-            <th st-sort="host">Title</th>
-            <th st-sort="description">Description</th>
-            <th st-sort="created">Creation</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Default Daemon</th>
+            <th>Ports</th>
             <th>Details</th>
         </tr>
         </thead>
@@ -21,10 +22,10 @@
                 {{group.description}}
             </td>
             <td>
-                Created at
-                <span data-ng-bind="group.created | date:'mediumDate'"></span>
-                by
-                <span data-ng-bind="group.user.displayName"></span>
+                {{group.daemon.name}}
+            </td>
+            <td>
+                {{group.portminrange}} - {{group.portmaxrange}}
             </td>
             <td>
                 <a class="btn btn-default btn-xs" href="#!/groups/{{group._id}}">
