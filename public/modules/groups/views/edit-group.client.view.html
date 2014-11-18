@@ -28,6 +28,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="contacts">Daemon</label>
+                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;">
+                        <ui-select-match placeholder="Select or search a daemon in the list...">
+                            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="daemon in daemons.all">
+                            {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="description">Description</label>
 
                     <div class="controls">

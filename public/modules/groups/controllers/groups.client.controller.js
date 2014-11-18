@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons) {
         $scope.authentication = Authentication;
         $scope.alerts = [];
 
@@ -14,6 +14,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.create = function () {
+            $scope.group.daemon = $scope.group.selectDaemon._id;
             $scope.group.$save(function (response) {
                 $location.path('groups/' + response._id);
             }, function (errorResponse) {
@@ -38,6 +39,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.update = function () {
             var group = $scope.group;
+            group.daemon = $scope.group.selectDaemon._id;
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
@@ -66,6 +68,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.group.containers.forEach(function (container) {
                         $scope.inspect(container);
                         container.daemon = daemons[container.daemonId];
+                    });
+
+                    $scope.daemons = {};
+                    Daemons.query(function (daemons) {
+                        $scope.daemons.all = daemons;
+                        daemons.forEach(function(daemon) {
+                            if (daemon._id === $scope.group.daemon) {
+                                $scope.group.selectDaemon = daemon;
+                            }
+                        });
                     });
                 });
             } else {

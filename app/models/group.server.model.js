@@ -131,6 +131,10 @@ var GroupSchema = new Schema({
         default: '',
         trim: true
     },
+    daemon: { // default daemon
+        type: Schema.ObjectId,
+        ref: 'Daemon'
+    },
     containers: [ContainerSchema],
     user: {
         type: Schema.ObjectId,
