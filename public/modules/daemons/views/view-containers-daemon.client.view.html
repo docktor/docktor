@@ -36,15 +36,19 @@
                     </button>
                 </td>
                 <td>
-                    <just-gage ng-show="container.inspect.State.Running" id="gaugeCPU{{container.Id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
-                               title="CPU"></just-gage>
+                    <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
+                        <just-gage id="gaugeCPU{{container.Id}}"
+                                   class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                                   title="CPU"></just-gage>
+                    </div>
                 </td>
                 <td style="text-align:center">
-                    <just-gage ng-show="container.inspect.State.Running" id="gaugeMem{{container.Id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
-                               title="Memory"></just-gage>
-                    <small>{{container.stats.memoryUsage}} Mo</small>
+                    <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
+                        <just-gage id="gaugeMem{{container.Id}}"
+                                   class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                                   title="Memory"></just-gage>
+                        <small>{{container.stats.memoryUsage}} Mo</small>
+                    </div>
 
                 </td>
                 <td>
