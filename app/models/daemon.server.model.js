@@ -17,6 +17,10 @@ var VariableSchema = new Schema({
         trim: true,
         required: 'Variable Name cannot be blank'
     },
+    value: {
+        type: String,
+        trim: true
+    },
     description: {
         type: String,
         default: '',
@@ -35,8 +39,7 @@ var ParameterSchema = new Schema({
     },
     value: {
         type: String,
-        trim: true,
-        required: 'parameter defaultValue cannot be blank'
+        trim: true
     },
     description: {
         type: String,

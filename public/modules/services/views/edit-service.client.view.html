@@ -154,7 +154,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="variable in image.variables">
-                            <li>-e {{variable.name}}:
+                            <li>-e {{variable.name}}:{{variable.value}}
                                 <small><i>{{variable.description}}</i></small>
                                 <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
@@ -181,6 +181,8 @@
                             <fieldset>
                                 <input type="text" name="name" data-ng-model="variable.name"
                                        placeholder="name" class="form-control" ng-required="true">
+                                <input type="text" name="value" data-ng-model="variable.value"
+                                       placeholder="default Value" class="form-control">
                                 <input type="text" name="descriptionVariable" data-ng-model="variable.description"
                                        placeholder="description"
                                        class="form-control">
