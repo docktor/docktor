@@ -79,7 +79,9 @@ exports.getFreePorts = function (req, res) {
                 var freePorts = [];
                 if (_.isNumber(req.group.portminrange) && _.isNumber(req.group.portmaxrange)) {
                     for (var port = req.group.portminrange; port <= req.group.portmaxrange; port++) {
-                        if (data[0] && data[0].usedPorts && !_.contains(data[0].usedPorts, port)) {
+                        if (!data[0] || !data[0].usedPorts) {
+                            freePorts.push(port);
+                        } else if (!_.contains(data[0].usedPorts, port)) {
                             freePorts.push(port);
                         }
 
