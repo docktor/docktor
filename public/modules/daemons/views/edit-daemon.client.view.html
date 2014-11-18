@@ -268,7 +268,7 @@
         <ul data-ng-repeat="volume in daemon.volumes">
             <li>
                 <span ng-show="volume.value">-v {{volume.value}}:{{volume.internal}}</span>
-                <span ng-hide="volume.value">-v &lg;nameVolume-attributed-on-group&gt;{{volume.value}}</span>
+                <span ng-hide="volume.value">-v &lg;nameVolume-attributed-on-group&gt;:{{volume.internal}}</span>
 
                 <small><i>{{volume.description}}</i></small>
                 <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
