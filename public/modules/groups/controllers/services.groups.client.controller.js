@@ -5,15 +5,25 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
         $scope.authentication = Authentication;
 
         $scope.findOne = function () {
-            $scope.group = Groups.get({
+            Groups.get({
                 groupId: $stateParams.groupId
+            }, function (group) {
+                $scope.group = group;
+                $scope.services = {};
+                $scope.services.all = Services.query();
+
+                $scope.daemons = {};
+                Daemons.query(function (daemons) {
+                    $scope.daemons.all = daemons;
+                    daemons.forEach(function (daemon) {
+                        if (daemon._id === $scope.group.daemon) {
+                            $scope.daemons.select = daemon;
+                        }
+                    });
+                });
             });
 
-            $scope.services = {};
-            $scope.services.all = Services.query();
 
-            $scope.daemons = {};
-            $scope.daemons.all = Daemons.query();
         };
 
         $scope.changeImage = function () {
