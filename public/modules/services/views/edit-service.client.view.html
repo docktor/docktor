@@ -220,9 +220,10 @@
                             <fieldset>
                                 <input type="text" name="internal" data-ng-model="volume.internal"
                                        placeholder="internal" class="form-control" ng-required="true">
+                                <input type="text" name="value" data-ng-model="volume.value"
+                                       placeholder="/exemple/defaultValue" class="form-control">
                                 <input type="text" name="descriptionVolume" data-ng-model="volume.description"
-                                       placeholder="description"
-                                       class="form-control">
+                                       placeholder="description" class="form-control">
                                 <button ng-disabled="volumeForm.$invalid"
                                         data-ng-click="addVolume(image); displayFormVolume=false"
                                         class="btn btn-primary">

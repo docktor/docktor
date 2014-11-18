@@ -26,7 +26,11 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 // default external volume
                 $scope.services.selectImage.parameters.push(parameter);
                 $scope.services.selectImage.volumes.forEach(function (volume) {
-                   volume.external = $scope.daemons.select.volume + '/' + $scope.group.title + '/' + $scope.services.select.title + '/' +  volume.internal;
+                    var internal = volume.value;
+                    if (!volume.value) {
+                        internal = $scope.daemons.select.volume + '/' + $scope.group.title + '/' + $scope.services.select.title + volume.internal;
+                    }
+                    volume.external = internal;
                 });
             }
         };
@@ -59,7 +63,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             var ports = [];
             image.ports.forEach(function (port) {
                 //if (_.isNumber(port.internal) && _.isNumber(port.external)) {
-                    ports.push(port);
+                ports.push(port);
                 //}
             });
 

@@ -68,6 +68,10 @@ var VolumeSchema = new Schema({
         trim: true,
         required: 'internal Volume cannot be blank'
     },
+    value: { // default value. ex : /etc/localtime:ro
+        type: String,
+        trim: true
+    },
     description: {
         type: String,
         default: '',
