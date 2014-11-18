@@ -33,6 +33,13 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 parameter.value = $scope.hostname;
                 // default external volume
                 $scope.services.selectImage.parameters.push(parameter);
+
+                // add default grom Deamon
+                $scope.services.selectImage.parameters = _.union($scope.services.selectImage.parameters, $scope.daemons.select.parameters);
+                $scope.services.selectImage.ports = _.union($scope.services.selectImage.ports, $scope.daemons.select.ports);
+                $scope.services.selectImage.variables = _.union($scope.services.selectImage.variables, $scope.daemons.select.variables);
+                $scope.services.selectImage.volumes = _.union($scope.services.selectImage.volumes, $scope.daemons.select.volumes);
+
                 $scope.services.selectImage.volumes.forEach(function (volume) {
                     var internal = volume.value;
                     if (!volume.value) {
