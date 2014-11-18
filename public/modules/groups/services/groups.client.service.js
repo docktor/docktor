@@ -16,6 +16,9 @@ angular.module('groups').factory('Groups', ['$resource',
 angular.module('groups').factory('GroupsServices', ['$http',
     function ($http) {
         return {
+            getFreePorts: function (groupId) {
+                return $http.get('/groups/ports/free/' + groupId);
+            },
             inspect: function (groupId, containerId) {
                 return $http.get('/groups/container/inspect/' + groupId + '/' + containerId);
             },

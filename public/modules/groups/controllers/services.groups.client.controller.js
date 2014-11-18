@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('ServicesGroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'Services', 'Daemons',
-    function ($scope, $stateParams, $location, Authentication, Groups, Services, Daemons) {
+angular.module('groups').controller('ServicesGroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'Services', 'Daemons', 'GroupsServices',
+    function ($scope, $stateParams, $location, Authentication, Groups, Services, Daemons, GroupsServices) {
         $scope.authentication = Authentication;
 
         $scope.findOne = function () {
@@ -40,6 +40,15 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     }
                     volume.external = internal;
                 });
+                GroupsServices.getFreePorts($scope.group._id)
+                    .success(function (freePorts) {
+                        $scope.freePorts = freePorts;
+                        var freeP = 0;
+                        $scope.services.selectImage.ports.forEach(function (port) {
+                            port.external = freePorts[freeP];
+                            freeP++;
+                        });
+                    });
             }
         };
 

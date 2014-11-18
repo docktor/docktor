@@ -69,6 +69,28 @@ exports.delete = function (req, res) {
     });
 };
 
+exports.getFreePorts = function (req, res) {
+    Group.getUsedPorts(req.group._id).exec(function (err, data) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                var freePorts = [];
+                if (_.isNumber(req.group.portminrange) && _.isNumber(req.group.portmaxrange)) {
+                    for (var port = req.group.portminrange; port <= req.group.portmaxrange; port++) {
+                        if (!_.contains(data[0].usedPorts, port)) {
+                            freePorts.push(port);
+                        }
+
+                    }
+                }
+                res.jsonp(freePorts);
+            }
+        }
+    );
+};
+
 /**
  * List of Groups
  */
@@ -84,13 +106,6 @@ exports.list = function (req, res) {
     });
 };
 
-exports.actionContainer = function (req, res) {
-    var group = req.group;
-    var action = req.param('action');
-    var containerId = req.param('containerId');
-
-};
-
 /**
  * Group middleware
  */
@@ -101,6 +116,7 @@ exports.groupById = function (req, res, next, id) {
         req.group = group;
         next();
     });
+
 };
 
 /**
