@@ -45,6 +45,41 @@ var ParameterSchema = new Schema({
     }
 });
 
+/**
+ * Port Schema, not useful outside Image
+ */
+var PortSchema = new Schema({
+    internal: {
+        type: Number,
+        trim: true,
+        required: 'internal Port cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
+ * Volume Schema, not useful outside Image
+ */
+var VolumeSchema = new Schema({
+    internal: {
+        type: String,
+        trim: true,
+        required: 'internal Volume cannot be blank'
+    },
+    value: { // default value. ex : /etc/localtime:ro
+        type: String,
+        trim: true
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
 
 /**
  * Daemon Schema
@@ -122,6 +157,8 @@ var DaemonSchema = new Schema({
         ref: 'Site'
     },
     variables: [VariableSchema],
+    ports: [PortSchema],
+    volumes: [VolumeSchema],
     parameters: [ParameterSchema]
 });
 

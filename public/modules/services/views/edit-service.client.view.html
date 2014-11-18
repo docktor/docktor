@@ -116,7 +116,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="port in image.ports">
-                            <li>-p {{port.internal}}:&lg;externalPort-attributed-on-group&gt;
+                            <li>-p &lg;externalPort-attributed-on-group&gt;:{{port.internal}}
                                 <small><i>{{port.description}}</i></small>
                                 <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -193,7 +193,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="volume in image.volumes">
-                            <li>-v {{volume.internal}}:&lg;externalVolume-attributed-on-group&gt;
+                            <li>-v &lg;externalVolume-attributed-on-group&gt;:{{volume.internal}}
                                 <small><i>{{volume.description}}</i></small>
                                 <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"

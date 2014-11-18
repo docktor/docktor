@@ -137,7 +137,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             }
         };
 
-
         $scope.addParameter = function () {
             $scope.daemon.parameters.push($scope.parameter);
             $scope.parameter = {};
@@ -145,6 +144,15 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.removeParameter = function (parameter) {
             $scope.daemon.parameters.splice($scope.daemon.parameters.indexOf(parameter), 1);
+        };
+
+        $scope.addPort = function () {
+            $scope.daemon.ports.push($scope.port);
+            $scope.port = {};
+        };
+
+        $scope.removePort = function (port) {
+            $scope.daemon.ports.splice($scope.daemon.ports.indexOf(port), 1);
         };
 
         $scope.addVariable = function () {
@@ -155,5 +163,15 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.removeVariable = function (variable) {
             $scope.daemon.variables.splice($scope.daemon.variables.indexOf(variable), 1);
         };
+
+        $scope.addVolume = function () {
+            $scope.daemon.volumes.push($scope.volume);
+            $scope.volume = {};
+        };
+
+        $scope.removeVolume = function (volume) {
+            $scope.daemon.volumes.splice($scope.daemon.volumes.indexOf(volume), 1);
+        };
+
     }
 ]);

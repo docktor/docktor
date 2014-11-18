@@ -20,7 +20,8 @@
             </a>
             <button class="btn btn-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
                 <i class="fa fa-trash-o"> Delete Group</i>
-            </button><br>
+            </button>
+            <br>
             <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-danger">
                 No, I don't want to delete this. <i class="fa fa-reply"></i>
             </button>
@@ -42,7 +43,7 @@
         <tr>
             <th>Name</th>
             <th>Image</th>
-            <th>Id</th>
+            <th>Status</th>
             <th>Daemon</th>
             <th>CPU</th>
             <th>Mem</th>
@@ -50,97 +51,29 @@
             <th>Variables</th>
             <th>Ports</th>
             <th>Volumes</th>
-            <th>Status</th>
-            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="container in group.containers">
-            <td>
-                {{container.name}}
+            <td nowrap>
+                {{container.name}}<br>
+                {{container.containerId | limitTo:12}}
             </td>
             <td>
                 {{container.image}}
             </td>
-            <td>
-                {{container.containerId | limitTo:12}}
-            </td>
-            <td>
-                <just-gage ng-show="container.inspect.State.Running" id="gaugeCPU{{container.Id}}"
-                           class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
-                           title="CPU"></just-gage>
-            </td>
-            <td style="text-align:center">
-                <just-gage ng-show="container.inspect.State.Running" id="gaugeMem{{container.Id}}"
-                           class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
-                           title="Memory"></just-gage>
-                <small>{{container.stats.memoryUsage}} Mo</small>
 
-            </td>
-            <td>
-                <div ng-switch="container.daemon.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
-                    </span>
-                    <span ng-switch-when="down" class="label label-danger">Down</span>
-                    <span ng-switch-when="up" class="label label-success">UP</span>
-                </div>
-                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
-
-            </td>
-            <td>
-                <div ng-repeat="parameter in container.parameters">
-                    {{parameter.name}}:{{parameter.value}}
-                </div>
-            </td>
-            <td>
-                <div ng-repeat="variable in container.variables">
-                    {{variable.name}}:{{variable.value}}
-                </div>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.Config.Env | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-            </td>
-            <td>
-                <div ng-repeat="port in container.ports">
-                    -e {{port.external}}:{{port.internal}}
-                </div>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-            </td>
-            <td>
-                <div ng-repeat="volume in container.volumes">
-                    -v {{volume.external}}:{{volume.internal}}
-                </div>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-            </td>
             <td>
                 <span ng-show="container.daemon.dockerStatusUp">
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
-
                     <button type="text" class="btn btn-default btn-xs" value="Click me!"
                             tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
                             tooltip-placement="left">
                         <i class="fa fa-eye"> </i>
                     </button>
-                </span>
-            </td>
-            <td>
-                <span ng-show="container.daemon.dockerStatusUp">
+
                     <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
                             ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create
                     </button>
@@ -183,7 +116,69 @@
                         class="btn btn-danger">
                     Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
                 </button>
-
+            </td>
+            <td>
+                <div ng-switch="container.daemon.dockerStatus">
+                    <span ng-switch-when="checking" class="label label-default">
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+                    </span>
+                    <span ng-switch-when="down" class="label label-danger">Down</span>
+                    <span ng-switch-when="up" class="label label-success">UP</span>
+                </div>
+                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
+            </td>
+            <td nowrap>
+                <div ng-show="container.inspect.State.Running">
+                    <just-gage id="gaugeCPU{{container.inspect.Id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                               title="CPU"></just-gage>
+                </div>
+            </td>
+            <td style="text-align:center" nowrap>
+                <div ng-show="container.inspect.State.Running">
+                    <just-gage id="gaugeMem{{container.inspect.Id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                               title="Memory"></just-gage>
+                    <small>{{container.stats.memoryUsage}} Mo</small>
+                </div>
+            </td>
+            <td nowrap>
+                <div ng-repeat="parameter in container.parameters">
+                    {{parameter.name}}:{{parameter.value}}
+                </div>
+            </td>
+            <td nowrap>
+                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
+                        value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.Config.Env | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
+                <div ng-repeat="variable in container.variables">
+                    {{variable.name}}:{{variable.value}}
+                </div>
+            </td>
+            <td nowrap>
+                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
+                        value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
+                <div ng-repeat="port in container.ports">
+                    -e {{port.external}}:{{port.internal}}
+                </div>
+            </td>
+            <td nowrap>
+                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
+                        value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
+                <div ng-repeat="volume in container.volumes">
+                    -v {{volume.external}}:{{volume.internal}}
+                </div>
             </td>
         </tr>
         </tbody>
