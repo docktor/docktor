@@ -44,7 +44,6 @@
                 <tr>
                     <th></th>
                     <th>Name</th>
-                    <th>Is Active</th>
                     <th>Parameters</th>
                     <th>Ports Mapping</th>
                     <th>Variables Mapping</th>
@@ -68,11 +67,13 @@
                         </div>
                     </td>
                     <td>
+                        <div class="form-group">
+
                         <input name="imageName" type="text" data-ng-model="image.name" id="imageName"
-                               class="form-control"
-                               placeholder="imageName">
+                               class="form-control" placeholder="imageName">
+                            </div>
+                        isActive : {{image.active}}
                     </td>
-                    <td>{{image.active}}</td>
                     <td>
 
                         <ul data-ng-repeat="parameter in image.parameters">
@@ -116,7 +117,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="port in image.ports">
-                            <li>-p &lg;externalPort-attributed-on-group&gt;:{{port.internal}}
+                            <li>-p :{{port.internal}}
                                 <small><i>{{port.description}}</i></small>
                                 <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -153,7 +154,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="variable in image.variables">
-                            <li>-e {{variable.name}}:&lg;nameVariable-attributed-on-group&gt;
+                            <li>-e {{variable.name}}:
                                 <small><i>{{variable.description}}</i></small>
                                 <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
@@ -193,7 +194,7 @@
                     </td>
                     <td>
                         <ul data-ng-repeat="volume in image.volumes">
-                            <li>-v &lg;externalVolume-attributed-on-group&gt;:{{volume.internal}}
+                            <li>-v :{{volume.internal}}
                                 <small><i>{{volume.description}}</i></small>
                                 <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
