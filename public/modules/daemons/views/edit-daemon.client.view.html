@@ -266,7 +266,10 @@
     <div class="form-group">
         <h3>Volume</h3>
         <ul data-ng-repeat="volume in daemon.volumes">
-            <li>-v &lg;externalVolume-attributed-on-group&gt;:{{volume.internal}}
+            <li>
+                <span ng-show="volume.value">-v {{volume.value}}:{{volume.internal}}</span>
+                <span ng-hide="volume.value">-v &lg;nameVolume-attributed-on-group&gt;{{volume.value}}</span>
+
                 <small><i>{{volume.description}}</i></small>
                 <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
