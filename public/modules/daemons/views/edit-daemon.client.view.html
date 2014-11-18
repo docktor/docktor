@@ -219,7 +219,10 @@
     <div class="form-group">
         <h3>Variables</h3>
         <ul data-ng-repeat="variable in daemon.variables">
-            <li>-e &lg;nameVariable-attributed-on-group&gt;:{{variable.name}}
+            <li>
+                <span ng-show="variable.value">-e {{variable.name}}:{{variable.value}}</span>
+                <span ng-hide="variable.value">-e {{variable.name}}:&lg;nameVariable-attributed-on-group&gt;</span>
+
                 <small><i>{{variable.description}}</i></small>
                 <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
