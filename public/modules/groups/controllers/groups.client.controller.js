@@ -82,6 +82,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
             } else {
                 $scope.group = new Groups();
+                $scope.daemons = {};
+                Daemons.query(function (daemons) {
+                    $scope.daemons.all = daemons;
+                });
             }
         };
 
