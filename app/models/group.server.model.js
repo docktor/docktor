@@ -164,11 +164,11 @@ GroupSchema.statics.getUsedPorts = function (idGroup) {
     console.log('Call getUsedPorts with ' + idGroup);
     return _this.aggregate(
         [
-            {"$match" : {_id : idGroup}},
-            {"$unwind" : "$containers"},
-            {"$unwind" : "$containers.ports"},
-            {"$group": { _id:0, "usedPorts": {$addToSet: "$containers.ports.external" } }},
-            {"$project" : {_id:0, usedPorts : 1}}
+            {'$match' : {_id : idGroup}},
+            {'$unwind' : '$containers'},
+            {'$unwind' : '$containers.ports'},
+            {'$group': { _id:0, 'usedPorts': {$addToSet: '$containers.ports.external' } }},
+            {'$project' : {_id:0, usedPorts : 1}}
         ]);
 };
 
