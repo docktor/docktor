@@ -129,14 +129,14 @@
             </td>
             <td nowrap>
                 <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
-                    <just-gage id="gaugeCPU{{container.inspect.Id}}"
+                    <just-gage id="gaugeCPU{{container._id}}"
                                class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
                                title="CPU"></just-gage>
                 </div>
             </td>
             <td style="text-align:center" nowrap>
                 <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
-                    <just-gage id="gaugeMem{{container.inspect.Id}}"
+                    <just-gage id="gaugeMem{{container._id}}"
                                class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
                                title="Memory"></just-gage>
                     <small>{{container.stats.memoryUsage}} Mo</small>
