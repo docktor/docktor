@@ -47,6 +47,7 @@ Notes below are for developers only. Docktor is not ready for production now.
 * Improve UI
     * Pipeline Add / Deploy service : pull, create, start
     * Display all Json Returns (error or not)
+    * Sort & Search in tables
     * New Bootstrap theme
     * ~~Merge create-* and edit-* views~~ Done
 
