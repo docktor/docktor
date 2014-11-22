@@ -1,8 +1,8 @@
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/docktor/?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/yesnault/docktor.svg?branch=master)](https://travis-ci.org/yesnault/docktor)
-[![Dependencies Status](https://david-dm.org/yesnault/docktor.svg)](https://david-dm.org/yesnault/docktor)
-[![devDependency Status](https://david-dm.org/yesnault/docktor/dev-status.svg)](https://david-dm.org/yesnault/docktor#info=devDependencies)
+[![Build Status](https://travis-ci.org/docktor/docktor.svg?branch=master)](https://travis-ci.org/docktor/docktor)
+[![Dependencies Status](https://david-dm.org/docktor/docktor.svg)](https://david-dm.org/docktor/docktor)
+[![devDependency Status](https://david-dm.org/docktor/docktor/dev-status.svg)](https://david-dm.org/docktor/docktor#info=devDependencies)
 
 ## Dev In Progress !
 
