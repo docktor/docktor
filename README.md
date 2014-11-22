@@ -1,56 +1,15 @@
-## Dev In Progress !
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/yesnault/docktor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/yesnault/docktor.svg?branch=master)](https://travis-ci.org/yesnault/docktor)
 [![Dependencies Status](https://david-dm.org/yesnault/docktor.svg)](https://david-dm.org/yesnault/docktor)
 [![devDependency Status](https://david-dm.org/yesnault/docktor/dev-status.svg)](https://david-dm.org/yesnault/docktor#info=devDependencies)
 
-Notes below are for developers only. Docktor is not ready for production now.
+## Dev In Progress !
 
 ## Roadmap
-* ~~Deploy a new service for a group : new container from a image~~ Done
-* ~~Check all services (up, down) for a group~~ Done
-* ~~Action on a container (pause, start, stop, kill, remove)~~ Done
-* ~~Action on container (from daemon UI, without group)~~ Done
-* ~~Monitoring Containers --> With cAdvisor's API~~ Done
-* ~~Monitoring Daemons~~ Done
-* ~~Action on image (from daemon UI, without group)~~ Done
-* Deploy : 
-    * ~~Add variables~~ Done
-    * ~~add parameters (CpuShares, Memory...)~~ Done
-    * Display image inspect (volume / port) if present
-    * Fix production env (blank page)
-* Daemon : 
-    * ~~pull an image (without group UI) on one daemons~~ Done
-    * ~~Display a map of Daemons (GPS infos) : use localization of site.~~ Done
-    * Pull an image (without group UI) on setected daemons
-    * Update a image in a group : check deploy service before
-* Group :
-    * ~~Service : delete service~~ Done
-    * ~~Add contacts field~~ Done
-    * Update a service
-* Site
-    * ~~a site have on or more daemons~~ Done
-    * ~~a site have a localization and a name~~ Done
-* Container :
-    * use Docker top
-    * use Docker log
-* Service :
-    * ~~Default cpu (-c) and memory (-m)~~ Done
-    * ~~Other default parameter~~ Done
-    * Check if there is no container (started or not) before delete it
-    * Add command to exec on container (docker exec)
-* REST Api
-* Admin : 
-    * admin / user of group
-    * Check all access on UI
-    * Log all actions on Docktor (history page)
-* Improve UI
-    * Pipeline Add / Deploy service : pull, create, start
-    * Display all Json Returns (error or not)
-    * Sort & Search in tables
-    * New Bootstrap theme
-    * ~~Merge create-* and edit-* views~~ Done
+See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
+
+Notes below are for developers only. Docktor is not ready for production now.
 
 ## Before You Begin 
 Before you begin we recommend you read about the basic building blocks that assemble Docktor: 
