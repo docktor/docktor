@@ -14,6 +14,10 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.volume = {};
         $scope.displayFormVolume = false;
 
+        $scope.displayFormExec = false;
+        $scope.cmd = {};
+        $scope.displayFormCmd = false;
+
         $scope.submitForm = function () {
             if ($scope.service._id) {
                 $scope.update();
@@ -115,6 +119,23 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeVolume = function (image, volume) {
             image.volumes.splice(image.volumes.indexOf(volume), 1);
+        };
+
+        $scope.addExec = function () {
+            $scope.service.execs.push({
+                name: $scope.execName,
+                cmds: []
+            });
+            $scope.execName = '';
+        };
+
+        $scope.addCmd = function (exec) {
+            exec.cmds.push($scope.cmd);
+            $scope.cmd = {};
+        };
+
+        $scope.removeCmd = function (exec, cmd) {
+            exec.cmds.splice(exec.cmds.indexOf(cmd), 1);
         };
 
     }

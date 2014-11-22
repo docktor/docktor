@@ -1,207 +1,205 @@
+<h4>Images
+    <button class="btn btn-default btn-xs" ng-click="addImage()">
+        <i class="fa fa-plus-square"></i>
+    </button>
+</h4>
 
-            <h4>Images
-                <button class="btn btn-default btn-xs" ng-click="addImage()">
-                    <i class="fa fa-plus-square"></i>
+<table st-table="rowCollection" class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Parameters</th>
+        <th>Ports Mapping</th>
+        <th>Variables Mapping</th>
+        <th>Volumes Mapping</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-ng-repeat="image in service.images">
+        <td style="width: 30px;">
+            <div>
+                <a ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
+                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Image"
+                       tooltip-popup-delay='750'></i>
+                </a>
+                <button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="btn btn-danger">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </button>
-            </h4>
+                <button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="btn btn-danger">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </button>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
 
-            <table st-table="rowCollection" class="table table-striped">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Parameters</th>
-                    <th>Ports Mapping</th>
-                    <th>Variables Mapping</th>
-                    <th>Volumes Mapping</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr data-ng-repeat="image in service.images">
-                    <td style="width: 30px;">
-                        <div>
-                            <a ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
-                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Image"
-                                   tooltip-popup-delay='750'></i>
-                            </a>
-                            <button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="btn btn-danger">
-                                No, I don't want to delete this. <i class="fa fa-reply"></i>
-                            </button>
-                            <button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="btn btn-danger">
-                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                            </button>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
+                <input name="imageName" type="text" data-ng-model="image.name" id="imageName"
+                       class="form-control" placeholder="imageName">
+            </div>
+            isActive : {{image.active}}
+        </td>
+        <td>
 
-                        <input name="imageName" type="text" data-ng-model="image.name" id="imageName"
-                               class="form-control" placeholder="imageName">
-                            </div>
-                        isActive : {{image.active}}
-                    </td>
-                    <td>
+            <ul data-ng-repeat="parameter in image.parameters">
+                <li>{{parameter.name}}:{{parameter.value}}
+                    <small><i>{{parameter.description}}</i></small>
+                    <a ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
+                            class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
 
-                        <ul data-ng-repeat="parameter in image.parameters">
-                            <li>{{parameter.name}}:{{parameter.value}}
-                                <small><i>{{parameter.description}}</i></small>
-                                <a ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
-                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
-                                       tooltip-popup-delay='750'></i>
-                                </a>
-                                <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
-                                        class="btn btn-danger">
-                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                                </button>
-                                <button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
-                                        class="btn btn-danger">
-                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                                </button>
-                            </li>
-                        </ul>
+            <button class="btn btn-default btn-xs" ng-hide="displayFormParameter"
+                    ng-click="displayFormParameter=!displayFormParameter">
+                <i class="fa fa-plus-square"></i>
+            </button>
 
-                        <button class="btn btn-default btn-xs" ng-hide="displayFormParameter"
-                                ng-click="displayFormParameter=!displayFormParameter">
-                            <i class="fa fa-plus-square"></i>
-                        </button>
+            <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
+                  autocomplete="off">
+                <fieldset>
+                    <input type="text" name="name" data-ng-model="parameter.name"
+                           placeholder="name" class="form-control" ng-required="true">
+                    <input type="text" name="value" data-ng-model="parameter.value"
+                           placeholder="defaultValue" class="form-control" ng-required="true">
+                    <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
+                           placeholder="description" class="form-control">
+                    <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
+                            data-ng-click="addParameter(image); displayFormParameter=false">
+                        Insert Parameter
+                    </button>
+                </fieldset>
+            </form>
+        </td>
+        <td>
+            <ul data-ng-repeat="port in image.ports">
+                <li>-p :{{port.internal}}
+                    <small><i>{{port.description}}</i></small>
+                    <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeletePort=false" ng-show="askDeletePort" class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
 
-                        <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
-                              autocomplete="off">
-                            <fieldset>
-                                <input type="text" name="name" data-ng-model="parameter.name"
-                                       placeholder="name" class="form-control" ng-required="true">
-                                <input type="text" name="value" data-ng-model="parameter.value"
-                                       placeholder="defaultValue" class="form-control" ng-required="true">
-                                <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
-                                       placeholder="description" class="form-control">
-                                <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
-                                        data-ng-click="addParameter(image); displayFormParameter=false">
-                                    Insert Parameter
-                                </button>
-                            </fieldset>
-                        </form>
-                    </td>
-                    <td>
-                        <ul data-ng-repeat="port in image.ports">
-                            <li>-p :{{port.internal}}
-                                <small><i>{{port.description}}</i></small>
-                                <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
-                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
-                                       tooltip-popup-delay='750'></i>
-                                </a>
-                                <button ng-click="askDeletePort=false" ng-show="askDeletePort" class="btn btn-danger">
-                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                                </button>
-                                <button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
-                                        class="btn btn-danger">
-                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                                </button>
-                            </li>
-                        </ul>
+            <button class="btn btn-default btn-xs" ng-hide="displayFormPort"
+                    ng-click="displayFormPort=!displayFormPort">
+                <i class="fa fa-plus-square"></i>
+            </button>
 
-                        <button class="btn btn-default btn-xs" ng-hide="displayFormPort"
-                                ng-click="displayFormPort=!displayFormPort">
-                            <i class="fa fa-plus-square"></i>
-                        </button>
+            <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
+                <fieldset>
+                    <input type="number" name="internal" data-ng-model="port.internal"
+                           placeholder="internal" class="form-control" ng-required="true">
+                    <input type="text" name="descriptionPort" data-ng-model="port.description"
+                           placeholder="description"
+                           class="form-control">
+                    <button ng-disabled="portForm.$invalid"
+                            data-ng-click="addPort(image); displayFormPort=false" class="btn btn-primary">
+                        Insert Port
+                    </button>
+                </fieldset>
+            </form>
+        </td>
+        <td>
+            <ul data-ng-repeat="variable in image.variables">
+                <li>-e {{variable.name}}:{{variable.value}}
+                    <small><i>{{variable.description}}</i></small>
+                    <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                            class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
 
-                        <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
-                            <fieldset>
-                                <input type="number" name="internal" data-ng-model="port.internal"
-                                       placeholder="internal" class="form-control" ng-required="true">
-                                <input type="text" name="descriptionPort" data-ng-model="port.description"
-                                       placeholder="description"
-                                       class="form-control">
-                                <button ng-disabled="portForm.$invalid"
-                                        data-ng-click="addPort(image); displayFormPort=false" class="btn btn-primary">
-                                    Insert Port
-                                </button>
-                            </fieldset>
-                        </form>
-                    </td>
-                    <td>
-                        <ul data-ng-repeat="variable in image.variables">
-                            <li>-e {{variable.name}}:{{variable.value}}
-                                <small><i>{{variable.description}}</i></small>
-                                <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
-                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
-                                       tooltip-popup-delay='750'></i>
-                                </a>
-                                <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
-                                        class="btn btn-danger">
-                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                                </button>
-                                <button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
-                                        class="btn btn-danger">
-                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                                </button>
-                            </li>
-                        </ul>
+            <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
+                    ng-click="displayFormVariable=!displayFormVariable">
+                <i class="fa fa-plus-square"></i>
+            </button>
 
-                        <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
-                                ng-click="displayFormVariable=!displayFormVariable">
-                            <i class="fa fa-plus-square"></i>
-                        </button>
+            <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
+                  autocomplete="off">
+                <fieldset>
+                    <input type="text" name="name" data-ng-model="variable.name"
+                           placeholder="name" class="form-control" ng-required="true">
+                    <input type="text" name="value" data-ng-model="variable.value"
+                           placeholder="default Value" class="form-control">
+                    <input type="text" name="descriptionVariable" data-ng-model="variable.description"
+                           placeholder="description"
+                           class="form-control">
+                    <button ng-disabled="variableForm.$invalid"
+                            data-ng-click="addVariable(image); displayFormVariable=false"
+                            class="btn btn-primary">
+                        Insert Variable
+                    </button>
+                </fieldset>
+            </form>
+        </td>
+        <td>
+            <ul data-ng-repeat="volume in image.volumes">
+                <li>-v :{{volume.internal}}
+                    <small><i>{{volume.description}}</i></small>
+                    <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
+                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
+                            class="btn btn-danger">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </button>
+                    <button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
+                            class="btn btn-danger">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </button>
+                </li>
+            </ul>
 
-                        <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
-                              autocomplete="off">
-                            <fieldset>
-                                <input type="text" name="name" data-ng-model="variable.name"
-                                       placeholder="name" class="form-control" ng-required="true">
-                                <input type="text" name="value" data-ng-model="variable.value"
-                                       placeholder="default Value" class="form-control">
-                                <input type="text" name="descriptionVariable" data-ng-model="variable.description"
-                                       placeholder="description"
-                                       class="form-control">
-                                <button ng-disabled="variableForm.$invalid"
-                                        data-ng-click="addVariable(image); displayFormVariable=false"
-                                        class="btn btn-primary">
-                                    Insert Variable
-                                </button>
-                            </fieldset>
-                        </form>
-                    </td>
-                    <td>
-                        <ul data-ng-repeat="volume in image.volumes">
-                            <li>-v :{{volume.internal}}
-                                <small><i>{{volume.description}}</i></small>
-                                <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
-                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
-                                       tooltip-popup-delay='750'></i>
-                                </a>
-                                <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
-                                        class="btn btn-danger">
-                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                                </button>
-                                <button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
-                                        class="btn btn-danger">
-                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                                </button>
-                            </li>
-                        </ul>
+            <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
+                    ng-click="displayFormVolume=!displayFormVolume">
+                <i class="fa fa-plus-square"></i>
+            </button>
 
-                        <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
-                                ng-click="displayFormVolume=!displayFormVolume">
-                            <i class="fa fa-plus-square"></i>
-                        </button>
-
-                        <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
-                              autocomplete="off">
-                            <fieldset>
-                                <input type="text" name="internal" data-ng-model="volume.internal"
-                                       placeholder="internal" class="form-control" ng-required="true">
-                                <input type="text" name="value" data-ng-model="volume.value"
-                                       placeholder="/exemple/defaultValue" class="form-control">
-                                <input type="text" name="descriptionVolume" data-ng-model="volume.description"
-                                       placeholder="description" class="form-control">
-                                <button ng-disabled="volumeForm.$invalid"
-                                        data-ng-click="addVolume(image); displayFormVolume=false"
-                                        class="btn btn-primary">
-                                    Insert Volume
-                                </button>
-                            </fieldset>
-                        </form>
-                    </td>
-                    </tr>
-                </tr>
-                </tbody>
-            </table>
+            <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
+                  autocomplete="off">
+                <fieldset>
+                    <input type="text" name="internal" data-ng-model="volume.internal"
+                           placeholder="internal" class="form-control" ng-required="true">
+                    <input type="text" name="value" data-ng-model="volume.value"
+                           placeholder="/exemple/defaultValue" class="form-control">
+                    <input type="text" name="descriptionVolume" data-ng-model="volume.description"
+                           placeholder="description" class="form-control">
+                    <button ng-disabled="volumeForm.$invalid"
+                            data-ng-click="addVolume(image); displayFormVolume=false"
+                            class="btn btn-primary">
+                        Insert Volume
+                    </button>
+                </fieldset>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -84,6 +84,39 @@ var VolumeSchema = new Schema({
 });
 
 /**
+ * Command Schema, not useful outside Service
+ */
+var CmdSchema = new Schema({
+    command: {
+        type: String,
+        trim: true,
+        required: 'Cmd command cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    }
+});
+
+/**
+ * Exec Schema, not useful outside Service
+ */
+var ExecSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Exec Name cannot be blank'
+    },
+    cmds: [CmdSchema],
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+
+/**
  * Image Schema, not useful outside Service
  */
 var ImageSchema = new Schema({
@@ -121,6 +154,7 @@ var ServiceSchema = new Schema({
         required: 'Title cannot be blank'
     },
     images: [ImageSchema],
+    execs: [ExecSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'
