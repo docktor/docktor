@@ -238,6 +238,56 @@ exports.inspectContainer = function (req, res) {
     });
 };
 
+exports.topContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.top({ps_args: 'aux'}, function (err, info) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(info);
+        }
+    });
+};
+
+exports.logsContainer = function (req, res) {
+    var container = req.container;
+    var daemonDocker = req.daemonDocker;
+
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+    var options =
+    {
+        'stderr': 1,
+        'stdout': 1,
+        'timestamps': 1,
+        'follow': 0,
+        'tail': 10
+    };
+
+    dockerContainer.logs(options, function (err, stream) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var string = [];
+            stream.on('data', function (buffer) {
+                var part = buffer;
+                string.push(part.toString());
+            });
+            stream.on('end', function () {
+                res.jsonp(string);
+            });
+        }
+    });
+};
+
+
 exports.execInContainer = function (req, res) {
     Service.getExec(req.service._id, req.params.execId).exec(function (err, data) {
         if (err) {
@@ -250,8 +300,6 @@ exports.execInContainer = function (req, res) {
             var dockerContainer = daemonDocker.getContainer(container.containerId);
 
             if (data[0]) {
-
-
                 var command = data[0].commands.exec.split(' ');
                 var options = {
                     'AttachStdout': true,
@@ -261,7 +309,9 @@ exports.execInContainer = function (req, res) {
                 };
 
                 dockerContainer.exec(options, function (err, exec) {
-                    if (err) return;
+                    if (err) return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
 
                     exec.start(function (err, stream) {
                         if (err) return;

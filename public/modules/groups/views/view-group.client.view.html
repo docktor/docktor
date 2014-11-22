@@ -36,7 +36,8 @@
     <h4>Services</h4>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
-        <span ng-repeat="msg in alert.msg">{{msg}}</span>
+
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
 
 
@@ -46,7 +47,7 @@
             <th>Name</th>
             <th>Service - Image</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Commands</th>
             <th>Daemon</th>
             <th>CPU</th>
             <th>Mem</th>
@@ -121,8 +122,20 @@
                 </button>
             </td>
             <td>
-                <div ng-repeat="command in container.commands">
-                    <button class="btn btn-default btn-xs" ng-click="doExec(container, command)">{{command.name}}</button>
+
+                <div ng-show="container.inspect.State.Running">
+
+                    <button class="btn btn-default btn-sm" ng-click="topContainer(container)"><i
+                            class="fa fa-stethoscope"></i> Top
+                    </button>
+                    <button class="btn btn-default btn-sm" ng-click="logsContainer(container)"><i
+                            class="fa fa-file-text-o"></i> Logs
+                    </button>
+
+                    <div ng-repeat="command in container.commands">
+                        <button class="btn btn-default btn-xs" ng-click="doExec(container, command)">{{command.name}}
+                        </button>
+                    </div>
                 </div>
             </td>
             <td>

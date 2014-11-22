@@ -160,6 +160,35 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             GroupsServices.action('kill', $scope.group._id, container, $scope.inspect, $scope.callbackError);
         };
 
+        $scope.topContainer = function (container) {
+            GroupsServices.action('top', $scope.group._id, container, function (container, data) {
+                var title = 'top on container ' + container.name;
+                var msg = [];
+                msg.push(data.Titles);
+                angular.forEach(data.Processes, function (value, key) {
+                    msg.push(value);
+                });
+
+                $scope.alerts.push({title: title, type: 'success', msg: msg});
+            }, $scope.callbackError);
+        };
+
+        $scope.logsContainer = function (container) {
+            GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
+                var title = 'Logs in container ' + container.name;
+                var msg = [];
+                console.log(data);
+                for (var value in data) {
+                    var s = new String(data[value]);
+                    // display only line with date 2014-...
+                    if (s.length > 2 && s.substring(0, 2) === '20') {
+                        msg.push(s);
+                    }
+                }
+                $scope.alerts.push({title: title, type: 'success', msg: msg});
+            }, $scope.callbackError);
+        };
+
         $scope.doExec = function (container, command) {
             GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
                 .success(function (data, status, headers, config) {

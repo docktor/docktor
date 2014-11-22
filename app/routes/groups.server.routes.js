@@ -42,6 +42,12 @@ module.exports = function (app) {
     app.route('/groups/container/inspect/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.inspectContainer);
 
+    app.route('/groups/container/top/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.topContainer);
+
+    app.route('/groups/container/logs/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.logsContainer);
+
     app.route('/groups/ports/free/:groupId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.getFreePorts);
 
