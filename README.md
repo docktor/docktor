@@ -39,6 +39,7 @@ Notes below are for developers only. Docktor is not ready for production now.
     * ~~Default cpu (-c) and memory (-m)~~ Done
     * ~~Other default parameter~~ Done
     * Check if there is no container (started or not) before delete it
+    * Add command to exec on container (docker exec)
 * REST Api
 * Admin : 
     * admin / user of group
