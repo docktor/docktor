@@ -12,6 +12,9 @@ module.exports = function (app) {
         .get(services.list)
         .post(users.requiresLogin, services.create);
 
+    app.route('/services/commands/:serviceId')
+        .get(users.requiresLogin, services.hasAuthorization, services.getCommands);
+
     app.route('/services/:serviceId')
         .get(services.read)
         .put(users.requiresLogin, services.hasAuthorization, services.update)

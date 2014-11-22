@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices) {
         $scope.authentication = Authentication;
         $scope.alerts = [];
 
@@ -68,12 +68,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.group.containers.forEach(function (container) {
                         $scope.inspect(container);
                         container.daemon = daemons[container.daemonId];
+                        if (container.serviceId) {
+                            ServicesServices.getCommands(container.serviceId)
+                                .success(function (commands) {
+                                    container.commands = commands;
+                                });
+                        }
                     });
 
                     $scope.daemons = {};
                     Daemons.query(function (daemons) {
                         $scope.daemons.all = daemons;
-                        daemons.forEach(function(daemon) {
+                        daemons.forEach(function (daemon) {
                             if (daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;
                             }
@@ -113,7 +119,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackError = function (container, err) {
-            $scope.alerts.push({type: 'danger', msg: err.message});
+            var msg = [];
+            msg.push(err.message);
+            $scope.alerts.push({title: 'Error', type: 'danger', msg: msg});
         };
 
         $scope.closeAlert = function (index) {
@@ -150,6 +158,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.killContainer = function (container) {
             GroupsServices.action('kill', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+        };
+
+        $scope.doExec = function (container, command) {
+            GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
+                .success(function (data, status, headers, config) {
+                    var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
+                    $scope.alerts.push({title: title, type: 'success', msg: data});
+                })
+                .error(function (err, status, headers, config) {
+                    $scope.callbackError(container, err);
+                });
         };
     }
 ]);

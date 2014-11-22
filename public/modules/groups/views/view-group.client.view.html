@@ -35,15 +35,18 @@
 
     <h4>Services</h4>
 
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+        <span ng-repeat="msg in alert.msg">{{msg}}</span>
+    </alert>
 
 
     <table class="table table-striped">
         <thead>
         <tr>
             <th>Name</th>
-            <th>Image</th>
+            <th>Service - Image</th>
             <th>Status</th>
+            <th>Actions</th>
             <th>Daemon</th>
             <th>CPU</th>
             <th>Mem</th>
@@ -60,7 +63,7 @@
                 {{container.containerId | limitTo:12}}
             </td>
             <td>
-                {{container.image}}
+                {{container.serviceTitle}} {{container.image}}
             </td>
 
             <td>
@@ -116,6 +119,11 @@
                         class="btn btn-danger">
                     Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
                 </button>
+            </td>
+            <td>
+                <div ng-repeat="command in container.commands">
+                    <button class="btn btn-default btn-xs" ng-click="doExec(container, command)">{{command.name}}</button>
+                </div>
             </td>
             <td>
                 <div ng-switch="container.daemon.dockerStatus">

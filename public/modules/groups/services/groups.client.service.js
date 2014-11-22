@@ -22,6 +22,9 @@ angular.module('groups').factory('GroupsServices', ['$http',
             inspect: function (groupId, containerId) {
                 return $http.get('/groups/container/inspect/' + groupId + '/' + containerId);
             },
+            exec: function (groupId, containerId, serviceId, cmdId) {
+                return $http.get('/groups/exec/' + groupId + '/' + containerId + '/' + serviceId + '/' + cmdId);
+            },
             action: function (action, groupId, container, cbSuccess, cbError) {
                 return $http.get('/groups/container/' + action + '/' + groupId + '/' + container._id).
                     success(function (data, status, headers, config) {

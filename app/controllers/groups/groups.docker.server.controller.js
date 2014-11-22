@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
     Daemon = mongoose.model('Daemon'),
+    Service = mongoose.model('Service'),
     _ = require('lodash');
 
 
@@ -233,6 +234,53 @@ exports.inspectContainer = function (req, res) {
             });
         } else {
             res.jsonp(info);
+        }
+    });
+};
+
+exports.execInContainer = function (req, res) {
+    Service.getExec(req.service._id, req.params.execId).exec(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var container = req.container;
+            var daemonDocker = req.daemonDocker;
+            var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+            if (data[0]) {
+
+
+                var command = data[0].commands.exec.split(' ');
+                var options = {
+                    'AttachStdout': true,
+                    'AttachStderr': true,
+                    'Tty': false,
+                    Cmd: command
+                };
+
+                dockerContainer.exec(options, function (err, exec) {
+                    if (err) return;
+
+                    exec.start(function (err, stream) {
+                        if (err) return;
+
+                        var string = [];
+                        stream.on('data', function (buffer) {
+                            var part = buffer;
+                            string.push(part.toString());
+                        });
+                        stream.on('end', function () {
+                            res.jsonp(string);
+                        });
+                    });
+                });
+            } else {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage("no Command found")
+                });
+            }
         }
     });
 };

@@ -1,0 +1,45 @@
+<h4>Commands
+    <button class="btn btn-default btn-xs" ng-click="addCommand()">
+        <i class="fa fa-plus-square"></i>
+    </button>
+</h4>
+
+<table st-table="rowCollection" class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Command</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-ng-repeat="command in service.commands">
+        <td style="width: 30px;">
+            <div>
+                <a ng-click="askDeleteCommand=true" ng-hide="askDeleteCommand">
+                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Command"
+                       tooltip-popup-delay='750'></i>
+                </a>
+                <button ng-click="askDeleteCommand=false" ng-show="askDeleteCommand" class="btn btn-danger">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </button>
+                <button data-ng-click="removeCommand(command);" ng-show="askDeleteCommand" class="btn btn-danger">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </button>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <input name="commandName" type="text" data-ng-model="command.name" id="commandName"
+                       class="form-control" placeholder="Name">
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <input name="commandExec" type="text" data-ng-model="command.exec" id="commandExec"
+                       class="form-control" placeholder="echo 'foo'">
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

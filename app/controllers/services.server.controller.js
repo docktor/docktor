@@ -84,6 +84,10 @@ exports.list = function (req, res) {
     });
 };
 
+exports.getCommands = function (req, res) {
+    res.jsonp(req.service.commands);
+};
+
 /**
  * Service middleware
  */
@@ -101,9 +105,9 @@ exports.serviceByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     /* TODO if (req.service.user.id !== req.user.id) {
-        return res.status(403).send({
-            message: 'User is not authorized'
-        });
-    }*/
+     return res.status(403).send({
+     message: 'User is not authorized'
+     });
+     }*/
     next();
 };

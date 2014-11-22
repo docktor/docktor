@@ -12,6 +12,9 @@ module.exports = function (app) {
         .get(groups.list)
         .post(users.requiresLogin, groups.create);
 
+    app.route('/groups/exec/:groupId/:containerId/:serviceId/:execId/')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.execInContainer);
+
     app.route('/groups/container/removeServiceFromGroup/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.removeContainerFromGroup);
 

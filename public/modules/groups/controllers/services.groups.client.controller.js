@@ -95,6 +95,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 name: containerName,
                 hostname: $scope.hostname,
                 image: image.name,
+                serviceTitle: $scope.services.select.title,
+                serviceId: $scope.services.select._id,
                 parameters: parameters,
                 variables: variables,
                 ports: ports,

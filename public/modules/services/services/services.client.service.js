@@ -12,3 +12,13 @@ angular.module('services').factory('Services', ['$resource',
         });
     }
 ]);
+
+angular.module('services').factory('ServicesServices', ['$http',
+    function ($http) {
+        return {
+            getCommands: function (serviceId) {
+                return $http.get('/services/commands/' + serviceId);
+            }
+        };
+    }
+]);

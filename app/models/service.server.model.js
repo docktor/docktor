@@ -84,31 +84,19 @@ var VolumeSchema = new Schema({
 });
 
 /**
- * Command Schema, not useful outside Service
- */
-var CmdSchema = new Schema({
-    command: {
-        type: String,
-        trim: true,
-        required: 'Cmd command cannot be blank'
-    },
-    description: {
-        type: String,
-        default: '',
-        trim: true
-    }
-});
-
-/**
  * Exec Schema, not useful outside Service
  */
-var ExecSchema = new Schema({
+var CommandSchema = new Schema({
     name: {
         type: String,
         trim: true,
         required: 'Exec Name cannot be blank'
     },
-    cmds: [CmdSchema],
+    exec: {
+        type: String,
+        trim: true,
+        required: 'exec command cannot be blank'
+    },
     created: {
         type: Date,
         default: Date.now
@@ -154,11 +142,22 @@ var ServiceSchema = new Schema({
         required: 'Title cannot be blank'
     },
     images: [ImageSchema],
-    execs: [ExecSchema],
+    commands: [CommandSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'
     }
 });
+
+ServiceSchema.statics.getExec = function (serviceId, commandId) {
+    var _this = this;
+    return _this.aggregate(
+        [
+            {'$match': {_id: serviceId}},
+            {'$unwind': '$commands'},
+            {'$match': {'commands._id': new mongoose.Types.ObjectId(commandId)}},
+            {'$project': {_id: 0, commands: 1}}
+        ]);
+};
 
 mongoose.model('Service', ServiceSchema);

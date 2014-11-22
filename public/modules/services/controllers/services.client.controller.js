@@ -14,9 +14,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.volume = {};
         $scope.displayFormVolume = false;
 
-        $scope.displayFormExec = false;
-        $scope.cmd = {};
-        $scope.displayFormCmd = false;
+        $scope.displayFormCommand = false;
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -121,21 +119,13 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             image.volumes.splice(image.volumes.indexOf(volume), 1);
         };
 
-        $scope.addExec = function () {
-            $scope.service.execs.push({
-                name: $scope.execName,
-                cmds: []
+        $scope.addCommand = function () {
+            $scope.service.commands.push({
+                name: $scope.commandName,
+                exec: $scope.commandExec
             });
-            $scope.execName = '';
-        };
-
-        $scope.addCmd = function (exec) {
-            exec.cmds.push($scope.cmd);
-            $scope.cmd = {};
-        };
-
-        $scope.removeCmd = function (exec, cmd) {
-            exec.cmds.splice(exec.cmds.indexOf(cmd), 1);
+            $scope.commandName = '';
+            $scope.commandExec = '';
         };
 
     }

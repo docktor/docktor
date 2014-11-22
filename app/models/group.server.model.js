@@ -89,6 +89,14 @@ var ContainerSchema = new Schema({
         trim: true,
         required: 'Image cannot be blank'
     },
+    serviceTitle: {
+        type: String,
+        trim: true
+    },
+    serviceId: {
+        type: String,
+        trim: true
+    },
     containerId: {
         type: String,
         trim: true
@@ -161,14 +169,13 @@ GroupSchema.statics.resetContainerId = function (idGroup, idContainer) {
 
 GroupSchema.statics.getUsedPorts = function (idGroup) {
     var _this = this;
-    console.log('Call getUsedPorts with ' + idGroup);
     return _this.aggregate(
         [
-            {'$match' : {_id : idGroup}},
-            {'$unwind' : '$containers'},
-            {'$unwind' : '$containers.ports'},
-            {'$group': { _id:0, 'usedPorts': {$addToSet: '$containers.ports.external' } }},
-            {'$project' : {_id:0, usedPorts : 1}}
+            {'$match': {_id: idGroup}},
+            {'$unwind': '$containers'},
+            {'$unwind': '$containers.ports'},
+            {'$group': {_id: 0, 'usedPorts': {$addToSet: '$containers.ports.external'}}},
+            {'$project': {_id: 0, usedPorts: 1}}
         ]);
 };
 
