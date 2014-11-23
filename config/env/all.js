@@ -18,6 +18,7 @@ module.exports = {
                 'public/lib/angular-ui-select/dist/select.css'
 			],
 			js: [
+				'public/lib/jquery/dist/jquery.min.js',
                 'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 

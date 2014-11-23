@@ -1,25 +1,24 @@
 {
-    "name": "docktor",
-    "version": "0.0.1",
-    "description": "Docker Monitoring",
-    "dependencies": {
-        "bootstrap": "~3",
-        "angular": "~1.2",
-        "angular-resource": "~1.2",
-        "angular-mocks": "~1.2",
-        "angular-cookies": "~1.2",
-        "angular-animate": "~1.2",
-        "angular-touch": "~1.2",
-        "angular-sanitize": "~1.2",
-        "angular-bootstrap": "~0.12.0",
-        "angular-ui-utils": "~0.1.1",
-        "angular-ui-router": "~0.2.10",
-        "angular-ui-select": "~0.8.3",
-        "angular-smart-table": "~1.4.1",
-        "fontawesome": "~4.2.0",
-        "ngmap": "~1.1.5",
-        "angular-justgage": "1.0.0",
-        "lodash": "~2.4.1"
-
-    }
+  "name": "docktor",
+  "version": "0.0.1",
+  "description": "Docker Monitoring",
+  "dependencies": {
+    "bootstrap": "~3",
+    "angular": "~1.2",
+    "angular-resource": "~1.2",
+    "angular-mocks": "~1.2",
+    "angular-cookies": "~1.2",
+    "angular-animate": "~1.2",
+    "angular-touch": "~1.2",
+    "angular-sanitize": "~1.2",
+    "angular-bootstrap": "~0.12.0",
+    "angular-ui-utils": "~0.1.1",
+    "angular-ui-router": "~0.2.10",
+    "angular-ui-select": "~0.8.3",
+    "angular-smart-table": "~1.4.1",
+    "fontawesome": "~4.2.0",
+    "ngmap": "~1.1.5",
+    "angular-justgage": "1.0.0",
+    "lodash": "~2.4.1"
+  }
 }
