@@ -31,6 +31,7 @@
 
     <!-- Fav Icon -->
     <link rel="shortcut icon" type="image/png" href="/modules/core/img/brand/docktor.png">
+    <link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
 
     <!--Application CSS Files-->
     {% for cssFile in cssFiles %}
@@ -45,17 +46,46 @@
 </head>
 
 <body class="ng-cloak">
-<header data-ng-include="'/modules/core/views/header.client.view.html'"
-        class="navbar navbar-fixed-top navbar-inverse"></header>
-<section class="content">
-    <section class="container">
-        {% block content %}{% endblock %}
-    </section>
-</section>
+<!--Start Header-->
+<div id="screensaver">
+    <canvas id="canvas"></canvas>
+    <i class="fa fa-lock" id="screen_unlock"></i>
+</div>
+<div id="modalbox">
+    <div class="devoops-modal">
+        <div class="devoops-modal-header">
+            <div class="modal-header-name">
+                <span>Basic table</span>
+            </div>
+            <div class="box-icons">
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <div class="devoops-modal-inner">
+        </div>
+        <div class="devoops-modal-bottom">
+        </div>
+    </div>
+</div>
+<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar"></header>
+
+<div id="main" class="container-fluid">
+    <div class="row">
+        <div data-ng-include="'/modules/core/views/menu.client.view.html'" id="sidebar-left" class="col-xs-2 col-sm-2">
+        </div>
+        <!--Start Content-->
+        <div id="content" class="col-xs-12 col-sm-10">
+            {% block content %}{% endblock %}
+        </div>
+        <!--End Content-->
+    </div>
+</div>
 
 <!--Embedding The User Object-->
 <script type="text/javascript">
-    var user = {{ user | json | safe }};
+    var user = {{user | json | safe}} ;
 </script>
 
 <!--Application JavaScript Files-->
@@ -68,9 +98,7 @@
 <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
 
 {% endif %}
-</body>
 
-<hr>
 <div class="footer text-center">
     <small>
         Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
@@ -78,4 +106,5 @@
     </small>
 </div>
 
+</body>
 </html>

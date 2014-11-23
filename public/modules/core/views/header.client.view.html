@@ -1,63 +1,67 @@
-<div class="container" data-ng-controller="HeaderController">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="/#!/" class="navbar-brand"> <i class="fa fa-user-md fa-inverse"></i> Docktor</a>
+<div class="container-fluid expanded-panel" data-ng-controller="HeaderController">
+    <div class="row">
+        <div id="logo" class="col-xs-12 col-sm-2">
+            <a href="index.html">Docktor</a>
+        </div>
+        <div id="top-panel" class="col-xs-12 col-sm-10">
+            <div class="row">
+                <div class="col-xs-4 col-sm-12 top-panel-right">
+
+                    <ul class="nav navbar-nav pull-right panel-menu" data-ng-hide="authentication.user">
+                        <li ui-route="/signup" ng-class="{active: $uiRoute}">
+                            <a href="/#!/signup" class="about">Sign Up</a>
+                        </li>
+                        <li class="divider-vertical"></li>
+                        <li ui-route="/signin" ng-class="{active: $uiRoute}">
+                            <a href="/#!/signin" class="about">Sign In</a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav pull-right panel-menu" data-ng-if="menu.shouldRender(authentication.user);">
+                        <li class="dropdown" dropdown>
+                            <a href class="dropdown-toggle account" dropdown-toggle>
+                                <!--<div class="avatar">
+                                    <img src="modules/core/img/avatar.jpg" class="img-circle" alt="avatar"/>
+                                </div>-->
+                                <i class="fa fa-angle-down pull-right"></i>
+
+                                <div class="user-mini pull-right">
+                                    <span class="welcome">Welcome,</span>
+                                    <span data-ng-bind="authentication.user.displayName"></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/#!/settings/profile">
+                                        <i class="fa fa-user"></i>
+                                        <span>Profile</span></a>
+                                </li>
+                                <li>
+                                    <a href="/#!/settings/accounts">
+                                        <i class="fa fa-cog"></i>
+                                        <span>Manage Social Accounts</span>
+                                    </a>
+                                </li>
+                                <li data-ng-show="authentication.user.provider === 'local'">
+                                    <a href="/#!/settings/password">
+                                        <i class="fa fa-key"></i>
+                                        <span>Change Password</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/auth/signout">
+                                        <i class="fa fa-power-off"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
-        <ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">
-            <li data-ng-repeat="item in menu.items | orderBy: 'position'"
-                data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType"
-                ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}"
-                dropdown="item.menuItemType === 'dropdown'">
-                <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
-                    <span data-ng-bind="item.title"></span>
-                    <b class="caret"></b>
-                </a>
-                <ul ng-switch-when="dropdown" class="dropdown-menu">
-                    <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
-                        data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}"
-                        ng-class="{active: $uiRoute}">
-                        <a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
-                    </li>
-                </ul>
-                <a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-            <li ui-route="/signup" ng-class="{active: $uiRoute}">
-                <a href="/#!/signup">Sign Up</a>
-            </li>
-            <li class="divider-vertical"></li>
-            <li ui-route="/signin" ng-class="{active: $uiRoute}">
-                <a href="/#!/signin">Sign In</a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" dropdown-toggle data-toggle="dropdown">
-                    <span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="/#!/settings/profile">Edit Profile</a>
-                    </li>
-                    <li>
-                        <a href="/#!/settings/accounts">Manage Social Accounts</a>
-                    </li>
-                    <li data-ng-show="authentication.user.provider === 'local'">
-                        <a href="/#!/settings/password">Change Password</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="/auth/signout">Signout</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
 </div>
+
+

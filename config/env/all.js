@@ -13,8 +13,7 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.min.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/fontawesome/css/font-awesome.css',
                 'public/lib/angular-ui-select/dist/select.css'
 			],
