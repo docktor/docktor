@@ -23,7 +23,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
             getDetails: function (daemon) {
                 daemon.dockerStatus = 'checking';
 
-                this.getInfo(daemon._id, daemon, function() {
+                this.getInfo(daemon._id, daemon, function () {
                     DaemonsDocker.version(daemon._id).
                         success(function (version) {
                             daemon.dockerVersion = version;

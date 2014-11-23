@@ -31,7 +31,8 @@
     <div ng-show="services.select">
         <h4>Select an image of service {{services.select.title}} :</h4>
 
-        <ui-select ng-model="services.selectImage" theme="bootstrap" style="min-width: 300px;" ng-change="changeImage()">
+        <ui-select ng-model="services.selectImage" theme="bootstrap" style="min-width: 300px;"
+                   ng-change="changeImage()">
             <ui-select-match placeholder="Select or search a image in the list...">{{$select.selected.name}}
             </ui-select-match>
             <ui-select-choices repeat="image in services.select.images">

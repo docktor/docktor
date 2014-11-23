@@ -105,9 +105,9 @@ exports.daemonByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     /*TODO if (req.daemon.user.id !== req.user.id) {
-        return res.status(403).send({
-            message: 'User is not authorized'
-        });
-    }*/
+     return res.status(403).send({
+     message: 'User is not authorized'
+     });
+     }*/
     next();
 };
