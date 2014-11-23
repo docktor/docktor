@@ -39,7 +39,7 @@
 
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
-    
+
     <table class="table table-striped">
         <thead>
         <tr>
@@ -50,9 +50,9 @@
             <th>Daemon</th>
             <th>CPU</th>
             <th>Mem</th>
+            <th>Ports</th>
             <th>Parameter</th>
             <th>Variables</th>
-            <th>Ports</th>
             <th>Volumes</th>
         </tr>
         </thead>
@@ -76,30 +76,57 @@
                             tooltip-placement="left">
                         <i class="fa fa-eye"> </i>
                     </button>
+                </span>
+            </td>
+            <td>
 
+                <span ng-show="container.daemon.dockerStatusUp">
                     <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
-                            ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create
+                            ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
                     </button>
 
                     <span ng-show="container.containerId">
 
-                        <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm"
-                                ng-click="startContainer(container)"><i class="fa fa-play"></i> Start
-                        </button>
+                        <span ng-hide="container.inspect.State.Running" class="btn btn-primary btn-sm"
+                              ng-click="startContainer(container)"><i class="fa fa-play"></i> Docker run
+                        </span>
 
                         <span ng-show="container.inspect.State.Running">
-                            <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm"
-                                    ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop
-                            </button>
-                            <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-sm"
-                                    ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause
-                            </button>
-                            <button ng-show="container.inspect.State.Paused" class="btn btn-default btn-sm"
-                                    ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Unpause
-                            </button>
-                            <button class="btn btn-default btn-sm" ng-click="killContainer(container)"><i
-                                    class="fa fa-crosshairs"></i> Kill
-                            </button>
+
+                            <div class="btn-group" dropdown is-open="status.isopen">
+                                <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle
+                                        ng-disabled="disabled">
+                                    Action... <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="" ng-hide="container.inspect.State.Paused"
+                                           ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Docker stop
+                                    </a></li>
+                                    <li><a href="" ng-hide="container.inspect.State.Paused"
+                                           ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Docker pause
+                                    </a></li>
+                                    <li><a href="" ng-show="container.inspect.State.Paused"
+                                           ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Docker unpause
+                                    </a></li>
+                                    <li><a href="" ng-click="killContainer(container)"><i
+                                            class="fa fa-crosshairs"></i> Docker kill
+                                    </a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="" ng-click="topContainer(container)"><i
+                                            class="fa fa-stethoscope"></i> Docker top
+                                    </a></li>
+                                    <li><a href="" ng-click="logsContainer(container)"><i
+                                            class="fa fa-file-text-o"></i> Docker logs
+                                    </a></li>
+                                    <li class="divider"></li>
+                                    <li ng-repeat="command in container.commands">
+                                        <a href="" ng-click="doExec(container, command)">{{command.name}}
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+
                         </span>
 
                         <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm"
@@ -109,8 +136,7 @@
                 </span>
 
                 <button ng-hide="container.containerId || askDeleteService" class="btn btn-default btn-sm"
-                        ng-click="askDeleteService=true"
-                        ng-click="createContainer(container)"><i class="fa fa-trash"></i>
+                        ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
                 </button>
                 <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
@@ -119,23 +145,6 @@
                         class="btn btn-danger">
                     Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
                 </button>
-            </td>
-            <td>
-
-                <div ng-show="container.inspect.State.Running">
-
-                    <button class="btn btn-default btn-sm" ng-click="topContainer(container)"><i
-                            class="fa fa-stethoscope"></i> Top
-                    </button>
-                    <button class="btn btn-default btn-sm" ng-click="logsContainer(container)"><i
-                            class="fa fa-file-text-o"></i> Logs
-                    </button>
-
-                    <div ng-repeat="command in container.commands">
-                        <button class="btn btn-default btn-xs" ng-click="doExec(container, command)">{{command.name}}
-                        </button>
-                    </div>
-                </div>
             </td>
             <td>
                 <div ng-switch="container.daemon.dockerStatus">
@@ -163,6 +172,17 @@
                 </div>
             </td>
             <td nowrap>
+                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
+                        value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
+                <div ng-repeat="port in container.ports">
+                    -e {{port.external}}:{{port.internal}}
+                </div>
+            </td>
+            <td nowrap>
                 <div ng-repeat="parameter in container.parameters">
                     {{parameter.name}}:{{parameter.value}}
                 </div>
@@ -176,17 +196,6 @@
                 </button>
                 <div ng-repeat="variable in container.variables">
                     {{variable.name}}:{{variable.value}}
-                </div>
-            </td>
-            <td nowrap>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-                <div ng-repeat="port in container.ports">
-                    -e {{port.external}}:{{port.internal}}
                 </div>
             </td>
             <td nowrap>

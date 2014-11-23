@@ -82,7 +82,15 @@
             <div class="row" data-ng-include="'/modules/core/views/breadcrumb.client.view.html'"></div>
 
             {% block content %}{% endblock %}
+            <div style="text-align: right;">
+                <small>
+                    <br><br><br><br>
+                    <i>Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
+                    <a href="https://github.com/docktor/docktor" title="Fork me on Github"> <i class="fa fa-github fa fa-2x"></i></a></i>
+                </small>
+            </div>
         </div>
+
         <!--End Content-->
     </div>
 </div>
@@ -102,13 +110,5 @@
 <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
 
 {% endif %}
-
-<div class="footer text-center">
-    <small>
-        Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
-        <a href="https://github.com/yesnault/docktor">Fork me on Github</a> <i class="fa fa-github fa fa-2x"></i>
-    </small>
-</div>
-
 </body>
 </html>

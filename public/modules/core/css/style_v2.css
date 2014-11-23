@@ -85,7 +85,7 @@ a.show-sidebar:hover {
   box-shadow: 0 0 6px #000;
   padding-bottom: 3000px !important;
   margin-bottom: -2980px !important;
-  /*overflow: hidden;*/
+  overflow: hidden;
   -webkit-transition: 0.1s;
   -moz-transition: 0.1s;
   -o-transition: 0.1s;
@@ -178,7 +178,7 @@ a.show-sidebar:hover {
 #main {
   margin-top: 50px;
   min-height: 800px;
-  /*overflow: hidden;*/
+  overflow: hidden;
 }
 #search {
   position: relative;
@@ -1761,8 +1761,9 @@ ul.DTTT_dropdown.dropdown-menu > li:hover > a {
 }
 .btn + .dropdown-menu {
   margin-top: -10px;
-  background: rgba(0, 0, 0, 0.7) !important; padding: 0; border: 0; 
-  right: 0; 
+  /*background: rgba(0, 0, 0, 0.7) !important; padding: 0; border: 0;*/
+  background: rgba(0, 0, 0, 2) !important; padding: 0; border: 0;
+  right: 0;
   left: auto; 
   min-width: 100%;
 }
