@@ -1,60 +1,50 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <div class="page-header">
 
-        <h1 data-ng-bind="group.title"></h1>
+    <div class="pull-right">
         <small>
             <p data-ng-bind="group.description"></p>
-            <em class="text-muted">
-                Created on
-                <span data-ng-bind="group.created | date:'mediumDate'"></span>
-                by
-                <span data-ng-bind="group.user.displayName"></span>
-            </em>
         </small>
         <div>
-            <a class="btn btn-success btn-sm" href="/#!/groups/{{group._id}}/deploy/service">
+            <a class="btn btn-success btn-xs" href="/#!/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> Deploy a service</i>
             </a>
-            <a class="btn btn-default btn-sm" href="/#!/groups/{{group._id}}/edit">
+            <a class="btn btn-default btn-xs" href="/#!/groups/{{group._id}}/edit">
                 <i class="fa fa-edit"> Edit this group</i>
             </a>
         </div>
-
     </div>
-
-    <h4>Services</h4>
+    <h3 class="page-header">{{group.title}}</h3>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
 
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
 
-    <table class="table table-striped">
+    <table class="table">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Service - Image</th>
+            <th>Service</th>
+            <th>Container - Image</th>
             <th>Status</th>
             <th>Commands</th>
             <th>Daemon</th>
             <th>CPU</th>
             <th>Mem</th>
-            <th>Ports</th>
-            <th>Parameter</th>
-            <th>Variables</th>
-            <th>Volumes</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="container in group.containers">
-            <td nowrap>
-                {{container.name}}<br>
-                {{container.containerId | limitTo:12}}
+            <td>
+                <a href="#!/groups/{{group._id}}/{{container._id}}">
+                <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
+                {{container.serviceTitle}}
+                </a>
             </td>
             <td>
-                {{container.serviceTitle}} {{container.image}}
+                {{container.name}}</a><br>
+                {{container.image}}<br>
+                {{container.containerId | limitTo:12}}
             </td>
-
             <td>
                 <span ng-show="container.daemon.dockerStatusUp">
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
@@ -95,7 +85,8 @@
                                            ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Docker pause
                                     </a></li>
                                     <li><a href="" ng-show="container.inspect.State.Paused"
-                                           ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Docker unpause
+                                           ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Docker
+                                        unpause
                                     </a></li>
                                     <li><a href="" ng-click="killContainer(container)"><i
                                             class="fa fa-crosshairs"></i> Docker kill
@@ -158,44 +149,6 @@
                                class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
                                title="Memory"></just-gage>
                     <small>{{container.stats.memoryUsage}} Mo</small>
-                </div>
-            </td>
-            <td nowrap>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-                <div ng-repeat="port in container.ports">
-                    -e {{port.external}}:{{port.internal}}
-                </div>
-            </td>
-            <td nowrap>
-                <div ng-repeat="parameter in container.parameters">
-                    {{parameter.name}}:{{parameter.value}}
-                </div>
-            </td>
-            <td nowrap>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.Config.Env | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-                <div ng-repeat="variable in container.variables">
-                    {{variable.name}}:{{variable.value}}
-                </div>
-            </td>
-            <td nowrap>
-                <button ng-show="container.daemon.dockerStatusUp" type="text" class="btn btn-default btn-xs"
-                        value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </button>
-                <div ng-repeat="volume in container.volumes">
-                    -v {{volume.external}}:{{volume.internal}}
                 </div>
             </td>
         </tr>

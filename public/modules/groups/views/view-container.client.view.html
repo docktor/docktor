@@ -1,0 +1,225 @@
+<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+    <h3 class="page-header">{{group.title}} - Service {{container.serviceTitle}}</h3>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Service - Image</th>
+            <th>Status</th>
+            <th>Daemon</th>
+            <th>CPU</th>
+            <th>Mem</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <a href="#!/groups/{{group._id}}/{{container._id}}">
+                    <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
+                    {{container.serviceTitle}}
+                </a>
+            </td>
+            <td>
+                {{container.name}}</a><br>
+                {{container.image}}<br>
+                {{container.containerId | limitTo:12}}
+            </td>
+            <td>
+                <span ng-show="container.daemon.dockerStatusUp">
+                    <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
+                    <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
+                    <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
+                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
+                            tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
+                            tooltip-placement="left">
+                        <i class="fa fa-eye"> </i>
+                    </button>
+                </span>
+            </td>
+            <td>
+                <div ng-switch="container.daemon.dockerStatus">
+                    <span ng-switch-when="checking" class="label label-default">
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+                    </span>
+                    <span ng-switch-when="down" class="label label-danger">Down</span>
+                    <span ng-switch-when="up" class="label label-success">UP</span>
+                </div>
+                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
+            </td>
+            <td nowrap>
+                <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
+                    <just-gage id="gaugeCPU{{container._id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                               title="CPU"></just-gage>
+                </div>
+            </td>
+            <td style="text-align:center" nowrap>
+                <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
+                    <just-gage id="gaugeMem{{container._id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                               title="Memory"></just-gage>
+                    <small>{{container.stats.memoryUsage}} Mo</small>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h4>Commands</h4>
+
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    </alert>
+
+
+    <div ng-show="container.daemon.dockerStatusUp">
+
+        <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-warning"
+                ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Remove from Group
+        </button>
+
+        <button ng-hide="container.containerId || askDeleteService" class="btn btn-default btn-sm"
+                ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
+        </button>
+        <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </button>
+        <button data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService"
+                class="btn btn-danger">
+            Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
+        </button>
+
+        <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
+                ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
+        </button>
+
+
+        <div ng-show="container.containerId">
+
+            <button ng-hide="container.inspect.State.Running" class="btn btn-primary btn-sm"
+                    ng-click="startContainer(container)"><i class="fa fa-play"></i> Docker run
+            </button>
+
+            <div ng-show="container.inspect.State.Running">
+                <button ng-hide="container.inspect.State.Paused" class="btn btn-default"
+                        ng-click="stopContainer(container)">
+                    <i class="fa fa-stop"></i> Docker stop
+                </button>
+                <button ng-hide="container.inspect.State.Paused" class="btn btn-default"
+                        ng-click="pauseContainer(container)">
+                    <i class="fa fa-pause"></i> Docker pause
+                </button>
+                <button ng-show="container.inspect.State.Paused" class="btn btn-default"
+                        ng-click="unpauseContainer(container)">
+                    <i class="fa fa-pause"></i> Docker unpause
+                </button>
+                <button ng-click="killContainer(container)" class="btn btn-default">
+                    <i class="fa fa-crosshairs"></i> Docker kill
+                </button>
+                <button ng-click="topContainer(container)" class="btn btn-default">
+                    <i class="fa fa-stethoscope"></i> Docker top
+                </button>
+                <button ng-click="logsContainer(container)" class="btn btn-default">
+                    <i class="fa fa-file-text-o"></i> Docker logs
+                </button>
+
+                <h5>Docker exec <i>set in the configuration of services</i></h5>
+                <span ng-repeat="command in container.commands">
+                    <button ng-click="doExec(container, command)" class="btn btn-default">{{command.name}}
+                    </button>
+                </span>
+            </div>
+
+
+        </div>
+    </div>
+
+    <h4 class="page-header">Ports</h4>
+
+    <h5>From Docktor</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-repeat="port in container.ports">
+                    -e {{port.external}}:{{port.internal}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>docker inspect</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                {{container.inspect.HostConfig.PortBindings | json}}
+            </div>
+        </div>
+    </div>
+
+    <h4 class="page-header">Parameters</h4>
+
+    <h5>From Docktor</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-repeat="parameter in container.parameters">
+                    {{parameter.name}}:{{parameter.value}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="page-header">Variables</h4>
+
+    <h5>From Docktor</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-repeat="variable in container.variables">
+                    {{variable.name}}:{{variable.value}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>docker inspect</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                {{container.inspect.Config.Env | json}}
+            </div>
+        </div>
+    </div>
+
+    <h4 class="page-header">Volumes</h4>
+
+    <h5>From Docktor</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-repeat="volume in container.volumes">
+                    -v {{volume.external}}:{{volume.internal}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>docker inspect</h5>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-12">
+                {{container.inspect.HostConfig.Binds | json}}
+            </div>
+        </div>
+    </div>
+
+</section>

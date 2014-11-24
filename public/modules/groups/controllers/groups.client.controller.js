@@ -59,20 +59,29 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.group = group;
                     var daemons = {};
                     $scope.group.containers.forEach(function (container) {
-                        $scope.inspect(container);
-                        daemons[container.daemonId] = {};
+                        if (!$stateParams.containerId ||
+                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                            $scope.inspect(container);
+                            daemons[container.daemonId] = {};
+                        }
+                        if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                            $scope.container = container;
+                        }
                     });
                     angular.forEach(daemons, function (daemon, daemonId) {
                         Daemon.getInfo(daemonId, daemon);
                     });
                     $scope.group.containers.forEach(function (container) {
-                        $scope.inspect(container);
-                        container.daemon = daemons[container.daemonId];
-                        if (container.serviceId) {
-                            ServicesServices.getCommands(container.serviceId)
-                                .success(function (commands) {
-                                    container.commands = commands;
-                                });
+                        if (!$stateParams.containerId ||
+                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                            $scope.inspect(container);
+                            container.daemon = daemons[container.daemonId];
+                            if (container.serviceId) {
+                                ServicesServices.getCommands(container.serviceId)
+                                    .success(function (commands) {
+                                        container.commands = commands;
+                                    });
+                            }
                         }
                     });
 
