@@ -4,6 +4,8 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
     function ($scope, $stateParams, $location, Authentication, Users) {
         $scope.authentication = Authentication;
 
+        $scope.roles = ['user', 'admin'];
+
         $scope.update = function () {
             var user = $scope.user;
             user.$update(function () {
@@ -34,8 +36,11 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
         $scope.findOne = function () {
             if ($stateParams.userId) {
-                $scope.user = Users.get({
+                Users.get({
                     userId: $stateParams.userId
+                }, function (user) {
+                    $scope.user = user;
+                    $scope.user.roleSelect = user.roles[0];
                 });
             }
         };
