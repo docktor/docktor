@@ -186,9 +186,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
                 var title = 'Logs in container ' + container.name;
                 var msg = [];
-                console.log(data);
                 for (var value in data) {
-                    var s = new String(data[value]);
+                    var s = '' + data[value];
                     // display only line with date 2014-...
                     if (s.length > 2 && s.substring(0, 2) === '20') {
                         msg.push(s);
