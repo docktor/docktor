@@ -328,7 +328,7 @@ exports.execInContainer = function (req, res) {
                 });
             } else {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage("no Command found")
+                    message: errorHandler.getErrorMessage('No Command found')
                 });
             }
         }
