@@ -20,6 +20,18 @@ angular.module('sites').config(['$stateProvider',
             state('editSite', {
                 url: '/sites/:siteId/edit',
                 templateUrl: 'modules/sites/views/edit-site.client.view.html'
+            }).
+            state('viewUser', {
+                url: '/users/:userId',
+                templateUrl: 'modules/users/views/users/view-user.client.view.html'
+            }).
+            state('listUsers', {
+                url: '/users',
+                templateUrl: 'modules/users/views/users/list-users.client.view.html'
+            }).
+            state('editUser', {
+                url: '/users/:userId/edit',
+                templateUrl: 'modules/users/views/users/edit-user.client.view.html'
             });
     }
 ]);

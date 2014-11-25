@@ -7,5 +7,8 @@ angular.module('sites').run(['Menus',
         Menus.addMenuItem('topbar', 'Sites', 'sites', 'dropdown', '/sites(/create)?');
         Menus.addSubMenuItem('topbar', 'sites', 'List Sites', 'sites');
         Menus.addSubMenuItem('topbar', 'sites', 'New Site', 'sites/create');
+
+        Menus.addMenuItem('topbar', 'Admin', 'admin', 'dropdown', '/users(.*)?');
+        Menus.addSubMenuItem('topbar', 'admin', 'List Users', 'users');
     }
 ]);

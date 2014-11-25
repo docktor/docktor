@@ -1,0 +1,52 @@
+<section data-ng-controller="UsersController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1>
+            <span ng-show="user._id">Edit user</span>
+        </h1>
+    </div>
+    <div class="col-md-12">
+        <form name="userForm" class="form-horizontal" data-ng-submit="update()" novalidate>
+            <fieldset>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="username">Username</label>
+
+                    <div class="col-sm-5 controls">
+                        <input name="username" type="text" data-ng-model="user.username" id="username"
+                               class="form-control"
+                               placeholder="Username" required>
+                    </div>
+                    <div ng-show="userForm.username.$invalid" class="help-block">
+                        <p ng-show="userForm.username.$error.required" class="text-danger">Username is required</p>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="firstName">FirstName</label>
+
+                    <div class="col-sm-5">
+                        <input name="latitude" type="text" data-ng-model="user.firstName" id="firstName"
+                               class="form-control"
+                               placeholder="firstName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="lastName">LastName</label>
+
+                    <div class="col-sm-5">
+                        <input name="lastName" type="text" data-ng-model="user.lastName" id="lastName"
+                               class="form-control"
+                               placeholder="lastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span ng-show="user._id">Update</span>
+                    </button>
+                </div>
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>

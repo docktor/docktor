@@ -1,0 +1,24 @@
+<section data-ng-controller="UsersController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1 data-ng-bind="user.displayName"></h1>
+    </div>
+    <p>Username : {{user.username}}</p>
+
+    <p>First Name: {{user.firstName}}</p>
+    <p>Last Name: {{user.lastName}}</p>
+
+    <div class="pull-right">
+        <a class="btn btn-primary" href="/#!/users/{{user._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
+    <small>
+        <em class="text-muted">
+            Created at
+            <span data-ng-bind="user.created | date:'mediumDate'"></span>
+        </em>
+    </small>
+</section>

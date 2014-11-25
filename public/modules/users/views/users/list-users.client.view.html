@@ -1,0 +1,46 @@
+<section data-ng-controller="UsersController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Users</h1>
+    </div>
+
+    <table st-table="rowCollection" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Creation</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in users">
+            <td>
+                {{user.username}}
+            </td>
+            <td>
+                {{user.firstName}}
+            </td>
+            <td>
+                {{user.lastName}}
+            </td>
+            <td>
+                {{user.email}}
+            </td>
+            <td>
+                Created at
+                <span data-ng-bind="user.created | date:'mediumDate'"></span>
+            </td>
+            <td>
+                <a class="btn btn-default btn-xs" href="#!/users/{{user._id}}">
+                    <i class="fa fa-eye"></i> Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-warning text-center" data-ng-if="users.$resolved && !users.length">
+        No users yet ?!
+    </div>
+</section>
