@@ -52,23 +52,18 @@ exports.update = function (req, res) {
 
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
-console.log('HOP');
     if (user) {
-        console.log('HOPAA');
         // Merge existing user
         user = _.extend(user, req.body);
         user.updated = Date.now();
         user.displayName = user.firstName + ' ' + user.lastName;
 
         user.save(function (err) {
-            console.log('HOPBB');
             if (err) {
-                console.log('HOPCC');
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                console.log('HOPDD');
                 req.login(user, function (err) {
                     if (err) {
                         res.status(400).send(err);
