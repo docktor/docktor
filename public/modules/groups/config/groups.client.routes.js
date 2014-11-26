@@ -21,13 +21,14 @@ angular.module('groups').config(['$stateProvider',
                 url: '/groups/:groupId',
                 templateUrl: 'modules/groups/views/view-group.client.view.html'
             }).
-            state('viewContainer', {
-                url: '/groups/:groupId/:containerId',
-                templateUrl: 'modules/groups/views/view-container.client.view.html'
-            }).
             state('editGroup', {
                 url: '/groups/:groupId/edit',
                 templateUrl: 'modules/groups/views/edit-group.client.view.html'
+            }).
+            state('viewContainer', {
+                url: '/groups/:groupId/:containerId',
+                templateUrl: 'modules/groups/views/view-container.client.view.html'
             });
+
     }
 ]);
