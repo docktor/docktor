@@ -84,7 +84,7 @@ exports.update = function (req, res) {
  * Show user
  */
 exports.read = function (req, res) {
-    res.jsonp(req.user);
+    res.jsonp(req.profile);
 };
 
 

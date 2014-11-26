@@ -6,11 +6,14 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
         $scope.roles = ['user', 'admin'];
 
-        $scope.groups = {};
-        $scope.groups.all = Groups.query();
+        $scope.groupsSelected = [];
 
         $scope.update = function () {
             var user = $scope.user;
+            user.groups = [];
+            angular.forEach($scope.groupsSelected, function (group, key) {
+                user.groups.push(group._id);
+            });
             user.$update(function () {
                 $location.path('users/' + user._id);
             }, function (errorResponse) {
@@ -38,36 +41,36 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
         };
 
         $scope.findOne = function () {
-            if ($stateParams.userId) {
-                Users.get({
-                    userId: $stateParams.userId
-                }, function (user) {
-                    $scope.user = user;
-                    $scope.user.groups = []
-                });
-            }
-        };
+            Groups.query(function (groups) {
+                $scope.groups = {};
 
-        $scope.togGroup = function (group) {
-            if ($scope.containsGroup(group)) {
-                $scope.removeGroup(group);
-            } else {
-                $scope.addGroup(group);
-            }
-        };
-
-        $scope.containsGroup = function (group) {
-            return _.contains($scope.user.groups, group._id);
+                if ($stateParams.userId) {
+                    Users.get({
+                        userId: $stateParams.userId
+                    }, function (user) {
+                        $scope.user = user;
+                        angular.forEach(groups, function (group, key) {
+                            if (_.where($scope.user.groups, {'_id' : group._id}).length > 0) {
+                                $scope.groupsSelected.push(group);
+                                groups = _.without(groups, group);
+                            }
+                        });
+                        $scope.groups.all = groups;
+                    });
+                }
+            });
         };
 
         $scope.addGroup = function (group) {
-            console.log('ADD ' + group._id);
             $scope.user.groups = _.union($scope.user.groups, [group._id]);
+            $scope.groupsSelected.push(group);
+            $scope.groups.all = _.without($scope.groups.all, group);
         };
 
         $scope.removeGroup = function (group) {
-            console.log('DEL ' + group._id);
             $scope.user.groups = _.without($scope.user.groups, group._id);
+            $scope.groupsSelected = _.without($scope.groupsSelected, group);
+            $scope.groups.all.push(group);
         };
     }
 ]);

@@ -8,9 +8,15 @@
 
     <p>Last Name: {{user.lastName}}</p>
 
+    <p>Email: {{user.email}}</p>
+
     <p>Role : {{user.role}}</p>
 
-    <p>Groups : TODO</p>
+    <p>Groups :
+    <ul>
+        <li ng-repeat="group in user.groups">{{group.title}}</li>
+    </ul>
+    </p>
 
     <div class="pull-right">
         <a class="btn btn-primary" href="/#!/users/{{user._id}}/edit">
@@ -23,7 +29,9 @@
     <small>
         <em class="text-muted">
             Created at
-            <span data-ng-bind="user.created | date:'mediumDate'"></span>
+            <span data-ng-bind="user.created | date:'mediumDate'"></span> -
+            Updated at
+            <span data-ng-bind="user.updated | date:'mediumDate'"></span>
         </em>
     </small>
 </section>
