@@ -14,15 +14,19 @@
         </div>
     </div>
     <h3 class="page-header">{{group.title}}</h3>
+
     <div class="col-sm-12 row">
         Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
         <hr>
     </div>
 
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+    <div class="col-sm-12 row">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            <strong>{{alert.title}}</strong><br>
 
-        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
-    </alert>
+            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+        </alert>
+    </div>
 
     <table class="table">
         <thead>
@@ -40,8 +44,8 @@
         <tr ng-repeat="container in group.containers">
             <td>
                 <a href="#!/groups/{{group._id}}/{{container._id}}">
-                <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
-                {{container.serviceTitle}}
+                    <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
+                    {{container.serviceTitle}}
                 </a>
             </td>
             <td>
@@ -54,15 +58,9 @@
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
-                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                            tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
-                            tooltip-placement="left">
-                        <i class="fa fa-eye"> </i>
-                    </button>
                 </span>
             </td>
             <td>
-
                 <span ng-show="container.daemon.dockerStatusUp">
                     <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
                             ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
@@ -95,22 +93,8 @@
                                     <li><a href="" ng-click="killContainer(container)"><i
                                             class="fa fa-crosshairs"></i> Docker kill
                                     </a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="" ng-click="topContainer(container)"><i
-                                            class="fa fa-stethoscope"></i> Docker top
-                                    </a></li>
-                                    <li><a href="" ng-click="logsContainer(container)"><i
-                                            class="fa fa-file-text-o"></i> Docker logs
-                                    </a></li>
-                                    <li class="divider"></li>
-                                    <li ng-repeat="command in container.commands">
-                                        <a href="" ng-click="doExec(container, command)">{{command.name}}
-                                        </a>
-                                    </li>
-
                                 </ul>
                             </div>
-
                         </span>
 
                         <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-sm"
@@ -118,27 +102,15 @@
                         </button>
                     </span>
                 </span>
-
-                <button ng-hide="container.containerId || askDeleteService" class="btn btn-default btn-sm"
-                        ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
-                </button>
-                <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
-                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService"
-                        class="btn btn-danger">
-                    Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
-                </button>
             </td>
             <td>
                 <div ng-switch="container.daemon.dockerStatus">
                     <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> <a href="#!/daemons/view/{{container.daemonId}}">Checking</a>
                     </span>
-                    <span ng-switch-when="down" class="label label-danger">Down</span>
-                    <span ng-switch-when="up" class="label label-success">UP</span>
+                    <span ng-switch-when="down" class="label label-danger"><a href="#!/daemons/view/{{container.daemonId}}">Down</a></span>
+                    <span ng-switch-when="up" class="label label-success"><a href="#!/daemons/view/{{container.daemonId}}">UP</a></span>
                 </div>
-                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
             </td>
             <td nowrap>
                 <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
