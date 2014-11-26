@@ -10,6 +10,7 @@
             <th>Description</th>
             <th>Default Daemon</th>
             <th>Ports</th>
+            <th>Services</th>
             <th>Details</th>
         </tr>
         </thead>
@@ -26,6 +27,9 @@
             </td>
             <td>
                 {{group.portminrange}} - {{group.portmaxrange}}
+            </td>
+            <td>
+                {{group.containers.length}}
             </td>
             <td>
                 <a class="btn btn-default btn-xs" href="#!/groups/{{group._id}}">

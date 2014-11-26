@@ -14,6 +14,10 @@
         </div>
     </div>
     <h3 class="page-header">{{group.title}}</h3>
+    <div class="col-sm-12 row">
+        Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
+        <hr>
+    </div>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
 

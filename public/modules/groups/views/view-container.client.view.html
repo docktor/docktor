@@ -1,31 +1,37 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
     <h3 class="page-header">{{group.title}} - Service {{container.serviceTitle}}</h3>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Service - Image</th>
-            <th>Status</th>
-            <th>Daemon</th>
-            <th>CPU</th>
-            <th>Mem</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <a href="#!/groups/{{group._id}}/{{container._id}}">
-                    <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
-                    {{container.serviceTitle}}
-                </a>
-            </td>
-            <td>
-                {{container.name}}</a><br>
-                {{container.image}}<br>
-                {{container.containerId | limitTo:12}}
-            </td>
-            <td>
+    <div class="col-sm-12 row">
+        Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
+        <hr>
+    </div>
+
+    <div class="col-sm-12 row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Service - Image</th>
+                <th>Status</th>
+                <th>Daemon</th>
+                <th>CPU</th>
+                <th>Mem</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <a href="#!/groups/{{group._id}}/{{container._id}}">
+                        <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
+                        {{container.serviceTitle}}
+                    </a>
+                </td>
+                <td>
+                    {{container.name}}</a><br>
+                    {{container.image}}<br>
+                    {{container.containerId | limitTo:12}}
+                </td>
+                <td>
                 <span ng-show="container.daemon.dockerStatusUp">
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
@@ -36,40 +42,42 @@
                         <i class="fa fa-eye"> </i>
                     </button>
                 </span>
-            </td>
-            <td>
-                <div ng-switch="container.daemon.dockerStatus">
+                </td>
+                <td>
+                    <div ng-switch="container.daemon.dockerStatus">
                     <span ng-switch-when="checking" class="label label-default">
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
                     </span>
-                    <span ng-switch-when="down" class="label label-danger">Down</span>
-                    <span ng-switch-when="up" class="label label-success">UP</span>
-                </div>
-                <a href="#!/daemons/view/{{container.daemonId}}">details</a>
-            </td>
-            <td nowrap>
-                <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
-                    <just-gage id="gaugeCPU{{container._id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
-                               title="CPU"></just-gage>
-                </div>
-            </td>
-            <td style="text-align:center" nowrap>
-                <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
-                    <just-gage id="gaugeMem{{container._id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
-                               title="Memory"></just-gage>
-                    <small>{{container.stats.memoryUsage}} Mo</small>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                        <span ng-switch-when="down" class="label label-danger">Down</span>
+                        <span ng-switch-when="up" class="label label-success">UP</span>
+                    </div>
+                    <a href="#!/daemons/view/{{container.daemonId}}">details</a>
+                </td>
+                <td nowrap>
+                    <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
+                        <just-gage id="gaugeCPU{{container._id}}"
+                                   class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                                   title="CPU"></just-gage>
+                    </div>
+                </td>
+                <td style="text-align:center" nowrap>
+                    <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
+                        <just-gage id="gaugeMem{{container._id}}"
+                                   class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                                   title="Memory"></just-gage>
+                        <small>{{container.stats.memoryUsage}} Mo</small>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
     <h4>Commands</h4>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
 
