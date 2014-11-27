@@ -39,13 +39,6 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
 
         $scope.remove = function (site) {
             if (site) {
-                site.$remove();
-                for (var i in $scope.sites) {
-                    if ($scope.sites[i] === site) {
-                        $scope.sites.splice(i, 1);
-                    }
-                }
-            } else {
                 $scope.site.$remove(function () {
                     $location.path('sites');
                 });
