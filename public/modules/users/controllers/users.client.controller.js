@@ -23,14 +23,8 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
         $scope.remove = function (user) {
             if (user) {
-                user.$remove();
-                for (var i in $scope.users) {
-                    if ($scope.users[i] === user) {
-                        $scope.users.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.user.$remove(function () {
+                var usertoDelete = user;
+                usertoDelete.$remove(function () {
                     $location.path('users');
                 });
             }

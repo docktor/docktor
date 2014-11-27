@@ -14,7 +14,7 @@ var _ = require('lodash'),
  * Delete a User
  */
 exports.delete = function (req, res) {
-    var user = req.user;
+    var user = req.profile;
 
     user.remove(function (err) {
         if (err) {
