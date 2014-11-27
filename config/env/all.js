@@ -15,7 +15,8 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/fontawesome/css/font-awesome.css',
-                'public/lib/angular-ui-select/dist/select.css'
+                'public/lib/angular-ui-select/dist/select.css',
+				'public/lib/trNgGrid/release/trNgGrid.min.css'
 			],
 			js: [
 				'public/lib/jquery/dist/jquery.min.js',
