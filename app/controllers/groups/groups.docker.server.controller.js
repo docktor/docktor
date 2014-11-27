@@ -81,7 +81,11 @@ exports.startContainer = function (req, res) {
 
     container.volumes.forEach(function (volume) {
         if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
-            volumes.push(volume.external + ':' + volume.internal);
+            var vol = volume.external + ':' + volume.internal;
+            if (_.isString(volume.rights) && !_.isEmpty(volume.rights)) {
+                vol = vol + ':' + volume.rights;
+            }
+            volumes.push(vol);
         }
     });
 

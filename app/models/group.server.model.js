@@ -67,6 +67,10 @@ var VolumeContainerSchema = new Schema({
         type: String,
         trim: true,
         required: 'externalVolumeContainer cannot be blank'
+    },
+    rights: { // ro, or rw
+        type: String,
+        trim: true
     }
 });
 
