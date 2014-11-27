@@ -3,18 +3,11 @@
         <h1>Users</h1>
     </div>
 
-    <table tr-ng-grid="" items="users" fields="['username', 'firstName', 'lastName', 'email', 'role']" class="table">
+    <table tr-ng-grid="" items="users" fields="['username', 'firstName', 'lastName', 'email', 'role', 'created']" class="table">
         <thead>
-        <th>
-            <div class="tr-ng-title">
-                Creation
-            </div>
-        </th>
+        <th field-name="created" display-format="date:'mediumDate'"></th>
         </thead>
         <tbody>
-        <td>
-            <span data-ng-bind="gridItem.created | date:'mediumDate'"></span>
-        </td>
         <td>
             <div><a class="btn btn-default btn-xs" href="#!/users/{{gridItem._id}}">
                 <i class="fa fa-eye"></i> Details</a>

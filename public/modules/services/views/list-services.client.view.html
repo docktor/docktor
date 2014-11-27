@@ -3,16 +3,10 @@
         <h1>Services</h1>
     </div>
 
-
     <table tr-ng-grid="" items="services" fields="" class="table">
         <thead>
         <th field-name="title" display-name="Title" enable-filtering="true"></th>
-
-        <th>
-            <div class="tr-ng-title">
-                Creation
-            </div>
-        </th>
+        <th field-name="created" display-format="date:'mediumDate'"></th>
         <th>
             <div class="tr-ng-title">
                 Details
@@ -20,14 +14,6 @@
         </th>
         </thead>
         <tbody>
-        <td>
-            <div>
-                Created at
-                <span data-ng-bind="gridItem.created | date:'mediumDate'"></span>
-                by
-                <span data-ng-bind="gridItem.user.displayName"></span>
-            </div>
-        </td>
         <td>
             <div>
                 <a class="btn btn-default btn-xs" href="#!/services/{{gridItem._id}}">

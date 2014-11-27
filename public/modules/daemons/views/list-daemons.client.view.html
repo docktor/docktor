@@ -10,7 +10,7 @@
             <th field-name="name" display-name="Name" enable-filtering="true"></th>
             <th field-name="dockerStatus" display-name="Status" enable-filtering="true"></th>
             <th field-name="host" display-name="Daemons" enable-filtering="true"></th>
-            <th field-name="dockerVersion.version" display-name="Version" enable-filtering="true"></th>
+            <th field-name="dockerVersion.Version" display-name="Version" enable-filtering="true"></th>
             <th>
                 <div class="tr-ng-title">
                     CPU
@@ -55,7 +55,7 @@
                     <a ng-show="gridItem.cadvisorApi" href="{{gridItem.cadvisorUrl}}">cAdvisor</a>
                 </div>
             </td>
-            <td field-name="dockerVersion.version">
+            <td field-name="dockerVersion.Version">
                 <div ng-show="gridItem.dockerStatusUp">{{gridItem.dockerVersion.Version}}</div>
             </td>
             <td style="text-align:center">
