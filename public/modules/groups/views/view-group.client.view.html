@@ -31,16 +31,8 @@
     <table tr-ng-grid="" items="group.containers" fields="" class="table">
         <thead>
         <tr>
-            <th>
-                <div class="tr-ng-title" >
-                    Service
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Container - Image
-                </div>
-            </th>
+            <th field-name="serviceTitle" display-name="Service" enable-filtering="true"></th>
+            <th field-name="name" display-name="Container - Image" enable-filtering="true"></th>
             <th>
                 <div class="tr-ng-title">
                     Status
@@ -70,13 +62,13 @@
         </thead>
         <tbody>
         <tr>
-            <td>
+            <td field-name="serviceTitle">
                 <a href="#!/groups/{{group._id}}/{{gridItem._id}}">
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
                     {{gridItem.serviceTitle}}
                 </a>
             </td>
-            <td>
+            <td field-name="name">
                 <div>
                     {{gridItem.name}}<br>
                     {{gridItem.image}}<br>
@@ -84,12 +76,10 @@
                 </div>
             </td>
             <td>
-                <div>
-                <span ng-show="gridItem.daemon.dockerStatusUp">
+                <div ng-show="gridItem.daemon.dockerStatusUp">
                     <span ng-show="gridItem.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="gridItem.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="gridItem.inspect.State.Paused" class="label label-warning">Paused</span>
-                </span>
                 </div>
             </td>
             <td>
