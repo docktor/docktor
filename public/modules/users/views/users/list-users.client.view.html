@@ -3,44 +3,23 @@
         <h1>Users</h1>
     </div>
 
-    <table class="table table-striped">
+    <table tr-ng-grid="" items="users" fields="['username', 'firstName', 'lastName', 'email', 'role']" class="table">
         <thead>
-        <tr>
-            <th>Username</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Creation</th>
-            <th>Details</th>
-        </tr>
+        <th>
+            <div class="tr-ng-title">
+                Creation
+            </div>
+        </th>
         </thead>
         <tbody>
-        <tr ng-repeat="user in users">
-            <td>
-                {{user.username}}
-            </td>
-            <td>
-                {{user.firstName}}
-            </td>
-            <td>
-                {{user.lastName}}
-            </td>
-            <td>
-                {{user.email}}
-            </td>
-            <td>
-                {{user.role}}
-            </td>
-            <td>
-                Created at
-                <span data-ng-bind="user.created | date:'mediumDate'"></span>
-            </td>
-            <td>
-                <a class="btn btn-default btn-xs" href="#!/users/{{user._id}}">
-                    <i class="fa fa-eye"></i> Details</a>
-            </td>
-        </tr>
+        <td>
+            <span data-ng-bind="gridItem.created | date:'mediumDate'"></span>
+        </td>
+        <td>
+            <div><a class="btn btn-default btn-xs" href="#!/users/{{gridItem._id}}">
+                <i class="fa fa-eye"></i> Details</a>
+            </div>
+        </td>
         </tbody>
     </table>
 
