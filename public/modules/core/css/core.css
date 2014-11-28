@@ -38,4 +38,6 @@
     position: fixed;
     bottom: 0px;
     left: 0px;
+    width: 200px;
+    font-size: 12px;
 }

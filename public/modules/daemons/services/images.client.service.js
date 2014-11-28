@@ -10,13 +10,13 @@ angular.module('daemons').factory('Images', ['$http',
                 var data = {name: imageName};
                 return $http.post('/daemons/docker/image/pull/' + daemonId + '/', data);
             },
-            removeImage: function (daemonId, image, cbSuccess, cbError) {
+            removeImage: function (daemonId, image, cbSuccess, index, cbSuccessEnd, cbError) {
                 return $http.get('/daemons/docker/image/remove/' + daemonId + '/' + image.Id).
                     success(function (data, status, headers, config) {
-                        cbSuccess(image, data);
+                        cbSuccess(image, data, index, cbSuccessEnd);
                     }).
                     error(function (data, status, headers, config) {
-                        cbError(image, data);
+                        cbError(image, data, index);
                     });
             }
         };

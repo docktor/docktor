@@ -156,9 +156,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             return index;
         };
 
+        $scope.gotoList = function() {
+            $location.path('groups/' + $scope.group._id);
+        };
+
         $scope.removeServiceFromGroup = function (container) {
             var index = $scope.addInfo('Removing service ' + container.serviceTitle + ' from group');
-            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
+            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackError);
         };
 
         $scope.createContainer = function (container) {

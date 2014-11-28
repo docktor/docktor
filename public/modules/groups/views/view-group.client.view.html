@@ -29,7 +29,7 @@
 
         <div class="infos-bottom">
             <alert ng-repeat="info in infos" type="success" close="closeInfo($index)">
-                 {{info.msg}}...
+                {{info.msg}}...
             </alert>
         </div>
 
@@ -127,8 +127,8 @@
                             </div>
                         </span>
 
-                        <button ng-hide="gridItem.inspect.State.Running" class="btn btn-default btn-sm"
-                                ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Remove
+                        <button ng-hide="gridItem.inspect.State.Running" class="btn btn-warning btn-sm"
+                                ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
                         </button>
                     </span>
                 </span>

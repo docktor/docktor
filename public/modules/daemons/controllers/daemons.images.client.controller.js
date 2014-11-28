@@ -4,6 +4,8 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
     function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images) {
 
         $scope.viewRawJson = false;
+        $scope.infos = [];
+        $scope.alerts = [];
 
         $scope.findOne = function () {
             $scope.daemon = Daemons.get({
@@ -33,18 +35,42 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
                 });
         };
 
-        $scope.callbackError = function (data) {
-            console.log('Error:');
-            console.log(data);
+        $scope.callbackError = function (container, err, index) {
+            var msg = [];
+            msg.push(err.message);
+            var title = 'Error - ' + moment().format('hh:mm:ss');
+            $scope.alerts.push({title: title, type: 'danger', msg: msg});
+            $scope.closeInfo(index);
+        };
+
+        $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
+            $scope.closeInfo(index);
+            cbSuccessEnd(container, data);
+        };
+
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.closeInfo = function (index) {
+            $scope.infos.splice(index, 1);
+        };
+
+        $scope.addInfo = function (msg) {
+            var index = $scope.infos.length;
+            msg = moment().format('hh:mm:ss') + ' ' + msg;
+            $scope.infos.push({msg: msg});
+            return index;
         };
 
         $scope.removeImage = function (image) {
-            Images.removeImage($scope.daemon._id, image, $scope.findOne, $scope.callbackError);
+            var index = $scope.addInfo('Removing ' + image.Id);
+            Images.removeImage($scope.daemon._id, image, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 
         $scope.runPullImage = function () {
             $scope.pullImage.pulled = true;
-            var info = {'status': 'Running docker pull ' + $scope.pullImage.name + '...'};
+            var info = {'status': 'Running docker pull ' + $scope.pullImage.name + '. Please wait...'};
             $scope.pullImage.output = [info];
             Images.pullImage($scope.daemon._id, $scope.pullImage.name).
                 success(function (data) {

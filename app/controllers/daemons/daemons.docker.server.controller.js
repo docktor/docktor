@@ -112,6 +112,18 @@ exports.unpauseContainer = function (req, res) {
     });
 };
 
+exports.killContainer = function (req, res) {
+    req.containerDocker.kill({}, function (err, container) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(container);
+        }
+    });
+};
+
 exports.removeContainer = function (req, res) {
     req.containerDocker.remove({}, function (err, container) {
         if (err) {
