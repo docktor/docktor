@@ -26,6 +26,13 @@
 
             <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
         </alert>
+
+        <div class="infos-bottom">
+            <alert ng-repeat="info in infos" type="success" close="closeInfo($index)">
+                 {{info.msg}}...
+            </alert>
+        </div>
+
     </div>
 
     <table tr-ng-grid="" items="group.containers" fields="" class="table">

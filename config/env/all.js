@@ -35,7 +35,8 @@ module.exports = {
 				'public/lib/ngmap/build/scripts/ng-map.min.js',
                 'public/lib/justgage-toorshia/justgage.js',
                 'public/lib/angular-justgage/ng-justgage.js',
-				'public/lib/lodash/dist/lodash.underscore.min.js'
+				'public/lib/lodash/dist/lodash.underscore.min.js',
+				'public/lib/moment/min/moment.min.js'
 			]
 		},
 		css: [
