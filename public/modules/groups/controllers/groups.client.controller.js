@@ -87,9 +87,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     });
 
                     $scope.daemons = {};
+                    $scope.daemons.all = {};
                     Daemons.query(function (daemons) {
-                        $scope.daemons.all = daemons;
                         daemons.forEach(function (daemon) {
+                            $scope.daemons.all[daemon._id] = daemon;
                             if (daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;
                             }
@@ -156,7 +157,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             return index;
         };
 
-        $scope.gotoList = function() {
+        $scope.gotoList = function () {
             $location.path('groups/' + $scope.group._id);
         };
 
@@ -239,17 +240,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
         };
 
-
-        $scope.getDaemonHost = function (idDaemon){
-            if($scope.daemons.all != undefined){
-                for(var i=0;i<$scope.daemons.all.length;i++){
-                    var d = $scope.daemons.all[i];   
-                    if(d._id == idDaemon){
-                        return d.host;
-                    }
-                }
-            }
-        }
+        $scope.getDaemon = function (idDaemon) {
+            return $scope.daemons.all[idDaemon];
+        };
 
         $scope.addFilesystem = function () {
             $scope.group.filesystems.push($scope.filesystem);
