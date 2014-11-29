@@ -239,6 +239,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
         };
 
+
+        $scope.getDaemonHost = function (idDaemon){
+            if($scope.daemons.all != undefined){
+                for(var i=0;i<$scope.daemons.all.length;i++){
+                    var d = $scope.daemons.all[i];   
+                    if(d._id == idDaemon){
+                        return d.host;
+                    }
+                }
+            }
+        }
+
         $scope.addFilesystem = function () {
             $scope.group.filesystems.push($scope.filesystem);
             $scope.filesystem = {};
@@ -247,5 +259,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.removeFilesystem = function (filesystem) {
             $scope.group.filesystems.splice($scope.group.filesystems.indexOf(filesystem), 1);
         };
+
     }
 ]);

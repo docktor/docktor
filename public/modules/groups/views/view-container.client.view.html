@@ -48,8 +48,8 @@
                     <span ng-switch-when="checking" class="label label-default">
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
                     </span>
-                        <span ng-switch-when="down" class="label label-danger">Down</span>
-                        <span ng-switch-when="up" class="label label-success">UP</span>
+                        <span ng-switch-when="down" class="label label-danger">{{getDaemonHost(container.daemonId)}}</span>
+                        <span ng-switch-when="up" class="label label-success">{{getDaemonHost(container.daemonId)}}</span>
                     </div>
                     <a href="#!/daemons/view/{{container.daemonId}}">details</a>
                 </td>
