@@ -67,18 +67,67 @@
                             required</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
-                        <span ng-hide="group._id">Create</span>
-                        <span ng-show="group._id">Update</span>
-                    </button>
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
             </fieldset>
         </form>
     </div>
+
+    <div class="col-md-12">
+        <fieldset class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label" for="title">Filesystem</label>
+                <button class="btn btn-default btn-xs" ng-hide="displayFormFilesystem"
+                        ng-click="displayFormFilesystem=!displayFormFilesystem">
+                    <i class="fa fa-plus-square"></i>
+                </button>
+                <div class="controls">
+
+                    <ul data-ng-repeat="filesystem in group.filesystems">
+                        <li>{{filesystem.partition}}:{{filesystem.value}}
+                            <small><i>{{filesystem.description}}</i></small>
+                            <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
+                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
+                                   tooltip-popup-delay='750'></i>
+                            </a>
+                            <button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
+                                    class="btn btn-danger">
+                                No, I don't want to delete this. <i class="fa fa-reply"></i>
+                            </button>
+                            <button data-ng-click="removeFilesystem(filesystem);"
+                                    ng-show="askDeleteFilesystem"
+                                    class="btn btn-danger">
+                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
+                          autocomplete="off">
+                        <fieldset>
+                            <input type="text" name="name" data-ng-model="filesystem.partition"
+                                   placeholder="name" class="form-control" ng-required="true">
+                            <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
+                                   placeholder="description" class="form-control">
+                            <button ng-disabled="filesystemForm.$invalid" class="btn btn-primary"
+                                    data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                                Insert Filesystem
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" ng-click="submitForm()">
+                    <span ng-hide="group._id">Create</span>
+                    <span ng-show="group._id">Update</span>
+                </button>
+            </div>
+            <div data-ng-show="error" class="text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </fieldset>
+    </div>
+
     <div ng-show="group._id">
         <button class="btn btn-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group

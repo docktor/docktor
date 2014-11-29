@@ -238,5 +238,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.callbackError(container, err);
                 });
         };
+
+        $scope.addFilesystem = function () {
+            $scope.group.filesystems.push($scope.filesystem);
+            $scope.filesystem = {};
+        };
+
+        $scope.removeFilesystem = function (filesystem) {
+            $scope.group.filesystems.splice($scope.group.filesystems.indexOf(filesystem), 1);
+        };
     }
 ]);

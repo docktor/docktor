@@ -7,6 +7,20 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
+ * Filesystem Schema, not useful outside Group
+ */
+var FilesystemSchema = new Schema({
+    partition: {
+        type: String,
+        trim: true,
+        required: 'Partition cannot be blank'
+    },
+    description: {
+        type: String
+    }
+});
+
+/**
  * Parameter Schema, not useful outside Image
  */
 var ParameterContainerSchema = new Schema({
@@ -153,7 +167,7 @@ var GroupSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'Daemon'
     },
-    containers: [ContainerSchema],
+    filesystems: [FilesystemSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'
