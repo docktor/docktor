@@ -30,12 +30,14 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
-                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;">
+                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;"
+                               ng-change="changeDaemon()">
                         <ui-select-match placeholder="Select or search a daemon in the list...">
-                            {{$select.selected.name}} -> {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
+                            {{$select.selected.name}} ->
+                            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
                         </ui-select-match>
                         <ui-select-choices repeat="daemon in daemons.all">
-                            {{daemon.selected.name}} -> {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+                            {{daemon.name}} -> {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
                         </ui-select-choices>
                     </ui-select>
                 </div>
@@ -82,46 +84,74 @@
                 </button>
 
                 <div class="controls">
-                    See <a ng-show="group.selectDaemon.cadvisorApi" href="{{group.selectDaemon.cadvisorUrl}}">cAdvisor of daemon {{group.selectDaemon.name}}</a>
+                    See <a ng-show="group.selectDaemon.cadvisorApi" href="{{group.selectDaemon.cadvisorUrl}}">cAdvisor
+                    of daemon {{group.selectDaemon.name}}</a>
 
                     <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-danger">
                         Daemon has no cAdvisor URL. Please check this
                         <a href="#!/daemons/edit/{{group.selectDaemon._id}}">Daemon</a>
                     </div>
 
+                    <div ng-show="group.selectDaemon.cadvisorApi">
+                        <ul data-ng-repeat="filesystem in group.filesystems">
+                            <li>{{filesystem.partition}}:{{filesystem.value}}
+                                <small><i>{{filesystem.description}}</i></small>
+                                <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
+                                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
+                                       tooltip-popup-delay='750'></i>
+                                </a>
+                                <button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
+                                        class="btn btn-danger">
+                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                                </button>
+                                <button data-ng-click="removeFilesystem(filesystem);"
+                                        ng-show="askDeleteFilesystem"
+                                        class="btn btn-danger">
+                                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                                </button>
+                            </li>
+                        </ul>
 
-                    <ul data-ng-repeat="filesystem in group.filesystems">
-                        <li>{{filesystem.partition}}:{{filesystem.value}}
-                            <small><i>{{filesystem.description}}</i></small>
-                            <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
-                                <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
-                                   tooltip-popup-delay='750'></i>
-                            </a>
-                            <button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                                    class="btn btn-danger">
-                                No, I don't want to delete this. <i class="fa fa-reply"></i>
-                            </button>
-                            <button data-ng-click="removeFilesystem(filesystem);"
-                                    ng-show="askDeleteFilesystem"
-                                    class="btn btn-danger">
-                                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                            </button>
-                        </li>
-                    </ul>
+                        <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
+                              autocomplete="off">
+                            <fieldset>
 
-                    <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
-                          autocomplete="off">
-                        <fieldset>
-                            <input type="text" name="name" data-ng-model="filesystem.partition"
-                                   placeholder="name of the partition. Example /dev/sda1 " class="form-control" ng-required="true">
-                            <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
-                                   placeholder="description" class="form-control">
-                            <button ng-disabled="filesystemForm.$invalid" class="btn btn-primary"
-                                    data-ng-click="addFilesystem(); displayFormFilesystem=false">
-                                Insert Filesystem
-                            </button>
-                        </fieldset>
-                    </form>
+                                <ui-select ng-model="group.currentFs" theme="bootstrap" style="min-width: 300px;"
+                                           ng-change="changefs()">
+                                    <ui-select-match placeholder="Select or search a partition">
+                                        {{$select.device}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="fs in group.selectDaemon.stats.filesystem">
+                                        {{fs.device}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <div class="col-sm-6" ng-show="group.currentFs">
+                                    <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Mb / {{group.currentFs.capacityInMB}} Mb ({{group.currentFs.usagePercent}}%)</span>
+                                </div>
+                                <div class="col-sm-6" ng-show="group.currentFs">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar"
+                                             aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
+                                             aria-valuemax="{{group.currentFs.capacity}}"
+                                             style="width: {{group.currentFs.usagePercent}}%;">
+                                            <span>&nbsp;</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="text" name="name" data-ng-model="filesystem.partition"
+                                       placeholder="name of the partition. Example /dev/sda1 " class="form-control"
+                                       ng-required="true">
+                                <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
+                                       placeholder="description" class="form-control">
+                                <button ng-disabled="filesystemForm.$invalid" class="btn btn-primary"
+                                        data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                                    Insert Filesystem
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
 

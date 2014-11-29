@@ -246,6 +246,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.addFilesystem = function () {
+            if (!$scope.group.filesystems) $scope.group.filesystems = [];
             $scope.group.filesystems.push($scope.filesystem);
             $scope.filesystem = {};
         };
@@ -254,5 +255,28 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.group.filesystems.splice($scope.group.filesystems.indexOf(filesystem), 1);
         };
 
+        $scope.changefs = function () {
+            if (!$scope.filesystem) $scope.filesystem = {};
+            $scope.filesystem.partition = $scope.group.currentFs.device;
+        };
+
+        $scope.changeDaemon = function () {
+            if ($scope.group.selectDaemon && $scope.group.selectDaemon.cadvisorApi) {
+                DaemonsDocker.statsDaemon($scope.group.selectDaemon._id).
+                    success(function (daemonInfo, status, headers, config) {
+                        $scope.group.selectDaemon.stats = daemonInfo.stats[daemonInfo.stats.length - 1];
+                        angular.forEach($scope.group.selectDaemon.stats.filesystem, function (fs, key) {
+                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                        });
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log('Error:');
+                        console.log(data);
+                    });
+
+            }
+        };
     }
 ]);
