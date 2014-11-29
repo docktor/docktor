@@ -87,9 +87,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     });
 
                     $scope.daemons = {};
-                    $scope.daemons.all = {};
+                    $scope.daemons.all = [];
                     Daemons.query(function (daemons) {
                         daemons.forEach(function (daemon) {
+                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                             $scope.daemons.all[daemon._id] = daemon;
                             if (daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;

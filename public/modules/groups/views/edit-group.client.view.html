@@ -32,10 +32,10 @@
                     <label class="control-label">Daemon</label>
                     <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;">
                         <ui-select-match placeholder="Select or search a daemon in the list...">
-                            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
+                            {{$select.selected.name}} -> {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
                         </ui-select-match>
                         <ui-select-choices repeat="daemon in daemons.all">
-                            {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+                            {{daemon.selected.name}} -> {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
                         </ui-select-choices>
                     </ui-select>
                 </div>
@@ -75,11 +75,20 @@
         <fieldset class="form-horizontal">
             <div class="form-group">
                 <label class="control-label" for="title">Filesystem</label>
+
                 <button class="btn btn-default btn-xs" ng-hide="displayFormFilesystem"
                         ng-click="displayFormFilesystem=!displayFormFilesystem">
                     <i class="fa fa-plus-square"></i>
                 </button>
+
                 <div class="controls">
+                    See <a ng-show="group.selectDaemon.cadvisorApi" href="{{group.selectDaemon.cadvisorUrl}}">cAdvisor of daemon {{group.selectDaemon.name}}</a>
+
+                    <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-danger">
+                        Daemon has no cAdvisor URL. Please check this
+                        <a href="#!/daemons/edit/{{group.selectDaemon._id}}">Daemon</a>
+                    </div>
+
 
                     <ul data-ng-repeat="filesystem in group.filesystems">
                         <li>{{filesystem.partition}}:{{filesystem.value}}
@@ -104,7 +113,7 @@
                           autocomplete="off">
                         <fieldset>
                             <input type="text" name="name" data-ng-model="filesystem.partition"
-                                   placeholder="name" class="form-control" ng-required="true">
+                                   placeholder="name of the partition. Example /dev/sda1 " class="form-control" ng-required="true">
                             <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
                                    placeholder="description" class="form-control">
                             <button ng-disabled="filesystemForm.$invalid" class="btn btn-primary"
