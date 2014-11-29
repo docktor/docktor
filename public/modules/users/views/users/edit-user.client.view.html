@@ -96,7 +96,7 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        <span ng-show="user._id">Update</span>
+                        <span ng-show="user._id"><i class="fa fa-save"></i> Update</span>
                     </button>
                 </div>
                 <div data-ng-show="error" class="text-danger">
@@ -104,5 +104,20 @@
                 </div>
             </fieldset>
         </form>
+
+        <div class="row">
+            <div ng-show="authentication.user.username===user.username" class="label label-warning">You can't delete yourself.</div>
+            <button class="btn btn-danger" ng-click="askDeleteUser=true" ng-hide="askDeleteUser" ng-disabled="authentication.user.username===user.username">
+                <i class="fa fa-trash-o"></i> Delete User
+            </button>
+            <br>
+            <button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="btn btn-danger">
+                No, I don't want to delete this. <i class="fa fa-reply"></i>
+            </button>
+            <button data-ng-click="remove(user);" ng-show="askDeleteUser"
+                    class="btn btn-danger">
+                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+            </button>
+        </div>
     </div>
 </section>

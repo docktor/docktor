@@ -3,6 +3,7 @@
 angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices',
     function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices) {
         $scope.authentication = Authentication;
+        $scope.infos = [];
         $scope.alerts = [];
 
         $scope.submitForm = function () {
@@ -127,46 +128,76 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.callbackError = function (container, err) {
+        $scope.callbackError = function (container, err, index) {
             var msg = [];
             msg.push(err.message);
-            $scope.alerts.push({title: 'Error', type: 'danger', msg: msg});
+            var title = 'Error - ' + moment().format('hh:mm:ss');
+            $scope.alerts.push({title: title, type: 'danger', msg: msg});
+            $scope.closeInfo(index);
+        };
+
+        $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
+            $scope.closeInfo(index);
+            cbSuccessEnd(container, data);
         };
 
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
 
+        $scope.closeInfo = function (index) {
+            $scope.infos.splice(index, 1);
+        };
+
+        $scope.addInfo = function (msg) {
+            var index = $scope.infos.length;
+            msg = moment().format('hh:mm:ss') + ' ' + msg;
+            $scope.infos.push({msg: msg});
+            return index;
+        };
+
+        $scope.gotoList = function() {
+            $location.path('groups/' + $scope.group._id);
+        };
+
         $scope.removeServiceFromGroup = function (container) {
-            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.findOne, $scope.callbackError);
+            var index = $scope.addInfo('Removing service ' + container.serviceTitle + ' from group');
+            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackError);
         };
 
         $scope.createContainer = function (container) {
-            GroupsServices.action('create', $scope.group._id, container, $scope.findOne, $scope.callbackError);
+            var index = $scope.addInfo('Create service ' + container.serviceTitle);
+            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
-            GroupsServices.action('start', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            var index = $scope.addInfo('Starting service ' + container.serviceTitle);
+            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.stopContainer = function (container) {
-            GroupsServices.action('stop', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            var index = $scope.addInfo('Stopping service ' + container.serviceTitle);
+            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.pauseContainer = function (container) {
-            GroupsServices.action('pause', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            var index = $scope.addInfo('Pausing service ' + container.serviceTitle);
+            GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.unpauseContainer = function (container) {
-            GroupsServices.action('unpause', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            var index = $scope.addInfo('Unpausing service ' + container.serviceTitle);
+            GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.removeContainer = function (container) {
-            GroupsServices.action('remove', $scope.group._id, container, $scope.findOne, $scope.callbackError);
+            var index = $scope.addInfo('Removing service ' + container.serviceTitle);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
-            GroupsServices.action('kill', $scope.group._id, container, $scope.inspect, $scope.callbackError);
+            var index = $scope.addInfo('Killing service ' + container.serviceTitle);
+            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.topContainer = function (container) {
@@ -208,6 +239,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
         };
 
+
         $scope.getDaemonHost = function (idDaemon){
             if($scope.daemons.all != undefined){
                 for(var i=0;i<$scope.daemons.all.length;i++){
@@ -218,5 +250,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 }
             }
         }
+
+        $scope.addFilesystem = function () {
+            $scope.group.filesystems.push($scope.filesystem);
+            $scope.filesystem = {};
+        };
+
+        $scope.removeFilesystem = function (filesystem) {
+            $scope.group.filesystems.splice($scope.group.filesystems.indexOf(filesystem), 1);
+        };
+
     }
 ]);

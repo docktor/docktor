@@ -41,6 +41,9 @@ module.exports = function (app) {
     app.route('/daemons/docker/container/unpause/:daemonId/:containerDockerId')
         .get(daemons.unpauseContainer);
 
+    app.route('/daemons/docker/container/kill/:daemonId/:containerDockerId')
+        .get(daemons.killContainer);
+
     app.route('/daemons/docker/container/remove/:daemonId/:containerDockerId')
         .get(daemons.removeContainer);
 

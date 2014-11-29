@@ -25,13 +25,13 @@ angular.module('groups').factory('GroupsServices', ['$http',
             exec: function (groupId, containerId, serviceId, cmdId) {
                 return $http.get('/groups/exec/' + groupId + '/' + containerId + '/' + serviceId + '/' + cmdId);
             },
-            action: function (action, groupId, container, cbSuccess, cbError) {
+            action: function (action, groupId, container, cbSuccess, index, cbSuccessEnd, cbError) {
                 return $http.get('/groups/container/' + action + '/' + groupId + '/' + container._id).
                     success(function (data, status, headers, config) {
-                        cbSuccess(container, data);
+                        cbSuccess(container, data, index, cbSuccessEnd);
                     }).
                     error(function (data, status, headers, config) {
-                        cbError(container, data);
+                        cbError(container, data, index);
                     });
             }
         };

@@ -4,16 +4,17 @@
     </div>
     <div>
         <h2>Images</h2>
+
+        <div ng-if="service.images.length <= 0" class="alert alert-warning">
+            No associated image yet. Please add one by editing this service.
+        </div>
         <ul data-ng-repeat="image in service.images">
             <li>{{image.name}}, active : {{image.active}}</li>
         </ul>
     </div>
-    <div class="pull-right">
+    <div>
         <a class="btn btn-primary" href="/#!/services/{{service._id}}/edit">
-            <i class="glyphicon glyphicon-edit"></i>
-        </a>
-        <a class="btn btn-primary" data-ng-click="remove();">
-            <i class="glyphicon glyphicon-trash"></i>
+            <i class="fa fa-edit"></i> Edit
         </a>
     </div>
     <small>

@@ -309,18 +309,29 @@
         </form>
     </div>
 
-
     <div class="form-group">
-
         <button type="button" ng-click="submitForm(daemonForm.$valid)" class="btn btn-primary">
-            <span ng-hide="daemon._id">Create Daemon</span>
-            <span ng-show="daemon._id">Update Daemon</span>
+            <span ng-hide="daemon._id"><i class="fa fa-save"></i> Create Daemon</span>
+            <span ng-show="daemon._id"><i class="fa fa-save"></i> Update Daemon</span>
         </button>
-
     </div>
+
     <div data-ng-show="error" class="text-danger">
         <strong data-ng-bind="error"></strong>
     </div>
+
+    <button class="btn btn-danger" ng-click="askDeleteDaemon=true" ng-hide="askDeleteDaemon">
+        <i class="fa fa-trash-o" tooltip="Delete Daemon"
+           tooltip-popup-delay='750'> </i> Delete Deamon
+    </button>
+    <button ng-click="askDeleteDaemon=false" ng-show="askDeleteDaemon" class="btn btn-danger">
+        No, I don't want to delete this. <i class="fa fa-reply"></i>
+    </button>
+    <button data-ng-click="remove(daemon);" ng-show="askDeleteDaemon"
+            class="btn btn-danger">
+        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+    </button>
+
     </fieldset>
     </div>
 </section>

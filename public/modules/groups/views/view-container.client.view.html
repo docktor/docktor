@@ -77,19 +77,24 @@
     <h4>Commands</h4>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
-
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
 
+    <div class="infos-bottom">
+        <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
+            {{info.msg}}...
+        </alert>
+    </div>
 
     <div ng-show="container.daemon.dockerStatusUp">
 
-        <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-warning"
-                ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Remove from Group
+        <button ng-hide="!container.containerId || container.inspect.State.Running" class="btn btn-default btn-warning"
+                ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
         </button>
 
         <button ng-hide="container.containerId || askDeleteService" class="btn btn-default btn-sm"
                 ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
+            Remove service from Group
         </button>
         <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
@@ -214,7 +219,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <div ng-repeat="volume in container.volumes">
-                    -v {{volume.external}}:{{volume.internal}}
+                    -v {{volume.external}}:{{volume.internal}}<span
+                        ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
                 </div>
             </div>
         </div>

@@ -3,41 +3,44 @@
         <h1>Groups</h1>
     </div>
 
-    <table class="table table-striped">
+    <table tr-ng-grid="" items="groups" fields="" class="table">
         <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Default Daemon</th>
-            <th>Ports</th>
-            <th>Services</th>
-            <th>Details</th>
-        </tr>
+        <th field-name="title" display-name="Title" enable-filtering="true"></th>
+        <th field-name="description" display-name="Description" enable-filtering="true"></th>
+        <th field-name="daemon.name" display-name="Default Daemon" enable-filtering="true"></th>
+        <th>
+            <div class="tr-ng-title">
+                Ports
+            </div>
+        </th>
+        <th>
+            <div class="tr-ng-title">
+                Services
+            </div>
+        </th>
+        <th>
+            <div class="tr-ng-title">
+                Details
+            </div>
+        </th>
         </thead>
         <tbody>
-        <tr ng-repeat="group in groups">
-            <td>
-                {{group.title}}
-            </td>
-            <td>
-                {{group.description}}
-            </td>
-            <td>
-                {{group.daemon.name}}
-            </td>
-            <td>
-                {{group.portminrange}} - {{group.portmaxrange}}
-            </td>
-            <td>
-                {{group.containers.length}}
-            </td>
-            <td>
-                <a class="btn btn-default btn-xs" href="#!/groups/{{group._id}}">
-                    <i class="fa fa-eye"></i> Details</a> <br>
-            </td>
-        </tr>
+        <td>
+            <div>
+                {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
+            </div>
+
+        </td>
+        <td>
+            <div>{{gridItem.containers.length}}</div>
+        </td>
+        <td>
+            <a class="btn btn-default btn-xs" href="#!/groups/{{gridItem._id}}">
+                <i class="fa fa-eye"></i> Details</a> <br>
+        </td>
         </tbody>
     </table>
+
     <div class="alert alert-warning text-center" data-ng-if="groups.$resolved && !groups.length">
         No groups yet, why don't you <a href="/#!/groups/create">create one</a>?
     </div>

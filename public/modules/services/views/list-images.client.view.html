@@ -161,7 +161,8 @@
         </td>
         <td>
             <ul data-ng-repeat="volume in image.volumes">
-                <li>-v :{{volume.internal}}
+                <li>-v {{volume.value}}:{{volume.internal}}<span
+                        ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
                     <small><i>{{volume.description}}</i></small>
                     <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
@@ -190,6 +191,8 @@
                            placeholder="internal" class="form-control" ng-required="true">
                     <input type="text" name="value" data-ng-model="volume.value"
                            placeholder="/exemple/defaultValue" class="form-control">
+                    <input type="text" name="value" data-ng-model="volume.rights"
+                           placeholder="ro or rw" class="form-control">
                     <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                            placeholder="description" class="form-control">
                     <button ng-disabled="volumeForm.$invalid"

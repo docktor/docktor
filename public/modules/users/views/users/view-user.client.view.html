@@ -12,25 +12,27 @@
 
     <p>Role : {{user.role}}</p>
 
-    <p>Groups :
-    <ul>
-        <li ng-repeat="group in user.groups">{{group.title}}</li>
-    </ul>
-    </p>
+    <div ng-show="user.role=='user'">
+        <div ng-if="user.groups.length > 0">
+        <p>Group<span ng-if="user.groups.length > 1">s</span> :</p>
+        <ul>
+            <li ng-repeat="group in user.groups">{{group.title}}</li>
+        </ul>
+        </div>
 
-    <div class="pull-right">
+        <div ng-if="user.groups.length <= 0" class="label label-info">No associated group<br><br></div>
+    </div>
+
+    <div>
         <a class="btn btn-primary" href="/#!/users/{{user._id}}/edit">
-            <i class="glyphicon glyphicon-edit"></i>
-        </a>
-        <a class="btn btn-primary" data-ng-click="remove();">
-            <i class="glyphicon glyphicon-trash"></i>
+            <i class="fa fa-edit"></i> Edit
         </a>
     </div>
     <small>
         <em class="text-muted">
             Created at
-            <span data-ng-bind="user.created | date:'mediumDate'"></span> -
-            Updated at
+            <span data-ng-bind="user.created | date:'mediumDate'"></span>
+            <span ng-show="user.updated">- Updated at</span>
             <span data-ng-bind="user.updated | date:'mediumDate'"></span>
         </em>
     </small>

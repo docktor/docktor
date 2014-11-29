@@ -38,14 +38,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.remove = function (daemon) {
             if (daemon) {
-                daemon.$remove();
-                for (var i in $scope.daemons) {
-                    if ($scope.daemons[i] === daemon) {
-                        $scope.daemons.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.daemon.$remove(function () {
+                daemon.$remove(function () {
                     $location.path('daemons');
                 });
             }

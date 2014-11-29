@@ -43,17 +43,10 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.remove = function (service) {
             if (service) {
-                service.$remove();
-
-                for (var i in $scope.services) {
-                    if ($scope.services[i] === service) {
-                        $scope.services.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.service.$remove(function () {
+                service.$remove(function () {
                     $location.path('services');
                 });
+
             }
         };
 

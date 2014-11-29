@@ -22,7 +22,8 @@
 		"angular": true,
 		"ApplicationConfiguration": true,
 	  	"_" : true,
-	  	"$" : true
+	  	"$" : true,
+	    "moment": true
 	},
 	"predef": [ // Extra globals.
 		"define",

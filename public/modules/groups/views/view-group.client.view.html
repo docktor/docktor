@@ -6,10 +6,10 @@
         </small>
         <div>
             <a class="btn btn-success btn-xs" href="/#!/groups/{{group._id}}/deploy/service">
-                <i class="fa fa-plus"> Deploy a service</i>
+                <i class="fa fa-plus"> </i> Deploy a service
             </a>
             <a class="btn btn-default btn-xs" href="/#!/groups/{{group._id}}/edit">
-                <i class="fa fa-edit"> Edit this group</i>
+                <i class="fa fa-edit"> </i> Edit this group
             </a>
         </div>
     </div>
@@ -26,21 +26,20 @@
 
             <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
         </alert>
+
+        <div class="infos-bottom">
+            <alert ng-repeat="info in infos" type="success" close="closeInfo($index)">
+                {{info.msg}}...
+            </alert>
+        </div>
+
     </div>
 
     <table tr-ng-grid="" items="group.containers" fields="" class="table">
         <thead>
         <tr>
-            <th>
-                <div class="tr-ng-title" >
-                    Service
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Container - Image
-                </div>
-            </th>
+            <th field-name="serviceTitle" display-name="Service" enable-filtering="true"></th>
+            <th field-name="name" display-name="Container - Image" enable-filtering="true"></th>
             <th>
                 <div class="tr-ng-title">
                     Status
@@ -70,13 +69,13 @@
         </thead>
         <tbody>
         <tr>
-            <td>
+            <td field-name="serviceTitle">
                 <a href="#!/groups/{{group._id}}/{{gridItem._id}}">
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
                     {{gridItem.serviceTitle}}
                 </a>
             </td>
-            <td>
+            <td field-name="name">
                 <div>
                     {{gridItem.name}}<br>
                     {{gridItem.image}}<br>
@@ -84,12 +83,10 @@
                 </div>
             </td>
             <td>
-                <div>
-                <span ng-show="gridItem.daemon.dockerStatusUp">
+                <div ng-show="gridItem.daemon.dockerStatusUp">
                     <span ng-show="gridItem.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="gridItem.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="gridItem.inspect.State.Paused" class="label label-warning">Paused</span>
-                </span>
                 </div>
             </td>
             <td>
@@ -130,8 +127,8 @@
                             </div>
                         </span>
 
-                        <button ng-hide="gridItem.inspect.State.Running" class="btn btn-default btn-sm"
-                                ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Remove
+                        <button ng-hide="gridItem.inspect.State.Running" class="btn btn-warning btn-sm"
+                                ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
                         </button>
                     </span>
                 </span>
