@@ -207,5 +207,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.callbackError(container, err);
                 });
         };
+
+        $scope.getDaemonHost = function (idDaemon){
+            if($scope.daemons.all != undefined){
+                for(var i=0;i<$scope.daemons.all.length;i++){
+                    var d = $scope.daemons.all[i];   
+                    if(d._id == idDaemon){
+                        return d.host;
+                    }
+                }
+            }
+        }
     }
 ]);
