@@ -45,7 +45,7 @@
                     <li ng-repeat="port in freePortRange">
                         {{port}}
                     </li>
-                    
+
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="portminrange">Port Min Range</label>
@@ -118,7 +118,6 @@
                             </li>
                         </ul>
 
-                        DD{{group.selectDaemon.stats}}FF
                         <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
                               autocomplete="off">
                             <fieldset>
@@ -128,15 +127,13 @@
                                     <ui-select-match placeholder="Select or search a partition">
                                         {{$select.device}}
                                     </ui-select-match>
-                                    <ui-select-choices repeat="fs in group.selectDaemon.stats.filesystem">
+                                    <ui-select-choices repeat="fs in group.selectDaemon.stats.filesystemsCompute">
                                         {{fs.device}}
                                     </ui-select-choices>
                                 </ui-select>
 
-                                <div class="col-sm-6" ng-show="group.currentFs">
-                                    <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Mb / {{group.currentFs.capacityInMB}} Mb ({{group.currentFs.usagePercent}}%)</span>
-                                </div>
-                                <div class="col-sm-6" ng-show="group.currentFs">
+
+                                <div class="col-sm-4" ng-show="group.currentFs">
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-danger" role="progressbar"
                                              aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
@@ -145,6 +142,9 @@
                                             <span>&nbsp;</span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-sm-8" ng-show="group.currentFs">
+                                    <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Mb / {{group.currentFs.capacityInMB}} Mb ({{group.currentFs.usagePercent}}%)</span>
                                 </div>
 
                                 <input type="text" name="name" data-ng-model="filesystem.partition"

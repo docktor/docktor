@@ -16,7 +16,7 @@ module.exports = function (app) {
         .get(users.requiresLogin, groups.hasAuthorization, groups.execInContainer);
 
     app.route('/groups/container/:idContainer')
-        .get(users.requiresLogin,groups.hasAuthorization,groups.getFreePortsOnContainer);
+        .get(users.requiresLogin, groups.hasAuthorization, groups.getFreePortsOnContainer);
     app.route('/groups/container/removeServiceFromGroup/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.removeContainerFromGroup);
 

@@ -106,8 +106,11 @@
         </form>
 
         <div class="row">
-            <div ng-show="authentication.user.username===user.username" class="label label-warning">You can't delete yourself.</div>
-            <button class="btn btn-danger" ng-click="askDeleteUser=true" ng-hide="askDeleteUser" ng-disabled="authentication.user.username===user.username">
+            <div ng-show="authentication.user.username===user.username" class="label label-warning">You can't delete
+                yourself.
+            </div>
+            <button class="btn btn-danger" ng-click="askDeleteUser=true" ng-hide="askDeleteUser"
+                    ng-disabled="authentication.user.username===user.username">
                 <i class="fa fa-trash-o"></i> Delete User
             </button>
             <br>

@@ -14,10 +14,10 @@
 
     <div ng-show="user.role=='user'">
         <div ng-if="user.groups.length > 0">
-        <p>Group<span ng-if="user.groups.length > 1">s</span> :</p>
-        <ul>
-            <li ng-repeat="group in user.groups">{{group.title}}</li>
-        </ul>
+            <p>Group<span ng-if="user.groups.length > 1">s</span> :</p>
+            <ul>
+                <li ng-repeat="group in user.groups">{{group.title}}</li>
+            </ul>
         </div>
 
         <div ng-if="user.groups.length <= 0" class="label label-info">No associated group<br><br></div>

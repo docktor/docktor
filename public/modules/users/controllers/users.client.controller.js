@@ -44,7 +44,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
                     }, function (user) {
                         $scope.user = user;
                         angular.forEach(groups, function (group, key) {
-                            if (_.where($scope.user.groups, {'_id' : group._id}).length > 0) {
+                            if (_.where($scope.user.groups, {'_id': group._id}).length > 0) {
                                 $scope.groupsSelected.push(group);
                                 groups = _.without(groups, group);
                             }

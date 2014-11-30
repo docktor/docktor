@@ -267,15 +267,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.filesystem.partition = $scope.group.currentFs.device;
         };
 
-        /*$scope.computeFs = function () {
-            $scope.group.selectDaemon.stats = daemonInfo.stats[daemonInfo.stats.length - 1];
-            angular.forEach($scope.group.selectDaemon.stats.filesystem, function (fs, key) {
-                fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
-                fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
-                fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-            });
-        };*/
-
         $scope.changeDaemon = function () {
             $scope.showFreePortRangeOnContainer();
         }

@@ -6,7 +6,9 @@
 
         <p>{{daemon.description}}</p>
 
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            <strong>{{alert.title}}</strong><br>
+
             <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
         </alert>
 

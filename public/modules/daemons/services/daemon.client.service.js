@@ -4,7 +4,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
     function (DaemonsDocker) {
         return {
             getcAdvisorUrl: function (daemon) {
-                return  daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
+                return daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
 
             },
             getInfo: function (id, daemon, callbackSuccess) {
@@ -69,16 +69,13 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                         daemon.stats.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                                     }
 
-                                    //if (daemonInfo.spec.has_filesystem) {
-                                        console.log('HOP');
-                                    console.log(daemonInfo.stats);
-                                        angular.forEach(cur.filesystem, function (fs, key) {
-                                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
-                                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
-                                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-                                        });
-                                    //}
-
+                                    daemon.stats.filesystemsCompute = [];
+                                    angular.forEach(cur.filesystem, function (fs, key) {
+                                        fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                                        fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                                        fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                                        daemon.stats.filesystemsCompute.push(fs);
+                                    });
                                 }).
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');
