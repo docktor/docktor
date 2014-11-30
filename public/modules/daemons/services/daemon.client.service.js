@@ -68,6 +68,17 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                         daemon.stats.memoryUsage = Math.round(cur.memory.usage / 1000000);
                                         daemon.stats.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                                     }
+
+                                    //if (daemonInfo.spec.has_filesystem) {
+                                        console.log('HOP');
+                                    console.log(daemonInfo.stats);
+                                        angular.forEach(cur.filesystem, function (fs, key) {
+                                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                                        });
+                                    //}
+
                                 }).
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');

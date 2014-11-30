@@ -69,9 +69,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.container = container;
                         }
                     });
-                    angular.forEach(daemons, function (daemon, daemonId) {
-                        Daemon.getInfo(daemonId, daemon);
-                    });
+
+                    $scope.prepareDaemonsAll();
+
                     $scope.group.containers.forEach(function (container) {
                         if (!$stateParams.containerId ||
                             ($stateParams.containerId && container._id === $stateParams.containerId)) {
@@ -85,8 +85,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             }
                         }
                     });
-                    $scope.prepareDaemonsAll();
-
                 });
             } else {
                 $scope.group = new Groups();
@@ -99,11 +97,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.daemons.all = [];
             Daemons.query(function (daemons) {
                 daemons.forEach(function (daemon) {
+                    Daemon.getDetails(daemon);
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                     $scope.daemons.all.push(daemon);
                     if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                         $scope.group.selectDaemon = daemon;
-                        $scope.changeDaemon();
                     }
                 });
             });
@@ -262,23 +260,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.filesystem.partition = $scope.group.currentFs.device;
         };
 
-        $scope.changeDaemon = function () {
-            if ($scope.group.selectDaemon && $scope.group.selectDaemon.cadvisorApi) {
-                DaemonsDocker.statsDaemon($scope.group.selectDaemon._id).
-                    success(function (daemonInfo, status, headers, config) {
-                        $scope.group.selectDaemon.stats = daemonInfo.stats[daemonInfo.stats.length - 1];
-                        angular.forEach($scope.group.selectDaemon.stats.filesystem, function (fs, key) {
-                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
-                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
-                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-                        });
-                    })
-                    .error(function (data, status, headers, config) {
-                        console.log('Error:');
-                        console.log(data);
-                    });
+        $scope.computeFs = function () {
+            $scope.group.selectDaemon.stats = daemonInfo.stats[daemonInfo.stats.length - 1];
+            angular.forEach($scope.group.selectDaemon.stats.filesystem, function (fs, key) {
+                fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+            });
 
-            }
-        };
+        }
     }
 ]);

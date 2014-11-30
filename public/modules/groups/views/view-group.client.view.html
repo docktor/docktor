@@ -166,4 +166,34 @@
         </tr>
         </tbody>
     </table>
+    <hr>
+    <div class="col-sm-12 row">
+        <h4>Filesystems</h4>
+
+        <div ng-hide="group.filesystems" class="alert alert-danger">
+            No filesystem attached to this group. Try to add one by
+            <a href="#!/groups/{{group._id}}/edit">editing this group</a>.
+        </div>
+
+        <div ng-repeat="fs in group.filesystems">
+
+            <div class="col-sm-6">
+                <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Mb / {{group.currentFs.capacityInMB}} Mb ({{group.currentFs.usagePercent}}%)</span>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-danger" role="progressbar"
+                         aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
+                         aria-valuemax="{{group.currentFs.capacity}}"
+                         style="width: {{group.currentFs.usagePercent}}%;">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 </section>

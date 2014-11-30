@@ -30,8 +30,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
-                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;"
-                               ng-change="changeDaemon()">
+                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;">
                         <ui-select-match placeholder="Select or search a daemon in the list...">
                             {{$select.selected.name}} ->
                             {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
@@ -112,6 +111,7 @@
                             </li>
                         </ul>
 
+                        DD{{group.selectDaemon.stats}}FF
                         <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
                               autocomplete="off">
                             <fieldset>
