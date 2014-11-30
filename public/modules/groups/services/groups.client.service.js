@@ -19,6 +19,9 @@ angular.module('groups').factory('GroupsServices', ['$http',
             getFreePorts: function (groupId) {
                 return $http.get('/groups/ports/free/' + groupId);
             },
+            getFreePortRangeOnContainer: function (containerId){
+                return $http.get('/groups/container/'+containerId);
+            },
             inspect: function (groupId, containerId) {
                 return $http.get('/groups/container/inspect/' + groupId + '/' + containerId);
             },
