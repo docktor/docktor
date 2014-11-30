@@ -72,7 +72,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             Daemons.query(function (daemons) {
                 $scope.daemons = daemons;
                 angular.forEach($scope.daemons, function (daemon, key) {
-                    daemon.cadvisorUrl = daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
+                    daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                     Daemon.getDetails(daemon);
                     if (!$scope.positions[daemon.site._id])
                         $scope.positions[daemon.site._id] = {};

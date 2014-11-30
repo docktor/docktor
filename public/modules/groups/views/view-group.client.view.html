@@ -140,10 +140,12 @@
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> <a
                             href="#!/daemons/view/{{gridItem.daemonId}}">Checking</a>
                     </span>
-                    <span ng-switch-when="down" class="label label-danger white"><a
-                            href="#!/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a></span>
-                    <span ng-switch-when="up" class="label label-success white"><a
-                            href="#!/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a></span>
+                    <span ng-switch-when="down" class="label label-danger white">
+                        <a href="#!/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                    </span>
+                    <span ng-switch-when="up" class="label label-success white">
+                        <a href="#!/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                    </span>
                 </div>
             </td>
             <td nowrap>

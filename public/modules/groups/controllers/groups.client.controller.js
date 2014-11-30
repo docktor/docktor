@@ -85,25 +85,28 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             }
                         }
                     });
+                    $scope.prepareDaemonsAll();
 
-                    $scope.daemons = {};
-                    $scope.daemons.all = {};
-                    Daemons.query(function (daemons) {
-                        daemons.forEach(function (daemon) {
-                            $scope.daemons.all[daemon._id] = daemon;
-                            if (daemon._id === $scope.group.daemon._id) {
-                                $scope.group.selectDaemon = daemon;
-                            }
-                        });
-                    });
                 });
             } else {
                 $scope.group = new Groups();
-                $scope.daemons = {};
-                Daemons.query(function (daemons) {
-                    $scope.daemons.all = daemons;
-                });
+                $scope.prepareDaemonsAll();
             }
+        };
+
+        $scope.prepareDaemonsAll = function () {
+            $scope.daemons = {};
+            $scope.daemons.all = [];
+            Daemons.query(function (daemons) {
+                daemons.forEach(function (daemon) {
+                    daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                    $scope.daemons.all.push(daemon);
+                    if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                        $scope.group.selectDaemon = daemon;
+                        $scope.changeDaemon();
+                    }
+                });
+            });
         };
 
         $scope.inspect = function (container) {
@@ -248,10 +251,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.getDaemon = function (idDaemon) {
-            return $scope.daemons.all[idDaemon];
+            return _.where($scope.daemons.all, {'_id': idDaemon})[0];
         };
 
         $scope.addFilesystem = function () {
+            if (!$scope.group.filesystems) $scope.group.filesystems = [];
             $scope.group.filesystems.push($scope.filesystem);
             $scope.filesystem = {};
         };
@@ -260,5 +264,29 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.group.filesystems.splice($scope.group.filesystems.indexOf(filesystem), 1);
         };
 
+        $scope.changefs = function () {
+            if (!$scope.filesystem) $scope.filesystem = {};
+            $scope.filesystem.partition = $scope.group.currentFs.device;
+        };
+
+        $scope.changeDaemon = function () {
+            if ($scope.group.selectDaemon && $scope.group.selectDaemon.cadvisorApi) {
+                DaemonsDocker.statsDaemon($scope.group.selectDaemon._id).
+                    success(function (daemonInfo, status, headers, config) {
+                        $scope.group.selectDaemon.stats = daemonInfo.stats[daemonInfo.stats.length - 1];
+                        angular.forEach($scope.group.selectDaemon.stats.filesystem, function (fs, key) {
+                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                        });
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log('Error:');
+                        console.log(data);
+                    });
+
+            }
+            $scope.showFreePortRangeOnContainer();
+        };
     }
 ]);

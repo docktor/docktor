@@ -3,6 +3,10 @@
 angular.module('daemons').factory('Daemon', ['DaemonsDocker',
     function (DaemonsDocker) {
         return {
+            getcAdvisorUrl: function (daemon) {
+                return  daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
+
+            },
             getInfo: function (id, daemon, callbackSuccess) {
                 daemon.dockerStatus = 'checking';
                 daemon.dockerStatus = 'checking';

@@ -48,8 +48,13 @@
                     <span ng-switch-when="checking" class="label label-default">
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
                     </span>
-                        <span ng-switch-when="down" class="label label-danger">{{getDaemon(container.daemonId).name}}</span>
-                        <span ng-switch-when="up" class="label label-success">{{getDaemon(container.daemonId).name}}</span>
+                    <span ng-switch-when="down" class="label label-danger white">
+                        <a href="#!/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                    </span>
+                    <span ng-switch-when="up" class="label label-success white">
+                        <a href="#!/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                    </span>
+
                     </div>
                     <a href="#!/daemons/view/{{container.daemonId}}">details</a>
                 </td>
@@ -77,6 +82,7 @@
     <h4>Commands</h4>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
 

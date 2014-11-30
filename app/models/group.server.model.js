@@ -168,6 +168,7 @@ var GroupSchema = new Schema({
         ref: 'Daemon'
     },
     filesystems: [FilesystemSchema],
+    containers: [ContainerSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'
