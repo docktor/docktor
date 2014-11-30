@@ -262,8 +262,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.showFreePortRangeOnContainer = function () {
             GroupsServices.getFreePortRangeOnContainer($scope.group.selectDaemon._id)
                 .success(function (data, status, headers, config) {
-                    console.log('HOP');
-                    console.log(data);
                     $scope.freePortRange = data;
                 });
         };
