@@ -240,6 +240,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
         };
 
+        $scope.showFreePortRangeOnContainer = function(){
+            GroupsServices.getFreePortRangeOnContainer($scope.group.selectDaemon._id)
+                          .success(function (data, status, headers, config){
+                                $scope.freePortRange =  data; 
+                          });
+        };
+
         $scope.getDaemon = function (idDaemon) {
             return $scope.daemons.all[idDaemon];
         };
