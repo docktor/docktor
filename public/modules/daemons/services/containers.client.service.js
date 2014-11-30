@@ -9,7 +9,7 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
             statsContainer: function (container, machineInfo, daemonId, containerId) {
                 return $http.get('/daemons/docker/container/stats/' + daemonId + '/' + containerId).
                     success(function (containerInfo, status, headers, config) {
-                        container.stats = containerInfo.stats;
+                        container.statsCompute = containerInfo.stats;
 
                         var cur = containerInfo.stats[containerInfo.stats.length - 1];
                         var cpuUsage = 0;
@@ -23,7 +23,7 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                                 cpuUsage = 100;
                             }
                         }
-                        container.stats.cpuUsagePercent = cpuUsage;
+                        container.statsCompute.cpuUsagePercent = cpuUsage;
 
                         if (containerInfo.spec.has_memory) {
                             // Saturate to the machine size.
@@ -31,9 +31,9 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                             if (limit > machineInfo.memory_capacity) {
                                 limit = machineInfo.memory_capacity;
                             }
-                            container.stats.memoryLimit = limit;
-                            container.stats.memoryUsage = Math.round(cur.memory.usage / 1000000);
-                            container.stats.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
+                            container.statsCompute.memoryLimit = limit;
+                            container.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
+                            container.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                         }
                     }).
                     error(function (data, status, headers, config) {

@@ -24,7 +24,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':' + resp);
                     });
             },
-            getDetails: function (daemon) {
+            getDetails: function (daemon, callbackSuccess) {
                 daemon.dockerStatus = 'checking';
 
                 this.getInfo(daemon._id, daemon, function () {
@@ -42,9 +42,10 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
 
                             DaemonsDocker.statsDaemon(daemon._id).
                                 success(function (daemonInfo, status, headers, config) {
-                                    daemonInfo.stats = daemonInfo.stats;
+
 
                                     var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
+                                    daemon.statsCompute = cur;
                                     var cpuUsage = 0;
                                     if (daemonInfo.spec.has_cpu && daemonInfo.stats.length >= 2) {
                                         var prev = daemonInfo.stats[daemonInfo.stats.length - 2];
@@ -56,7 +57,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                             cpuUsage = 100;
                                         }
                                     }
-                                    daemon.stats.cpuUsagePercent = cpuUsage;
+                                    daemon.statsCompute.cpuUsagePercent = cpuUsage;
 
                                     if (daemonInfo.spec.has_memory) {
                                         // Saturate to the machine size.
@@ -64,18 +65,18 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                         if (limit > daemon.machineInfo.memory_capacity) {
                                             limit = daemon.machineInfo.memory_capacity;
                                         }
-                                        daemon.stats.memoryLimit = limit;
-                                        daemon.stats.memoryUsage = Math.round(cur.memory.usage / 1000000);
-                                        daemon.stats.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
+                                        daemon.statsCompute.memoryLimit = limit;
+                                        daemon.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
+                                        daemon.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                                     }
 
-                                    daemon.stats.filesystemsCompute = [];
                                     angular.forEach(cur.filesystem, function (fs, key) {
                                         fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
                                         fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
                                         fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-                                        daemon.stats.filesystemsCompute.push(fs);
                                     });
+
+                                    if (callbackSuccess) callbackSuccess();
                                 }).
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');

@@ -127,7 +127,7 @@
                                     <ui-select-match placeholder="Select or search a partition">
                                         {{$select.device}}
                                     </ui-select-match>
-                                    <ui-select-choices repeat="fs in group.selectDaemon.stats.filesystemsCompute">
+                                    <ui-select-choices repeat="fs in group.selectDaemon.statsCompute.filesystem">
                                         {{fs.device}}
                                     </ui-select-choices>
                                 </ui-select>

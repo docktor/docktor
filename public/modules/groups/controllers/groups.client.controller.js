@@ -70,7 +70,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
 
-                    $scope.prepareDaemonsAll();
+                    $scope.prepareDaemonsAll(true);
 
                     $scope.group.containers.forEach(function (container) {
                         if (!$stateParams.containerId ||
@@ -92,17 +92,31 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.prepareDaemonsAll = function () {
+        $scope.computeFsForGroup = function (group) {
+            if (group.selectDaemon.statsCompute && group.selectDaemon.statsCompute.filesystem) {
+                angular.forEach(group.filesystems, function (fs, key) {
+                    var found = _.where(group.selectDaemon.statsCompute.filesystem, {'device': fs.partition});
+                    if (found) fs.statsCompute = found[0];
+                });
+            } else {
+                console.log('No fs for daemon ' + group.selectDaemon.name);
+            }
+
+        };
+
+        $scope.prepareDaemonsAll = function (fsToCompute) {
             $scope.daemons = {};
             $scope.daemons.all = [];
             Daemons.query(function (daemons) {
                 daemons.forEach(function (daemon) {
-                    Daemon.getDetails(daemon);
-                    daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                    $scope.daemons.all.push(daemon);
-                    if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
-                        $scope.group.selectDaemon = daemon;
-                    }
+                    Daemon.getDetails(daemon, function () {
+                        daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                        $scope.daemons.all.push(daemon);
+                        if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                            $scope.group.selectDaemon = daemon;
+                            if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                        }
+                    });
                 });
             });
         };

@@ -149,18 +149,18 @@
                 </div>
             </td>
             <td nowrap>
-                <div ng-show="gridItem.inspect.State.Running && gridItem.stats.cpuUsagePercent">
+                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.cpuUsagePercent">
                     <just-gage id="gaugeCPU{{gridItem._id}}"
-                               class="gaugeSmall" min=0 max=100 value="gridItem.stats.cpuUsagePercent"
+                               class="gaugeSmall" min=0 max=100 value="gridItem.statsCompute.cpuUsagePercent"
                                title="CPU"></just-gage>
                 </div>
             </td>
             <td style="text-align:center" nowrap>
-                <div ng-show="gridItem.inspect.State.Running && gridItem.stats.memoryUsagePercent">
+                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.memoryUsagePercent">
                     <just-gage id="gaugeMem{{gridItem._id}}"
                                class="gaugeSmall" min=0 max=100 value="gridItem.stats.memoryUsagePercent"
                                title="Memory"></just-gage>
-                    <small>{{gridItem.stats.memoryUsage}} Mo</small>
+                    <small>{{gridItem.statsCompute.memoryUsage}} Mo</small>
                 </div>
             </td>
         </tr>
@@ -176,22 +176,23 @@
         </div>
 
         <div ng-repeat="fs in group.filesystems">
-
-            <div class="col-sm-6">
-                <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Mb / {{group.currentFs.capacityInMB}} Mb ({{group.currentFs.usagePercent}}%)</span>
-            </div>
-
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="progress">
                     <div class="progress-bar progress-bar-danger" role="progressbar"
-                         aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
-                         aria-valuemax="{{group.currentFs.capacity}}"
-                         style="width: {{group.currentFs.usagePercent}}%;">
+                         aria-valuenow="{{fs.statsCompute.usage}}" aria-valuemin="0"
+                         aria-valuemax="{{fs.statsCompute.capacity}}"
+                         style="width: {{fs.statsCompute.usagePercent}}%;">
                         <span>&nbsp;</span>
                     </div>
                 </div>
             </div>
 
+            <div class="col-sm-8">
+                <div> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Mb / {{fs.statsCompute.capacityInMB}} Mb
+                    ({{fs.statsCompute.usagePercent}}%)
+                </div>
+                <div><i>{{fs.description}}</i></div>
+            </div>
         </div>
 
     </div>

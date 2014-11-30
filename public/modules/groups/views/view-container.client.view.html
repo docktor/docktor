@@ -59,18 +59,18 @@
                     <a href="#!/daemons/view/{{container.daemonId}}">details</a>
                 </td>
                 <td nowrap>
-                    <div ng-show="container.inspect.State.Running && container.stats.cpuUsagePercent">
+                    <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">
                         <just-gage id="gaugeCPU{{container._id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.stats.cpuUsagePercent"
+                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.cpuUsagePercent"
                                    title="CPU"></just-gage>
                     </div>
                 </td>
                 <td style="text-align:center" nowrap>
-                    <div ng-show="container.inspect.State.Running && container.stats.memoryUsagePercent">
+                    <div ng-show="container.inspect.State.Running && container.statsCompute.memoryUsagePercent">
                         <just-gage id="gaugeMem{{container._id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.stats.memoryUsagePercent"
+                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.memoryUsagePercent"
                                    title="Memory"></just-gage>
-                        <small>{{container.stats.memoryUsage}} Mo</small>
+                        <small>{{container.statsCompute.memoryUsage}} Mo</small>
                     </div>
                 </td>
             </tr>

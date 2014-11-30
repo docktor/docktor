@@ -61,15 +61,15 @@
             <td style="text-align:center">
                 <span ng-show="gridItem.dockerStatusUp">
                     <just-gage id="gaugeCPU{{gridItem._id}}" class="gaugeSmall"
-                               min=0 max=100 value="gridItem.stats.cpuUsagePercent" title="CPU"></just-gage>
+                               min=0 max=100 value="gridItem.statsCompute.cpuUsagePercent" title="CPU"></just-gage>
                     <small>{{gridItem.machineInfo.num_cores}} cores</small>
                 </span>
             </td>
             <td style="text-align:center">
                 <span ng-show="gridItem.dockerStatusUp">
                     <just-gage id="gaugeMem{{gridItem._id}}" class="gaugeSmall"
-                               min=0 max=100 value="gridItem.stats.memoryUsagePercent" title="Memory"></just-gage>
-                    <small>{{gridItem.stats.memoryUsage}} Mo</small>
+                               min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent" title="Memory"></just-gage>
+                    <small>{{gridItem.statsCompute.memoryUsage}} Mo</small>
                 </span>
 
             </td>
