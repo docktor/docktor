@@ -85,26 +85,28 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             }
                         }
                     });
+                    $scope.prepareDaemonsAll();
 
-                    $scope.daemons = {};
-                    $scope.daemons.all = [];
-                    Daemons.query(function (daemons) {
-                        daemons.forEach(function (daemon) {
-                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                            $scope.daemons.all[daemon._id] = daemon;
-                            if (daemon._id === $scope.group.daemon._id) {
-                                $scope.group.selectDaemon = daemon;
-                            }
-                        });
-                    });
                 });
             } else {
                 $scope.group = new Groups();
-                $scope.daemons = {};
-                Daemons.query(function (daemons) {
-                    $scope.daemons.all = daemons;
-                });
+                $scope.prepareDaemonsAll();
             }
+        };
+
+        $scope.prepareDaemonsAll = function () {
+            $scope.daemons = {};
+            $scope.daemons.all = [];
+            Daemons.query(function (daemons) {
+                daemons.forEach(function (daemon) {
+                    daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                    $scope.daemons.all.push(daemon);
+                    if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                        $scope.group.selectDaemon = daemon;
+                        $scope.changeDaemon();
+                    }
+                });
+            });
         };
 
         $scope.inspect = function (container) {
@@ -242,7 +244,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.getDaemon = function (idDaemon) {
-            return $scope.daemons.all[idDaemon];
+            return _.where($scope.daemons.all, {'_id': idDaemon})[0];
         };
 
         $scope.addFilesystem = function () {
