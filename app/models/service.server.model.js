@@ -88,7 +88,7 @@ var VolumeSchema = new Schema({
 });
 
 /**
- * Exec Schema, not useful outside Service
+ * Command Schema, not useful outside Service
  */
 var CommandSchema = new Schema({
     name: {
@@ -107,6 +107,26 @@ var CommandSchema = new Schema({
     }
 });
 
+
+/**
+ * Shorcut Schema, not useful outside Service
+ */
+var UrlSchema = new Schema({
+    label: {
+        type: String,
+        trim: true,
+        required: 'Shortcut Name cannot be blank'
+    },
+    url: {
+        type: String,
+        trim: true,
+        required: 'url cannot be blank'
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
 
 /**
  * Image Schema, not useful outside Service
@@ -147,6 +167,7 @@ var ServiceSchema = new Schema({
     },
     images: [ImageSchema],
     commands: [CommandSchema],
+    urls: [UrlSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'

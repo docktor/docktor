@@ -121,5 +121,22 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.commandExec = '';
         };
 
+        $scope.removeCommand = function (command) {
+            $scope.service.commands.splice($scope.service.commands.indexOf(command), 1);
+        };
+
+        $scope.addUrl = function () {
+            $scope.service.urls.push({
+                label: $scope.urlLabel,
+                url: $scope.urlUrl
+            });
+            $scope.urlLabel = '';
+            $scope.urlUrl = '';
+        };
+
+        $scope.removeUrl = function (command) {
+            $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
+        };
+
     }
 ]);

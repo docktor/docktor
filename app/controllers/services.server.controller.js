@@ -88,6 +88,10 @@ exports.getCommands = function (req, res) {
     res.jsonp(req.service.commands);
 };
 
+exports.getUrls = function (req, res) {
+    res.jsonp(req.service.urls);
+};
+
 /**
  * Service middleware
  */

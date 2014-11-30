@@ -1,0 +1,46 @@
+<h4>Urls
+    <button class="btn btn-default btn-xs" ng-click="addUrl()">
+        <i class="fa fa-plus-square"></i>
+    </button>
+</h4>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Label</th>
+        <th>Url</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-ng-repeat="url in service.urls">
+        <td style="width: 30px;">
+            <div>
+                <a ng-click="askDeleteUrl=true" ng-hide="askDeleteUrl">
+                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Url"
+                       tooltip-popup-delay='750'></i>
+                </a>
+                <button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="btn btn-danger">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </button>
+                <button data-ng-click="removeUrl(url);" ng-show="askDeleteUrl" class="btn btn-danger">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </button>
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <input name="urlLabel" type="text" data-ng-model="url.label" id="urlLabel"
+                       class="form-control" placeholder="Label">
+            </div>
+        </td>
+        <td>
+            <div class="form-group">
+                <input name="urlUrl" type="text" data-ng-model="url.url" id="urlUrl"
+                       class="form-control" placeholder=":8080/foo or just :8080">
+                <span class="label label-info">Tips</span> Put an internal port here, docktor will retrieve external port on each container.
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

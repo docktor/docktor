@@ -78,6 +78,12 @@
         </table>
     </div>
 
+    <h4>Urls</h4>
+
+    <div ng-hide="container.urls.length > 0" class="label label-info">No url attached to this srvice.</div>
+    <div ng-repeat="url in container.urls">
+        <a href={{url.urlCompute}}><i class="fa fa-link"></i> {{url.label}}</a>
+    </div>
 
     <h4>Commands</h4>
 

@@ -70,7 +70,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
 
-                    $scope.prepareDaemonsAll(true, function() {
+                    $scope.prepareDaemonsAll(true, function () {
                         $scope.group.containers.forEach(function (container) {
                             if (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId)) {
@@ -80,6 +80,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                     ServicesServices.getCommands(container.serviceId)
                                         .success(function (commands) {
                                             container.commands = commands;
+                                        });
+                                    ServicesServices.getUrls(container.serviceId)
+                                        .success(function (urls) {
+                                            container.urls = [];
+                                            angular.forEach(urls, function (url, key) {
+                                                var urlO = $scope.computeUrl(container, url);
+                                                container.urls.push(urlO);
+                                            });
                                         });
                                 }
                             }
@@ -284,5 +292,29 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             if (!$scope.filesystem) $scope.filesystem = {};
             $scope.filesystem.partition = $scope.group.currentFs.device;
         };
+
+        $scope.computeUrl = function (container, url) {
+            if (url.url.substr(0, 1) === ':') {
+                var pos = url.url.indexOf('/');
+                var urlWithoutPort = '';
+                if (pos > 0) {
+                    var portInContainer = url.url.substr(1, pos);
+                    var urlWithoutPort = url.url.substr(pos, url.url.length);
+                    if (!urlWithoutPort) urlWithoutPort = '';
+                } else {
+                    var portInContainer = url.url.substr(1, url.url.length);
+                }
+
+                var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
+                var portExternal = '';
+                if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
+
+                url.urlCompute = "http://" + container.daemon.host + portExternal + urlWithoutPort;
+
+            } else {
+                url.urlCompute = "http://" + container.daemon.host + url.url;
+            }
+            return url;
+        }
     }
 ]);

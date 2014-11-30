@@ -18,6 +18,9 @@ angular.module('services').factory('ServicesServices', ['$http',
         return {
             getCommands: function (serviceId) {
                 return $http.get('/services/commands/' + serviceId);
+            },
+            getUrls: function (serviceId) {
+                return $http.get('/services/urls/' + serviceId);
             }
         };
     }

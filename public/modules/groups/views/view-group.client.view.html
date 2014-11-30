@@ -74,6 +74,12 @@
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
                     {{gridItem.serviceTitle}}
                 </a>
+
+                <div>
+                <span ng-repeat="url in gridItem.urls">
+                    <a href={{url.urlCompute}}><i class="fa fa-link"></i> {{url.label}}</a>
+                </span>
+                </div>
             </td>
             <td field-name="name">
                 <div>
