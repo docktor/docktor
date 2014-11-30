@@ -69,6 +69,25 @@ exports.delete = function (req, res) {
     });
 };
 
+exports.getFreePortsOnContainer = function (req,res){
+    var containerId = req.param('idContainer');
+    Group.find().where('daemon')
+                 .equals(containerId)
+                 .exec(function (err,groups){
+        if (err) {
+            return res.status(400)
+                      .send({message: errorHandler.getErrorMessage(err)
+                    });
+        } else {
+            var usedPortRange = [];
+            for(var i=0;i<groups.length;i++){
+                usedPortRange.push(groups[i].portminrange+'->'+groups[i].portmaxrange);
+            }
+            res.jsonp(usedPortRange);
+        }
+    });
+};
+
 exports.getFreePorts = function (req, res) {
     Group.getUsedPorts(req.group._id).exec(function (err, data) {
             if (err) {
@@ -89,8 +108,8 @@ exports.getFreePorts = function (req, res) {
                 }
                 res.jsonp(freePorts);
             }
-        }
-    );
+         }
+   );
 };
 
 /**
