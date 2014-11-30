@@ -70,25 +70,27 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
 
-                    $scope.prepareDaemonsAll(true);
-
-                    $scope.group.containers.forEach(function (container) {
-                        if (!$stateParams.containerId ||
-                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
-                            $scope.inspect(container);
-                            container.daemon = daemons[container.daemonId];
-                            if (container.serviceId) {
-                                ServicesServices.getCommands(container.serviceId)
-                                    .success(function (commands) {
-                                        container.commands = commands;
-                                    });
+                    $scope.prepareDaemonsAll(true, function() {
+                        $scope.group.containers.forEach(function (container) {
+                            if (!$stateParams.containerId ||
+                                ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                                $scope.inspect(container);
+                                container.daemon = $scope.getDaemon(container.daemonId);
+                                if (container.serviceId) {
+                                    ServicesServices.getCommands(container.serviceId)
+                                        .success(function (commands) {
+                                            container.commands = commands;
+                                        });
+                                }
                             }
-                        }
+                        });
                     });
+
+
                 });
             } else {
                 $scope.group = new Groups();
-                $scope.prepareDaemonsAll();
+                $scope.prepareDaemonsAll(false);
             }
         };
 
@@ -104,7 +106,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         };
 
-        $scope.prepareDaemonsAll = function (fsToCompute) {
+        $scope.prepareDaemonsAll = function (fsToCompute, cb) {
             $scope.daemons = {};
             $scope.daemons.all = [];
             Daemons.query(function (daemons) {
@@ -115,6 +117,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                             $scope.group.selectDaemon = daemon;
                             if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                            if (cb) cb(); // todo fix perf to not compute all time
                         }
                     });
                 });
