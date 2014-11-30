@@ -116,6 +116,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         $scope.daemons.all.push(daemon);
                         if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                             $scope.group.selectDaemon = daemon;
+                            $scope.showFreePortRangeOnContainer();
                             if (fsToCompute) $scope.computeFsForGroup($scope.group);
                             if (cb) cb(); // todo fix perf to not compute all time
                         }
@@ -261,6 +262,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.showFreePortRangeOnContainer = function () {
             GroupsServices.getFreePortRangeOnContainer($scope.group.selectDaemon._id)
                 .success(function (data, status, headers, config) {
+                    console.log('HOP');
+                    console.log(data);
                     $scope.freePortRange = data;
                 });
         };
@@ -283,9 +286,5 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             if (!$scope.filesystem) $scope.filesystem = {};
             $scope.filesystem.partition = $scope.group.currentFs.device;
         };
-
-        $scope.changeDaemon = function () {
-            $scope.showFreePortRangeOnContainer();
-        }
     }
 ]);

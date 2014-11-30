@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
-                    <ui-select ng-model="group.selectDaemon" theme="bootstrap" style="min-width: 300px;">
+                    <ui-select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()" theme="bootstrap" style="min-width: 300px;">
                         <ui-select-match placeholder="Select or search a daemon in the list...">
                             {{$select.selected.name}} ->
                             {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
