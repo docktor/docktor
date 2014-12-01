@@ -41,6 +41,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.update = function () {
             var group = $scope.group;
             group.daemon = $scope.group.selectDaemon._id;
+            group.selectDaemon = null;
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
