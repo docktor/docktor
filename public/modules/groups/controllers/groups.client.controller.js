@@ -46,8 +46,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             group.currentFs = null;
             // todo : do not post containers var in update group
             angular.forEach(group.containers, function (container, key) {
-                container.inpect = null;
+                container.inspect = null;
                 container.daemon = null;
+                container.statsCompute = null;
             });
             group.$update(function () {
                 $location.path('groups/' + group._id);
