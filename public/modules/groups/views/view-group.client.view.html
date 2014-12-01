@@ -21,6 +21,36 @@
     </div>
 
     <div class="col-sm-12 row">
+        <h4>Filesystems</h4>
+
+        <div ng-hide="group.filesystems" class="alert alert-danger">
+            No filesystem attached to this group. Try to add one by
+            <a href="#!/groups/{{group._id}}/edit">editing this group</a>.
+        </div>
+
+        <div ng-repeat="fs in group.filesystems" class="col-sm-12 row">
+            <div class="col-sm-4">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-danger" role="progressbar"
+                         aria-valuenow="{{fs.statsCompute.usage}}" aria-valuemin="0"
+                         aria-valuemax="{{fs.statsCompute.capacity}}"
+                         style="width: {{fs.statsCompute.usagePercent}}%;">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-8">
+                <div> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
+                    ({{fs.statsCompute.usagePercent}}%)
+                </div>
+                <div><i>{{fs.description}}</i></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="col-sm-12 row">
+        <h4>Services</h4>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             <strong>{{alert.title}}</strong><br>
 
@@ -32,7 +62,6 @@
                 {{info.msg}}...
             </alert>
         </div>
-
     </div>
 
     <table tr-ng-grid="" items="group.containers" fields="" class="table">
@@ -172,35 +201,5 @@
         </tr>
         </tbody>
     </table>
-    <hr>
-    <div class="col-sm-12 row">
-        <h4>Filesystems</h4>
-
-        <div ng-hide="group.filesystems" class="alert alert-danger">
-            No filesystem attached to this group. Try to add one by
-            <a href="#!/groups/{{group._id}}/edit">editing this group</a>.
-        </div>
-
-        <div ng-repeat="fs in group.filesystems">
-            <div class="col-sm-4">
-                <div class="progress">
-                    <div class="progress-bar progress-bar-danger" role="progressbar"
-                         aria-valuenow="{{fs.statsCompute.usage}}" aria-valuemin="0"
-                         aria-valuemax="{{fs.statsCompute.capacity}}"
-                         style="width: {{fs.statsCompute.usagePercent}}%;">
-                        <span>&nbsp;</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-8">
-                <div> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Mb / {{fs.statsCompute.capacityInMB}} Mb
-                    ({{fs.statsCompute.usagePercent}}%)
-                </div>
-                <div><i>{{fs.description}}</i></div>
-            </div>
-        </div>
-
-    </div>
 
 </section>
