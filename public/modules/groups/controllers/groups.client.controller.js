@@ -41,7 +41,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.update = function () {
             var group = $scope.group;
             group.daemon = $scope.group.selectDaemon._id;
+            // fix entity too large. Remove temporary var.
             group.selectDaemon = null;
+            group.currentFs = null;
+            // todo : do not post containers var in update group
+            angular.forEach(group.containers, function (container, key) {
+                container.inpect = null;
+                container.daemon = null;
+            });
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
