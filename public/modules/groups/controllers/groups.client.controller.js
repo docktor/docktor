@@ -16,6 +16,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.create = function () {
             $scope.group.daemon = $scope.group.selectDaemon._id;
+            $scope.group.selectDaemon = null;
+            $scope.group.currentFs = null;
             $scope.group.$save(function (response) {
                 $location.path('groups/' + response._id);
             }, function (errorResponse) {
@@ -41,6 +43,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.update = function () {
             var group = $scope.group;
             group.daemon = $scope.group.selectDaemon._id;
+            group.selectDaemon = null;
+            group.currentFs = null;
             group.$update(function () {
                 $location.path('groups/' + group._id);
             }, function (errorResponse) {
