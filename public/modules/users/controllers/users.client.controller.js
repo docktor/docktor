@@ -15,7 +15,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
                 user.groups.push(group._id);
             });
             user.$update(function () {
-                $location.path('users/' + user._id);
+                $location.path('admin/users/' + user._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -25,7 +25,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
             if (user) {
                 var usertoDelete = user;
                 usertoDelete.$remove(function () {
-                    $location.path('users');
+                    $location.path('admin/users');
                 });
             }
         };

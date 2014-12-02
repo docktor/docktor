@@ -26,7 +26,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.create = function () {
             $scope.service.$save(function (response) {
-                $location.path('services/' + response._id);
+                $location.path('admin/services/' + response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -35,7 +35,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.update = function () {
             var service = $scope.service;
             service.$update(function () {
-                $location.path('services/' + service._id);
+                $location.path('admin/services/' + service._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -44,9 +44,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.remove = function (service) {
             if (service) {
                 service.$remove(function () {
-                    $location.path('services');
+                    $location.path('admin/services');
                 });
-
             }
         };
 

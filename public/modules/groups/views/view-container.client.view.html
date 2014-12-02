@@ -49,14 +49,14 @@
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
                     </span>
                     <span ng-switch-when="down" class="label label-danger white">
-                        <a href="#!/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                        <a href="#!/admin/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
                     </span>
                     <span ng-switch-when="up" class="label label-success white">
-                        <a href="#!/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                        <a href="#!/admin/daemons/view/{{container.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
                     </span>
 
                     </div>
-                    <a href="#!/daemons/view/{{container.daemonId}}">details</a>
+                    <a href="#!/admin/daemons/view/{{container.daemonId}}">details</a>
                 </td>
                 <td nowrap>
                     <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">

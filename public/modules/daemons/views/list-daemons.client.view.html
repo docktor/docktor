@@ -3,6 +3,9 @@
         <h1>Daemons</h1>
     </div>
 
+    <div class="pull-right">
+        <a href="#!/admin/daemons/create" class="btn btn-default align-right">New Daemon</a>
+    </div>
 
     <table tr-ng-grid="" items="daemons" fields="" class="table">
         <thead>
@@ -68,7 +71,8 @@
             <td style="text-align:center">
                 <span ng-show="gridItem.dockerStatusUp">
                     <just-gage id="gaugeMem{{gridItem._id}}" class="gaugeSmall"
-                               min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent" title="Memory"></just-gage>
+                               min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent"
+                               title="Memory"></just-gage>
                     <small>{{gridItem.statsCompute.memoryUsage}} Mo</small>
                 </span>
 
@@ -76,7 +80,7 @@
             <td>
                 <div>
                     <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/daemons/view/containers/{{gridItem._id}}">View
+                       href="/#!/admin/daemons/view/containers/{{gridItem._id}}">View
                         {{gridItem.dockerInfo.Containers}}
                         containers</a>
                 </div>
@@ -84,14 +88,14 @@
             <td>
                 <div>
                     <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/daemons/view/images/{{gridItem._id}}">View
+                       href="/#!/admin/daemons/view/images/{{gridItem._id}}">View
                         {{gridItem.dockerInfo.Images}}
                         images</a>
                 </div>
             </td>
             <td>
                 </div>
-                <a class="btn btn-default btn-xs" href="#!/daemons/view/{{gridItem._id}}">
+                <a class="btn btn-default btn-xs" href="#!/admin/daemons/view/{{gridItem._id}}">
                     <i class="fa fa-eye"></i> Details</a>
             </td>
             </td>
@@ -100,7 +104,7 @@
     </table>
 
     <div class="alert alert-warning text-center" data-ng-if="daemons.$resolved && !daemons.length">
-        No daemons yet, why don't you <a href="/#!/daemons/create">create one</a>?
+        No daemons yet, why don't you <a href="/#!/admin/daemons/create">create one</a>?
     </div>
 
     <button ng-hide="mapView" ng-click="initMap()" class="btn btn-default">View on Map</button>

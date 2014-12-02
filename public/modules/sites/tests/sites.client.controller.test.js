@@ -122,7 +122,7 @@
             expect(scope.content).toEqual('');
 
             // Test URL redirection after the site was created
-            expect($location.path()).toBe('/sites/' + sampleSiteResponse._id);
+            expect($location.path()).toBe('/admin/sites/' + sampleSiteResponse._id);
         }));
 
         it('$scope.update() should update a valid site', inject(function (Sites) {
@@ -144,7 +144,7 @@
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/sites/' + sampleSitePutData._id);
+            expect($location.path()).toBe('/admin/sites/' + sampleSitePutData._id);
         }));
 
         it('$scope.remove() should send a DELETE request with a valid siteId and remove the site from the scope', inject(function (Sites) {

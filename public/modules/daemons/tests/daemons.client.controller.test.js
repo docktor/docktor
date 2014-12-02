@@ -122,7 +122,7 @@
             expect(scope.content).toEqual('');
 
             // Test URL redirection after the daemon was created
-            expect($location.path()).toBe('/daemons/' + sampleDaemonResponse._id);
+            expect($location.path()).toBe('/admin/daemons/' + sampleDaemonResponse._id);
         }));
 
         it('$scope.update() should update a valid daemon', inject(function (Daemons) {
@@ -144,7 +144,7 @@
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/daemons/' + sampleDaemonPutData._id);
+            expect($location.path()).toBe('/admin/daemons/' + sampleDaemonPutData._id);
         }));
 
         it('$scope.remove() should send a DELETE request with a valid daemonId and remove the daemon from the scope', inject(function (Daemons) {

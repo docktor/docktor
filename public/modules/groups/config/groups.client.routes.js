@@ -10,11 +10,11 @@ angular.module('groups').config(['$stateProvider',
                 templateUrl: 'modules/groups/views/list-groups.client.view.html'
             }).
             state('deployServiceGroup', {
-                url: '/groups/:groupId/deploy/service',
+                url: '/admin/groups/:groupId/deploy/service',
                 templateUrl: 'modules/groups/views/deploy-service-group.client.view.html'
             }).
             state('createGroup', {
-                url: '/groups/create',
+                url: '/admin/groups/create',
                 templateUrl: 'modules/groups/views/edit-group.client.view.html'
             }).
             state('viewGroup', {
@@ -22,7 +22,7 @@ angular.module('groups').config(['$stateProvider',
                 templateUrl: 'modules/groups/views/view-group.client.view.html'
             }).
             state('editGroup', {
-                url: '/groups/:groupId/edit',
+                url: '/admin/groups/:groupId/edit',
                 templateUrl: 'modules/groups/views/edit-group.client.view.html'
             }).
             state('viewContainer', {

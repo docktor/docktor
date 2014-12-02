@@ -22,7 +22,7 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
 
         $scope.create = function () {
             $scope.site.$save(function (response) {
-                $location.path('sites/' + response._id);
+                $location.path('admin/sites/' + response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -31,7 +31,7 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         $scope.update = function () {
             var site = $scope.site;
             site.$update(function () {
-                $location.path('sites/' + site._id);
+                $location.path('admin/sites/' + site._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -40,7 +40,7 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         $scope.remove = function (site) {
             if (site) {
                 $scope.site.$remove(function () {
-                    $location.path('sites');
+                    $location.path('admin/sites');
                 });
             }
         };

@@ -30,7 +30,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             var daemon = $scope.daemon;
             $scope.daemon.site = $scope.daemon.selectSite._id;
             daemon.$save(function (response) {
-                $location.path('daemons/view/' + response._id);
+                $location.path('admin/daemons/view/' + response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -39,7 +39,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.remove = function (daemon) {
             if (daemon) {
                 daemon.$remove(function () {
-                    $location.path('daemons');
+                    $location.path('admin/daemons');
                 });
             }
         };
@@ -48,7 +48,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             $scope.daemon.site = $scope.daemon.selectSite._id;
             var daemon = $scope.daemon;
             daemon.$update(function () {
-                $location.path('daemons/view/' + daemon._id);
+                $location.path('admin/daemons/view/' + daemon._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });

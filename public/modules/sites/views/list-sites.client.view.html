@@ -3,6 +3,10 @@
         <h1>Sites</h1>
     </div>
 
+    <div class="pull-right">
+        <a href="#!/admin/sites/create" class="btn btn-default align-right">New Site</a>
+    </div>
+
     <table tr-ng-grid="" items="sites" fields="['title','created', 'latitude', 'longitude']">
         <thead>
         <tr>
@@ -18,7 +22,7 @@
         <tr>
             <td>
                 <div>
-                    <a class="btn btn-default btn-xs" href="#!/sites/{{gridItem._id}}">
+                    <a class="btn btn-default btn-xs" href="#!/admin/sites/{{gridItem._id}}">
                         <i class="fa fa-eye"></i> Details</a>
                 </div>
             </td>
@@ -27,6 +31,6 @@
     </table>
 
     <div class="alert alert-warning text-center" data-ng-if="sites.$resolved && !sites.length">
-        No sites yet, why don't you <a href="/#!/sites/create">create one</a>?
+        No sites yet, why don't you <a href="/#!/admin/sites/create">create one</a>?
     </div>
 </section>

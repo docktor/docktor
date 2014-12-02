@@ -122,7 +122,7 @@
             expect(scope.content).toEqual('');
 
             // Test URL redirection after the group was created
-            expect($location.path()).toBe('/groups/' + sampleGroupResponse._id);
+            expect($location.path()).toBe('/admin/groups/' + sampleGroupResponse._id);
         }));
 
         it('$scope.update() should update a valid group', inject(function (Groups) {
@@ -144,7 +144,7 @@
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/groups/' + sampleGroupPutData._id);
+            expect($location.path()).toBe('/admin/groups/' + sampleGroupPutData._id);
         }));
 
         it('$scope.remove() should send a DELETE request with a valid groupId and remove the group from the scope', inject(function (Groups) {

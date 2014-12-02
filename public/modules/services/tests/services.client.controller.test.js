@@ -122,7 +122,7 @@
             expect(scope.content).toEqual('');
 
             // Test URL redirection after the service was created
-            expect($location.path()).toBe('/services/' + sampleServiceResponse._id);
+            expect($location.path()).toBe('/admin/services/' + sampleServiceResponse._id);
         }));
 
         it('$scope.update() should update a valid service', inject(function (Services) {

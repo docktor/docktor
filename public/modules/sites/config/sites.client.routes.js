@@ -6,31 +6,31 @@ angular.module('sites').config(['$stateProvider',
         // Sites state routing
         $stateProvider.
             state('listSites', {
-                url: '/sites',
+                url: '/admin/sites',
                 templateUrl: 'modules/sites/views/list-sites.client.view.html'
             }).
             state('createSite', {
-                url: '/sites/create',
+                url: '/admin/sites/create',
                 templateUrl: 'modules/sites/views/edit-site.client.view.html'
             }).
             state('viewSite', {
-                url: '/sites/:siteId',
+                url: '/admin/sites/:siteId',
                 templateUrl: 'modules/sites/views/view-site.client.view.html'
             }).
             state('editSite', {
-                url: '/sites/:siteId/edit',
+                url: '/admin/sites/:siteId/edit',
                 templateUrl: 'modules/sites/views/edit-site.client.view.html'
             }).
             state('viewUser', {
-                url: '/users/:userId',
+                url: '/admin/users/:userId',
                 templateUrl: 'modules/users/views/users/view-user.client.view.html'
             }).
             state('listUsers', {
-                url: '/users',
+                url: '/admin/users',
                 templateUrl: 'modules/users/views/users/list-users.client.view.html'
             }).
             state('editUser', {
-                url: '/users/:userId/edit',
+                url: '/admin/users/:userId/edit',
                 templateUrl: 'modules/users/views/users/edit-user.client.view.html'
             });
     }
