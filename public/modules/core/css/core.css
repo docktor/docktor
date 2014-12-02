@@ -4,6 +4,7 @@
     src: url('../fonts/glyphicons-halflings-regular.eot');
     src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff?v=4.2.0') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
+
 .content {
     margin-top: 50px;
 }
@@ -32,7 +33,6 @@
 .table-small-text {
     font-size: 12px;
 }
-
 
 .infos-bottom {
     position: fixed;

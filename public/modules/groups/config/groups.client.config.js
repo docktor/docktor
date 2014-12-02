@@ -10,7 +10,7 @@ angular.module('groups').run(['Menus',
 
 
         /*Menus.addMenuItem('topbar', 'Groups', 'groups', 'dropdown', '/groups(/create)?');
-        Menus.addSubMenuItem('topbar', 'groups', 'List Groups', 'groups');
-        Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');*/
+         Menus.addSubMenuItem('topbar', 'groups', 'List Groups', 'groups');
+         Menus.addSubMenuItem('topbar', 'groups', 'New Group', 'groups/create');*/
     }
 ]);

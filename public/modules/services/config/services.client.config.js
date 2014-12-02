@@ -6,6 +6,6 @@ angular.module('services').run(['Menus',
         // Set top bar menu items
         //Menus.addMenuItem('topbar', 'Services', 'services', 'dropdown', '/services(/create)?');
         /*Menus.addSubMenuItem('topbar', 'services', 'List Services', 'services');
-        Menus.addSubMenuItem('topbar', 'services', 'New Service', 'services/create');*/
+         Menus.addSubMenuItem('topbar', 'services', 'New Service', 'services/create');*/
     }
 ]);
