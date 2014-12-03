@@ -94,7 +94,10 @@
                         <input type="text" ng-model="volume.external" class="form-control">
                     </td>
                     <td>
-                        <input type="text" ng-model="volume.rights" class="form-control" placeholder="ro or rw">
+                        <select ng-model="volume.rights" class="form-control" ng-required="true">
+                            <option value="ro">ro</option>
+                            <option value="rw">rw</option>
+                        </select>
                     </td>
                 </tr>
                 </tbody>
@@ -120,6 +123,12 @@
                     </td>
                     <td>
                         <input type="text" ng-model="port.external" class="form-control">
+                    </td>
+                    <td>
+                        <select data-ng-model="port.protocol" class="form-control" ng-required="true">
+                            <option value="tcp">tcp</option>
+                            <option value="udp">udp</option>
+                        </select>
                     </td>
                 </tr>
                 </tbody>

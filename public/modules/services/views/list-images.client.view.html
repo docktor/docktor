@@ -82,7 +82,7 @@
         </td>
         <td>
             <ul data-ng-repeat="port in image.ports">
-                <li>-p :{{port.internal}}
+                <li>-p :{{port.internal}}/{{port.protocol}}
                     <small><i>{{port.description}}</i></small>
                     <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -107,6 +107,10 @@
                 <fieldset>
                     <input type="number" name="internal" data-ng-model="port.internal"
                            placeholder="internal" class="form-control" ng-required="true">
+                    <select data-ng-model="port.protocol" class="form-control" ng-required="true">
+                        <option value="tcp">tcp</option>
+                        <option value="udp">udp</option>
+                    </select>
                     <input type="text" name="descriptionPort" data-ng-model="port.description"
                            placeholder="description"
                            class="form-control">
@@ -191,8 +195,10 @@
                            placeholder="internal" class="form-control" ng-required="true">
                     <input type="text" name="value" data-ng-model="volume.value"
                            placeholder="/exemple/defaultValue" class="form-control">
-                    <input type="text" name="value" data-ng-model="volume.rights"
-                           placeholder="ro or rw" class="form-control">
+                    <select data-ng-model="volume.rights" class="form-control" ng-required="true">
+                        <option value="ro">ro</option>
+                        <option value="rw">rw</option>
+                    </select>
                     <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                            placeholder="description" class="form-control">
                     <button ng-disabled="volumeForm.$invalid"

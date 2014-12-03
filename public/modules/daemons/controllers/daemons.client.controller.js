@@ -13,6 +13,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.sites = {};
         $scope.sites.all = Sites.query();
 
+        $scope.port = {'protocol': 'tcp'};
         $scope.parameter = {};
         $scope.displayFormParameter = false;
         $scope.variable = {};
@@ -141,7 +142,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.addPort = function () {
             $scope.daemon.ports.push($scope.port);
-            $scope.port = {};
+            $scope.port = {'protocol': 'tcp'};
         };
 
         $scope.removePort = function (port) {

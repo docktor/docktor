@@ -57,6 +57,11 @@ var PortSchema = new Schema({
         trim: true,
         required: 'internal Port cannot be blank'
     },
+    protocol: { // tcp / udp
+        type: String,
+        trim: true,
+        default: 'tcp'
+    },
     description: {
         type: String,
         default: '',
@@ -73,7 +78,11 @@ var VolumeSchema = new Schema({
         trim: true,
         required: 'internal Volume cannot be blank'
     },
-    value: { // default value. ex : /etc/localtime:ro
+    value: { // default value. ex : /etc/localtime
+        type: String,
+        trim: true
+    },
+    rights: { // ro, or rw
         type: String,
         trim: true
     },

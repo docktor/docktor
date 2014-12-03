@@ -180,7 +180,7 @@
     <div class="form-group">
         <h3>Ports</h3>
         <ul data-ng-repeat="port in daemon.ports">
-            <li>-p &lg;externalPort-attributed-on-group&gt;:{{port.internal}}
+            <li>-p &lg;externalPort-attributed-on-group&gt;:{{port.internal}}/{{port.protocol}}
                 <small><i>{{port.description}}</i></small>
                 <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
@@ -205,6 +205,10 @@
             <fieldset>
                 <input type="number" name="internal" data-ng-model="port.internal"
                        placeholder="internal" class="form-control" ng-required="true">
+                <select data-ng-model="port.protocol" class="form-control" ng-required="true">
+                    <option value="tcp">tcp</option>
+                    <option value="udp">udp</option>
+                </select>
                 <input type="text" name="descriptionPort" data-ng-model="port.description"
                        placeholder="description"
                        class="form-control">
@@ -267,8 +271,8 @@
         <h3>Volume</h3>
         <ul data-ng-repeat="volume in daemon.volumes">
             <li>
-                <span ng-show="volume.value">-v {{volume.value}}:{{volume.internal}}</span>
-                <span ng-hide="volume.value">-v &lg;nameVolume-attributed-on-group&gt;:{{volume.internal}}</span>
+                <span ng-show="volume.value">-v {{volume.value}}:{{volume.internal}}:{{volume.rights}}</span>
+                <span ng-hide="volume.value">-v &lg;nameVolume-attributed-on-group&gt;:{{volume.internal}}:{{volume.rights}}</span>
 
                 <small><i>{{volume.description}}</i></small>
                 <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
@@ -298,6 +302,10 @@
                        placeholder="internal" class="form-control" ng-required="true">
                 <input type="text" name="value" data-ng-model="volume.value"
                        placeholder="/exemple/defaultValue" class="form-control">
+                <select data-ng-model="volume.rights" class="form-control" ng-required="true">
+                    <option value="ro">ro</option>
+                    <option value="rw">rw</option>
+                </select>
                 <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                        placeholder="description" class="form-control">
                 <button ng-disabled="volumeForm.$invalid"

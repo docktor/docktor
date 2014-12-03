@@ -65,6 +65,11 @@ var PortContainerSchema = new Schema({
         type: Number,
         trim: true,
         required: 'externalPortContainer cannot be blank'
+    },
+    protocol: { // tcp / udp
+        type: String,
+        trim: true,
+        default: 'tcp'
     }
 });
 

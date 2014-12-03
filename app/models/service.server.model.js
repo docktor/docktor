@@ -56,6 +56,11 @@ var PortSchema = new Schema({
         trim: true,
         required: 'internal Port cannot be blank'
     },
+    protocol: { // tcp / udp
+        type: String,
+        trim: true,
+        default: 'tcp'
+    },
     description: {
         type: String,
         default: '',

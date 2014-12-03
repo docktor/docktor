@@ -7,7 +7,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormImage = false;
         $scope.parameter = {};
         $scope.displayFormParameter = false;
-        $scope.port = {};
+        $scope.port = {'protocol': 'tcp'};
         $scope.displayFormPort = false;
         $scope.variable = {};
         $scope.displayFormVariable = false;
@@ -86,7 +86,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.addPort = function (image) {
             image.ports.push($scope.port);
-            $scope.port = {};
+            $scope.port = {'protocol': 'tcp'};
         };
 
         $scope.removePort = function (image, port) {

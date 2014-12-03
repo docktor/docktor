@@ -29,7 +29,7 @@ exports.createContainer = function (req, res) {
     // example : ExposedPorts: {"80/tcp": {}, "22/tcp" : {}}
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal)) {
-            ports[port.internal] = {};
+            ports[port.internal + '/' + port.protocol] = {};
         }
     });
 
@@ -96,7 +96,7 @@ exports.startContainer = function (req, res) {
 
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal) && _.isNumber(port.external)) {
-            ports[port.internal] = [
+            ports[port.internal + '/' + port.protocol] = [
                 {'HostPort': '' + port.external + ''}
             ];
         }
