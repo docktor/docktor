@@ -79,26 +79,29 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
 
-                    $scope.prepareDaemonsAll(true, function () {
+                    $scope.prepareDaemonsAll(true, function (daemon) {
                         $scope.group.containers.forEach(function (container) {
                             if (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId)) {
-                                $scope.inspect(container);
-                                container.daemon = $scope.getDaemon(container.daemonId);
-                                if (container.serviceId) {
-                                    ServicesServices.getCommands(container.serviceId)
-                                        .success(function (commands) {
-                                            container.commands = commands;
-                                        });
-                                    ServicesServices.getUrls(container.serviceId)
-                                        .success(function (urls) {
-                                            container.urls = [];
-                                            angular.forEach(urls, function (url, key) {
-                                                var urlO = $scope.computeUrl(container, url);
-                                                container.urls.push(urlO);
+                                if (daemon._id === container.daemonId) {
+                                    $scope.inspect(container);
+                                    container.daemon = $scope.getDaemon(container.daemonId);
+                                    if (container.serviceId) {
+                                        ServicesServices.getCommands(container.serviceId)
+                                            .success(function (commands) {
+                                                container.commands = commands;
                                             });
-                                        });
+                                        ServicesServices.getUrls(container.serviceId)
+                                            .success(function (urls) {
+                                                container.urls = [];
+                                                angular.forEach(urls, function (url, key) {
+                                                    var urlO = $scope.computeUrl(container, url);
+                                                    container.urls.push(urlO);
+                                                });
+                                            });
+                                    }
                                 }
+
                             }
                         });
                     });
@@ -135,7 +138,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.group.selectDaemon = daemon;
                             $scope.showFreePortRangeOnContainer();
                             if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                            if (cb) cb(); // todo fix perf to not compute all time
+                            if (cb) cb(daemon); // todo fix perf to not compute all time
                         }
                     });
                 });
@@ -319,7 +322,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
                 url.urlCompute = "http://" + container.daemon.host + portExternal + urlWithoutPort;
-
             } else {
                 url.urlCompute = "http://" + container.daemon.host + url.url;
             }
