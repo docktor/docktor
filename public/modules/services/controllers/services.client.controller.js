@@ -133,7 +133,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.urlUrl = '';
         };
 
-        $scope.removeUrl = function (command) {
+        $scope.removeUrl = function (url) {
             $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
         };
 
