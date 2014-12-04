@@ -33,7 +33,11 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                             }
                             container.statsCompute.memoryLimit = limit;
                             container.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
+                            console.log('MEM USAGE:');
+                            console.log(container.statsCompute.memoryUsage);
                             container.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
+                            console.log('MEM USAGE PERCENT:');
+                            console.log(container.statsCompute.memoryUsagePercent);
                         }
                     }).
                     error(function (data, status, headers, config) {

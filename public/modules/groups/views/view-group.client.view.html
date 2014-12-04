@@ -191,11 +191,13 @@
                 </div>
             </td>
             <td style="text-align:center" nowrap>
-                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.memoryUsagePercent">
+                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.memoryUsagePercent"
+                     style="text-align:center">
                     <just-gage id="gaugeMem{{gridItem._id}}"
-                               class="gaugeSmall" min=0 max=100 value="gridItem.stats.memoryUsagePercent"
+                               class="gaugeSmall" min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent"
                                title="Memory"></just-gage>
-                    <small>{{gridItem.statsCompute.memoryUsage}} Mo</small>
+                    <small>{{gridItem.statsCompute.memoryUsage}} Mo
+                    </small>
                 </div>
             </td>
         </tr>
