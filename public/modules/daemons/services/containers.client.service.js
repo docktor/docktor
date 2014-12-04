@@ -11,34 +11,33 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                     success(function (containerInfo, status, headers, config) {
                         container.statsCompute = containerInfo.stats;
 
-                        var cur = containerInfo.stats[containerInfo.stats.length - 1];
-                        var cpuUsage = 0;
-                        if (containerInfo.spec.has_cpu && containerInfo.stats.length >= 2) {
-                            var prev = containerInfo.stats[containerInfo.stats.length - 2];
-                            var rawUsage = cur.cpu.usage.total - prev.cpu.usage.total;
-                            var intervalInNs = DaemonsDocker.getInterval(cur.timestamp, prev.timestamp);
-                            // Convert to millicores and take the percentage
-                            cpuUsage = Math.round(((rawUsage / intervalInNs) / machineInfo.num_cores) * 100);
-                            if (cpuUsage > 100) {
-                                cpuUsage = 100;
+                        if (containerInfo && containerInfo.stats) {
+                            var cur = containerInfo.stats[containerInfo.stats.length - 1];
+                            var cpuUsage = 0;
+                            if (containerInfo.spec.has_cpu && containerInfo.stats.length >= 2) {
+                                var prev = containerInfo.stats[containerInfo.stats.length - 2];
+                                var rawUsage = cur.cpu.usage.total - prev.cpu.usage.total;
+                                var intervalInNs = DaemonsDocker.getInterval(cur.timestamp, prev.timestamp);
+                                // Convert to millicores and take the percentage
+                                cpuUsage = Math.round(((rawUsage / intervalInNs) / machineInfo.num_cores) * 100);
+                                if (cpuUsage > 100) {
+                                    cpuUsage = 100;
+                                }
                             }
-                        }
-                        container.statsCompute.cpuUsagePercent = cpuUsage;
+                            container.statsCompute.cpuUsagePercent = cpuUsage;
 
-                        if (containerInfo.spec.has_memory) {
-                            // Saturate to the machine size.
-                            var limit = containerInfo.spec.memory.limit;
-                            if (limit > machineInfo.memory_capacity) {
-                                limit = machineInfo.memory_capacity;
+                            if (containerInfo.spec.has_memory) {
+                                // Saturate to the machine size.
+                                var limit = containerInfo.spec.memory.limit;
+                                if (limit > machineInfo.memory_capacity) {
+                                    limit = machineInfo.memory_capacity;
+                                }
+                                container.statsCompute.memoryLimit = limit;
+                                container.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
+                                container.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                             }
-                            container.statsCompute.memoryLimit = limit;
-                            container.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
-                            console.log('MEM USAGE:');
-                            console.log(container.statsCompute.memoryUsage);
-                            container.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
-                            console.log('MEM USAGE PERCENT:');
-                            console.log(container.statsCompute.memoryUsagePercent);
                         }
+
                     }).
                     error(function (data, status, headers, config) {
                         console.log('Error:');
