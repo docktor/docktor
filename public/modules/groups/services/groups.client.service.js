@@ -20,7 +20,7 @@ angular.module('groups').factory('GroupsServices', ['$http',
                 return $http.get('/groups/ports/free/' + groupId);
             },
             getFreePortRangeOnContainer: function (containerId) {
-                return $http.get('/groups/container/' + containerId);
+                return $http.get('/groups/container/freeports/' + containerId);
             },
             inspect: function (groupId, containerId) {
                 return $http.get('/groups/container/inspect/' + groupId + '/' + containerId);

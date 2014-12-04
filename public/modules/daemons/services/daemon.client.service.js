@@ -44,38 +44,39 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                             DaemonsDocker.statsDaemon(daemon._id).
                                 success(function (daemonInfo, status, headers, config) {
 
-
-                                    var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
-                                    daemon.statsCompute = cur;
-                                    var cpuUsage = 0;
-                                    if (daemonInfo.spec.has_cpu && daemonInfo.stats.length >= 2) {
-                                        var prev = daemonInfo.stats[daemonInfo.stats.length - 2];
-                                        var rawUsage = cur.cpu.usage.total - prev.cpu.usage.total;
-                                        var intervalInNs = DaemonsDocker.getInterval(cur.timestamp, prev.timestamp);
-                                        // Convert to millicores and take the percentage
-                                        cpuUsage = Math.round(((rawUsage / intervalInNs) / daemon.machineInfo.num_cores) * 100);
-                                        if (cpuUsage > 100) {
-                                            cpuUsage = 100;
+                                    if (daemonInfo && daemonInfo.stats.length > 0) {
+                                        var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
+                                        daemon.statsCompute = cur;
+                                        var cpuUsage = 0;
+                                        if (daemonInfo.spec.has_cpu && daemonInfo.stats.length >= 2) {
+                                            var prev = daemonInfo.stats[daemonInfo.stats.length - 2];
+                                            var rawUsage = cur.cpu.usage.total - prev.cpu.usage.total;
+                                            var intervalInNs = DaemonsDocker.getInterval(cur.timestamp, prev.timestamp);
+                                            // Convert to millicores and take the percentage
+                                            cpuUsage = Math.round(((rawUsage / intervalInNs) / daemon.machineInfo.num_cores) * 100);
+                                            if (cpuUsage > 100) {
+                                                cpuUsage = 100;
+                                            }
                                         }
-                                    }
-                                    daemon.statsCompute.cpuUsagePercent = cpuUsage;
+                                        daemon.statsCompute.cpuUsagePercent = cpuUsage;
 
-                                    if (daemonInfo.spec.has_memory) {
-                                        // Saturate to the machine size.
-                                        var limit = daemonInfo.spec.memory.limit;
-                                        if (limit > daemon.machineInfo.memory_capacity) {
-                                            limit = daemon.machineInfo.memory_capacity;
+                                        if (daemonInfo.spec.has_memory) {
+                                            // Saturate to the machine size.
+                                            var limit = daemonInfo.spec.memory.limit;
+                                            if (limit > daemon.machineInfo.memory_capacity) {
+                                                limit = daemon.machineInfo.memory_capacity;
+                                            }
+                                            daemon.statsCompute.memoryLimit = limit;
+                                            daemon.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
+                                            daemon.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
                                         }
-                                        daemon.statsCompute.memoryLimit = limit;
-                                        daemon.statsCompute.memoryUsage = Math.round(cur.memory.usage / 1000000);
-                                        daemon.statsCompute.memoryUsagePercent = Math.round((cur.memory.usage / limit) * 100);
-                                    }
 
-                                    angular.forEach(cur.filesystem, function (fs, key) {
-                                        fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
-                                        fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
-                                        fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-                                    });
+                                        angular.forEach(cur.filesystem, function (fs, key) {
+                                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                                        });
+                                    }
 
                                     if (callbackSuccess) callbackSuccess();
                                 }).
