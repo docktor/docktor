@@ -138,8 +138,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.group.selectDaemon = daemon;
                             $scope.showFreePortRangeOnContainer();
                             if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                            if (cb) cb(daemon); // todo fix perf to not compute all time
                         }
+                        if (cb) cb(daemon); // todo fix perf to not compute all time
                     });
                 });
             });
