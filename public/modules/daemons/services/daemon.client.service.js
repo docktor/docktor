@@ -44,7 +44,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                             DaemonsDocker.statsDaemon(daemon._id).
                                 success(function (daemonInfo, status, headers, config) {
 
-                                    if (daemonInfo && daemonInfo.stats.length > 0) {
+                                    if (daemonInfo && daemonInfo.stats) {
                                         var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
                                         daemon.statsCompute = cur;
                                         var cpuUsage = 0;
