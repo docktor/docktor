@@ -75,6 +75,10 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.imageIsActive = true;
         };
 
+        $scope.removeImage = function (image) {
+            $scope.service.images.splice($scope.service.images.indexOf(image), 1);
+        };
+
         $scope.addParameter = function (image) {
             image.parameters.push($scope.parameter);
             $scope.parameter = {};
