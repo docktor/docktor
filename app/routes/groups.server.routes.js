@@ -9,17 +9,17 @@ var users = require('../../app/controllers/users.server.controller'),
 module.exports = function (app) {
     // Group Routes
     app.route('/groups')
-        .get(groups.list)
-        .post(users.requiresLogin, groups.create);
+        .get(users.requiresLogin, groups.list)
+        .post(users.requiresLogin, groups.hasAdminAuthorization, groups.create);
 
     app.route('/groups/exec/:groupId/:containerId/:serviceId/:execId/')
         .get(users.requiresLogin, groups.hasAuthorization, groups.execInContainer);
 
     app.route('/groups/container/freeports/:idContainer')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.getFreePortsOnContainer);
+        .get(users.requiresLogin, groups.hasAdminAuthorization, groups.getFreePortsOnContainer);
 
     app.route('/groups/container/removeServiceFromGroup/:groupId/:containerId')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.removeContainerFromGroup);
+        .get(users.requiresLogin, groups.hasAdminAuthorization, groups.removeContainerFromGroup);
 
     app.route('/groups/container/create/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.createContainer);
@@ -52,12 +52,12 @@ module.exports = function (app) {
         .get(users.requiresLogin, groups.hasAuthorization, groups.logsContainer);
 
     app.route('/groups/ports/free/:groupId')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.getFreePorts);
+        .get(users.requiresLogin, groups.hasAdminAuthorization, groups.getFreePorts);
 
     app.route('/groups/:groupId')
-        .get(groups.read)
-        .put(users.requiresLogin, groups.hasAuthorization, groups.update)
-        .delete(users.requiresLogin, groups.hasAuthorization, groups.delete);
+        .get(users.requiresLogin, groups.hasAuthorization, groups.read)
+        .put(users.requiresLogin, groups.hasAdminAuthorization, groups.update)
+        .delete(users.requiresLogin, groups.hasAdminAuthorization, groups.delete);
 
     // Finish by binding the group middleware
     app.param('groupId', groups.groupById);

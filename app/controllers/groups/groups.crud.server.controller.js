@@ -145,6 +145,15 @@ exports.groupById = function (req, res, next, id) {
  * Group authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
+    if (req.user.role !== 'admin' && _.contains(req.user.groups, req.group._id)) {
+        return res.status(403).send({
+            message: 'User is not authorized (user - groups)'
+        });
+    }
+    next();
+};
+
+exports.hasAdminAuthorization = function (req, res, next) {
     if (req.user.role !== 'admin') {
         return res.status(403).send({
             message: 'User is not authorized (no Admin - groups)'

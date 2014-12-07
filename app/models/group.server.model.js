@@ -193,14 +193,13 @@ GroupSchema.statics.resetContainerId = function (idGroup, idContainer) {
 
 GroupSchema.statics.getUsedPorts = function (idGroup) {
     var _this = this;
-    return _this.aggregate(
-        [
-            {'$match': {_id: idGroup}},
-            {'$unwind': '$containers'},
-            {'$unwind': '$containers.ports'},
-            {'$group': {_id: 0, 'usedPorts': {$addToSet: '$containers.ports.external'}}},
-            {'$project': {_id: 0, usedPorts: 1}}
-        ]);
+    return _this.aggregate([
+        {'$match': {_id: idGroup}},
+        {'$unwind': '$containers'},
+        {'$unwind': '$containers.ports'},
+        {'$group': {_id: 0, 'usedPorts': {$addToSet: '$containers.ports.external'}}},
+        {'$project': {_id: 0, usedPorts: 1}}
+    ]);
 };
 
 mongoose.model('Group', GroupSchema);
