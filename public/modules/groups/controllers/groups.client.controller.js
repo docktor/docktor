@@ -3,6 +3,7 @@
 angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices',
     function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices) {
         $scope.authentication = Authentication;
+
         $scope.infos = [];
         $scope.alerts = [];
 
@@ -307,25 +308,23 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.computeUrl = function (container, url) {
             if (url.url.substr(0, 1) === ':') {
-                var pos = url.url.indexOf('/');
                 var urlWithoutPort = '';
+                var portInContainer = url.url.substr(1, url.url.length);
+                var pos = url.url.indexOf('/');
                 if (pos > 0) {
-                    var portInContainer = url.url.substr(1, pos);
-                    var urlWithoutPort = url.url.substr(pos, url.url.length);
+                    portInContainer = url.url.substr(1, pos);
+                    urlWithoutPort = url.url.substr(pos, url.url.length);
                     if (!urlWithoutPort) urlWithoutPort = '';
-                } else {
-                    var portInContainer = url.url.substr(1, url.url.length);
                 }
-
                 var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
-                url.urlCompute = "http://" + container.daemon.host + portExternal + urlWithoutPort;
+                url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
             } else {
-                url.urlCompute = "http://" + container.daemon.host + url.url;
+                url.urlCompute = 'http://' + container.daemon.host + url.url;
             }
             return url;
-        }
+        };
     }
 ]);

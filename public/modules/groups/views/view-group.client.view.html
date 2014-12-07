@@ -4,7 +4,7 @@
         <small>
             <p data-ng-bind="group.description"></p>
         </small>
-        <div>
+        <div ng-show="authentication.isAdmin">
             <a class="btn btn-success btn-xs" href="/#!/admin/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> </i> Deploy a service
             </a>
@@ -24,8 +24,11 @@
         <h4>Filesystems</h4>
 
         <div ng-hide="group.filesystems" class="alert alert-danger">
-            No filesystem attached to this group. Try to add one by
-            <a href="#!/admin/groups/{{group._id}}/edit">editing this group</a>.
+            No filesystem attached to this group.
+            <span ng-show="authentication.isAdmin">Try to add one by
+                <a href="#!/admin/groups/{{group._id}}/edit">editing this group</a>.
+            </span>
+            <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
         </div>
 
         <div ng-repeat="fs in group.filesystems" class="col-sm-12 row">
@@ -172,14 +175,26 @@
             <td>
                 <div ng-switch="gridItem.daemon.dockerStatus">
                     <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> <a
-                            href="#!/admin/daemons/view/{{gridItem.daemonId}}">Checking</a>
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i>
+                        <a ng-show="authentication.isAdmin"
+                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">Checking</a>
+                        <span ng-hide="authentication.isAdmin">Checking</span>
                     </span>
                     <span ng-switch-when="down" class="label label-danger white">
-                        <a href="#!/admin/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                        <a ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                            {{getDaemon(gridItem.daemonId).name}}
+                        </a>
+                        <span ng-hide="authentication.isAdmin">
+                            {{getDaemon(gridItem.daemonId).name}}
+                        </span>
                     </span>
                     <span ng-switch-when="up" class="label label-success white">
-                        <a href="#!/admin/daemons/view/{{gridItem.daemonId}}">{{getDaemon(gridItem.daemonId).name}}</a>
+                        <a ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                            {{getDaemon(gridItem.daemonId).name}}
+                        </a>
+                        <span ng-hide="authentication.isAdmin">
+                            {{getDaemon(gridItem.daemonId).name}}
+                        </span>
                     </span>
                 </div>
             </td>

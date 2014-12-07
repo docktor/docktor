@@ -36,7 +36,13 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center" data-ng-if="groups.$resolved && !groups.length">
-        No groups yet, why don't you <a href="/#!/admin/groups/create">create one</a>?
+    <div class="alert alert-warning text-center"
+         data-ng-if="groups.$resolved && !groups.length">
+        <span ng-show="authentication.isAdmin">
+            No group yet, why don't you <a href="/#!/admin/groups/create">create one</a>?
+        </span>
+        <span ng-hide="authentication.isAdmin">
+            No group yet, ask the Administrators.
+        </span>
     </div>
 </section>
