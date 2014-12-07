@@ -6,14 +6,15 @@
     <table tr-ng-grid="" items="users" fields="['username', 'firstName', 'lastName', 'email', 'role', 'created']"
            class="table">
         <thead>
+        <th field-name="username" display-name="Username" enable-filtering="true"></th>
         <th field-name="created" display-format="date:'mediumDate'"></th>
         </thead>
         <tbody>
-        <td>
-            <div><a class="btn btn-default btn-xs" href="#!/admin/users/{{gridItem._id}}">
-                <i class="fa fa-eye"></i> Details</a>
-            </div>
-        </td>
+        <tr>
+            <td field-name="username">
+                <a href="#!/admin/users/{{gridItem._id}}">{{gridItem.username}}</a>
+            </td>
+        </tr>
         </tbody>
     </table>
 

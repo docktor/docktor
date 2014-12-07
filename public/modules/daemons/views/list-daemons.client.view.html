@@ -26,27 +26,21 @@
             </th>
             <th>
                 <div class="tr-ng-title">
-                    Containers
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Images
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Details
+                    Containers / Images
                 </div>
             </th>
         </tr>
         </thead>
         <tbody>
         <tr>
+            <td field-name="name">
+                <a href="#!/admin/daemons/view/{{gridItem._id}}">{{gridItem.name}}</a>
+            </td>
             <td field-name="dockerStatus">
                 <span ng-switch="gridItem.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default"> <i ng-switch-when="checking"
-                                                                                    class="fa fa-spinner fa-spin"> </i> Checking </span>
+                    <span ng-switch-when="checking" class="label label-default">
+                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
+                    </span>
                     <span ng-switch-when="down" class="label label-danger">Down</span>
                     <span ng-switch-when="up" class="label label-success">UP</span>
                 </span>
@@ -80,24 +74,16 @@
             <td>
                 <div>
                     <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/admin/daemons/view/containers/{{gridItem._id}}">View
+                       href="/#!/admin/daemons/view/containers/{{gridItem._id}}">
                         {{gridItem.dockerInfo.Containers}}
                         containers</a>
                 </div>
-            </td>
-            <td>
                 <div>
                     <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/admin/daemons/view/images/{{gridItem._id}}">View
+                       href="/#!/admin/daemons/view/images/{{gridItem._id}}">
                         {{gridItem.dockerInfo.Images}}
                         images</a>
                 </div>
-            </td>
-            <td>
-                </div>
-                <a class="btn btn-default btn-xs" href="#!/admin/daemons/view/{{gridItem._id}}">
-                    <i class="fa fa-eye"></i> Details</a>
-            </td>
             </td>
         </tr>
         </tbody>

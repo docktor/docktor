@@ -18,25 +18,21 @@
                 Services
             </div>
         </th>
-        <th>
-            <div class="tr-ng-title">
-                Details
-            </div>
-        </th>
         </thead>
         <tbody>
-        <td>
-            <div>
-                {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
-            </div>
-        </td>
-        <td>
-            <div>{{gridItem.containers.length}}</div>
-        </td>
-        <td>
-            <a class="btn btn-default btn-xs" href="#!/groups/{{gridItem._id}}">
-                <i class="fa fa-eye"></i> Details</a> <br>
-        </td>
+        <tr>
+            <td field-name="title">
+                <a href="#!/groups/{{gridItem._id}}">{{gridItem.title}}</a>
+            </td>
+            <td>
+                <div>
+                    {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
+                </div>
+            </td>
+            <td>
+                <div>{{gridItem.containers.length}}</div>
+            </td>
+        </tr>
         </tbody>
     </table>
 
