@@ -104,10 +104,10 @@ exports.daemonByID = function (req, res, next, id) {
  * Daemon authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    /*TODO if (req.daemon.user.id !== req.user.id) {
-     return res.status(403).send({
-     message: 'User is not authorized'
-     });
-     }*/
+    if (req.user.role !== 'admin') {
+        return res.status(403).send({
+            message: 'User is not authorized (no Admin)'
+        });
+    }
     next();
 };
