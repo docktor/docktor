@@ -99,6 +99,10 @@ exports.siteByID = function (req, res, next, id) {
  * Site authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    //TODO
+    if (req.user.role !== 'admin') {
+        return res.status(403).send({
+            message: 'User is not authorized (no Admin - sites)'
+        });
+    }
     next();
 };

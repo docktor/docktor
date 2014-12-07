@@ -9,8 +9,8 @@ var users = require('../../app/controllers/users.server.controller'),
 module.exports = function (app) {
     // Service Routes
     app.route('/services')
-        .get(services.list)
-        .post(users.requiresLogin, services.create);
+        .get(users.requiresLogin, services.hasAuthorization, services.list)
+        .post(users.requiresLogin, services.hasAuthorization, services.create);
 
     app.route('/services/commands/:serviceId')
         .get(users.requiresLogin, services.hasAuthorization, services.getCommands);
@@ -19,7 +19,7 @@ module.exports = function (app) {
         .get(users.requiresLogin, services.hasAuthorization, services.getUrls);
 
     app.route('/services/:serviceId')
-        .get(services.read)
+        .get(users.requiresLogin, services.hasAuthorization, services.read)
         .put(users.requiresLogin, services.hasAuthorization, services.update)
         .delete(users.requiresLogin, services.hasAuthorization, services.delete);
 
