@@ -130,6 +130,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.prepareDaemonsAll = function (fsToCompute, cb) {
             $scope.daemons = {};
             $scope.daemons.all = [];
+
+            //TODO Fix query all daemons on view --> NOT USEFULL
             Daemons.query(function (daemons) {
                 daemons.forEach(function (daemon) {
                     Daemon.getDetails(daemon, function () {

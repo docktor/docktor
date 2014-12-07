@@ -202,4 +202,26 @@ GroupSchema.statics.getUsedPorts = function (idGroup) {
     ]);
 };
 
+GroupSchema.statics.getGroupsOfOneDaemon = function (idDaemon) {
+    var _this = this;
+    /*
+     Example of result :
+
+     {"_id" : 0,
+     "groupIds" : [
+     ObjectId("546b185246be610000ce23b2"),
+     ObjectId("547a0556420ed600007a8ee7"),
+     ObjectId("547cb1466e48a67131045b1c")
+     ],
+     "daemonIds" : [
+     "544be91dc65afab7965c9bac"
+     ]}
+     */
+    return _this.aggregate([
+        {'$unwind': '$containers'},
+        {'$group': {'_id': 0, 'groupIds': {'$addToSet': '$_id'}, 'daemonIds': {'$addToSet': '$containers.daemonId'}}},
+        {'$match': {'daemonIds': {'$in': [idDaemon]}}}
+    ]);
+};
+
 mongoose.model('Group', GroupSchema);

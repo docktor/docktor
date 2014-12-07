@@ -9,64 +9,64 @@ var users = require('../../app/controllers/users.server.controller'),
 module.exports = function (app) {
     // Daemon Routes
     app.route('/daemons')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.list)
-        .post(users.requiresLogin, daemons.hasAuthorization, daemons.create);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.list)
+        .post(users.requiresLogin, daemons.hasAdminAuthorization, daemons.create);
 
     app.route('/daemons/docker/info/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.info);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.info);
 
     app.route('/daemons/docker/version/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.version);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.version);
 
     app.route('/daemons/docker/listContainers/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.listContainers);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.listContainers);
 
     app.route('/daemons/:daemonId')
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.read)
-        .put(users.requiresLogin, daemons.hasAuthorization, daemons.update)
-        .delete(users.requiresLogin, daemons.hasAuthorization, daemons.delete);
+        .put(users.requiresLogin, daemons.hasAdminAuthorization, daemons.update)
+        .delete(users.requiresLogin, daemons.hasAdminAuthorization, daemons.delete);
 
     app.route('/daemons/docker/container/inspect/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.inspectContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.inspectContainer);
 
     app.route('/daemons/docker/container/start/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.startContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.startContainer);
 
     app.route('/daemons/docker/container/stop/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.stopContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.stopContainer);
 
     app.route('/daemons/docker/container/pause/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.pauseContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.pauseContainer);
 
     app.route('/daemons/docker/container/unpause/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.unpauseContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.unpauseContainer);
 
     app.route('/daemons/docker/container/kill/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.killContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.killContainer);
 
     app.route('/daemons/docker/container/remove/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.removeContainer);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.removeContainer);
 
     app.route('/daemons/docker/container/stats/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsContainer);
 
     app.route('/daemons/docker/stats/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsDeamon);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.statsDeamon);
 
     app.route('/daemons/docker/machineInfo/:daemonId')
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.machineInfo);
 
     app.route('/daemons/docker/listImages/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.listImages);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.listImages);
 
     app.route('/daemons/docker/image/remove/:daemonId/:imageDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.removeImage);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.removeImage);
 
     app.route('/daemons/docker/image/inspect/:daemonId/:imageDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.inspectImage);
+        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.inspectImage);
 
     app.route('/daemons/docker/image/pull/:daemonId')
-        .post(users.requiresLogin, daemons.hasAuthorization, daemons.pullImage);
+        .post(users.requiresLogin, daemons.hasAdminAuthorization, daemons.pullImage);
 
     // Finish by binding with middleware
     app.param('daemonId', daemons.daemonByID);

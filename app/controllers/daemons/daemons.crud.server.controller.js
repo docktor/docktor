@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Daemon = mongoose.model('Daemon'),
+    Group = mongoose.model('Group'),
     _ = require('lodash');
 
 
@@ -104,9 +105,43 @@ exports.daemonByID = function (req, res, next, id) {
  * Daemon authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
+
+    // TODO check if daemon in in groups as
+    Group.getGroupsOfOneDaemon(req.daemon._id.toString()).exec(function (err, data) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                var userAssociatedToGroup = false;
+                data[0].groupIds.forEach(function (groupId) {
+                    if (!userAssociatedToGroup) {
+                        req.user.groups.forEach(function (userGroupId) {
+                            if (groupId.toString === userGroupId.toString) {
+                                userAssociatedToGroup = true;
+                                return;
+                            }
+                        });
+                    }
+                    if (userAssociatedToGroup) return false;
+                });
+
+                if (req.user.role === 'admin' || (req.user.role !== 'admin' && !userAssociatedToGroup)) {
+                    return res.status(403).send({
+                        message: 'User is not authorized (user - groups)'
+                    });
+                }
+                next();
+            }
+        }
+    );
+
+};
+
+exports.hasAdminAuthorization = function (req, res, next) {
     if (req.user.role !== 'admin') {
         return res.status(403).send({
-            message: 'User is not authorized (no Admin - daemons)'
+            message: 'User is not authorized (no Admin - groups)'
         });
     }
     next();
