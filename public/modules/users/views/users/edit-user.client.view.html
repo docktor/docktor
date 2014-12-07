@@ -1,7 +1,7 @@
 <section data-ng-controller="UsersController" data-ng-init="findOne()">
     <div class="page-header">
         <h1>
-            <span ng-show="user._id">Edit user</span>
+            <span ng-show="userToEdit._id">Edit user</span>
         </h1>
     </div>
     <div class="col-md-12">
@@ -11,7 +11,7 @@
                     <label class="control-label col-sm-2" for="username">Username</label>
 
                     <div class="col-sm-5 controls">
-                        <input name="username" type="text" data-ng-model="user.username" id="username"
+                        <input name="username" type="text" data-ng-model="userToEdit.username" id="username"
                                class="form-control"
                                placeholder="Username" required>
                     </div>
@@ -24,7 +24,7 @@
                     <label class="control-label col-sm-2" for="firstName">FirstName</label>
 
                     <div class="col-sm-5">
-                        <input name="latitude" type="text" data-ng-model="user.firstName" id="firstName"
+                        <input name="latitude" type="text" data-ng-model="userToEdit.firstName" id="firstName"
                                class="form-control"
                                placeholder="firstName" required>
                     </div>
@@ -33,7 +33,7 @@
                     <label class="control-label col-sm-2" for="lastName">LastName</label>
 
                     <div class="col-sm-5">
-                        <input name="lastName" type="text" data-ng-model="user.lastName" id="lastName"
+                        <input name="lastName" type="text" data-ng-model="userToEdit.lastName" id="lastName"
                                class="form-control"
                                placeholder="lastName" required>
                     </div>
@@ -43,7 +43,7 @@
                     <label class="control-label col-sm-2" for="email">Email</label>
 
                     <div class="col-sm-5">
-                        <input name="email" type="text" data-ng-model="user.email" id="email"
+                        <input name="email" type="text" data-ng-model="userToEdit.email" id="email"
                                class="form-control"
                                placeholder="email" required>
                     </div>
@@ -57,13 +57,13 @@
 
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="radio-inline" ng-model="user.role" ng-value="'user'"> User
+                                <input type="radio" name="radio-inline" ng-model="userToEdit.role" ng-value="'user'"> User
                                 <i class="fa fa-circle-o"></i>
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="radio-inline" ng-model="user.role" ng-value="'admin'"> Admin
+                                <input type="radio" name="radio-inline" ng-model="userToEdit.role" ng-value="'admin'"> Admin
                                 <i class="fa fa-circle-o"></i>
                             </label>
                         </div>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="user.role=='user'">
+                <div class="form-group" ng-show="userToEdit.role=='user'">
                     <label class="control-label col-sm-2">Groups</label>
 
                     <div class="col-sm-5">
@@ -96,7 +96,7 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        <span ng-show="user._id"><i class="fa fa-save"></i> Update</span>
+                        <span ng-show="userToEdit._id"><i class="fa fa-save"></i> Update</span>
                     </button>
                 </div>
                 <div data-ng-show="error" class="text-danger">
@@ -106,18 +106,18 @@
         </form>
 
         <div class="row">
-            <div ng-show="authentication.user.username===user.username" class="label label-warning">You can't delete
-                yourself.
+            <div ng-show="authentication.user.username===userToEdit.username" class="label label-warning">
+                You can't delete yourself.
             </div>
             <button class="btn btn-danger" ng-click="askDeleteUser=true" ng-hide="askDeleteUser"
-                    ng-disabled="authentication.user.username===user.username">
+                    ng-disabled="authentication.user.username===userToEdit.username">
                 <i class="fa fa-trash-o"></i> Delete User
             </button>
             <br>
             <button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="btn btn-danger">
                 No, I don't want to delete this. <i class="fa fa-reply"></i>
             </button>
-            <button data-ng-click="remove(user);" ng-show="askDeleteUser"
+            <button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"
                     class="btn btn-danger">
                 Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
             </button>

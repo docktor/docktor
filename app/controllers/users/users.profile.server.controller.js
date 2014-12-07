@@ -64,13 +64,17 @@ exports.update = function (req, res) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.login(user, function (err) {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.jsonp(user);
-                    }
-                });
+                if (req.user._id === req.profile._id) {
+                    req.login(user, function (err) {
+                        if (err) {
+                            res.status(400).send(err);
+                        } else {
+                            res.jsonp(user);
+                        }
+                    });
+                } else { // edit a user from an admin
+                    res.jsonp(user);
+                }
             }
         });
     } else {
