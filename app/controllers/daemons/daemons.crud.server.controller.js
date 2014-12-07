@@ -106,7 +106,7 @@ exports.daemonByID = function (req, res, next, id) {
 exports.hasAuthorization = function (req, res, next) {
     if (req.user.role !== 'admin') {
         return res.status(403).send({
-            message: 'User is not authorized (no Admin)'
+            message: 'User is not authorized (no Admin - daemons)'
         });
     }
     next();

@@ -47,7 +47,7 @@ exports.list = function (req, res) {
  */
 exports.update = function (req, res) {
     // Init Variables
-    var user = req.user;
+    var user = req.profile;
     var message = null;
 
     // For security measurement we remove the roles from the req.body object
@@ -99,6 +99,20 @@ exports.me = function (req, res) {
  * Site authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    //TODO
+    if (req.user.role !== 'admin' && req.user._id !== req.profile._id) {
+        return res.status(403).send({
+            message: 'User is not authorized (user - users)'
+        });
+    }
     next();
 };
+
+exports.hasAdminAuthorization = function (req, res, next) {
+    if (req.user.role !== 'admin') {
+        return res.status(403).send({
+            message: 'User is not authorized (no Admin - users)'
+        });
+    }
+    next();
+};
+

@@ -16,11 +16,9 @@ angular.module('core').service('Menus', [
                 if (!!~this.roles.indexOf('*')) {
                     return true;
                 } else {
-                    for (var userRoleIndex in user.roles) {
-                        for (var roleIndex in this.roles) {
-                            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
-                                return true;
-                            }
+                    for (var roleIndex in this.roles) {
+                        if (this.roles[roleIndex] === user.role) {
+                            return true;
                         }
                     }
                 }
@@ -96,7 +94,6 @@ angular.module('core').service('Menus', [
                 items: [],
                 shouldRender: shouldRender
             });
-
             // Return the menu object
             return this.menus[menuId];
         };

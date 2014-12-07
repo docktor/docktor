@@ -25,11 +25,12 @@ module.exports = function (app) {
     app.route('/auth/signout').get(users.signout);
 
     app.route('/users/:userId')
-        .get(users.read)
+        .get(users.requiresLogin, users.hasAuthorization, users.read)
         .put(users.requiresLogin, users.hasAuthorization, users.update)
-        .delete(users.requiresLogin, users.hasAuthorization, users.delete);
+        .delete(users.requiresLogin, users.hasAdminAuthorization, users.delete);
 
-    app.route('/users').get(users.requiresLogin, users.hasAuthorization, users.list);
+    app.route('/users').get(users.requiresLogin, users.hasAdminAuthorization, users.list);
+
     // Finish by binding the user middleware
     app.param('userId', users.userByID);
 };

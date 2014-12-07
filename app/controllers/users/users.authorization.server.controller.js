@@ -12,7 +12,6 @@ var _ = require('lodash'),
  */
 exports.userByID = function (req, res, next, id) {
     User.findOne({_id: id}).populate('groups', 'title').exec(function (err, user) {
-        console.log('LOAD' + id);
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load User ' + id));
         req.profile = user;
@@ -29,7 +28,6 @@ exports.requiresLogin = function (req, res, next) {
             message: 'User is not logged in'
         });
     }
-
     next();
 };
 
