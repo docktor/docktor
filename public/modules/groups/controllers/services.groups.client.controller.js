@@ -45,6 +45,9 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     if (!volume.value) {
                         internal = $scope.daemons.select.volume + '/' + $scope.group.title + '/' + $scope.services.select.title + volume.internal;
                     }
+                    if (!volume.rights) {
+                        volume.rights = 'rw';
+                    }
                     volume.external = internal;
                 });
                 GroupsServices.getFreePorts($scope.group._id)

@@ -80,6 +80,7 @@
                     <th>Description</th>
                     <th>Internal</th>
                     <th>External</th>
+                    <th>Rights :<br><small>RW Read-Write, RO : Read Only</small></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -95,8 +96,8 @@
                     </td>
                     <td>
                         <select ng-model="volume.rights" class="form-control" ng-required="true">
-                            <option value="ro">ro</option>
-                            <option value="rw">rw</option>
+                            <option value="ro">RO</option>
+                            <option value="rw">RW</option>
                         </select>
                     </td>
                 </tr>
