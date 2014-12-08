@@ -13,10 +13,10 @@ module.exports = function (app) {
         .post(users.requiresLogin, daemons.hasAdminAuthorization, daemons.create);
 
     app.route('/daemons/docker/info/:daemonId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.info);
+        .get(users.requiresLogin, daemons.hasAuthorization, daemons.info);
 
     app.route('/daemons/docker/version/:daemonId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.version);
+        .get(users.requiresLogin, daemons.hasAuthorization, daemons.version);
 
     app.route('/daemons/docker/listContainers/:daemonId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.listContainers);
@@ -51,7 +51,7 @@ module.exports = function (app) {
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsContainer);
 
     app.route('/daemons/docker/stats/:daemonId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.statsDeamon);
+        .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsDeamon);
 
     app.route('/daemons/docker/machineInfo/:daemonId')
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.machineInfo);

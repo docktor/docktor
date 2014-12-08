@@ -106,7 +106,6 @@ exports.daemonByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
 
-    // TODO check if daemon in in groups as
     Group.getGroupsOfOneDaemon(req.daemon._id.toString()).exec(function (err, data) {
             if (err) {
                 return res.status(400).send({

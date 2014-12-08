@@ -16,11 +16,11 @@ angular.module('services').factory('Services', ['$resource',
 angular.module('services').factory('ServicesServices', ['$http',
     function ($http) {
         return {
-            getCommands: function (serviceId) {
-                return $http.get('/services/commands/' + serviceId);
+            getCommands: function (serviceId, groupId) {
+                return $http.get('/services/commands/' + serviceId + '/' + groupId);
             },
-            getUrls: function (serviceId) {
-                return $http.get('/services/urls/' + serviceId);
+            getUrls: function (serviceId, groupId) {
+                return $http.get('/services/urls/' + serviceId + '/' + groupId);
             }
         };
     }

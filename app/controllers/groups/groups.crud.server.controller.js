@@ -116,8 +116,13 @@ exports.getFreePorts = function (req, res) {
 /**
  * List of Groups
  */
-exports.list = function (req, res) {
-    Group.find().sort('-created').populate('daemon').exec(function (err, groups) {
+exports.listGroups = function (req, res) {
+    var where = {'_id': {'$in': req.user.groups}};
+    if (req.user.role === 'admin') {
+        where = {};
+    }
+
+    Group.find(where).sort('title').populate('daemon').exec(function (err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

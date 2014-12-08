@@ -80,19 +80,19 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
 
-                    $scope.prepareDaemonsAll(true, function (daemon) {
-                        $scope.group.containers.forEach(function (container) {
-                            if (!$stateParams.containerId ||
-                                ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                    $scope.group.containers.forEach(function (container) {
+                        if (!$stateParams.containerId ||
+                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                            $scope.prepareDaemonsAll(true, container.daemonId, function (daemon) {
                                 if (daemon._id === container.daemonId) {
                                     $scope.inspect(container);
                                     container.daemon = $scope.getDaemon(container.daemonId);
                                     if (container.serviceId) {
-                                        ServicesServices.getCommands(container.serviceId)
+                                        ServicesServices.getCommands(container.serviceId, $scope.group._id)
                                             .success(function (commands) {
                                                 container.commands = commands;
                                             });
-                                        ServicesServices.getUrls(container.serviceId)
+                                        ServicesServices.getUrls(container.serviceId, $scope.group._id)
                                             .success(function (urls) {
                                                 container.urls = [];
                                                 angular.forEach(urls, function (url, key) {
@@ -102,9 +102,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                             });
                                     }
                                 }
-
-                            }
-                        });
+                            });
+                        }
                     });
 
 
@@ -127,25 +126,41 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         };
 
-        $scope.prepareDaemonsAll = function (fsToCompute, cb) {
+        $scope.prepareDaemonsAll = function (fsToCompute, daemonId, cb) {
             $scope.daemons = {};
             $scope.daemons.all = [];
 
-            //TODO Fix query all daemons on view --> NOT USEFULL
-            Daemons.query(function (daemons) {
-                daemons.forEach(function (daemon) {
+            if (daemonId) {
+                Daemons.get({
+                    daemonId: daemonId
+                }, function (daemon) {
                     Daemon.getDetails(daemon, function () {
                         daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                         $scope.daemons.all.push(daemon);
                         if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                             $scope.group.selectDaemon = daemon;
-                            $scope.showFreePortRangeOnContainer();
                             if (fsToCompute) $scope.computeFsForGroup($scope.group);
                         }
-                        if (cb) cb(daemon); // todo fix perf to not compute all time
+                        if (cb) cb(daemon);
                     });
                 });
-            });
+            } else {
+                Daemons.query(function (daemons) {
+                    daemons.forEach(function (daemon) {
+                        Daemon.getDetails(daemon, function () {
+                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                            $scope.daemons.all.push(daemon);
+                            if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                                $scope.group.selectDaemon = daemon;
+                                // Fixme line below usefull only for create group
+                                $scope.showFreePortRangeOnContainer();
+                                if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                            }
+                            if (cb) cb(daemon); // todo fix perf to not compute all time
+                        });
+                    });
+                });
+            }
         };
 
         $scope.inspect = function (container) {

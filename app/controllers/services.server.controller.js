@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Service = mongoose.model('Service'),
+    Schema = mongoose.Schema,
     _ = require('lodash');
 
 /**
@@ -107,8 +108,24 @@ exports.serviceByID = function (req, res, next, id) {
 /**
  * Service authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
+exports.hasAdminAuthorization = function (req, res, next) {
     if (req.user.role !== 'admin') {
+        return res.status(403).send({
+            message: 'User is not authorized (no Admin - services)'
+        });
+    }
+    next();
+};
+
+exports.hasAuthorization = function (req, res, next) {
+    var userAssociatedToGroup = false;
+    req.user.groups.forEach(function (userGroupId) {
+        if (req.group._id.toString() === userGroupId.valueOf().toString()) {
+            userAssociatedToGroup = true;
+            return;
+        }
+    });
+    if (req.user.role !== 'admin' && !userAssociatedToGroup) {
         return res.status(403).send({
             message: 'User is not authorized (no Admin - services)'
         });

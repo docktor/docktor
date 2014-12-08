@@ -9,7 +9,7 @@ var users = require('../../app/controllers/users.server.controller'),
 module.exports = function (app) {
     // Group Routes
     app.route('/groups')
-        .get(users.requiresLogin, groups.list)
+        .get(users.requiresLogin, groups.listGroups)
         .post(users.requiresLogin, groups.hasAdminAuthorization, groups.create);
 
     app.route('/groups/exec/:groupId/:containerId/:serviceId/:execId/')
