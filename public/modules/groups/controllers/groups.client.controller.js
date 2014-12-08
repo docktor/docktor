@@ -72,38 +72,39 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 }, function (group) {
                     $scope.group = group;
 
-                    $scope.group.containers.forEach(function (container) {
-                        if ($stateParams.containerId && container._id === $stateParams.containerId) {
-                            $scope.container = container;
-                        }
+                    if (!$stateParams.containerId ||
+                        ($stateParams.containerId && container._id === $stateParams.containerId)) {
 
-                        if (!$stateParams.containerId ||
-                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
-                            $scope.prepareDaemonsAll(true, container.daemonId, function (daemon) {
-                                if (daemon._id === container.daemonId) {
-                                    $scope.inspect(container);
-                                    container.daemon = $scope.getDaemon(container.daemonId);
-                                    if (container.serviceId) {
-                                        ServicesServices.getCommands(container.serviceId, $scope.group._id)
-                                            .success(function (commands) {
-                                                container.commands = commands;
+                        var allDaemonsContainer = {};
+
+                        $scope.group.containers.forEach(function (container) {
+                            allDaemonsContainer[container.daemonId] = true;
+                        });
+
+                        $scope.prepareDaemonsAll(true, allDaemonsContainer, function () {
+                            if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                                $scope.container = container;
+                            }
+                            $scope.group.containers.forEach(function (container) {
+                                container.daemon = $scope.getDaemon(container.daemonId);
+                                if (container.serviceId) {
+                                    ServicesServices.getCommands(container.serviceId, $scope.group._id)
+                                        .success(function (commands) {
+                                            container.commands = commands;
+                                        });
+                                    ServicesServices.getUrls(container.serviceId, $scope.group._id)
+                                        .success(function (urls) {
+                                            container.urls = [];
+                                            angular.forEach(urls, function (url, key) {
+                                                var urlO = $scope.computeUrl(container, url);
+                                                container.urls.push(urlO);
                                             });
-                                        ServicesServices.getUrls(container.serviceId, $scope.group._id)
-                                            .success(function (urls) {
-                                                container.urls = [];
-                                                angular.forEach(urls, function (url, key) {
-                                                    var urlO = $scope.computeUrl(container, url);
-                                                    container.urls.push(urlO);
-                                                });
-                                            });
-                                    }
-                                    $scope.inspect(container);
+                                        });
                                 }
+                                $scope.inspect(container);
                             });
-                        }
-                    });
-
-
+                        });
+                    }
                 });
             } else {
                 $scope.group = new Groups();
@@ -120,27 +121,28 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             } else {
                 console.log('No fs for daemon ' + group.selectDaemon.name);
             }
-
         };
 
-        $scope.prepareDaemonsAll = function (fsToCompute, daemonId, cb) {
-            if (daemonId) {
-                if (!_.contains($scope.daemons.ids, daemonId)) {
-                    $scope.daemons.ids.push(daemonId);
-                    Daemons.get({
-                        daemonId: daemonId
-                    }, function (daemon) {
-                        Daemon.getDetails(daemon, function () {
-                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                            $scope.daemons.all.push(daemon);
-                            if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
-                                $scope.group.selectDaemon = daemon;
-                                if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                            }
-                            if (cb) cb(daemon);
+        $scope.prepareDaemonsAll = function (fsToCompute, allDaemonsContainer, cb) {
+            if (allDaemonsContainer) {
+                angular.forEach(allDaemonsContainer, function (value, daemonId) {
+                    if (!_.contains($scope.daemons.ids, daemonId)) {
+                        $scope.daemons.ids.push(daemonId);
+                        Daemons.get({
+                            daemonId: daemonId
+                        }, function (daemon) {
+                            Daemon.getDetails(daemon, function () {
+                                daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                                $scope.daemons.all.push(daemon);
+                                if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                                    $scope.group.selectDaemon = daemon;
+                                    if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                                }
+                                if (cb) cb(daemon);
+                            });
                         });
-                    });
-                }
+                    }
+                });
             } else {
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
