@@ -26,9 +26,11 @@ exports.signup = function (req, res) {
 
     // Admin to first user
     User.count({}, function (err, nb) {
-        //TODO FIXME if (nb <= 0) {
+        if (nb <= 0) {
             user.role = 'admin';
-        //}
+        }
+
+        user.preparePassword();
 
         // Then save the user
         user.save(function (err) {

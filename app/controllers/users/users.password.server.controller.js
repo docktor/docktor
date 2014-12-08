@@ -126,6 +126,7 @@ exports.reset = function (req, res, next) {
                         user.password = passwordDetails.newPassword;
                         user.resetPasswordToken = undefined;
                         user.resetPasswordExpires = undefined;
+                        user.preparePassword();
 
                         user.save(function (err) {
                             if (err) {
@@ -198,6 +199,7 @@ exports.changePassword = function (req, res) {
                     if (user.authenticate(passwordDetails.currentPassword)) {
                         if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
                             user.password = passwordDetails.newPassword;
+                            user.preparePassword();
 
                             user.save(function (err) {
                                 if (err) {

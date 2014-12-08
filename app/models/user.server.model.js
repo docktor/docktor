@@ -94,16 +94,14 @@ var UserSchema = new Schema({
 });
 
 /**
- * Hook a pre save method to hash the password
+ * Hash password before save it.
  */
-UserSchema.pre('save', function (next) {
+UserSchema.methods.preparePassword = function () {
     if (this.password && this.password.length > 6) {
         this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
         this.password = this.hashPassword(this.password);
     }
-
-    next();
-});
+};
 
 /**
  * Create instance method for hashing a password
