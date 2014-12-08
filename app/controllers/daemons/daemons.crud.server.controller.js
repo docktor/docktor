@@ -125,7 +125,7 @@ exports.hasAuthorization = function (req, res, next) {
                     if (userAssociatedToGroup) return false;
                 });
 
-                if (req.user.role === 'admin' || (req.user.role !== 'admin' && !userAssociatedToGroup)) {
+                if (req.user.role !== 'admin' && !userAssociatedToGroup) {
                     return res.status(403).send({
                         message: 'User is not authorized (user - groups)'
                     });
