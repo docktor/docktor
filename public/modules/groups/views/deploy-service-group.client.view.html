@@ -19,7 +19,7 @@
     <div ng-show="daemons.select">
         <h4>Select a service :</h4>
 
-        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;">
+        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;" ng-required="true">
             <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
             </ui-select-match>
             <ui-select-choices repeat="service in services.all">

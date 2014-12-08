@@ -50,6 +50,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     }
                     volume.external = internal;
                 });
+
                 GroupsServices.getFreePorts($scope.group._id)
                     .success(function (freePorts) {
                         $scope.freePorts = freePorts;

@@ -38,6 +38,9 @@ exports.getErrorMessage = function (err) {
         }
     } else if (err.reason) {
         message = err.reason;
+        if (err.json) {
+            message += ' -> ' + err.json;
+        }
     } else if (err.errors) {
         for (var errName in err.errors) {
             if (err.errors[errName].message) message = err.errors[errName].message;
