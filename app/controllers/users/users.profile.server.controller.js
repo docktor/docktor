@@ -54,6 +54,9 @@ exports.update = function (req, res) {
     if (req.user._id === req.profile._id) {
         delete req.body.role;
     }
+    delete req.body.password;
+    delete req.body.salt;
+
     if (user) {
         // Merge existing user
         user = _.extend(user, req.body);
