@@ -4,6 +4,8 @@
 [![Dependencies Status](https://david-dm.org/docktor/docktor.svg)](https://david-dm.org/docktor/docktor)
 [![devDependency Status](https://david-dm.org/docktor/docktor/dev-status.svg)](https://david-dm.org/docktor/docktor#info=devDependencies)
 
+[![wercker status](https://app.wercker.com/status/aa752d73aaa88276a33d3911d2c11043/m "wercker status")](https://app.wercker.com/project/bykey/aa752d73aaa88276a33d3911d2c11043)
+
 ## Dev In Progress !
 
 ## Roadmap
