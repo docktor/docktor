@@ -6,9 +6,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.infos = [];
         $scope.alerts = [];
-        $scope.daemons = {};
-        $scope.daemons.all = [];
-        $scope.daemons.ids = [];
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         $scope.submitForm = function () {
@@ -71,6 +68,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 Groups.get({
                     groupId: $stateParams.groupId
                 }, function (group) {
+                    $scope.daemons = {};
+                    $scope.daemons.all = [];
+                    $scope.daemons.ids = [];
                     $scope.group = group;
 
                     var allDaemonsContainer = {};
