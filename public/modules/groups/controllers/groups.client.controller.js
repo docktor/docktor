@@ -6,6 +6,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.infos = [];
         $scope.alerts = [];
+        $scope.daemons = {};
+        $scope.daemons.all = [];
+        $scope.daemons.ids = [];
 
         $scope.submitForm = function () {
             if ($scope.group._id) {
@@ -68,19 +71,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     groupId: $stateParams.groupId
                 }, function (group) {
                     $scope.group = group;
-                    var daemons = {};
+
                     $scope.group.containers.forEach(function (container) {
-                        if (!$stateParams.containerId ||
-                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
-                            $scope.inspect(container);
-                            daemons[container.daemonId] = {};
-                        }
                         if ($stateParams.containerId && container._id === $stateParams.containerId) {
                             $scope.container = container;
                         }
-                    });
 
-                    $scope.group.containers.forEach(function (container) {
                         if (!$stateParams.containerId ||
                             ($stateParams.containerId && container._id === $stateParams.containerId)) {
                             $scope.prepareDaemonsAll(true, container.daemonId, function (daemon) {
@@ -101,6 +97,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                                 });
                                             });
                                     }
+                                    $scope.inspect(container);
                                 }
                             });
                         }
@@ -127,23 +124,23 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.prepareDaemonsAll = function (fsToCompute, daemonId, cb) {
-            $scope.daemons = {};
-            $scope.daemons.all = [];
-
             if (daemonId) {
-                Daemons.get({
-                    daemonId: daemonId
-                }, function (daemon) {
-                    Daemon.getDetails(daemon, function () {
-                        daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                        $scope.daemons.all.push(daemon);
-                        if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
-                            $scope.group.selectDaemon = daemon;
-                            if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                        }
-                        if (cb) cb(daemon);
+                if (!_.contains($scope.daemons.ids, daemonId)) {
+                    $scope.daemons.ids.push(daemonId);
+                    Daemons.get({
+                        daemonId: daemonId
+                    }, function (daemon) {
+                        Daemon.getDetails(daemon, function () {
+                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                            $scope.daemons.all.push(daemon);
+                            if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                                $scope.group.selectDaemon = daemon;
+                                if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                            }
+                            if (cb) cb(daemon);
+                        });
                     });
-                });
+                }
             } else {
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
@@ -169,15 +166,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     success(function (data, status, headers, config) {
                         container.inspect = data;
                         if (container.inspect.State.Running === true) {
-
-                            // TODO make one call per daemon to machineInfo
-                            DaemonsDocker.machineInfo(container.daemonId).
-                                success(function (machineInfo) {
-                                    Containers.statsContainer(container, machineInfo, container.daemonId, container.containerId, $scope.callbackError);
-                                })
-                                .error(function (err) {
-                                    $scope.callbackError(container, err);
-                                });
+                            Containers.statsContainer(container, container.daemon.machineInfo, container.daemonId, container.containerId, $scope.callbackError);
                         }
                     }).
                     error(function (err, status, headers, config) {
