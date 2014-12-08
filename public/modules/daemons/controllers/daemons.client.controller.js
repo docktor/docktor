@@ -5,6 +5,8 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.authentication = Authentication;
         $scope.positions = {};
 
+        $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
+
         $scope.mapInitialized = false;
         $scope.mapView = false;
         $scope.daemonsInitialized = false;

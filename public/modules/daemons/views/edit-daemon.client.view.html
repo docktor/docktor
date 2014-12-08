@@ -12,10 +12,14 @@
                     <label class="control-label col-sm-2" for="name">Name</label>
 
                     <div class="col-sm-5">
-                        <input name="name" type="text" data-ng-model="daemon.name" id="name"
-                               class="form-control" placeholder="Name..." required>
+                        <input name="name" type="text" data-ng-model="daemon.name" id="name" ng-pattern="patternTitle"
+                               class="form-control" placeholder="Title..." maxlength="200" required>
                     </div>
                     <div class="col-sm-5">
+                        <p ng-show="daemonForm.name.$error.required" class="text-danger">Title is required</p>
+
+                        <p ng-show="daemonForm.name.$invalid" class="text-danger">
+                            The title have to match this pattern : [a-zA-Z0-9_]{1,200}</p>
                     </div>
                 </div>
 

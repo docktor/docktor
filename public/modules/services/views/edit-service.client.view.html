@@ -8,15 +8,19 @@
     <div class="col-md-12">
         <form name="serviceForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
             <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="title">Title</label>
 
-                    <div class="controls">
-                        <input name="title" type="text" data-ng-model="service.title" id="title" class="form-control"
-                               placeholder="Title" required>
+                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
+                    <label class="control-label col-sm-2" for="title">Title</label>
+
+                    <div class="col-sm-5">
+                        <input name="title" type="text" data-ng-model="service.title" id="title" ng-pattern="patternTitle"
+                               class="form-control" placeholder="Title of service" maxlength="200" required>
                     </div>
-                    <div ng-show="submitted && serviceForm.title.$invalid" class="help-block">
+                    <div class="col-sm-5">
                         <p ng-show="serviceForm.title.$error.required" class="text-danger">Title is required</p>
+
+                        <p ng-show="serviceForm.title.$invalid" class="text-danger">
+                            The title have to match this pattern : [a-zA-Z0-9_]{1,200}</p>
                     </div>
                 </div>
 
@@ -30,6 +34,7 @@
                 </div>
             </fieldset>
         </form>
+        <hr>
 
         <div ng-if="service._id">
             <div ng-include="'/modules/services/views/list-images.client.view.html'"></div>

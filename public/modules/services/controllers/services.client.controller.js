@@ -4,6 +4,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
     function ($scope, $stateParams, $location, Authentication, Services) {
         $scope.authentication = Authentication;
 
+        $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
+
         $scope.displayFormImage = false;
         $scope.parameter = {};
         $scope.displayFormParameter = false;

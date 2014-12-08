@@ -9,6 +9,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.daemons = {};
         $scope.daemons.all = [];
         $scope.daemons.ids = [];
+        $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         $scope.submitForm = function () {
             if ($scope.group._id) {
