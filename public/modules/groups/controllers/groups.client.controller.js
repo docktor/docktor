@@ -277,12 +277,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.doExec = function (container, command) {
+            var index = $scope.addInfo('command ' + command.exec + ' on container ' + container.name);
             GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
                 .success(function (data, status, headers, config) {
                     var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
                     $scope.alerts.push({title: title, type: 'success', msg: data});
+                    $scope.closeInfo(index);
                 })
                 .error(function (err, status, headers, config) {
+                    $scope.closeInfo(index);
                     $scope.callbackError(container, err);
                 });
         };

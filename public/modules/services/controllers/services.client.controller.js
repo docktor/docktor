@@ -17,6 +17,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormVolume = false;
 
         $scope.displayFormCommand = false;
+        $scope.commandRole = 'user';
+        $scope.commandRoleName = '';
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -118,12 +120,18 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         };
 
         $scope.addCommand = function () {
-            $scope.service.commands.push({
+            var d = new Date();
+            var commandToAdd = {
                 name: $scope.commandName,
-                exec: $scope.commandExec
-            });
+                exec: $scope.commandExec,
+                role: $scope.commandRole,
+                fooRoleName : d.getMilliseconds()
+            };
+            $scope.service.commands.push(commandToAdd);
             $scope.commandName = '';
             $scope.commandExec = '';
+            $scope.commandRole = 'user';
+
         };
 
         $scope.removeCommand = function (command) {

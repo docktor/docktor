@@ -106,6 +106,11 @@ var CommandSchema = new Schema({
         trim: true,
         required: 'exec command cannot be blank'
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'admin'
+    },
     created: {
         type: Date,
         default: Date.now

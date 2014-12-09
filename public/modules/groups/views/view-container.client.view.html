@@ -98,7 +98,8 @@
 
     <h4>Commands</h4>
 
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><strong>{{alert.title}}</strong><br>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <strong>{{alert.title}}</strong><br>
 
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>
@@ -115,7 +116,8 @@
                 ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
         </button>
 
-        <button ng-hide="!authentication.isAdmin || container.containerId || askDeleteService" class="btn btn-default btn-sm"
+        <button ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
+                class="btn btn-default btn-sm"
                 ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
             Remove service from Group
         </button>
@@ -161,14 +163,17 @@
                     <i class="fa fa-file-text-o"></i> Docker logs
                 </button>
 
-                <h5>Docker exec <i>set in the configuration of services</i></h5>
-                <span ng-repeat="command in container.commands">
+                <h5>User</h5>
+                <span ng-repeat="command in container.commands | filter:{role:'user'}">
+                    <button ng-click="doExec(container, command)" class="btn btn-default">{{command.name}}
+                    </button>
+                </span>
+                <h5 ng-if="authentication.isAdmin">Admin</h5>
+                <span ng-if="authentication.isAdmin" ng-repeat="command in container.commands | filter:{role:'admin'}">
                     <button ng-click="doExec(container, command)" class="btn btn-default">{{command.name}}
                     </button>
                 </span>
             </div>
-
-
         </div>
     </div>
 

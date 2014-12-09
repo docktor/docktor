@@ -291,7 +291,6 @@ exports.logsContainer = function (req, res) {
     });
 };
 
-
 exports.execInContainer = function (req, res) {
     Service.getExec(req.service._id, req.params.execId).exec(function (err, data) {
         if (err) {
@@ -312,24 +311,30 @@ exports.execInContainer = function (req, res) {
                     Cmd: command
                 };
 
-                dockerContainer.exec(options, function (err, exec) {
-                    if (err) return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                if (req.user.role !== 'admin' && data[0].commands.role === 'admin') {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage('role user not authorized to exec this command')
                     });
-
-                    exec.start(function (err, stream) {
-                        if (err) return;
-
-                        var string = [];
-                        stream.on('data', function (buffer) {
-                            var part = buffer;
-                            string.push(part.toString());
+                } else {
+                    dockerContainer.exec(options, function (err, exec) {
+                        if (err) return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
                         });
-                        stream.on('end', function () {
-                            res.jsonp(string);
+
+                        exec.start(function (err, stream) {
+                            if (err) return;
+
+                            var string = [];
+                            stream.on('data', function (buffer) {
+                                var part = buffer;
+                                string.push(part.toString());
+                            });
+                            stream.on('end', function () {
+                                res.jsonp(string);
+                            });
                         });
                     });
-                });
+                }
             } else {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage('No Command found')

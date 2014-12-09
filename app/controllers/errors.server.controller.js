@@ -48,6 +48,8 @@ exports.getErrorMessage = function (err) {
     } else {
         if ((!message || message === '') && err.json) {
             message = err.json;
+        } else {
+            message = err;
         }
     }
 
