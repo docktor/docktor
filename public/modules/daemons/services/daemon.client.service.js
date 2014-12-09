@@ -25,7 +25,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         console.log(resp);
                     });
             },
-            getDetails: function (daemon, callbackSuccess) {
+            getDetails: function (daemon, callback) {
                 daemon.dockerStatus = 'checking';
 
                 this.getInfo(daemon._id, daemon, function () {
@@ -78,7 +78,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                         });
                                     }
 
-                                    if (callbackSuccess) callbackSuccess();
+                                    if (callback) callback();
                                 }).
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');
@@ -88,6 +88,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         })
                         .error(function (resp) {
                             console.log('Error with DaemonsDocker.machineInfo:' + resp);
+                            if (callback) callback();
                         });
                 });
             }
