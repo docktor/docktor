@@ -51,19 +51,19 @@
                            href="#!/admin/daemons/view/{{container.daemonId}}">Checking</a>
                         <span ng-hide="authentication.isAdmin">Checking</span>
                     </span>
-                    <span ng-switch-when="down" class="label label-danger white">
-                        <a ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                    <span ng-switch-when="down">
+                        <a class="label label-danger" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
                             {{getDaemon(container.daemonId).name}}
                         </a>
-                        <span ng-hide="authentication.isAdmin">
+                        <span ng-hide="authentication.isAdmin" class="label label-danger">
                             {{getDaemon(container.daemonId).name}}
                         </span>
                     </span>
-                    <span ng-switch-when="up" class="label label-success white">
-                        <a ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                    <span ng-switch-when="up">
+                        <a class="label label-success" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
                             {{getDaemon(container.daemonId).name}}
                         </a>
-                        <span ng-hide="authentication.isAdmin">
+                        <span ng-hide="authentication.isAdmin" class="label label-success">
                             {{getDaemon(container.daemonId).name}}
                         </span>
                     </span>
