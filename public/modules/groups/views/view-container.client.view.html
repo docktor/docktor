@@ -191,75 +191,78 @@
         </div>
     </div>
 
-    <h5>docker inspect</h5>
+    <div ng-if="authentication.isAdmin">
+        <h5>docker inspect</h5>
 
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                {{container.inspect.HostConfig.PortBindings | json}}
-            </div>
-        </div>
-    </div>
-
-    <h4 class="page-header">Parameters</h4>
-
-    <h5>From Docktor</h5>
-
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                <div ng-repeat="parameter in container.parameters">
-                    {{parameter.name}}:{{parameter.value}}
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    {{container.inspect.HostConfig.PortBindings | json}}
                 </div>
             </div>
         </div>
-    </div>
 
-    <h4 class="page-header">Variables</h4>
 
-    <h5>From Docktor</h5>
+        <h4 class="page-header">Parameters</h4>
 
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                <div ng-repeat="variable in container.variables">
-                    {{variable.name}}:{{variable.value}}
+        <h5>From Docktor</h5>
+
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div ng-repeat="parameter in container.parameters">
+                        {{parameter.name}}:{{parameter.value}}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <h5>docker inspect</h5>
+        <h4 class="page-header">Variables</h4>
 
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                {{container.inspect.Config.Env | json}}
-            </div>
-        </div>
-    </div>
+        <h5>From Docktor</h5>
 
-    <h4 class="page-header">Volumes</h4>
-
-    <h5>From Docktor</h5>
-
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                <div ng-repeat="volume in container.volumes">
-                    -v {{volume.external}}:{{volume.internal}}<span
-                        ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div ng-repeat="variable in container.variables">
+                        {{variable.name}}:{{variable.value}}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <h5>docker inspect</h5>
+        <h5>docker inspect</h5>
 
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                {{container.inspect.HostConfig.Binds | json}}
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    {{container.inspect.Config.Env | json}}
+                </div>
+            </div>
+        </div>
+
+        <h4 class="page-header">Volumes</h4>
+
+        <h5>From Docktor</h5>
+
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div ng-repeat="volume in container.volumes">
+                        -v {{volume.external}}:{{volume.internal}}<span
+                            ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5>docker inspect</h5>
+
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    {{container.inspect.HostConfig.Binds | json}}
+                </div>
             </div>
         </div>
     </div>
