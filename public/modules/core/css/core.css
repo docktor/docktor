@@ -41,3 +41,25 @@
     width: 200px;
     font-size: 12px;
 }
+
+
+#logo {
+    position: relative;
+}
+
+#logo a {
+    color: #D8D8D8;
+    display: block;
+    font-size: 20px;
+    line-height: 50px;
+    background: url(../img/docktor.png) right 42px no-repeat;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
+}
+
+#logo a:hover {
+    background-position: right 25px;
+    text-decoration: none;
+}
