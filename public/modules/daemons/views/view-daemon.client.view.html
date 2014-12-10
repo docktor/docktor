@@ -1,26 +1,25 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>{{daemon.name}}</h1>
 
-        <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
+    <h1>{{daemon.name}}</h1>
 
-        <p>{{daemon.description}}</p>
-        <small>
-            <em class="text-muted">
-                Created on
-                <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
-                by
-                <span data-ng-bind="daemon.user.displayName"></span>
-            </em>
-        </small>
-        <br>
+    <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
-        <h2>Actions</h2>
-        <a class="btn btn-primary" href="/#!/admin/daemons/edit/{{daemon._id}}">
-            <i class="fa fa-edit"> </i> Edit Daemon
-        </a>
+    <p>{{daemon.description}}</p>
+    <small>
+        <em class="text-muted">
+            Created on
+            <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
+            by
+            <span data-ng-bind="daemon.user.displayName"></span>
+        </em>
+    </small>
+    <br>
 
-    </div>
+    <h2>Actions</h2>
+    <a class="btn btn-primary" href="/#!/admin/daemons/edit/{{daemon._id}}">
+        <i class="fa fa-edit"> </i> Edit Daemon
+    </a>
+
     <h2>Status</h2>
 
     <div>

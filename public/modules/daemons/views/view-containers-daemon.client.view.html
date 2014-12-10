@@ -1,85 +1,85 @@
 <section data-ng-controller="DaemonsContainersController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>{{daemon.name}}</h1>
 
-        <h3>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
+    <h1>{{daemon.name}}</h1>
 
-        <p>{{daemon.description}}</p>
+    <h3>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-            <strong>{{alert.title}}</strong><br>
+    <p>{{daemon.description}}</p>
 
-            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <strong>{{alert.title}}</strong><br>
+
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    </alert>
+
+    <div class="infos-bottom">
+        <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
+            {{info.msg}}...
         </alert>
+    </div>
 
-        <div class="infos-bottom">
-            <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
-                {{info.msg}}...
-            </alert>
-        </div>
+    <table class="table table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Mapping</th>
+            <th>CPU</th>
+            <th>Mem</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="container in containers">
+            <td class="table-small-text">{{container.Id}}<br>
+                Image : {{container.Image}}<br>
+                Name : {{container.inspect.Name}}
+            </td>
+            <td>
+                <button type="text" class="btn btn-default btn-xs" value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i> Volumes
+                </button>
+                <button type="text" class="btn btn-default btn-xs" value="Click me!"
+                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i> Ports
+                </button>
+            </td>
+            <td>
+                <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">
+                    <just-gage id="gaugeCPU{{container.Id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.statsCompute.cpuUsagePercent"
+                               title="CPU"></just-gage>
+                </div>
+            </td>
+            <td style="text-align:center">
+                <div ng-show="container.inspect.State.Running && container.statsCompute.memoryUsagePercent">
+                    <just-gage id="gaugeMem{{container.Id}}"
+                               class="gaugeSmall" min=0 max=100 value="container.statsCompute.memoryUsagePercent"
+                               title="Memory"></just-gage>
+                    <small>{{container.statsCompute.memoryUsage}} Mo</small>
+                </div>
 
-        <table class="table table-striped table-condensed">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Mapping</th>
-                <th>CPU</th>
-                <th>Mem</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="container in containers">
-                <td class="table-small-text">{{container.Id}}<br>
-                    Image : {{container.Image}}<br>
-                    Name : {{container.inspect.Name}}
-                </td>
-                <td>
-                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                            tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
-                            tooltip-trigger="focus" tooltip-placement="left">
-                        <i class="fa fa-eye"> </i> Volumes
-                    </button>
-                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                            tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                            tooltip-trigger="focus" tooltip-placement="left">
-                        <i class="fa fa-eye"> </i> Ports
-                    </button>
-                </td>
-                <td>
-                    <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">
-                        <just-gage id="gaugeCPU{{container.Id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.cpuUsagePercent"
-                                   title="CPU"></just-gage>
-                    </div>
-                </td>
-                <td style="text-align:center">
-                    <div ng-show="container.inspect.State.Running && container.statsCompute.memoryUsagePercent">
-                        <just-gage id="gaugeMem{{container.Id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.memoryUsagePercent"
-                                   title="Memory"></just-gage>
-                        <small>{{container.statsCompute.memoryUsage}} Mo</small>
-                    </div>
+            </td>
+            <td>
+                <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
+                <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
+                <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
 
-                </td>
-                <td>
-                    <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
-                    <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
-                    <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
+                <button type="text" class="btn btn-default btn-xs" value="Click me!"
+                        tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
+                        tooltip-trigger="focus" tooltip-placement="left">
+                    <i class="fa fa-eye"> </i>
+                </button>
 
-                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                            tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
-                            tooltip-trigger="focus" tooltip-placement="left">
-                        <i class="fa fa-eye"> </i>
-                    </button>
+            </td>
+            <td>
 
-                </td>
-                <td>
-
-                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
-                            ng-click="startContainer(container)"><i class="fa fa-play"></i> Start
-                    </button>
+                <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
+                        ng-click="startContainer(container)"><i class="fa fa-play"></i> Start
+                </button>
 
                     <span ng-show="container.inspect.State.Running">
                         <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-xs"
@@ -96,19 +96,17 @@
                         </button>
                     </span>
 
-                    <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
-                            ng-click="removeContainer(container)">
-                        <i class="fa fa-trash"></i> Remove
-                    </button>
+                <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
+                        ng-click="removeContainer(container)">
+                    <i class="fa fa-trash"></i> Remove
+                </button>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
+    <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
 
-        <pre ng-show="viewRawJson">{{containers | json}}</pre>
-
-    </div>
+    <pre ng-show="viewRawJson">{{containers | json}}</pre>
 </section>

@@ -1,96 +1,95 @@
 <section data-ng-controller="DaemonsImagesController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>{{daemon.name}}</h1>
 
-        <h3>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
+    <h1>{{daemon.name}}</h1>
 
-        <p>{{daemon.description}}</p>
+    <h3>Images on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-            <strong>{{alert.title}}</strong><br>
+    <p>{{daemon.description}}</p>
 
-            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <strong>{{alert.title}}</strong><br>
+
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    </alert>
+
+    <div class="infos-bottom">
+        <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
+            {{info.msg}}...
         </alert>
-
-        <div class="infos-bottom">
-            <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
-                {{info.msg}}...
-            </alert>
-        </div>
-
-        <button class="btn btn-default" ng-click="pullImage.askToPull=true" ng-hide="pullImage.askToPull">
-            <i class="fa fa-cloud-download" tooltip="Pull an image"
-               tooltip-popup-delay='750'> </i> Pull an image
-        </button>
-
-        <input type="text" ng-show="pullImage.askToPull" ng-model="pullImage.name" class="form-control"
-               placeholder="image:version">
-
-        <button ng-click="pullImage.askToPull=false" ng-show="pullImage.askToPull" class="btn btn-warning"
-                ng-disabled="pullImage.pulled">
-            Cancel <i class="fa fa-reply"></i>
-        </button>
-        <button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="btn btn-primary"
-                ng-disabled="pullImage.pulled">
-            Pull <i class="fa fa-check"></i>
-        </button>
-
-        <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
-            <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
-                {{line.id}}
-            </div>
-        </alert>
-
-        <table class="table table-striped table-condensed table-small-text">
-            <thead>
-            <tr>
-                <th>Info</th>
-                <th>Docker Version</th>
-                <th>RepoTags</th>
-                <th>Volumes</th>
-                <th>Ports</th>
-                <th>Sizes</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="image in images">
-                <td>
-                    {{image.Id | limitTo:12}}<br>
-                    {{image.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}<br>
-                    {{image.inspect.Author}}
-                </td>
-                <td>
-                    {{image.inspect.DockerVersion}}<br>
-                </td>
-                <td>
-                    <div ng-repeat="tag in image.RepoTags">{{tag}}</div>
-                </td>
-                </td>
-                <td>
-                    <div ng-repeat="(volume,val) in image.inspect.Config.Volumes">{{volume}}</div>
-                </td>
-                <td>
-                    <div ng-repeat="(port,val) in image.inspect.Config.ExposedPorts">{{port}}</div>
-                </td>
-                <td>
-                    Virtual:
-                    <span ng-show="image.Size===0">{{image.Size}} Mo</span>
-                    <span ng-show="image.Size">{{image.Size / 1000000 | number:4}} Mo</span><br>
-                    Virtual:{{image.VirtualSize / 1000000 | number:0}} Mo
-                </td>
-                <td>
-                    <button class="btn btn-default btn-xs" ng-click="removeImage(image)"><i class="fa fa-trash"></i>
-                        Remove
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
-
-        <pre ng-show="viewRawJson">{{images | json}}</pre>
-
     </div>
+
+    <button class="btn btn-default" ng-click="pullImage.askToPull=true" ng-hide="pullImage.askToPull">
+        <i class="fa fa-cloud-download" tooltip="Pull an image"
+           tooltip-popup-delay='750'> </i> Pull an image
+    </button>
+
+    <input type="text" ng-show="pullImage.askToPull" ng-model="pullImage.name" class="form-control"
+           placeholder="image:version">
+
+    <button ng-click="pullImage.askToPull=false" ng-show="pullImage.askToPull" class="btn btn-warning"
+            ng-disabled="pullImage.pulled">
+        Cancel <i class="fa fa-reply"></i>
+    </button>
+    <button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="btn btn-primary"
+            ng-disabled="pullImage.pulled">
+        Pull <i class="fa fa-check"></i>
+    </button>
+
+    <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
+        <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
+            {{line.id}}
+        </div>
+    </alert>
+
+    <table class="table table-striped table-condensed table-small-text">
+        <thead>
+        <tr>
+            <th>Info</th>
+            <th>Docker Version</th>
+            <th>RepoTags</th>
+            <th>Volumes</th>
+            <th>Ports</th>
+            <th>Sizes</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="image in images">
+            <td>
+                {{image.Id | limitTo:12}}<br>
+                {{image.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}<br>
+                {{image.inspect.Author}}
+            </td>
+            <td>
+                {{image.inspect.DockerVersion}}<br>
+            </td>
+            <td>
+                <div ng-repeat="tag in image.RepoTags">{{tag}}</div>
+            </td>
+            </td>
+            <td>
+                <div ng-repeat="(volume,val) in image.inspect.Config.Volumes">{{volume}}</div>
+            </td>
+            <td>
+                <div ng-repeat="(port,val) in image.inspect.Config.ExposedPorts">{{port}}</div>
+            </td>
+            <td>
+                Virtual:
+                <span ng-show="image.Size===0">{{image.Size}} Mo</span>
+                <span ng-show="image.Size">{{image.Size / 1000000 | number:4}} Mo</span><br>
+                Virtual:{{image.VirtualSize / 1000000 | number:0}} Mo
+            </td>
+            <td>
+                <button class="btn btn-default btn-xs" ng-click="removeImage(image)"><i class="fa fa-trash"></i>
+                    Remove
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
+
+    <pre ng-show="viewRawJson">{{images | json}}</pre>
+
 </section>

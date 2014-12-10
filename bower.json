@@ -19,6 +19,7 @@
     "fontawesome": "~4.2.0",
     "angular-justgage": "1.0.0",
     "lodash": "~2.4.1",
-    "moment": "~2.8.4"
+    "moment": "~2.8.4",
+    "bootstrap-material-design" : "0.2.1"
   }
 }

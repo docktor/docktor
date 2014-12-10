@@ -1,10 +1,10 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>
-            <span ng-hide="group._id">Create Group</span>
-            <span ng-show="group._id">Edit Group</span>
-        </h1>
-    </div>
+
+    <h1>
+        <span ng-hide="group._id">Create Group</span>
+        <span ng-show="group._id">Edit Group</span>
+    </h1>
+
     <div class="col-md-12">
         <form name="groupForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
             <fieldset>
@@ -17,7 +17,9 @@
                     </div>
                     <div ng-show="groupForm.title.$invalid" class="help-block">
                         <p ng-show="groupForm.title.$error.required" class="text-danger">Title is required</p>
-                        <p ng-show="groupForm.title.$invalid" class="text-danger">The name have to match this pattern : [a-zA-Z0-9_]{1,200}</p>
+
+                        <p ng-show="groupForm.title.$invalid" class="text-danger">The name have to match this pattern :
+                            [a-zA-Z0-9_]{1,200}</p>
                     </div>
 
                 </div>

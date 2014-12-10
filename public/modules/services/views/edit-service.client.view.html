@@ -1,10 +1,10 @@
 <section data-ng-controller="ServicesController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>
-            <span ng-hide="service._id">Create Service</span>
-            <span ng-show="service._id">Edit Service</span>
-        </h1>
-    </div>
+
+    <h1>
+        <span ng-hide="service._id">Create Service</span>
+        <span ng-show="service._id">Edit Service</span>
+    </h1>
+
     <div class="col-md-12">
         <form name="serviceForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
             <fieldset>
@@ -13,7 +13,8 @@
                     <label class="control-label col-sm-2" for="title">Title</label>
 
                     <div class="col-sm-5">
-                        <input name="title" type="text" data-ng-model="service.title" id="title" ng-pattern="patternTitle"
+                        <input name="title" type="text" data-ng-model="service.title" id="title"
+                               ng-pattern="patternTitle"
                                class="form-control" placeholder="Title of service" maxlength="200" required>
                     </div>
                     <div class="col-sm-5">

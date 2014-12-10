@@ -1,7 +1,6 @@
 <section data-ng-controller="ServicesGroupsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1 data-ng-bind="group.title"></h1>
-    </div>
+
+    <h1 data-ng-bind="group.title"></h1>
 
     <p class="lead" data-ng-bind="group.description"></p>
 
@@ -80,7 +79,9 @@
                     <th>Description</th>
                     <th>Internal</th>
                     <th>External</th>
-                    <th>Rights :<br><small>RW Read-Write, RO : Read Only</small></th>
+                    <th>Rights :<br>
+                        <small>RW Read-Write, RO : Read Only</small>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
