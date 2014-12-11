@@ -98,7 +98,7 @@
                     See <a ng-show="group.selectDaemon.cadvisorApi" href="{{group.selectDaemon.cadvisorUrl}}">cAdvisor
                     of daemon {{group.selectDaemon.name}}</a>
 
-                    <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-danger">
+                    <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-warning">
                         Daemon has no cAdvisor URL. Please check this
                         <a href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">Daemon</a>
                     </div>
@@ -192,4 +192,11 @@
             Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
         </button>
     </div>
+
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <strong>{{alert.title}}</strong><br>
+
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    </alert>
+
 </section>
