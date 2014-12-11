@@ -59,16 +59,12 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
     var service = req.service;
 
-    console.log('REQ ON ');
-    console.log(service._id);
-    var result = Group.getGroupsOfOneService(service._id.toString()).exec(function (err, data) {
+    Group.getGroupsOfOneService(service._id.toString()).exec(function (err, data) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            console.log('data:');
-            console.log(data);
             if (data && data[0] && data[0].groups.length > 0) {
                 var titles = '';
                 data[0].groups.forEach(function (group) {
