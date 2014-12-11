@@ -19,6 +19,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormCommand = false;
         $scope.commandRole = 'user';
         $scope.commandRoleName = '';
+        $scope.alerts = [];
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -49,6 +50,15 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             if (service) {
                 service.$remove(function () {
                     $location.path('admin/services');
+                }, function (errorResponse) {
+                    var title = 'Error - ' + moment().format('hh:mm:ss');
+                    var err = [];
+                    if (errorResponse.data.message) {
+                        err.push(errorResponse.data.message);
+                    } else {
+                        err.push(errorResponse);
+                    }
+                    $scope.alerts.push({title: title, type: 'danger', msg: err});
                 });
             }
         };
@@ -125,7 +135,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
                 name: $scope.commandName,
                 exec: $scope.commandExec,
                 role: $scope.commandRole,
-                fooRoleName : d.getMilliseconds()
+                fooRoleName: d.getMilliseconds()
             };
             $scope.service.commands.push(commandToAdd);
             $scope.commandName = '';
@@ -149,6 +159,10 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeUrl = function (url) {
             $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
+        };
+
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
         };
 
     }

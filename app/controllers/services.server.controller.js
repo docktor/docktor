@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Service = mongoose.model('Service'),
-    Schema = mongoose.Schema,
+    Group = mongoose.model('Group'),
     _ = require('lodash');
 
 /**
@@ -59,13 +59,35 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
     var service = req.service;
 
-    service.remove(function (err) {
+    console.log('REQ ON ');
+    console.log(service._id);
+    var result = Group.getGroupsOfOneService(service._id.toString()).exec(function (err, data) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(service);
+            console.log('data:');
+            console.log(data);
+            if (data && data[0] && data[0].groups.length > 0) {
+                var titles = '';
+                data[0].groups.forEach(function (group) {
+                    titles += ' ' + group.title;
+                });
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage('Some group(s) (' + titles + ' ) are using this service. Please remove this service from them before delete it')
+                });
+            } else {
+                service.remove(function (err) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else {
+                        res.jsonp(service);
+                    }
+                });
+            }
         }
     });
 };

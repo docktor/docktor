@@ -224,4 +224,22 @@ GroupSchema.statics.getGroupsOfOneDaemon = function (idDaemon) {
     ]);
 };
 
+GroupSchema.statics.getGroupsOfOneService = function (idService) {
+    var _this = this;
+    /*
+     Example of result :
+     { "_id" : 0,
+     "groups" : [ {
+     "id" : ObjectId("546b185246be610000ce23b2"),
+     "title" : "GroupCCCD"
+     }]
+     }
+     */
+    return _this.aggregate([
+        {'$unwind': '$containers'},
+        {'$match': {'containers.serviceId': {'$in': [idService]}}},
+        {'$group': {'_id': 0, 'groups': {'$addToSet': {'id': '$_id', 'title': '$title'}}}}
+    ]);
+};
+
 mongoose.model('Group', GroupSchema);

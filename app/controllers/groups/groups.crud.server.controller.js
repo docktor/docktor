@@ -60,7 +60,7 @@ exports.delete = function (req, res) {
 
     if (group.containers && group.containers.length > 0) {
         return res.status(400).send({
-            message: errorHandler.getErrorMessage("Please remove all services on group before delete it.")
+            message: errorHandler.getErrorMessage('Please remove all services on group before delete it.')
         });
     } else {
         group.remove(function (err) {
