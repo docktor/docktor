@@ -31,7 +31,7 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-    User.find().populate('groups', 'title').exec(function (err, users) {
+    User.find().populate('groups').exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

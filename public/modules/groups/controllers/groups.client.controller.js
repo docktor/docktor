@@ -113,6 +113,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.inspect(container);
                         });
                     });
+                    GroupsServices.getUsersOnGroup($scope.group._id)
+                        .success(function(users) {
+                            $scope.group.users = users;
+                            var mailAll = '';
+                            users.forEach(function(user) {
+                                mailAll +=  user.email + ';';
+                            });
+                            $scope.group.mailAllUsers = mailAll;
+                        });
                 });
             } else {
                 $scope.group = new Groups();
@@ -147,6 +156,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                     if (fsToCompute) $scope.computeFsForGroup($scope.group);
                                 }
                                 if (cb) cb(daemon);
+                            }, function (err) {
+                                if (cb) cb();
                             });
                         });
                     }

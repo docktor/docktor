@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
+    User = mongoose.model('User'),
     _ = require('lodash');
 
 /**
@@ -26,11 +27,30 @@ exports.create = function (req, res) {
     });
 };
 
+
 /**
  * Show the current group
  */
 exports.read = function (req, res) {
     res.jsonp(req.group);
+};
+
+exports.getUsersOnGroup = function (req, res) {
+    var group = req.group;
+    User.getUsersOfOneGroup(group._id).exec(function (err, data) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                if (data[0] && data[0].users && data[0].users.length > 0) {
+                    res.jsonp(data[0].users);
+                } else {
+                    res.jsonp([]);
+                }
+            }
+        }
+    );
 };
 
 /**

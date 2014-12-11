@@ -143,4 +143,30 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
     });
 };
 
+/**
+ *
+ * @param idGroup an ObjectId
+ * @returns {Aggregate|Promise}
+ */
+UserSchema.statics.getUsersOfOneGroup = function (idGroup) {
+    var _this = this;
+    /*
+     Example of result :
+
+     {"_id" : 0,
+     "users" : [
+     {
+     "id" : ObjectId("54861a208d058b859f1d83c8"),
+     "username" : "user",
+     "email" : "user@user.fr",
+     "displayName" : "user user"
+     }]
+     }
+     */
+    return _this.aggregate([
+        {'$match': {'groups': {'$in': [idGroup]}}},
+        {'$group': {'_id': 0, 'users': {'$addToSet': {'id' : '$_id', 'username':'$username', 'email': '$email', 'displayName': '$displayName'}}}}
+    ]);
+};
+
 mongoose.model('User', UserSchema);

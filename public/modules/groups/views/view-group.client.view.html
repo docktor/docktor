@@ -16,12 +16,18 @@
     <h3>{{group.title}}</h3>
 
     <div class="col-sm-12 row">
-        Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
+        <h4><i class="fa fa-users"></i> Contacts</h4>
+        <span ng-repeat="u in group.users">
+            <a href="mailto:{{u.email}}"><i class="fa fa-envelope"></i> {{u.displayName}}</a>
+        </span>
+        <div>
+        <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
+        </div>
         <hr>
     </div>
 
     <div class="col-sm-12 row">
-        <h4>Filesystems</h4>
+        <h4><i class="fa fa-pie-chart"></i> Filesystems</h4>
 
         <div ng-hide="group.filesystems" class="alert alert-danger">
             No filesystem attached to this group.
@@ -53,7 +59,7 @@
     </div>
     <hr>
     <div class="col-sm-12 row">
-        <h4>Services</h4>
+        <h4><i class="fa fa-tachometer"></i> Services</h4>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             <strong>{{alert.title}}</strong><br>
 
