@@ -58,26 +58,21 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
     var group = req.group;
 
-    console.log('group');
-    console.log(group);
-
     if (group.containers && group.containers.length > 0) {
         return res.status(400).send({
             message: errorHandler.getErrorMessage("Please remove all services on group before delete it.")
         });
     } else {
-        console.log('Ok pour suppression');
+        group.remove(function (err) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(group);
+            }
+        });
     }
-
-    /*group.remove(function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(group);
-        }
-    });*/
 };
 
 exports.getFreePortsOnContainer = function (req, res) {
