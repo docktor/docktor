@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'db_1:27017/docktor',
+	db: 'mongodb://db_1:27017/docktor',
 	assets: {
 		lib: {
 			css: [
