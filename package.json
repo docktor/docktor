@@ -10,7 +10,7 @@
   "scripts": {
     "start": "grunt",
     "test": "grunt test",
-    "postinstall": "bower install --config.interactive=false --allow-root"
+    "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {
     "express": "~4.10.0",
