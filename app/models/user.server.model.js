@@ -170,3 +170,4 @@ UserSchema.statics.getUsersOfOneGroup = function (idGroup) {
 };
 
 mongoose.model('User', UserSchema);
+module.exports=mongoose.model('User', UserSchema);

@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
-    User = mongoose.model('User'),
+    User = require('../../models/user.server.model'),
     _ = require('lodash');
 
 /**
