@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-sm-12 row">
-        <h4><i class="fa fa-pie-chart"></i> Filesystems</h4>
+        <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
 
         <div ng-hide="group.filesystems" class="alert alert-danger">
             No filesystem attached to this group.
@@ -37,7 +37,7 @@
             <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
         </div>
 
-        <div ng-repeat="fs in group.filesystems" class="col-sm-12 row">
+        <div ng-repeat="fs in group.filesystems" class="col-sm-12">
             <div class="col-sm-4">
                 <div class="progress">
                     <div class="progress-bar progress-bar-danger" role="progressbar"
@@ -50,16 +50,19 @@
             </div>
 
             <div class="col-sm-8">
-                <div> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
+                <div><i class="fa fa-pie-chart"></i> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
                     ({{fs.statsCompute.usagePercent}}%)
                 </div>
                 <div><i>{{fs.description}}</i></div>
             </div>
         </div>
+        <div class="col-sm-12 row">
+            <i class="fa fa-bar-chart"></i> <a href="{{grafanaUrl}}?groupName={{group.title}}">Monitoring CPU / RAM - All Servics</a>
+        </div>
     </div>
     <hr>
     <div class="col-sm-12 row">
-        <h4><i class="fa fa-tachometer"></i> Services</h4>
+        <h4><i class="fa fa-cloud"></i> Services</h4>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             <strong>{{alert.title}}</strong><br>
 
@@ -203,8 +206,8 @@
                 </div>
             </td>
             <td>
-                <div>
-                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">Monitoring</a>
+                <div class="text-center">
+                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i class="fa fa-bar-chart"></i></a>
                 </div>
             </td>
         </tr>
