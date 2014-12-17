@@ -1,18 +1,29 @@
-<ul class="nav main-menu" data-ng-controller="HeaderController">
-    <li data-ng-repeat="item in menu.items | orderBy: 'position'"
-        data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType"
+<!--
+<ul class="nav main-menu" ng-controller="HeaderController">
+    <li ng-repeat="item in menu.items | orderBy: 'position'"
+        ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType"
         ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}"
         ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
         <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
-            <span data-ng-bind="item.title"></span>
+            <span ng-bind="item.title"></span>
         </a>
         <ul ng-switch-when="dropdown" class="dropdown-menu">
-            <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
-                data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}"
+            <li ng-repeat="subitem in item.items | orderBy: 'position'"
+                ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}"
                 ng-class="{active: $uiRoute}">
-                <a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
+                <a href="/#!/{{subitem.link}}" ng-bind="subitem.title"></a>
             </li>
         </ul>
-        <a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
+        <a ng-switch-default href="/#!/{{item.link}}" ng-bind="item.title"></a>
     </li>
 </ul>
+-->
+<md-toolbar class="md-theme-indigo">
+    <h1 class="md-toolbar-tools">Sidenav Left</h1>
+</md-toolbar>
+<md-content class="md-padding">
+    <p hide-md show-gt-md>
+        This sidenav is locked open on your device. To go back to the default behavior,
+        narrow your display.
+    </p>
+</md-content>

@@ -44,30 +44,32 @@
 
 </head>
 
-<body class="ng-cloak">
+<body class="ng-cloak" layout="row">
+
+<md-sidenav layout="column"
+            class="md-sidenav-left md-whiteframe-z5"
+            md-component-id="left"
+
+            ng-include="'/modules/core/views/menu.client.view.html'"></md-sidenav>
 <!--Start Header-->
-<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar"></header>
-
-<div id="main" class="container-fluid">
-    <div class="row">
-        <div data-ng-include="'/modules/core/views/menu.client.view.html'" id="sidebar-left" class="col-xs-2 col-sm-2">
-        </div>
-
+<div id="main" layout-fill layout="column">
+    <md-toolbar class="md-accent" layout="row" layout-align="space-between center"
+                ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
+    <md-content md-scroll-y flex class="md-padding ng-scope">
         <!--Start Content-->
-        <div id="content" class="col-xs-12 col-sm-10">
+        <div id="content" layout="column" layout-align="space-between center">
             {% block content %}{% endblock %}
-            <div style="text-align: right;">
-                <small>
-                    <br><br><br><br>
-                    <i>Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
-                    <a href="https://github.com/docktor/docktor" title="Fork me on Github"> <i class="fa fa-github fa fa-2x"></i></a></i>
-                </small>
-            </div>
+            <div class="custom-footer" flex ng-include="'/modules/core/views/footer.client.view.html'"></div>
         </div>
-
         <!--End Content-->
-    </div>
+    </md-content>
 </div>
+
+<md-sidenav layout="column"
+            class="md-sidenav-right md-whiteframe-z5"
+            md-component-id="right"
+
+            ng-include="'/modules/core/views/admin.client.view.html'"></md-sidenav>
 
 <!--Embedding The User Object-->
 <script type="text/javascript">

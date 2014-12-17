@@ -1,35 +1,24 @@
-<div id="page-login" class="row" data-ng-controller="AuthenticationController">
-    <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-        <div class="text-right">
-            <a href="/#!/signup" class="txt-default">Need an account?</a> |
-            <a href="/#!/password/forgot" class="txt-default">Forgot your password?</a>
-        </div>
-        <div class="box">
-            <div class="box-content">
-                <form data-ng-submit="signin()" class="signin" autocomplete="off">
-                    <fieldset>
-                        <div class="text-center">
-                            <h3>Docktor Login Page</h3>
-                        </div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" class="form-control"
-                                   data-ng-model="credentials.username" placeholder="Username">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control"
-                                   data-ng-model="credentials.password" placeholder="Password">
-                        </div>
-                        <div class="text-center form-group">
-                            <button type="submit" class="btn btn-primary">Sign in</button>
-                        </div>
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <strong data-ng-bind="error"></strong>
-                        </div>
-                    </fieldset>
-                </form>
+<div id="page-login"
+     layout="column" layout-align="space-around center" ng-controller="AuthenticationController">
+
+
+    <h3 flex >Docktor Login Page</h3>
+
+    <div flex>
+        <form data-ng-submit="signin()" class="signin md-whiteframe-z1" autocomplete="off" layout="column" layout-margin layout-align="space-around center">
+            <input flex type="text" id="username" name="username" class="form-control"
+                   data-ng-model="credentials.username" placeholder="Username">
+            <input flex type="password" id="password" name="password" class="form-control"
+                   data-ng-model="credentials.password" placeholder="Password">
+            <button flex type="submit" class="btn btn-primary">Sign in</button>
+            <div data-ng-show="error" class="text-center text-danger">
+                <strong data-ng-bind="error"></strong>
             </div>
-        </div>
+        </form>
+    </div>
+
+    <div flex class="text-right">
+        <md-button href="/#!/signup" class="txt-default">Need an account?</md-button> |
+        <md-button href="/#!/password/forgot" class="txt-default">Forgot your password?</md-button>
     </div>
 </div>
