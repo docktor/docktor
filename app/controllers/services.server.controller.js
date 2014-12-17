@@ -103,12 +103,8 @@ exports.list = function (req, res) {
     });
 };
 
-exports.getCommands = function (req, res) {
-    res.jsonp(req.service.commands);
-};
-
-exports.getUrls = function (req, res) {
-    res.jsonp(req.service.urls);
+exports.getUrlsAndCommands = function (req, res) {
+    res.jsonp({'commands': req.service.commands, 'urls': req.service.urls});
 };
 
 /**

@@ -351,6 +351,7 @@ exports.containerById = function (req, res, next, id) {
     var containerId = req.param('containerId');
     var container = req.group.containers.id(containerId);
     if (!container) return next(new Error('Failed to load container ' + containerId));
+    req.group.containers = [container];
     req.container = container;
 
     Daemon.findById(req.container.daemonId).exec(function (err, daemon) {

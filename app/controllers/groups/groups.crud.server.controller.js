@@ -169,7 +169,6 @@ exports.groupById = function (req, res, next, id) {
         req.group = group;
         next();
     });
-
 };
 
 /**

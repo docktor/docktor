@@ -20,8 +20,9 @@
         <span ng-repeat="u in group.users">
             <a href="mailto:{{u.email}}"><i class="fa fa-envelope"></i> {{u.displayName}}</a>
         </span>
+
         <div>
-        <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
+            <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
         </div>
         <hr>
     </div>
@@ -50,14 +51,17 @@
             </div>
 
             <div class="col-sm-8">
-                <div><i class="fa fa-pie-chart"></i> {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
+                <div><i class="fa fa-pie-chart"></i>
+                    {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
                     ({{fs.statsCompute.usagePercent}}%)
                 </div>
                 <div><i>{{fs.description}}</i></div>
             </div>
         </div>
         <div class="col-sm-12 row">
-            <i class="fa fa-bar-chart"></i> <a href="{{grafanaUrl}}?groupName={{group.title}}">Monitoring CPU / RAM - All Servics</a>
+            <i class="fa fa-bar-chart"></i> <a href="{{grafanaUrl}}?groupName={{group.title}}">
+            Monitoring CPU / RAM - All Services
+        </a>
         </div>
     </div>
     <hr>
@@ -185,7 +189,8 @@
                         <span ng-hide="authentication.isAdmin">Checking</span>
                     </span>
                     <span ng-switch-when="down">
-                        <a class="label label-danger" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                        <a class="label label-danger" ng-show="authentication.isAdmin"
+                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">
                             {{getDaemon(gridItem.daemonId).name}}
                         </a>
                         <span ng-hide="authentication.isAdmin" class="label label-danger">
@@ -207,7 +212,8 @@
             </td>
             <td>
                 <div class="text-center">
-                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i class="fa fa-bar-chart"></i></a>
+                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i
+                            class="fa fa-bar-chart"></i></a>
                 </div>
             </td>
         </tr>

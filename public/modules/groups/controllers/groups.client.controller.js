@@ -9,7 +9,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         //TODO Grafana URL -> Admin Parameter
-        $scope.grafanaUrl = "http://" + $location.host() + ":8090/#/dashboard/script/docktor.js";
+        $scope.grafanaUrl = 'http://' + $location.host() + ':8090/#/dashboard/script/docktor.js';
 
         $scope.submitForm = function () {
             if ($scope.group._id) {
@@ -78,7 +78,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.findOne = function () {
             if ($stateParams.groupId) {
                 Groups.get({
-                    groupId: $stateParams.groupId
+                    groupId: $stateParams.groupId,
+                    containerId: $stateParams.containerId
                 }, function (group) {
                     $scope.daemons = {};
                     $scope.daemons.all = [];
@@ -94,20 +95,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     $scope.prepareDaemonsAll(true, allDaemonsContainer, function () {
 
                         $scope.group.containers.forEach(function (container) {
+                            container.daemon = $scope.getDaemon(container.daemonId);
+
                             if ($stateParams.containerId && container._id === $stateParams.containerId) {
                                 $scope.container = container;
                             }
-                            container.daemon = $scope.getDaemon(container.daemonId);
 
                             if (container.serviceId) {
-                                ServicesServices.getCommands(container.serviceId, $scope.group._id)
-                                    .success(function (commands) {
-                                        container.commands = commands;
-                                    });
-                                ServicesServices.getUrls(container.serviceId, $scope.group._id)
-                                    .success(function (urls) {
+                                ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
+                                    .success(function (data) {
+                                        container.commands = data.commands;
                                         container.urls = [];
-                                        angular.forEach(urls, function (url, key) {
+                                        angular.forEach(data.urls, function (url, key) {
                                             var urlO = $scope.computeUrl(container, url);
                                             container.urls.push(urlO);
                                         });
@@ -189,9 +188,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
-                        if (container.inspect.State.Running === true) {
-                            Containers.statsContainer(container, container.daemon.machineInfo, container.daemonId, container.containerId, $scope.callbackError);
-                        }
                     }).
                     error(function (err, status, headers, config) {
                         $scope.callbackError(container, err);

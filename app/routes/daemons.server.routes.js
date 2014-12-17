@@ -12,11 +12,8 @@ module.exports = function (app) {
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.list)
         .post(users.requiresLogin, daemons.hasAdminAuthorization, daemons.create);
 
-    app.route('/daemons/docker/info/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.info);
-
-    app.route('/daemons/docker/version/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.version);
+    app.route('/daemons/docker/infos/:daemonId')
+        .get(users.requiresLogin, daemons.hasAuthorization, daemons.infos);
 
     app.route('/daemons/docker/listContainers/:daemonId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.listContainers);
@@ -47,14 +44,8 @@ module.exports = function (app) {
     app.route('/daemons/docker/container/remove/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.removeContainer);
 
-    app.route('/daemons/docker/container/stats/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsContainer);
-
     app.route('/daemons/docker/stats/:daemonId')
         .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsDeamon);
-
-    app.route('/daemons/docker/machineInfo/:daemonId')
-        .get(users.requiresLogin, daemons.hasAuthorization, daemons.machineInfo);
 
     app.route('/daemons/docker/listImages/:daemonId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.listImages);

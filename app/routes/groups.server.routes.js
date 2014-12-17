@@ -57,6 +57,9 @@ module.exports = function (app) {
     app.route('/groups/users/:groupId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.getUsersOnGroup);
 
+    app.route('/groups/:groupId/:containerId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.read);
+
     app.route('/groups/:groupId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.read)
         .put(users.requiresLogin, groups.hasAdminAuthorization, groups.update)
