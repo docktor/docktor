@@ -240,7 +240,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.createContainer = function (container) {
             var index = $scope.addInfo('Create service ' + container.serviceTitle);
-            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
+            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
@@ -265,7 +265,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeContainer = function (container) {
             var index = $scope.addInfo('Removing service ' + container.serviceTitle);
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
