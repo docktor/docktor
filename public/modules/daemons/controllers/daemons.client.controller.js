@@ -93,46 +93,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             $scope.mapInitialized = true;
         });
 
-        $scope.initMap = function () {
-
-            if ($scope.daemonsInitialized && $scope.mapInitialized) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var pos = new google.maps.LatLng(position.coords.latitude,
-                        position.coords.longitude);
-
-                    var i = 0;
-                    var markers = [];
-                    angular.forEach($scope.positions, function (position, key) {
-                        var site = position.site;
-                        var daemons = position.daemons;
-                        if (site.latitude && site.longitude) {
-                            markers[i] = new google.maps.Marker({
-                                title: site.title
-                            });
-
-                            var latlng = new google.maps.LatLng(site.latitude, site.longitude);
-                            markers[i].setPosition(latlng);
-                            markers[i].setMap($scope.map);
-
-                            google.maps.event.addListener(markers[i], 'click', function () {
-                                var d = '';
-                                angular.forEach(daemons, function (daemon, key) {
-                                    d = d + daemon.name + '<br>';
-                                });
-                                $scope.markerInfo = 'Site ' + site.title + '<hr>' + d;
-                                $scope.$apply();
-                            });
-
-                            i++;
-                        }
-                    });
-
-                    $scope.map.setCenter(pos);
-                });
-                $scope.mapView = true;
-            }
-        };
-
         $scope.addParameter = function () {
             $scope.daemon.parameters.push($scope.parameter);
             $scope.parameter = {};

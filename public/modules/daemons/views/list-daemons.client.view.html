@@ -14,16 +14,6 @@
             <th field-name="dockerVersion.Version" display-name="Version" enable-filtering="true"></th>
             <th>
                 <div class="tr-ng-title">
-                    CPU
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Memory
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
                     Containers / Images
                 </div>
             </th>
@@ -53,22 +43,6 @@
             <td field-name="dockerVersion.Version">
                 <div ng-show="gridItem.dockerStatusUp">{{gridItem.dockerVersion.Version}}</div>
             </td>
-            <td style="text-align:center">
-                <span ng-show="gridItem.dockerStatusUp">
-                    <just-gage id="gaugeCPU{{gridItem._id}}" class="gaugeSmall"
-                               min=0 max=100 value="gridItem.statsCompute.cpuUsagePercent" title="CPU"></just-gage>
-                    <small>{{gridItem.machineInfo.num_cores}} cores</small>
-                </span>
-            </td>
-            <td style="text-align:center">
-                <span ng-show="gridItem.dockerStatusUp">
-                    <just-gage id="gaugeMem{{gridItem._id}}" class="gaugeSmall"
-                               min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent"
-                               title="Memory"></just-gage>
-                    <small>{{gridItem.statsCompute.memoryUsage}} Mo</small>
-                </span>
-
-            </td>
             <td>
                 <div>
                     <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
@@ -89,17 +63,6 @@
 
     <div class="alert alert-warning text-center" data-ng-if="daemons.$resolved && !daemons.length">
         No daemons yet, why don't you <a href="/#!/admin/daemons/create">create one</a>?
-    </div>
-
-    <button ng-hide="mapView" ng-click="initMap()" class="btn btn-default">View on Map</button>
-
-    <h3>Localization</h3>
-
-    <div class="col-sm-4">
-        <div ng-bind-html="markerInfo"></div>
-    </div>
-    <div class="col-sm-8">
-        <map center="48.1120266, -1.6884867" zoom="5"></map>
     </div>
 
 </section>

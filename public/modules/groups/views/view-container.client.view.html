@@ -1,5 +1,5 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <h3>{{group.title}} - Service {{container.serviceTitle}}</h3>
+    <h3> <i class="fa fa-cloud"></i> {{group.title}} - Service {{container.serviceTitle}}</h3>
 
     <div class="col-sm-12 row">
         Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
@@ -14,8 +14,7 @@
                 <th>Service - Image</th>
                 <th>Status</th>
                 <th>Daemon</th>
-                <th>CPU</th>
-                <th>Mem</th>
+                <th>Monitoring</th>
             </tr>
             </thead>
             <tbody>
@@ -27,7 +26,7 @@
                     </div>
                 </td>
                 <td>
-                    {{container.name}}</a><br>
+                    {{container.name}}<br>
                     {{container.image}}<br>
                     {{container.containerId | limitTo:12}}
                 </td>
@@ -69,20 +68,8 @@
                     </span>
                     </div>
                 </td>
-                <td nowrap>
-                    <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">
-                        <just-gage id="gaugeCPU{{container._id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.cpuUsagePercent"
-                                   title="CPU"></just-gage>
-                    </div>
-                </td>
-                <td style="text-align:center" nowrap>
-                    <div ng-show="container.inspect.State.Running && container.statsCompute.memoryUsagePercent">
-                        <just-gage id="gaugeMem{{container._id}}"
-                                   class="gaugeSmall" min=0 max=100 value="container.statsCompute.memoryUsagePercent"
-                                   title="Memory"></just-gage>
-                        <small>{{container.statsCompute.memoryUsage}} Mo</small>
-                    </div>
+                <td>
+                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i class="fa fa-bar-chart"></i></a>
                 </td>
             </tr>
             </tbody>

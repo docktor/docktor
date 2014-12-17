@@ -35,9 +35,6 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-ui-select/dist/select.js',
                 'public/lib/trNgGrid/release/trNgGrid.min.js',
-                'public/lib/raphael/raphael-min.js',
-                'public/lib/justgage-toorshia/justgage.js',
-                'public/lib/angular-justgage/ng-justgage.js',
                 'public/lib/lodash/dist/lodash.underscore.min.js',
                 'public/lib/moment/min/moment.min.js'
             ]
