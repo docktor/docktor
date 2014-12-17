@@ -36,6 +36,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             } else {
                 $scope.group.$remove(function () {
                     $location.path('groups');
+                }, function (errorResponse) {
+                    var title = 'Error - ' + moment().format('hh:mm:ss');
+                    var err = [];
+                    if (errorResponse.data.message) {
+                        err.push(errorResponse.data.message);
+                    } else {
+                        err.push(errorResponse);
+                    }
+                    $scope.alerts.push({title: title, type: 'danger', msg: err});
                 });
             }
         };
@@ -104,6 +113,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.inspect(container);
                         });
                     });
+                    GroupsServices.getUsersOnGroup($scope.group._id)
+                        .success(function(users) {
+                            $scope.group.users = users;
+                            var mailAll = '';
+                            users.forEach(function(user) {
+                                mailAll +=  user.email + ';';
+                            });
+                            $scope.group.mailAllUsers = mailAll;
+                        });
                 });
             } else {
                 $scope.group = new Groups();
@@ -138,6 +156,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                     if (fsToCompute) $scope.computeFsForGroup($scope.group);
                                 }
                                 if (cb) cb(daemon);
+                            }, function (err) {
+                                if (cb) cb();
                             });
                         });
                     }

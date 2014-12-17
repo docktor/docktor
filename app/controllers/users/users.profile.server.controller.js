@@ -7,7 +7,7 @@ var _ = require('lodash'),
     errorHandler = require('../errors.server.controller'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    User = mongoose.model('User');
+    User = require('../../models/user.server.model');
 
 
 /**
@@ -31,7 +31,7 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-    User.find().exec(function (err, users) {
+    User.find().populate('groups').exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

@@ -152,11 +152,6 @@ var GroupSchema = new Schema({
         trim: true,
         required: 'Title cannot be blank'
     },
-    contacts: {
-        type: String,
-        default: '',
-        trim: true
-    },
     description: {
         type: String,
         default: '',
@@ -221,6 +216,24 @@ GroupSchema.statics.getGroupsOfOneDaemon = function (idDaemon) {
         {'$unwind': '$containers'},
         {'$group': {'_id': 0, 'groupIds': {'$addToSet': '$_id'}, 'daemonIds': {'$addToSet': '$containers.daemonId'}}},
         {'$match': {'daemonIds': {'$in': [idDaemon]}}}
+    ]);
+};
+
+GroupSchema.statics.getGroupsOfOneService = function (idService) {
+    var _this = this;
+    /*
+     Example of result :
+     { "_id" : 0,
+     "groups" : [ {
+     "id" : ObjectId("546b185246be610000ce23b2"),
+     "title" : "GroupCCCD"
+     }]
+     }
+     */
+    return _this.aggregate([
+        {'$unwind': '$containers'},
+        {'$match': {'containers.serviceId': {'$in': [idService]}}},
+        {'$group': {'_id': 0, 'groups': {'$addToSet': {'id': '$_id', 'title': '$title'}}}}
     ]);
 };
 

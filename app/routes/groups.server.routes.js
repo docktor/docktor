@@ -54,6 +54,9 @@ module.exports = function (app) {
     app.route('/groups/ports/free/:groupId')
         .get(users.requiresLogin, groups.hasAdminAuthorization, groups.getFreePorts);
 
+    app.route('/groups/users/:groupId')
+        .get(users.requiresLogin, groups.hasAuthorization, groups.getUsersOnGroup);
+
     app.route('/groups/:groupId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.read)
         .put(users.requiresLogin, groups.hasAdminAuthorization, groups.update)

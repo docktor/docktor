@@ -7,7 +7,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                 return daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
 
             },
-            getInfo: function (id, daemon, callbackSuccess) {
+            getInfo: function (id, daemon, callbackSuccess, callbackErr) {
                 daemon.dockerStatus = 'checking';
                 daemon.dockerStatus = 'checking';
                 daemon.dockerStatusUp = false;
@@ -23,6 +23,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
                         console.log(resp);
+                        if (callbackErr) callbackErr();
                     });
             },
             getDetails: function (daemon, callback) {
@@ -83,6 +84,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');
                                     console.log(data);
+                                    if (callback) callback();
                                 });
 
                         })
@@ -90,6 +92,10 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                             console.log('Error with DaemonsDocker.machineInfo:' + resp);
                             if (callback) callback();
                         });
+                }, function (err) {
+                    console.log('Error:');
+                    console.log(err);
+                    if (callback) callback();
                 });
             }
         };

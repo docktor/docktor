@@ -4,6 +4,11 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
     function ($scope, $stateParams, $location, Authentication, Groups, Services, Daemons, GroupsServices) {
         $scope.authentication = Authentication;
 
+        $scope.patternName = /^[a-zA-Z0-9_\-/]{1,200}$/;
+        $scope.patternHostname = /^[a-zA-Z0-9_\-]{1,200}$/;
+
+        $scope.container = {};
+
         $scope.findOne = function () {
             Groups.get({
                 groupId: $stateParams.groupId
@@ -29,8 +34,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 // Hostname
                 var parameter = {};
                 parameter.name = 'Hostname';
-                $scope.hostname = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
-                parameter.value = $scope.hostname;
+                $scope.container.hostname = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
+                parameter.value = $scope.container.hostname;
                 // default external volume
                 $scope.services.selectImage.parameters.push(parameter);
 
@@ -51,6 +56,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     volume.external = internal;
                 });
 
+                $scope.container.name = '/' + $scope.group.title + '-' + $scope.services.select.title;
+
                 GroupsServices.getFreePorts($scope.group._id)
                     .success(function (freePorts) {
                         $scope.freePorts = freePorts;
@@ -65,7 +72,6 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
         $scope.addImageToGroup = function (daemon, image) {
             var group = $scope.group;
-            var containerName = '/' + $scope.group.title + '-' + $scope.services.select.title;
 
             var parameters = [];
             image.parameters.forEach(function (parameter) {
@@ -96,8 +102,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             });
 
             group.containers.push({
-                name: containerName,
-                hostname: $scope.hostname,
+                name: $scope.container.name,
+                hostname: $scope.container.hostname,
                 image: image.name,
                 serviceTitle: $scope.services.select.title,
                 serviceId: $scope.services.select._id,
