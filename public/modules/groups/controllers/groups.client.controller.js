@@ -89,30 +89,36 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     var allDaemonsContainer = {};
 
                     $scope.group.containers.forEach(function (container) {
-                        allDaemonsContainer[container.daemonId] = true;
+                        if (!$stateParams.containerId ||
+                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                            allDaemonsContainer[container.daemonId] = true;
+                        }
                     });
 
-                    $scope.prepareDaemonsAll(true, allDaemonsContainer, function () {
+                    $scope.prepareDaemonsAll(true, allDaemonsContainer, function (daemon) {
 
                         $scope.group.containers.forEach(function (container) {
-                            container.daemon = $scope.getDaemon(container.daemonId);
+                            if (container.daemonId == daemon._id) {
+                                container.daemon = $scope.getDaemon(container.daemonId);
 
-                            if ($stateParams.containerId && container._id === $stateParams.containerId) {
-                                $scope.container = container;
-                            }
+                                if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                                    $scope.container = container;
+                                }
 
-                            if (container.serviceId) {
-                                ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
-                                    .success(function (data) {
-                                        container.commands = data.commands;
-                                        container.urls = [];
-                                        angular.forEach(data.urls, function (url, key) {
-                                            var urlO = $scope.computeUrl(container, url);
-                                            container.urls.push(urlO);
+                                if ((container.serviceId) && (!$stateParams.containerId ||
+                                    ($stateParams.containerId && container._id === $stateParams.containerId))) {
+                                    ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
+                                        .success(function (data) {
+                                            container.commands = data.commands;
+                                            container.urls = [];
+                                            angular.forEach(data.urls, function (url, key) {
+                                                var urlO = $scope.computeUrl(container, url);
+                                                container.urls.push(urlO);
+                                            });
                                         });
-                                    });
+                                }
+                                $scope.inspect(container);
                             }
-                            $scope.inspect(container);
                         });
                     });
                     GroupsServices.getUsersOnGroup($scope.group._id)
@@ -165,6 +171,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     }
                 });
             } else {
+                if (cb) alert('Error of call. Only create Group function here.');
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
                         Daemon.getDetails(daemon, function () {
@@ -172,11 +179,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.daemons.all.push(daemon);
                             if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;
-                                // Fixme line below usefull only for create group
                                 $scope.showFreePortRangeOnContainer();
                                 if (fsToCompute) $scope.computeFsForGroup($scope.group);
                             }
-                            if (cb) cb(daemon); // todo fix perf to not compute all time
+
                         });
                     });
                 });
@@ -349,7 +355,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
-                url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
+                if (!container.daemon) {
+                    console.log('container:');
+                    console.log(container);
+                    console.log(container.daemon.host);
+                    url.urlCompute = 'POURT';
+                } else {
+                    url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
+                }
+
             } else {
                 url.urlCompute = 'http://' + container.daemon.host + url.url;
             }
