@@ -23,8 +23,6 @@
         <tr>
             <th>Id</th>
             <th>Mapping</th>
-            <th>CPU</th>
-            <th>Mem</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -48,22 +46,6 @@
                 </button>
             </td>
             <td>
-                <div ng-show="container.inspect.State.Running && container.statsCompute.cpuUsagePercent">
-                    <just-gage id="gaugeCPU{{container.Id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.statsCompute.cpuUsagePercent"
-                               title="CPU"></just-gage>
-                </div>
-            </td>
-            <td style="text-align:center">
-                <div ng-show="container.inspect.State.Running && container.statsCompute.memoryUsagePercent">
-                    <just-gage id="gaugeMem{{container.Id}}"
-                               class="gaugeSmall" min=0 max=100 value="container.statsCompute.memoryUsagePercent"
-                               title="Memory"></just-gage>
-                    <small>{{container.statsCompute.memoryUsage}} Mo</small>
-                </div>
-
-            </td>
-            <td>
                 <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                 <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                 <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
@@ -73,10 +55,8 @@
                         tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i>
                 </button>
-
             </td>
             <td>
-
                 <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
                         ng-click="startContainer(container)"><i class="fa fa-play"></i> Start
                 </button>

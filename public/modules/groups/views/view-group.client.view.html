@@ -95,12 +95,7 @@
             </th>
             <th>
                 <div class="tr-ng-title">
-                    CPU
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Mem
+                    Monitoring
                 </div>
             </th>
         </tr>
@@ -207,25 +202,12 @@
 
                 </div>
             </td>
-            <td nowrap>
-                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.cpuUsagePercent">
-                    <just-gage id="gaugeCPU{{gridItem._id}}"
-                               class="gaugeSmall" min=0 max=100 value="gridItem.statsCompute.cpuUsagePercent"
-                               title="CPU"></just-gage>
-                </div>
-            </td>
-            <td style="text-align:center" nowrap>
-                <div ng-show="gridItem.inspect.State.Running && gridItem.statsCompute.memoryUsagePercent"
-                     style="text-align:center">
-                    <just-gage id="gaugeMem{{gridItem._id}}"
-                               class="gaugeSmall" min=0 max=100 value="gridItem.statsCompute.memoryUsagePercent"
-                               title="Memory"></just-gage>
-                    <small>{{gridItem.statsCompute.memoryUsage}} Mo
-                    </small>
+            <td>
+                <div>
+                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">Monitoring</a>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
-
 </section>

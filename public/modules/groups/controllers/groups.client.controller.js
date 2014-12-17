@@ -8,6 +8,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.alerts = [];
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
+        //TODO Grafana URL -> Admin Parameter
+        $scope.grafanaUrl = "http://" + $location.host() + ":8090/#/dashboard/script/docktor.js";
+
         $scope.submitForm = function () {
             if ($scope.group._id) {
                 $scope.update();
@@ -114,11 +117,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         });
                     });
                     GroupsServices.getUsersOnGroup($scope.group._id)
-                        .success(function(users) {
+                        .success(function (users) {
                             $scope.group.users = users;
                             var mailAll = '';
-                            users.forEach(function(user) {
-                                mailAll +=  user.email + ';';
+                            users.forEach(function (user) {
+                                mailAll += user.email + ';';
                             });
                             $scope.group.mailAllUsers = mailAll;
                         });
