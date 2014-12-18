@@ -1,6 +1,6 @@
 <section data-ng-controller="ServicesGroupsController" data-ng-init="findOne()">
 
-    <h1 data-ng-bind="group.title"></h1>
+    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Deploy a new service</h3>
 
     <p class="lead" data-ng-bind="group.description"></p>
 
@@ -61,6 +61,7 @@
 
                     <p ng-show="deployForm.containerName.$invalid" class="text-danger">
                         The name have to match this pattern : [/a-zA-Z0-9_\-]{1,200}</p>
+
                     <p class="label label-default">
                         It is not recommanded to modify default value from Docktor</p>
                 </div>
@@ -75,10 +76,12 @@
                            class="form-control" maxlength="200" required>
                 </div>
                 <div class="col-sm-5">
-                    <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">Hostname is required</p>
+                    <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">Hostname is
+                        required</p>
 
                     <p ng-show="deployForm.containerHostname.$invalid" class="text-danger">
                         The hostname shave to match this pattern : [a-zA-Z0-9_\-]{1,200}</p>
+
                     <p class="label label-default">
                         It is not recommanded to modify default value from Docktor</p>
                 </div>
