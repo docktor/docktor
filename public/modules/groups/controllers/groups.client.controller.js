@@ -9,7 +9,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         //TODO Grafana URL -> Admin Parameter
-        $scope.grafanaUrl = "http://" + $location.host() + ":8090/#/dashboard/script/docktor.js";
+        $scope.grafanaUrl = 'http://' + $location.host() + ':8090/#/dashboard/script/docktor.js';
 
         $scope.submitForm = function () {
             if ($scope.group._id) {
@@ -78,7 +78,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.findOne = function () {
             if ($stateParams.groupId) {
                 Groups.get({
-                    groupId: $stateParams.groupId
+                    groupId: $stateParams.groupId,
+                    containerId: $stateParams.containerId
                 }, function (group) {
                     $scope.daemons = {};
                     $scope.daemons.all = [];
@@ -88,32 +89,36 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     var allDaemonsContainer = {};
 
                     $scope.group.containers.forEach(function (container) {
-                        allDaemonsContainer[container.daemonId] = true;
+                        if (!$stateParams.containerId ||
+                            ($stateParams.containerId && container._id === $stateParams.containerId)) {
+                            allDaemonsContainer[container.daemonId] = true;
+                        }
                     });
 
-                    $scope.prepareDaemonsAll(true, allDaemonsContainer, function () {
+                    $scope.prepareDaemonsAll(true, allDaemonsContainer, function (daemon) {
 
                         $scope.group.containers.forEach(function (container) {
-                            if ($stateParams.containerId && container._id === $stateParams.containerId) {
-                                $scope.container = container;
-                            }
-                            container.daemon = $scope.getDaemon(container.daemonId);
+                            if (container.daemonId == daemon._id) {
+                                container.daemon = $scope.getDaemon(container.daemonId);
 
-                            if (container.serviceId) {
-                                ServicesServices.getCommands(container.serviceId, $scope.group._id)
-                                    .success(function (commands) {
-                                        container.commands = commands;
-                                    });
-                                ServicesServices.getUrls(container.serviceId, $scope.group._id)
-                                    .success(function (urls) {
-                                        container.urls = [];
-                                        angular.forEach(urls, function (url, key) {
-                                            var urlO = $scope.computeUrl(container, url);
-                                            container.urls.push(urlO);
+                                if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                                    $scope.container = container;
+                                }
+
+                                if ((container.serviceId) && (!$stateParams.containerId ||
+                                    ($stateParams.containerId && container._id === $stateParams.containerId))) {
+                                    ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
+                                        .success(function (data) {
+                                            container.commands = data.commands;
+                                            container.urls = [];
+                                            angular.forEach(data.urls, function (url, key) {
+                                                var urlO = $scope.computeUrl(container, url);
+                                                container.urls.push(urlO);
+                                            });
                                         });
-                                    });
+                                }
+                                $scope.inspect(container);
                             }
-                            $scope.inspect(container);
                         });
                     });
                     GroupsServices.getUsersOnGroup($scope.group._id)
@@ -166,6 +171,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     }
                 });
             } else {
+                if (cb) alert('Error of call. Only create Group function here.');
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
                         Daemon.getDetails(daemon, function () {
@@ -173,11 +179,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.daemons.all.push(daemon);
                             if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;
-                                // Fixme line below usefull only for create group
                                 $scope.showFreePortRangeOnContainer();
                                 if (fsToCompute) $scope.computeFsForGroup($scope.group);
                             }
-                            if (cb) cb(daemon); // todo fix perf to not compute all time
+
                         });
                     });
                 });
@@ -189,9 +194,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
-                        if (container.inspect.State.Running === true) {
-                            Containers.statsContainer(container, container.daemon.machineInfo, container.daemonId, container.containerId, $scope.callbackError);
-                        }
                     }).
                     error(function (err, status, headers, config) {
                         $scope.callbackError(container, err);
@@ -238,7 +240,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.createContainer = function (container) {
             var index = $scope.addInfo('Create service ' + container.serviceTitle);
-            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
+            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
@@ -263,7 +265,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeContainer = function (container) {
             var index = $scope.addInfo('Removing service ' + container.serviceTitle);
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
@@ -353,7 +355,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
-                url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
+                if (!container.daemon) {
+                    console.log('container:');
+                    console.log(container);
+                    console.log(container.daemon.host);
+                    url.urlCompute = 'POURT';
+                } else {
+                    url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
+                }
+
             } else {
                 url.urlCompute = 'http://' + container.daemon.host + url.url;
             }

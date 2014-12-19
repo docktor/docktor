@@ -113,22 +113,24 @@ exports.hasAuthorization = function (req, res, next) {
                 });
             } else {
                 var userAssociatedToGroup = false;
-                data[0].groupIds.forEach(function (groupId) {
+                if (req.user.role !== 'admin') {
+                    data[0].groupIds.forEach(function (groupId) {
+                        if (!userAssociatedToGroup) {
+                            req.user.groups.forEach(function (userGroupId) {
+                                if (groupId.toString === userGroupId.toString) {
+                                    userAssociatedToGroup = true;
+                                    return;
+                                }
+                            });
+                        }
+                        if (userAssociatedToGroup) return false;
+                    });
+
                     if (!userAssociatedToGroup) {
-                        req.user.groups.forEach(function (userGroupId) {
-                            if (groupId.toString === userGroupId.toString) {
-                                userAssociatedToGroup = true;
-                                return;
-                            }
+                        return res.status(403).send({
+                            message: 'User is not authorized (user - groups)'
                         });
                     }
-                    if (userAssociatedToGroup) return false;
-                });
-
-                if (req.user.role !== 'admin' && !userAssociatedToGroup) {
-                    return res.status(403).send({
-                        message: 'User is not authorized (user - groups)'
-                    });
                 }
                 next();
             }

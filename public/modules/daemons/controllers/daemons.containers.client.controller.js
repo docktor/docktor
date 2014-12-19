@@ -45,12 +45,6 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                 });
         };
 
-        $scope.stats = function (container) {
-            if (container.inspect.State.Running === true) {
-                Containers.statsContainer(container, $scope.machineInfo, $scope.daemon._id, container.Id, $scope.callbackError);
-            }
-        };
-
         $scope.callbackError = function (container, err, index) {
             var msg = [];
             msg.push(err.message);

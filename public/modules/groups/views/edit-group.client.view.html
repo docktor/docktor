@@ -1,9 +1,12 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
 
-    <h1>
-        <span ng-hide="group._id">Create Group</span>
-        <span ng-show="group._id">Edit Group</span>
-    </h1>
+    <h3 ng-hide="group._id">
+        <a href="#!/groups">My Groups</a> / Create Group
+    </h3>
+
+    <h3 ng-show="group._id">
+        <a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Edit Group
+    </h3>
 
     <div class="col-md-12">
         <form name="groupForm" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
@@ -127,7 +130,6 @@
                                         {{fs.device}}
                                     </ui-select-choices>
                                 </ui-select>
-
 
                                 <div class="col-sm-4" ng-show="group.currentFs">
                                     <div class="progress">

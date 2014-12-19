@@ -12,11 +12,8 @@ module.exports = function (app) {
         .get(users.requiresLogin, services.hasAdminAuthorization, services.list)
         .post(users.requiresLogin, services.hasAdminAuthorization, services.create);
 
-    app.route('/services/commands/:serviceId/:groupId')
-        .get(users.requiresLogin, services.hasAuthorization, services.getCommands);
-
-    app.route('/services/urls/:serviceId/:groupId')
-        .get(users.requiresLogin, services.hasAuthorization, services.getUrls);
+    app.route('/services/urlsandcommands/:serviceId/:groupId')
+        .get(users.requiresLogin, services.hasAuthorization, services.getUrlsAndCommands);
 
     app.route('/services/:serviceId')
         .get(users.requiresLogin, services.hasAdminAuthorization, services.read)

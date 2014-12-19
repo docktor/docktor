@@ -1,8 +1,24 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <h3> <i class="fa fa-cloud"></i> {{group.title}} - Service {{container.serviceTitle}}</h3>
+    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Service {{container.serviceTitle}}</h3>
 
     <div class="col-sm-12 row">
-        Contacts : <span><a href="mailto:{{group.contacts}}">{{group.contacts}}</a></span>
+        <h4><i class="fa fa-users"></i> Contacts</h4>
+        <span ng-repeat="u in group.users">
+            <a href="mailto:{{u.email}}"><i class="fa fa-envelope"></i> {{u.displayName}}</a>
+        </span>
+
+        <div>
+            <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
+        </div>
+        <hr>
+    </div>
+
+    <div class="col-sm-12 row">
+        <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
+        <i class="fa fa-bar-chart"></i>
+        <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
+            Monitoring CPU / RAM on this service.
+        </a>
         <hr>
     </div>
 
@@ -14,7 +30,6 @@
                 <th>Service - Image</th>
                 <th>Status</th>
                 <th>Daemon</th>
-                <th>Monitoring</th>
             </tr>
             </thead>
             <tbody>
@@ -51,7 +66,8 @@
                         <span ng-hide="authentication.isAdmin">Checking</span>
                     </span>
                     <span ng-switch-when="down">
-                        <a class="label label-danger" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                        <a class="label label-danger" ng-show="authentication.isAdmin"
+                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">
                             {{getDaemon(container.daemonId).name}}
                         </a>
                         <span ng-hide="authentication.isAdmin" class="label label-danger">
@@ -59,7 +75,8 @@
                         </span>
                     </span>
                     <span ng-switch-when="up">
-                        <a class="label label-success" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                        <a class="label label-success" ng-show="authentication.isAdmin"
+                           href="#!/admin/daemons/view/{{container.daemonId}}">
                             {{getDaemon(container.daemonId).name}}
                         </a>
                         <span ng-hide="authentication.isAdmin" class="label label-success">
@@ -67,9 +84,6 @@
                         </span>
                     </span>
                     </div>
-                </td>
-                <td>
-                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i class="fa fa-bar-chart"></i></a>
                 </td>
             </tr>
             </tbody>

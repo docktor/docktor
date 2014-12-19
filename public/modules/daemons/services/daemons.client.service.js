@@ -22,11 +22,8 @@ angular.module('daemons').factory('DaemonsDocker', ['$http',
                 // ms -> ns.
                 return (cur.getTime() - prev.getTime()) * 1000000;
             },
-            info: function (daemonId) {
-                return $http.get('/daemons/docker/info/' + daemonId);
-            },
-            version: function (daemonId) {
-                return $http.get('/daemons/docker/version/' + daemonId);
+            infos: function (daemonId) {
+                return $http.get('/daemons/docker/infos/' + daemonId);
             },
             listContainers: function (daemonId) {
                 return $http.get('/daemons/docker/listContainers/' + daemonId);
@@ -36,9 +33,6 @@ angular.module('daemons').factory('DaemonsDocker', ['$http',
             },
             statsDaemon: function (daemonId) {
                 return $http.get('/daemons/docker/stats/' + daemonId);
-            },
-            machineInfo: function (daemonId) {
-                return $http.get('/daemons/docker/machineInfo/' + daemonId);
             }
         };
     }

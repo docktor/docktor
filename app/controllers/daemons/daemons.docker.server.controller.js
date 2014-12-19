@@ -10,32 +10,30 @@ var mongoose = require('mongoose'),
     Request = require('request'),
     _ = require('lodash');
 
-/**
- * Docker info on daemon
- */
-exports.info = function (req, res) {
-    req.daemonDocker.info(function (err, data) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(data);
-        }
+exports.infos = function (req, res) {
+
+    var daemonInfos = {};
+    req.daemonDocker.info(function (err, dataInfo) {
+        daemonInfos.info = dataInfo;
+        req.daemonDocker.version(function (err, dataVersion) {
+            daemonInfos.version = dataVersion;
+            if (req.daemon.cadvisorApi) {
+                new Request(req.daemon.cadvisorApi + '/machine', function (err, response, machineInfo) {
+                    if (err) {
+                        daemonInfos.machineInfo = errorHandler.getErrorMessage(err);
+                    } else {
+                        daemonInfos.machineInfo = machineInfo;
+                    }
+                    res.send(daemonInfos);
+                });
+            } else {
+                res.send(daemonInfos);
+            }
+        });
     });
+
 };
 
-exports.version = function (req, res) {
-    req.daemonDocker.version(function (err, data) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(data);
-        }
-    });
-};
 
 /**
  * List containers of one docker daemon.
@@ -148,34 +146,8 @@ exports.killContainer = function (req, res) {
     });
 };
 
-
-exports.statsContainer = function (req, res) {
-    new Request(req.daemon.cadvisorApi + '/containers/docker/' + req.containerDocker.id, function (err, response, body) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.send(body);
-        }
-    });
-};
-
-
 exports.statsDeamon = function (req, res) {
     new Request(req.daemon.cadvisorApi + '/containers/', function (err, response, body) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.send(body);
-        }
-    });
-};
-
-exports.machineInfo = function (req, res) {
-    new Request(req.daemon.cadvisorApi + '/machine', function (err, response, body) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
