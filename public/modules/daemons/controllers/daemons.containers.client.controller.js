@@ -12,13 +12,6 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                 daemonId: $stateParams.daemonId
             }, function (daemon) {
                 $scope.daemon = daemon;
-                DaemonsDocker.machineInfo($scope.daemon._id).
-                    success(function (machineInfo) {
-                        $scope.machineInfo = machineInfo;
-                    })
-                    .error(function (resp) {
-                        console.log('Error with DaemonsDocker.machineInfo:' + resp);
-                    });
 
                 DaemonsDocker.listContainers($scope.daemon._id).
                     success(function (containers) {
@@ -37,7 +30,6 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             Containers.inspectContainer($scope.daemon._id, container.Id).
                 success(function (data, status, headers, config) {
                     container.inspect = data;
-                    $scope.stats(container);
                 }).
                 error(function (data, status, headers, config) {
                     console.log('Error:');
