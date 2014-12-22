@@ -6,19 +6,19 @@
 
     <h4>Select a daemon :</h4>
 
-    <ui-select ng-model="daemons.select" theme="bootstrap" style="min-width: 300px;">
+    <ui-select ng-model="daemons.select" theme="bootstrap" style="min-width: 300px;" ng-change="changeDaemon()">
         <ui-select-match placeholder="Select or search a daemon in the list...">
-            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
+            {{$select.selected.name}} on {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
         </ui-select-match>
         <ui-select-choices repeat="daemon in daemons.all">
-            {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
+            {{daemon.name}} on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
         </ui-select-choices>
     </ui-select>
 
     <div ng-show="daemons.select">
         <h4>Select a service :</h4>
 
-        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;" ng-required="true">
+        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;" ng-required="true" ng-change="changeService()">
             <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
             </ui-select-match>
             <ui-select-choices repeat="service in services.all">
