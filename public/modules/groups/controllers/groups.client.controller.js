@@ -76,16 +76,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.findOne = function () {
+            $scope.daemons = {};
+            $scope.daemons.all = [];
+            $scope.daemons.ids = [];
+
             if ($stateParams.groupId) {
                 Groups.get({
                     groupId: $stateParams.groupId,
                     containerId: $stateParams.containerId
                 }, function (group) {
-                    $scope.daemons = {};
-                    $scope.daemons.all = [];
-                    $scope.daemons.ids = [];
                     $scope.group = group;
-
                     var allDaemonsContainer = {};
 
                     $scope.group.containers.forEach(function (container) {
