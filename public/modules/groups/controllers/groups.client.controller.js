@@ -148,7 +148,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.prepareDaemonsAll = function (fsToCompute, allDaemonsContainer, cb) {
-            if (allDaemonsContainer && allDaemonsContainer.size > 0) {
+            if (allDaemonsContainer && !_.isEmpty(allDaemonsContainer)) {
                 angular.forEach(allDaemonsContainer, function (value, daemonId) {
                     if (!_.contains($scope.daemons.ids, daemonId)) {
                         $scope.daemons.ids.push(daemonId);
