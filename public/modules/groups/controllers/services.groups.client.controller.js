@@ -29,15 +29,20 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             });
         };
 
+        $scope.changeDaemon = function() {
+            $scope.services.select = null;
+            $scope.services.selectImage = null;
+        };
+
+        $scope.changeService = function() {
+            $scope.services.selectImage = null;
+        };
+
         $scope.changeImage = function () {
             if ($scope.services.selectImage) {
                 // Hostname
                 var parameter = {};
-                parameter.name = 'Hostname';
                 $scope.container.hostname = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
-                parameter.value = $scope.container.hostname;
-                // default external volume
-                $scope.services.selectImage.parameters.push(parameter);
 
                 // add default grom Deamon
                 $scope.services.selectImage.parameters = _.union($scope.services.selectImage.parameters, $scope.daemons.select.parameters);
@@ -115,8 +120,9 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 active: true
             });
 
-            group.$update(function () {
-                $location.path('groups/' + group._id);
+            group.$update(function (groupSaved) {
+                var newContainer = _.where(groupSaved.containers, {"name": $scope.container.name, "daemonId": daemon._id})[0];
+                $location.path('groups/' + group._id + '/' + newContainer._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
