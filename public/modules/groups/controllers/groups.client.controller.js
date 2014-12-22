@@ -96,7 +96,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     });
 
                     $scope.prepareDaemonsAll(true, allDaemonsContainer, function (daemon) {
-
                         $scope.group.containers.forEach(function (container) {
                             if (container.daemonId == daemon._id) {
                                 container.daemon = $scope.getDaemon(container.daemonId);
@@ -149,7 +148,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.prepareDaemonsAll = function (fsToCompute, allDaemonsContainer, cb) {
-            if (allDaemonsContainer) {
+            if (allDaemonsContainer && allDaemonsContainer.size > 0) {
                 angular.forEach(allDaemonsContainer, function (value, daemonId) {
                     if (!_.contains($scope.daemons.ids, daemonId)) {
                         $scope.daemons.ids.push(daemonId);
@@ -171,7 +170,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     }
                 });
             } else {
-                if (cb) alert('Error of call. Only create Group function here.');
+                // here : create group or edit group with no deployed containers
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
                         Daemon.getDetails(daemon, function () {
