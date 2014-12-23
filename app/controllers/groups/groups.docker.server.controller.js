@@ -168,19 +168,24 @@ exports.unpauseContainer = function (req, res) {
 };
 
 exports.removeContainerFromGroup = function (req, res) {
-    var group = req.group;
     var container = req.container;
-
-    group.containers.id(container._id).remove();
-    group.save(function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(container._id + ' removed from ' + group._id);
-        }
+    // DO not user this : group.containers.id(container._id).remove();
+    // group.containers contains only selected group...
+    Group.findById(req.group._id).exec(function (err, group) {
+        if (err) return next(err);
+        if (!group) return next(new Error('Failed to load group ' + id));
+        group.containers.id(container._id).remove();
+        group.save(function (err) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(container._id + ' removed from ' + group._id);
+            }
+        });
     });
+
 };
 
 

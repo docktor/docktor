@@ -1,5 +1,6 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Service {{container.serviceTitle}}</h3>
+    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Service
+        {{container.serviceTitle}}</h3>
 
     <div class="col-sm-12 row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
@@ -113,6 +114,10 @@
 
     <div ng-show="container.daemon.dockerStatusUp">
 
+        <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
+                ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
+        </button>
+
         <button ng-hide="!container.containerId || container.inspect.State.Running" class="btn btn-default btn-warning"
                 ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
         </button>
@@ -129,11 +134,6 @@
                 class="btn btn-danger">
             Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
         </button>
-
-        <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
-                ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
-        </button>
-
 
         <div ng-show="container.containerId">
 

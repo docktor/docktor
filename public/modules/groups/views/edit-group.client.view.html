@@ -106,7 +106,7 @@
                                        tooltip-popup-delay='750'></i>
                                 </a>
                                 <button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                                        class="btn btn-danger">
+                                        class="btn btn-warning">
                                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                                 </button>
                                 <button data-ng-click="removeFilesystem(filesystem);"
@@ -177,7 +177,7 @@
             <i class="fa fa-trash-o"> </i> Delete Group
         </button>
         <br>
-        <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-danger">
+        <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-warning">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </button>
         <button data-ng-click="remove();" ng-show="askDeleteGroup"
