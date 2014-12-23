@@ -12,7 +12,7 @@
         <tbody>
         <tr>
             <td field-name="username">
-                <a href="#!/admin/users/{{gridItem._id}}">{{gridItem.username}}</a>
+                <md-button class="md-accent" href="#!/admin/users/{{gridItem._id}}">{{gridItem.username}}</md-button>
             </td>
             <td field-name="groups">
                 <span ng-repeat="g in gridItem.groups">

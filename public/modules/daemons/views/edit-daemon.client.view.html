@@ -165,10 +165,10 @@
                        placeholder="defaultValue" class="form-control" ng-required="true">
                 <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
                        placeholder="description" class="form-control">
-                <button ng-disabled="parameterForm.$invalid" class="btn btn-primary"
+                <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
                         data-ng-click="addParameter(); displayFormParameter=false">
                     Insert Parameter
-                </button>
+                </md-button>
             </fieldset>
         </form>
     </div>
@@ -208,10 +208,10 @@
                 <input type="text" name="descriptionPort" data-ng-model="port.description"
                        placeholder="description"
                        class="form-control">
-                <button ng-disabled="portForm.$invalid"
-                        data-ng-click="addPort(); displayFormPort=false" class="btn btn-primary">
+                <md-button ng-disabled="portForm.$invalid"
+                        data-ng-click="addPort(); displayFormPort=false" class="md-raised md-primary">
                     Insert Port
-                </button>
+                </md-button>
             </fieldset>
         </form>
     </div>
@@ -254,11 +254,11 @@
                 <input type="text" name="descriptionVariable" data-ng-model="variable.description"
                        placeholder="description"
                        class="form-control">
-                <button ng-disabled="variableForm.$invalid"
+                <md-button ng-disabled="variableForm.$invalid"
                         data-ng-click="addVariable(); displayFormVariable=false"
-                        class="btn btn-primary">
+                        class="md-raised md-primary">
                     Insert Variable
-                </button>
+                </md-button>
             </fieldset>
         </form>
     </div>
@@ -304,17 +304,17 @@
                 </select>
                 <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                        placeholder="description" class="form-control">
-                <button ng-disabled="volumeForm.$invalid"
+                <md-button ng-disabled="volumeForm.$invalid"
                         data-ng-click="addVolume(); displayFormVolume=false"
-                        class="btn btn-primary">
+                        class="md-raised md-primary">
                     Insert Volume
-                </button>
+                </md-button>
             </fieldset>
         </form>
     </div>
 
     <div class="form-group">
-        <button type="button" ng-click="submitForm(daemonForm.$valid)" class="btn btn-primary">
+        <md-button ng-click="submitForm(daemonForm.$valid)" class="md-raised md-primary">
             <span ng-hide="daemon._id"><i class="fa fa-save"></i> Create Daemon</span>
             <span ng-show="daemon._id"><i class="fa fa-save"></i> Update Daemon</span>
         </button>

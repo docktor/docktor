@@ -3,8 +3,9 @@
     <h1>Sites</h1>
 
     <div class="pull-right">
-        <a href="#!/admin/sites/create" class="btn btn-primary btn-xs align-right">
-            <i class="fa fa-plus"> </i> New Site</a>
+        <md-button href="#!/admin/sites/create" class="md-raised md-primary">
+            <i class="fa fa-plus"> </i> New Site
+        </md-button>
     </div>
 
     <table tr-ng-grid="" items="sites" fields="['title','created', 'latitude', 'longitude']">
@@ -17,15 +18,15 @@
         <tbody>
         <tr>
             <td field-name="title">
-                <a href="#!/admin/sites/{{gridItem._id}}">
+                <md-button class="md-accent" href="#!/admin/sites/{{gridItem._id}}">
                     {{gridItem.title}}
-                </a>
+                </md-button>
             </td>
         </tr>
         </tbody>
     </table>
 
     <div class="alert alert-warning text-center" data-ng-if="sites.$resolved && !sites.length">
-        No sites yet, why don't you <a href="/#!/admin/sites/create">create one</a>?
+        No sites yet, why don't you <md-button class="md-accent" href="/#!/admin/sites/create">create one</md-button> ?
     </div>
 </section>

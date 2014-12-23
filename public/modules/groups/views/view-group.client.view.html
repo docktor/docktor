@@ -161,10 +161,10 @@
                         <span ng-show="gridItem.inspect.State.Running">
 
                             <div class="btn-group" dropdown is-open="status.isopen">
-                                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" dropdown-toggle
+                                <md-button class="md-raised md-primary" dropdown-toggle
                                         ng-disabled="disabled">
                                     Action... <span class="caret"></span>
-                                </button>
+                                </md-button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="" ng-hide="gridItem.inspect.State.Paused"
                                            ng-click="stopContainer(gridItem)"><i class="fa fa-stop"></i> Docker stop

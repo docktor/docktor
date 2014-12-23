@@ -30,10 +30,10 @@
             ng-disabled="pullImage.pulled">
         Cancel <i class="fa fa-reply"></i>
     </button>
-    <button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="btn btn-primary"
+    <md-button data-ng-click="runPullImage()" ng-show="pullImage.askToPull" class="md-raised md-primary"
             ng-disabled="pullImage.pulled">
         Pull <i class="fa fa-check"></i>
-    </button>
+    </md-button>
 
     <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
         <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
