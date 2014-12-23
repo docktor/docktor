@@ -19,9 +19,9 @@
                 Login
             </md-button>
         </div>
-        <md-button class="md-accent" ng-click="toggleCollapsibleMenu('right')"
+        <md-button class="md-primary md-hue-2" ng-click="toggleCollapsibleMenu('right')"
                    ng-if="menu.shouldRender(authentication.user);">
-            Welcome, {{ authentication.user.displayName}} <i class="fa fa-chevron-left"></i>
+            {{ authentication.user.displayName}} <i class="fa fa-chevron-left"></i>
         </md-button>
     </div>
 </div>

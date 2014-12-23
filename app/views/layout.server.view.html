@@ -53,13 +53,13 @@
 </md-sidenav>
 
 <!--Start Header-->
-<div role="main" layout-fill layout="column">
+<div layout="column" layout-fill tabindex="-1" role="main">
     <md-toolbar layout="column" layout-align="space-between right" class="md-default-theme"
                 ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
 
-    <md-content md-scroll-y flex class="md-padding ng-scope">
+    <md-content md-scroll-y flex class="md-padding md-default-theme">
         <!--Start Content-->
-        <div id="content" layout="column" layout-align="space-between center">
+        <div id="content" layout="column" layout-fill class="layout-content layout-options">
             {% block content %}{% endblock %}
             <div class="custom-footer" flex ng-include="'/modules/core/views/footer.client.view.html'"></div>
         </div>

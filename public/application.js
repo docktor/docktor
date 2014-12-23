@@ -14,7 +14,7 @@ angular.module(ApplicationConfiguration.applicationModuleName)
     .config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryColor('green')
-            .accentColor('grey');
+            .accentColor('teal');
     });
 
 
