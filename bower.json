@@ -17,6 +17,6 @@
     "fontawesome": "~4.2.0",
     "lodash": "~2.4.1",
     "moment": "~2.8.4",
-    "angular-material": "~0.6.1"
+    "angular-material": "~0.7.0-rc1"
   }
 }

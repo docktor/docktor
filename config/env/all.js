@@ -13,12 +13,12 @@ module.exports = {
     assets: {
         lib: {
             css: [
+                'public/lib/angular-material/themes/green-theme.css',
+                'public/lib/angular-material/themes/grey-theme.css',
+                'public/lib/angular-material/angular-material.css',
                 'public/lib/fontawesome/css/font-awesome.css',
                 'public/lib/angular-ui-select/dist/select.css',
-                'public/lib/trNgGrid/release/trNgGrid.min.css',
-                'public/lib/angular-material/angular-material.css',
-                'public/lib/angular-material/themes/green-theme.css',
-                'public/lib/angular-material/themes/grey-theme.css'
+                'public/lib/trNgGrid/release/trNgGrid.min.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
