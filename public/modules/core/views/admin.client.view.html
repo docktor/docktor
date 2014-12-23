@@ -5,16 +5,15 @@
     <md-list>
         <md-item>
             <md-item-content>
-                <md-button ng-click="close('right')" href="/#!/settings/profile">
+                <md-button class="md-primary" ng-click="close('right')" href="/#!/settings/profile">
                     <i class="fa fa-user"></i>
                     Profile
                 </md-button>
             </md-item-content>
         </md-item>
-        <md-item flex/>
         <md-item ng-show="authentication.user.provider === 'local'">
             <md-item-content>
-                <md-button ng-click="close('right')" href="/#!/settings/password">
+                <md-button class="md-primary" ng-click="close('right')" href="/#!/settings/password">
                     <i class="fa fa-key"></i>
                     Change Password
                 </md-button>
@@ -22,7 +21,7 @@
         </md-item>
         <md-item>
             <md-item-content>
-                <md-button ng-click="close('right')" href="/auth/signout">
+                <md-button class="md-primary" ng-click="close('right')" href="/auth/signout">
                     <i class="fa fa-power-off"></i>
                     Logout
                 </md-button>
