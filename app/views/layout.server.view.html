@@ -44,17 +44,19 @@
 
 </head>
 
-<body class="ng-cloak" layout="row">
+<body layout="row">
 
 <md-sidenav layout="column"
             class="md-sidenav-left md-whiteframe-z5"
             md-component-id="left"
+            ng-include="'/modules/core/views/menu.client.view.html'">
+</md-sidenav>
 
-            ng-include="'/modules/core/views/menu.client.view.html'"></md-sidenav>
 <!--Start Header-->
-<div id="main" layout-fill layout="column">
-    <md-toolbar class="md-accent" layout="row" layout-align="space-between center"
+<div role="main" layout-fill layout="column">
+    <md-toolbar layout="column" layout-align="space-between right" class="md-default-theme"
                 ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
+
     <md-content md-scroll-y flex class="md-padding ng-scope">
         <!--Start Content-->
         <div id="content" layout="column" layout-align="space-between center">
@@ -68,7 +70,6 @@
 <md-sidenav layout="column"
             class="md-sidenav-right md-whiteframe-z5"
             md-component-id="right"
-
             ng-include="'/modules/core/views/admin.client.view.html'"></md-sidenav>
 
 <!--Embedding The User Object-->

@@ -1,22 +1,29 @@
-<div class="md-toolbar-tools" ng-controller="HeaderController">
-    <md-button class="md-primary md-fab" ng-click="toggleCollapsibleMenu('left')">
-        <i class="fa fa-bars"></i>
-    </md-button>
-    <div id="logo">
-        <a href="#!/">Docktor</a>
-    </div>
-    <div flex/>
-    <div layout="row" layout-margin layout-align="space-between center" ng-hide="authentication.user">
-        <md-button class="md-raised" href="#!/signup" ui-route="/signup" ng-class="{active: $uiRoute}">
-            Sign Up
+<div class="md-toolbar-tools" layout="column" ng-controller="HeaderController">
+    <div layout="row" flex>
+        <md-button class="md-primary md-fab"
+                   ng-if="menu.shouldRender(authentication.user);"
+                   ng-click="toggleCollapsibleMenu('left')">
+            <i class="fa fa-bars"></i>
         </md-button>
-        <md-button class="md-raised" href="#!/signin" ui-route="/signin" ng-class="{active: $uiRoute}">
-            Sign In
+        <div id="logo">
+            <a href="#!/">Docktor</a>
+        </div>
+
+        <div flex></div>
+
+        <div layout="row"  layout-align="center center" ng-hide="authentication.user">
+            <md-button class="md-raised" href="#!/signup" ui-route="/signup" ng-class="{active: $uiRoute}">
+                Register
+            </md-button>
+            <md-button class="md-raised" href="#!/signin" ui-route="/signin" ng-class="{active: $uiRoute}">
+                Login
+            </md-button>
+        </div>
+        <md-button class="md-accent" ng-click="toggleCollapsibleMenu('right')"
+                   ng-if="menu.shouldRender(authentication.user);">
+            Welcome, {{ authentication.user.displayName}} <i class="fa fa-chevron-left"></i>
         </md-button>
     </div>
-    <md-button class="md-accent" ng-click="toggleCollapsibleMenu('right')" ng-if="menu.shouldRender(authentication.user);">
-        Welcome, {{ authentication.user.displayName}} <i class="fa fa-chevron-left"></i>
-    </md-button>
 </div>
 
 
