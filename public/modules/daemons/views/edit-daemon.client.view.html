@@ -27,17 +27,9 @@
                     <label class="control-label col-sm-2" for="name">Site</label>
 
                     <div class="col-sm-5">
-                        <ui-select ng-model="daemon.selectSite" theme="bootstrap" style="min-width: 300px;">
-                            <ui-select-match placeholder="Select or search a site in the list...">
-                                {{$select.selected.title}}
-                            </ui-select-match>
-                            <ui-select-choices repeat="site in sites.all">
-                                <div ng-bind-html="site.title | highlight: $select.search"></div>
-                                <small>
-                                    Created {{site.created | date:'mediumDate'}}
-                                </small>
-                            </ui-select-choices>
-                        </ui-select>
+                        <select ng-model="daemon.selectSite"
+                                ng-options="site.title for site in sites.all">
+                        </select>
                     </div>
                     <div class="col-sm-5">
                     </div>

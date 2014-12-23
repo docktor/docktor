@@ -5,7 +5,10 @@
     </h3>
 
     <h3 ng-show="group._id">
-        <md-button class="md-accent" href="#!/groups">My Groups</md-button> / <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button> / Edit Group
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        /
+        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        / Edit Group
     </h3>
 
     <div class="col-md-12">
@@ -28,16 +31,9 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
-                    <ui-select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
-                               theme="bootstrap" style="min-width: 300px;">
-                        <ui-select-match placeholder="Select or search a daemon in the list...">
-                            {{$select.selected.name}} ->
-                            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
-                        </ui-select-match>
-                        <ui-select-choices repeat="daemon in daemons.all">
-                            {{daemon.name}} -> {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
-                        </ui-select-choices>
-                    </ui-select>
+                    <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
+                            ng-options="daemon.name for daemon in daemons.all">
+                    </select>
                 </div>
                 <div class="form-group" ng-show="freePortRange">
                     <label class="control-label">Ports already used :</label>
