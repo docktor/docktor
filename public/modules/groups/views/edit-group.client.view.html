@@ -123,15 +123,10 @@
                               autocomplete="off">
                             <fieldset>
 
-                                <ui-select ng-model="group.currentFs" theme="bootstrap" style="min-width: 300px;"
-                                           ng-change="changefs()">
-                                    <ui-select-match placeholder="Select or search a partition">
-                                        {{$select.device}}
-                                    </ui-select-match>
-                                    <ui-select-choices repeat="fs in group.selectDaemon.statsCompute.filesystem">
-                                        {{fs.device}}
-                                    </ui-select-choices>
-                                </ui-select>
+                                <select ng-model="group.currentFs" theme="bootstrap" style="min-width: 300px;"
+                                        ng-change="changefs()"
+                                        ng-options="fs.device for fs in group.selectDaemon.statsCompute.filesystem">
+                                </select>
 
                                 <div class="col-sm-4" ng-show="group.currentFs">
                                     <div class="progress">
@@ -175,17 +170,17 @@
     </div>
 
     <div ng-show="group._id">
-        <button class="btn btn-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
+        <md-button class="md-raised md-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group
-        </button>
+        </md-button>
         <br>
-        <button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="btn btn-warning">
+        <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-warning">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
-        </button>
-        <button data-ng-click="remove();" ng-show="askDeleteGroup"
-                class="btn btn-danger">
+        </md-button>
+        <md-button data-ng-click="remove();" ng-show="askDeleteGroup"
+                class="md-raised md-danger">
             Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-        </button>
+        </md-button>
     </div>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
