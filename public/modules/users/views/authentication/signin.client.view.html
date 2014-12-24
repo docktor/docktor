@@ -1,35 +1,22 @@
-<div id="page-login" class="row" data-ng-controller="AuthenticationController">
-    <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-        <div class="text-right">
-            <a href="/#!/signup" class="txt-default">Need an account?</a> |
-            <a href="/#!/password/forgot" class="txt-default">Forgot your password?</a>
-        </div>
-        <div class="box">
-            <div class="box-content">
-                <form data-ng-submit="signin()" class="signin" autocomplete="off">
-                    <fieldset>
-                        <div class="text-center">
-                            <h3>Docktor Login Page</h3>
-                        </div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" class="form-control"
-                                   data-ng-model="credentials.username" placeholder="Username">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control"
-                                   data-ng-model="credentials.password" placeholder="Password">
-                        </div>
-                        <div class="text-center form-group">
-                            <button type="submit" class="btn btn-primary">Sign in</button>
-                        </div>
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <strong data-ng-bind="error"></strong>
-                        </div>
-                    </fieldset>
-                </form>
+<div id="page-login" ng-controller="AuthenticationController" layout-fill layout="column" layout-align="space-around center">
+
+    <h1>Docktor Login Page</h1>
+
+    <md-content class="md-whiteframe-z1">
+        <form ng-submit="signin()" style="padding: 20px;" autocomplete="off" layout-margin layout-padding layout="column" layout-align="space-around center">
+            <div class="row">
+                <md-text-float label="Username" ng-model="credentials.username"></md-text-float>
+                <md-text-float type="password" label="Password" ng-model="credentials.password"></md-text-float>
             </div>
-        </div>
-    </div>
+            <md-button type="submit" class="md-raised md-primary">Sign in</md-button>
+            <div class="row md-warn" ng-show="error">
+                <strong ng-bind="error"></strong>
+            </div>
+            <div class="row">
+                <md-button class="md-primary" href="/#!/signup">Need an account?</md-button> |
+                <md-button class="md-primary" href="/#!/password/forgot">Forgot your password?</md-button>
+            </div>
+        </form>
+
+    </md-content>
 </div>

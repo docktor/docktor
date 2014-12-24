@@ -1,46 +1,36 @@
 <section data-ng-controller="ServicesGroupsController" data-ng-init="findOne()">
 
-    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Deploy a new service</h3>
+    <h3>
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        /
+        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        / Deploy a new service
+    </h3>
 
     <p class="lead" data-ng-bind="group.description"></p>
 
     <h4>Select a daemon :</h4>
 
-    <ui-select ng-model="daemons.select" theme="bootstrap" style="min-width: 300px;" ng-change="changeDaemon()">
-        <ui-select-match placeholder="Select or search a daemon in the list...">
-            {{$select.selected.name}} on {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
-        </ui-select-match>
-        <ui-select-choices repeat="daemon in daemons.all">
-            {{daemon.name}} on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
-        </ui-select-choices>
-    </ui-select>
+    <select ng-model="daemons.select" ng-change="changeDaemon()"
+            ng-options="daemon.name for daemon in daemons.all">
+    </select>
 
     <div ng-show="daemons.select">
         <h4>Select a service :</h4>
 
-        <ui-select ng-model="services.select" theme="bootstrap" style="min-width: 300px;" ng-required="true" ng-change="changeService()">
-            <ui-select-match placeholder="Select or search a service in the list...">{{$select.selected.title}}
-            </ui-select-match>
-            <ui-select-choices repeat="service in services.all">
-                <div ng-bind-html="service.title | highlight: $select.search"></div>
-            </ui-select-choices>
-        </ui-select>
+        <select ng-model="services.select" ng-required="true"
+                ng-change="changeService()"
+                ng-options="service.title for service in services.all">
+        </select>
     </div>
 
     <div ng-show="services.select">
         <h4>Select an image of service {{services.select.title}} :</h4>
 
-        <ui-select ng-model="services.selectImage" theme="bootstrap" style="min-width: 300px;"
-                   ng-change="changeImage()">
-            <ui-select-match placeholder="Select or search a image in the list...">{{$select.selected.name}}
-            </ui-select-match>
-            <ui-select-choices repeat="image in services.select.images">
-                <div ng-bind-html="image.name | highlight: $select.search"></div>
-                <small>
-                    Created {{image.created | date:'mediumDate'}}
-                </small>
-            </ui-select-choices>
-        </ui-select>
+        <select ng-model="services.selectImage"
+                   ng-change="changeImage()"
+                   ng-options="image.name for image in services.select.images">
+        </select>
     </div>
 
     <div ng-show="services.selectImage">
@@ -202,10 +192,10 @@
                 </tbody>
             </table>
 
-            <button ng-disabled="deployForm.$invalid"
-                    data-ng-click="addImageToGroup(daemons.select, services.selectImage)" class="btn btn-primary">
+            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
+                    data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
                 Deploy Service
-            </button>
+            </md-button>
 
         </form>
     </div>

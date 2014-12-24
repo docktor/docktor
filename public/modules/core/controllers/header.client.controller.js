@@ -1,19 +1,17 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-    function ($scope, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$mdSidenav',
+    function ($scope, Authentication, Menus, $mdSidenav) {
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('topbar');
 
-        $scope.toggleCollapsibleMenu = function () {
-            $('div#main').toggleClass('sidebar-show');
-            //$scope.isCollapsed = !$scope.isCollapsed;
+        $scope.toggleCollapsibleMenu = function (side) {
+            $mdSidenav(side).toggle();
         };
 
-        // Collapsing the menu after navigation
-        /*$scope.$on('$stateChangeSuccess', function () {
-         $scope.isCollapsed = false;
-         });*/
+        $scope.close = function(side) {
+            $mdSidenav(side).close();
+        };
     }
 ]);

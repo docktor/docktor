@@ -3,8 +3,9 @@
     <h1>Services</h1>
 
     <div class="pull-right">
-        <a href="#!/admin/services/create" class="btn btn-primary btn-xs align-right">
-            <i class="fa fa-plus"> </i> New Service</a>
+        <md-button href="#!/admin/services/create" class="md-raised md-primary">
+            <i class="fa fa-plus"> </i> New Service
+        </md-button>
     </div>
 
     <table tr-ng-grid="" items="services" fields="" class="table">
@@ -15,7 +16,9 @@
         <tbody>
         <tr>
             <td field-name="title">
-                <a href="#!/admin/services/{{gridItem._id}}">{{gridItem.title}}</a>
+                <md-button class="md-accent" href="#!/admin/services/{{gridItem._id}}">
+                    {{gridItem.title}}
+                </md-button>
             </td>
         </tr>
         </tbody>

@@ -1,11 +1,15 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
 
     <h3 ng-hide="group._id">
-        <a href="#!/groups">My Groups</a> / Create Group
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        / Create Group
     </h3>
 
     <h3 ng-show="group._id">
-        <a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Edit Group
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        /
+        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        / Edit Group
     </h3>
 
     <div class="col-md-12">
@@ -28,16 +32,9 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
-                    <ui-select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
-                               theme="bootstrap" style="min-width: 300px;">
-                        <ui-select-match placeholder="Select or search a daemon in the list...">
-                            {{$select.selected.name}} ->
-                            {{$select.selected.protocol}}://{{$select.selected.host}}:{{$select.selected.port}}
-                        </ui-select-match>
-                        <ui-select-choices repeat="daemon in daemons.all">
-                            {{daemon.name}} -> {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}
-                        </ui-select-choices>
-                    </ui-select>
+                    <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
+                            ng-options="daemon.name for daemon in daemons.all">
+                    </select>
                 </div>
                 <div class="form-group" ng-show="freePortRange">
                     <label class="control-label">Ports already used :</label>
@@ -89,12 +86,17 @@
                 </button>
 
                 <div class="controls">
-                    See <a ng-show="group.selectDaemon.cadvisorApi" href="{{group.selectDaemon.cadvisorUrl}}">cAdvisor
-                    of daemon {{group.selectDaemon.name}}</a>
+                    See
+                    <md-button class="md-accent" ng-show="group.selectDaemon.cadvisorApi"
+                               href="{{group.selectDaemon.cadvisorUrl}}">
+                        cAdvisor of daemon {{group.selectDaemon.name}}
+                    </md-button>
 
                     <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-warning">
                         Daemon has no cAdvisor URL. Please check this
-                        <a href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">Daemon</a>
+                        <md-button class="md-accent" href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">
+                            Daemon
+                        </md-button>
                     </div>
 
                     <div ng-show="group.selectDaemon.cadvisorApi">
@@ -150,10 +152,10 @@
                                        ng-required="true">
                                 <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
                                        placeholder="description" class="form-control">
-                                <button ng-disabled="filesystemForm.$invalid" class="btn btn-primary"
-                                        data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                                <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
+                                           data-ng-click="addFilesystem(); displayFormFilesystem=false">
                                     Insert Filesystem
-                                </button>
+                                </md-button>
                             </fieldset>
                         </form>
                     </div>
@@ -161,10 +163,10 @@
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-primary" ng-click="submitForm()">
+                <md-button class="md-raised md-primary" ng-click="submitForm()">
                     <span ng-hide="group._id">Create</span>
                     <span ng-show="group._id">Update</span>
-                </button>
+                </md-button>
             </div>
             <div data-ng-show="error" class="text-danger">
                 <strong data-ng-bind="error"></strong>

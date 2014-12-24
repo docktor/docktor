@@ -1,52 +1,30 @@
-<div id="page-login" class="row" data-ng-controller="AuthenticationController">
-    <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-        <div class="text-right">
-            <a href="page_login.html" class="txt-default">Already have an account?</a>
-        </div>
-        <div class="box">
-            <div class="box-content">
-                <form name="userForm" data-ng-submit="signup()" class="signin" novalidate autocomplete="off">
-                    <fieldset>
-                        <div class="text-center">
-                            <h3>Docktor Register Page</h3>
-                        </div>
-                        <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input type="text" required id="firstName" name="firstName" class="form-control"
-                                   data-ng-model="credentials.firstName" placeholder="First Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" class="form-control"
-                                   data-ng-model="credentials.lastName" placeholder="Last Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control"
-                                   data-ng-model="credentials.email"
-                                   placeholder="Email">
-                        </div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" class="form-control"
-                                   data-ng-model="credentials.username" placeholder="Username">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control"
-                                   data-ng-model="credentials.password" placeholder="Password">
-                        </div>
-                        <div class="text-center form-group">
-                            <button type="submit" class="btn btn-large btn-primary">Sign up</button>
-                            &nbsp; or&nbsp;
-                            <a href="/#!/signin" class="show-signup">Sign in</a>
-                        </div>
-                        <div data-ng-show="error" class="text-center text-danger">
-                            <strong data-ng-bind="error"></strong>
-                        </div>
-                    </fieldset>
-                </form>
+<div id="page-login" ng-controller="AuthenticationController" layout-fill layout="column" layout-align="space-around center">
+
+    <h1>Docktor Register Page</h1>
+
+    <md-content class="md-whiteframe-z1">
+        <form ng-submit="signup()" style="padding: 20px;" autocomplete="off" layout-margin layout-padding layout="column" layout-align="space-around center">
+            <div class="row">
+                <md-text-float label="First Name" ng-model="credentials.firstName"></md-text-float>
+                <md-text-float label="Last Name" ng-model="credentials.lastName"></md-text-float>
             </div>
-        </div>
-    </div>
+            <div class="row">
+                <md-text-float label="Username" ng-model="credentials.username"></md-text-float>
+                <md-text-float type="password" label="Password" ng-model="credentials.password"></md-text-float>
+            </div>
+            <div class="row">
+                <md-text-float type="email" label="Email" ng-model="credentials.email"></md-text-float>
+                <md-button type="submit" class="md-raised md-primary">Sign Up</md-button>
+            </div>
+
+            <div class="row md-warn" ng-show="error">
+                <strong ng-bind="error"></strong>
+            </div>
+            <div class="row">
+                <md-button class="md-primary" href="/#!/signin">Already have an account?</md-button>
+            </div>
+        </form>
+
+    </md-content>
 </div>
+

@@ -13,17 +13,18 @@ module.exports = {
     assets: {
         lib: {
             css: [
-                'public/lib/bootstrap/dist/css/bootstrap.css',
+                'public/lib/angular-material/themes/green-theme.css',
+                'public/lib/angular-material/themes/grey-theme.css',
+                'public/lib/angular-material/angular-material.css',
                 'public/lib/fontawesome/css/font-awesome.css',
-                'public/lib/angular-ui-select/dist/select.css',
-                'public/lib/trNgGrid/release/trNgGrid.min.css',
-                'public/lib/bootstrap-material-design/dist/css/material.min.css',
-                'public/lib/bootstrap-material-design/dist/css/material-wfont.min.css',
-                'public/lib/bootstrap-material-design/dist/css/ripples.min.css'
+                'public/lib/trNgGrid/release/trNgGrid.min.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
                 'public/lib/angular/angular.js',
+                'public/lib/angular-aria/angular-aria.js',
+                'public/lib/hammerjs/hammer.js',
+                'public/lib/angular-material/angular-material.js',
                 'public/lib/angular-resource/angular-resource.js',
                 'public/lib/angular-cookies/angular-cookies.js',
                 'public/lib/angular-animate/angular-animate.js',
@@ -31,13 +32,9 @@ module.exports = {
                 'public/lib/angular-sanitize/angular-sanitize.js',
                 'public/lib/angular-ui-router/release/angular-ui-router.js',
                 'public/lib/angular-ui-utils/ui-utils.js',
-                'public/lib/angular-ui-select/dist/select.js',
-                'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'public/lib/trNgGrid/release/trNgGrid.min.js',
                 'public/lib/lodash/dist/lodash.underscore.min.js',
-                'public/lib/moment/min/moment.min.js',
-                'public/lib/bootstrap-material-design/dist/js/material.min.js',
-                'public/lib/bootstrap-material-design/dist/js/ripples.js'
+                'public/lib/moment/min/moment.min.js'
             ]
         },
         css: [

@@ -2,8 +2,9 @@
     <h1>Daemons</h1>
 
     <div class="pull-right">
-        <a href="#!/admin/daemons/create" class="btn btn-primary btn-xs align-right">
-            <i class="fa fa-plus"> </i> New Daemon</a>
+        <md-button href="#!/admin/daemons/create" class="md-raised md-primary">
+            <i class="fa fa-plus"> </i> New Daemon
+        </md-button>
     </div>
 
     <table tr-ng-grid="" items="daemons" fields="" class="table">
@@ -23,7 +24,7 @@
         <tbody>
         <tr>
             <td field-name="name">
-                <a href="#!/admin/daemons/view/{{gridItem._id}}">{{gridItem.name}}</a>
+                <md-button class="md-accent" href="#!/admin/daemons/view/{{gridItem._id}}">{{gridItem.name}}</md-button>
             </td>
             <td field-name="dockerStatus">
                 <span ng-switch="gridItem.dockerStatus">
@@ -38,7 +39,9 @@
                 <div>
                     <a href="{{gridItem.protocol}}://{{gridItem.host}}:{{gridItem.port}}/info">{{gridItem.protocol}}://{{gridItem.host}}:{{gridItem.port}}</a>
                     <small><p class="list-group-item-text" data-ng-bind="gridItem.description"></p></small>
-                    <a ng-show="gridItem.cadvisorApi" href="{{gridItem.cadvisorUrl}}">cAdvisor</a>
+                    <md-button class="md-accent" ng-show="gridItem.cadvisorApi" href="{{gridItem.cadvisorUrl}}">
+                        cAdvisor
+                    </md-button>
                 </div>
             </td>
             <td field-name="dockerVersion.Version">

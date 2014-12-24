@@ -1,15 +1,23 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
-    <h3><a href="#!/groups">My Groups</a> / <a href="#!/groups/{{group._id}}">{{group.title}}</a> / Service
-        {{container.serviceTitle}}</h3>
+    <h3>
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        /
+        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        / Service {{container.serviceTitle}}
+    </h3>
 
     <div class="col-sm-12 row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
         <span ng-repeat="u in group.users">
-            <a href="mailto:{{u.email}}"><i class="fa fa-envelope"></i> {{u.displayName}}</a>
+            <md-button class="md-accent" href="mailto:{{u.email}}">
+                <i class="fa fa-envelope"></i> {{u.displayName}}
+            </md-button>
         </span>
 
         <div>
-            <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
+            <md-button class="md-accent" href="mailto:{{group.mailAllUsers}}">
+                <i class="fa fa-envelope"></i> Mail All
+            </md-button>
         </div>
         <hr>
     </div>
@@ -17,9 +25,9 @@
     <div class="col-sm-12 row">
         <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
         <i class="fa fa-bar-chart"></i>
-        <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
+        <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
             Monitoring CPU / RAM on this service.
-        </a>
+        </md-button>
         <hr>
     </div>
 
@@ -51,11 +59,11 @@
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
-                    <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                            tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
-                            tooltip-placement="left">
+                    <md-button class="md-raised" type="text" class="btn btn-default btn-xs" value="Click me!"
+                               tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
+                               tooltip-placement="left">
                         <i class="fa fa-eye"> </i>
-                    </button>
+                    </md-button>
                 </span>
                 </td>
                 <td>
@@ -95,7 +103,9 @@
 
     <div ng-hide="container.urls.length > 0" class="label label-info">No url attached to this srvice.</div>
     <div ng-repeat="url in container.urls">
-        <a href={{url.urlCompute}}><i class="fa fa-link"></i> {{url.label}}</a>
+        <md-button class="md-accent" href={{url.urlCompute}}>
+            <i class="fa fa-link"></i> {{url.label}}
+        </md-button>
     </div>
 
     <h4>Commands</h4>
@@ -114,65 +124,68 @@
 
     <div ng-show="container.daemon.dockerStatusUp">
 
-        <button ng-hide="container.containerId" class="btn btn-primary btn-sm"
-                ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
-        </button>
+        <md-button class="md-raised md-primary" ng-hide="container.containerId"
+                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
+        </md-button>
 
-        <button ng-hide="!container.containerId || container.inspect.State.Running" class="btn btn-default btn-warning"
-                ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
-        </button>
+        <md-button class="md-raised md-warn" ng-hide="!container.containerId || container.inspect.State.Running"
+                   ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
+        </md-button>
 
-        <button ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
-                class="btn btn-default btn-sm"
-                ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
+        <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
+                   class="btn btn-default btn-sm"
+                   ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
             Remove service from Group
-        </button>
-        <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
+        </md-button>
+        <md-button class="md-raised md-warn" ng-click="askDeleteService=false" ng-show="askDeleteService">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
-        </button>
-        <button data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService"
-                class="btn btn-danger">
+        </md-button>
+        <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);"
+                   ng-show="askDeleteService"
+                   class="btn btn-danger">
             Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
-        </button>
+        </md-button>
 
         <div ng-show="container.containerId">
 
-            <button ng-hide="container.inspect.State.Running" class="btn btn-primary btn-sm"
-                    ng-click="startContainer(container)"><i class="fa fa-play"></i> Docker run
-            </button>
+            <md-button class="md-raised md-primary" ng-hide="container.inspect.State.Running"
+                       ng-click="startContainer(container)"><i class="fa fa-play"></i> Docker run
+            </md-button>
 
             <div ng-show="container.inspect.State.Running">
-                <button ng-hide="container.inspect.State.Paused" class="btn btn-default"
-                        ng-click="stopContainer(container)">
+                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                           ng-click="stopContainer(container)">
                     <i class="fa fa-stop"></i> Docker stop
-                </button>
-                <button ng-hide="container.inspect.State.Paused" class="btn btn-default"
-                        ng-click="pauseContainer(container)">
+                </md-button>
+                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                           ng-click="pauseContainer(container)">
                     <i class="fa fa-pause"></i> Docker pause
-                </button>
-                <button ng-show="container.inspect.State.Paused" class="btn btn-default"
-                        ng-click="unpauseContainer(container)">
+                </md-button>
+                <md-button class="md-raised" ng-show="container.inspect.State.Paused"
+                           ng-click="unpauseContainer(container)">
                     <i class="fa fa-pause"></i> Docker unpause
-                </button>
-                <button ng-click="killContainer(container)" class="btn btn-default">
+                </md-button>
+                <md-button class="md-raised" ng-click="killContainer(container)">
                     <i class="fa fa-crosshairs"></i> Docker kill
-                </button>
-                <button ng-click="topContainer(container)" class="btn btn-default">
+                </md-button>
+                <md-button class="md-raised" ng-click="topContainer(container)">
                     <i class="fa fa-stethoscope"></i> Docker top
-                </button>
-                <button ng-click="logsContainer(container)" class="btn btn-default">
+                </md-button>
+                <md-button class="md-raised" ng-click="logsContainer(container)">
                     <i class="fa fa-file-text-o"></i> Docker logs
-                </button>
+                </md-button>
 
                 <h5>User</h5>
                 <span ng-repeat="command in container.commands | filter:{role:'user'}">
-                    <button ng-click="doExec(container, command)" class="btn btn-default">{{command.name}}
-                    </button>
+                    <md-button class="md-raised" ng-click="doExec(container, command)">
+                        {{command.name}}
+                    </md-button>
                 </span>
                 <h5 ng-if="authentication.isAdmin">Admin</h5>
                 <span ng-if="authentication.isAdmin" ng-repeat="command in container.commands | filter:{role:'admin'}">
-                    <button ng-click="doExec(container, command)" class="btn btn-default">{{command.name}}
-                    </button>
+                    <md-button class="md-raised" ng-click="doExec(container, command)">
+                        {{command.name}}
+                    </md-button>
                 </span>
             </div>
         </div>
@@ -182,90 +195,61 @@
 
     <h5>From Docktor</h5>
 
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-12">
-                <div ng-repeat="port in container.ports">
-                    -e {{port.external}}:{{port.internal}}/{{port.protocol}}
-                </div>
-            </div>
+    <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+        <div ng-repeat="port in container.ports">
+            -e {{port.external}}:{{port.internal}}/{{port.protocol}}
         </div>
-    </div>
+    </md-whiteframe>
 
     <div ng-if="authentication.isAdmin">
         <h5>docker inspect</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    {{container.inspect.HostConfig.PortBindings | json}}
-                </div>
-            </div>
-        </div>
-
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <span>{{container.inspect.HostConfig.PortBindings | json}}</span>
+        </md-whiteframe>
 
         <h4>Parameters</h4>
 
         <h5>From Docktor</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div ng-repeat="parameter in container.parameters">
-                        {{parameter.name}}:{{parameter.value}}
-                    </div>
-                </div>
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="parameter in container.parameters">
+                {{parameter.name}}:{{parameter.value}}
             </div>
-        </div>
+        </md-whiteframe>
 
         <h4>Variables</h4>
 
         <h5>From Docktor</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div ng-repeat="variable in container.variables">
-                        {{variable.name}}:{{variable.value}}
-                    </div>
-                </div>
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="variable in container.variables">
+                {{variable.name}}:{{variable.value}}
             </div>
-        </div>
+        </md-whiteframe>
 
         <h5>docker inspect</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    {{container.inspect.Config.Env | json}}
-                </div>
-            </div>
-        </div>
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <span>{{container.inspect.Config.Env | json}}</span>
+        </md-whiteframe>
 
         <h4>Volumes</h4>
 
         <h5>From Docktor</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div ng-repeat="volume in container.volumes">
-                        -v {{volume.external}}:{{volume.internal}}<span
-                            ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
-                    </div>
-                </div>
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="volume in container.volumes">
+                -v {{volume.external}}:{{volume.internal}}<span
+                    ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
             </div>
-        </div>
+        </md-whiteframe>
 
         <h5>docker inspect</h5>
 
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-12">
-                    {{container.inspect.HostConfig.Binds | json}}
-                </div>
-            </div>
-        </div>
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <span>{{container.inspect.HostConfig.Binds | json}}</span>
+        </md-whiteframe>
     </div>
 
 </section>

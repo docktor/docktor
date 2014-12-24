@@ -5,24 +5,31 @@
             <p data-ng-bind="group.description"></p>
         </small>
         <div ng-show="authentication.isAdmin">
-            <a class="btn btn-primary btn-xs" href="/#!/admin/groups/{{group._id}}/deploy/service">
+            <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> </i> Deploy a service
-            </a>
-            <a class="btn btn-default btn-xs" href="/#!/admin/groups/{{group._id}}/edit">
+            </md-button>
+            <md-button class="md-raised" href="/#!/admin/groups/{{group._id}}/edit">
                 <i class="fa fa-edit"> </i> Edit this group
-            </a>
+            </md-button>
         </div>
     </div>
-    <h3><a href="#!/groups">My Groups</a> / {{group.title}}</h3>
+    <h3>
+        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        / {{group.title}}
+    </h3>
 
     <div class="col-sm-12 row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
         <span ng-repeat="u in group.users">
-            <a href="mailto:{{u.email}}"><i class="fa fa-envelope"></i> {{u.displayName}}</a>
+            <md-button class="md-accent" href="mailto:{{u.email}}">
+                <i class="fa fa-envelope"></i> {{u.displayName}}
+            </md-button>
         </span>
 
         <div>
-            <a href="mailto:{{group.mailAllUsers}}"><i class="fa fa-envelope"></i> Mail All</a>
+            <md-button class="md-accent" href="mailto:{{group.mailAllUsers}}">
+                <i class="fa fa-envelope"></i> Mail All
+            </md-button>
         </div>
         <hr>
     </div>
@@ -33,7 +40,7 @@
         <div ng-hide="group.filesystems" class="alert alert-danger">
             No filesystem attached to this group.
             <span ng-show="authentication.isAdmin">Try to add one by
-                <a href="#!/admin/groups/{{group._id}}/edit">editing this group</a>.
+                <md-button class="md-accent" href="#!/admin/groups/{{group._id}}/edit">editing this group</md-button>.
             </span>
             <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
         </div>
@@ -59,9 +66,10 @@
             </div>
         </div>
         <div class="col-sm-12 row">
-            <i class="fa fa-bar-chart"></i> <a href="{{grafanaUrl}}?groupName={{group.title}}">
-            Monitoring CPU / RAM - All Services
-        </a>
+            <i class="fa fa-bar-chart"></i>
+            <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}">
+                Monitoring CPU / RAM - All Services
+            </md-button>
         </div>
     </div>
     <hr>
@@ -110,14 +118,16 @@
         <tbody>
         <tr>
             <td field-name="serviceTitle">
-                <a href="#!/groups/{{group._id}}/{{gridItem._id}}">
+                <md-button class="md-accent" href="#!/groups/{{group._id}}/{{gridItem._id}}">
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
                     {{gridItem.serviceTitle}}
-                </a>
+                </md-button>
 
                 <div>
                 <span ng-repeat="url in gridItem.urls">
-                    <a href={{url.urlCompute}}><i class="fa fa-link"></i> {{url.label}}</a>
+                    <md-button class="md-accent" href={{url.urlCompute}}>
+                        <i class="fa fa-link"></i> {{url.label}}
+                    </md-button>
                 </span>
                 </div>
             </td>
@@ -151,10 +161,10 @@
                         <span ng-show="gridItem.inspect.State.Running">
 
                             <div class="btn-group" dropdown is-open="status.isopen">
-                                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" dropdown-toggle
+                                <md-button class="md-raised md-primary" dropdown-toggle
                                         ng-disabled="disabled">
                                     Action... <span class="caret"></span>
-                                </button>
+                                </md-button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="" ng-hide="gridItem.inspect.State.Paused"
                                            ng-click="stopContainer(gridItem)"><i class="fa fa-stop"></i> Docker stop
@@ -189,20 +199,20 @@
                         <span ng-hide="authentication.isAdmin">Checking</span>
                     </span>
                     <span ng-switch-when="down">
-                        <a class="label label-danger" ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                        <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}">
                             {{getDaemon(gridItem.daemonId).name}}
-                        </a>
+                        </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-danger">
                             {{getDaemon(gridItem.daemonId).name}}
                         </span>
                     </span>
 
                     <div ng-switch-when="up">
-                        <a ng-show="authentication.isAdmin" class="label label-success"
-                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                        <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
+                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}">
                             {{getDaemon(gridItem.daemonId).name}}
-                        </a>
+                        </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-success">
                                 {{getDaemon(gridItem.daemonId).name}}
                         </span>
@@ -211,9 +221,11 @@
                 </div>
             </td>
             <td>
-                <div class="text-center">
-                    <a href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}"><i
-                            class="fa fa-bar-chart"></i></a>
+                <div layout-align="center">
+                    <md-button class="md-fab"
+                               href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">
+                        <i class="fa fa-bar-chart"></i>
+                    </md-button>
                 </div>
             </td>
         </tr>

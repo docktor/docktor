@@ -1,18 +1,20 @@
-<ul class="nav main-menu" data-ng-controller="HeaderController">
-    <li data-ng-repeat="item in menu.items | orderBy: 'position'"
-        data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType"
-        ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}"
-        ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
-        <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
-            <span data-ng-bind="item.title"></span>
+<md-toolbar class="md-theme-indigo">
+    <h1 class="md-toolbar-tools">Menu</h1>
+</md-toolbar>
+<md-content class="md-padding" ng-controller="HeaderController">
+    <div ng-repeat="item in menu.items | orderBy: 'position'">
+        <button ng-if="item.shouldRender(authentication.user);"
+                ui-route="{{item.uiRoute}}"
+                class="menu-item menu-title md-menu-item">
+            {{item.title}}
+        </button>
+        <a ng-repeat="subitem in item.items | orderBy: 'position'"
+           class="menu-item menu-sub-item md-menu-item"
+           ng-if="subitem.shouldRender(authentication.user);"
+           ui-route="{{subitem.uiRoute}}"
+           ng-class="{active: $uiRoute}"
+           href="/#!/{{subitem.link}}">
+            <span>{{subitem.title}}</span>
         </a>
-        <ul ng-switch-when="dropdown" class="dropdown-menu">
-            <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
-                data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}"
-                ng-class="{active: $uiRoute}">
-                <a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
-            </li>
-        </ul>
-        <a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
-    </li>
-</ul>
+    </div>
+</md-content>

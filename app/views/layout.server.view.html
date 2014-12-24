@@ -44,34 +44,37 @@
 
 </head>
 
-<body class="ng-cloak">
+<body layout="row">
+
+<md-sidenav layout="column"
+            class="md-sidenav-left md-whiteframe-z5"
+            md-component-id="left"
+            ng-include="'/modules/core/views/menu.client.view.html'">
+</md-sidenav>
+
 <!--Start Header-->
-<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar"></header>
+<div layout="column" layout-fill tabindex="-1" role="main">
+    <md-toolbar layout="column" layout-align="space-between right" class="md-default-theme"
+                ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
 
-<div id="main" class="container-fluid">
-    <div class="row">
-        <div data-ng-include="'/modules/core/views/menu.client.view.html'" id="sidebar-left" class="col-xs-2 col-sm-2">
-        </div>
-
+    <md-content md-scroll-y flex class="md-padding md-default-theme">
         <!--Start Content-->
-        <div id="content" class="col-xs-12 col-sm-10">
+        <div id="content" layout="column" layout-fill class="layout-content layout-options">
             {% block content %}{% endblock %}
-            <div style="text-align: right;">
-                <small>
-                    <br><br><br><br>
-                    <i>Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
-                    <a href="https://github.com/docktor/docktor" title="Fork me on Github"> <i class="fa fa-github fa fa-2x"></i></a></i>
-                </small>
-            </div>
+            <div class="custom-footer" flex ng-include="'/modules/core/views/footer.client.view.html'"></div>
         </div>
-
         <!--End Content-->
-    </div>
+    </md-content>
 </div>
+
+<md-sidenav layout="column"
+            class="md-sidenav-right md-whiteframe-z5"
+            md-component-id="right"
+            ng-include="'/modules/core/views/admin.client.view.html'"></md-sidenav>
 
 <!--Embedding The User Object-->
 <script type="text/javascript">
-    var user = {{user | json | safe}} ;
+    var user = {{user | json | safe}};
 </script>
 
 <!--Application JavaScript Files-->
