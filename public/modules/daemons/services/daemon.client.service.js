@@ -41,13 +41,14 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                     if (callback) callback();
                                 });
                         } else {
+                            console.log('noMachineInfo for daemon ' + daemon._id);
                             if (callback) callback();
                         }
                     })
-                    .error(function (resp) {
+                    .error(function(data, status, headers, config) {
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
-                        console.log(resp);
+                        console.log(data);
                         if (callback) callback();
                     });
             }

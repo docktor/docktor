@@ -140,14 +140,14 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
-                        class="btn btn-warning">
+                <md-button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
+                        class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeParameter(parameter);" ng-show="askDeleteParameter"
-                        class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removeParameter(parameter);" ng-show="askDeleteParameter"
+                        class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </li>
         </ul>
 

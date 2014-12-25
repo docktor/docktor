@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label class="control-label">Daemon</label>
                     <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
-                            ng-options="daemon.name for daemon in daemons.all">
+                            ng-options="daemon as daemon.name for daemon in daemons.all">
                     </select>
                 </div>
                 <div class="form-group" ng-show="freePortRange">
@@ -170,15 +170,15 @@
     </div>
 
     <div ng-show="group._id">
-        <md-button class="md-raised md-danger" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
+        <md-button class="md-raised md-warn" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group
         </md-button>
         <br>
-        <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-warning">
+        <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-warn">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button data-ng-click="remove();" ng-show="askDeleteGroup"
-                class="md-raised md-danger">
+                class="md-raised md-warn">
             Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
         </md-button>
     </div>
