@@ -34,59 +34,63 @@
                 Name : {{container.inspect.Name}}
             </td>
             <td>
-                <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
+                <md-button type="text" class="md-raised"
+                           tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
+                           tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i> Volumes
-                </button>
-                <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                        tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                        tooltip-trigger="focus" tooltip-placement="left">
+                </md-button>
+                <md-button type="text" class="md-raised"
+                           tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
+                           tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i> Ports
-                </button>
+                </md-button>
             </td>
             <td>
                 <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                 <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                 <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
 
-                <button type="text" class="btn btn-default btn-xs" value="Click me!"
-                        tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
-                        tooltip-trigger="focus" tooltip-placement="left">
+                <md-button type="text" class="md-raised"
+                           tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
+                           tooltip-trigger="focus" tooltip-placement="left">
                     <i class="fa fa-eye"> </i>
-                </button>
+                </md-button>
             </td>
             <td>
-                <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
-                        ng-click="startContainer(container)"><i class="fa fa-play"></i> Start
-                </button>
+                <md-button ng-hide="container.inspect.State.Running" class="md-raised"
+                           ng-click="startContainer(container)">
+                    <i class="fa fa-play"></i> Start
+                </md-button>
 
                     <span ng-show="container.inspect.State.Running">
-                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-xs"
-                                ng-click="stopContainer(container)"><i class="fa fa-stop"></i> Stop
-                        </button>
-                        <button ng-hide="container.inspect.State.Paused" class="btn btn-default btn-xs"
-                                ng-click="pauseContainer(container)"><i class="fa fa-pause"></i> Pause
-                        </button>
-                        <button ng-show="container.inspect.State.Paused" class="btn btn-default btn-xs"
-                                ng-click="unpauseContainer(container)"><i class="fa fa-pause"></i> Unpause
-                        </button>
-                        <button class="btn btn-default btn-xs" ng-click="killContainer(container)"><i
-                                class="fa fa-crosshairs"></i> Kill
-                        </button>
+                        <md-button ng-hide="container.inspect.State.Paused" class="md-raised"
+                                   ng-click="stopContainer(container)">
+                            <i class="fa fa-stop"></i> Stop
+                        </md-button>
+                        <md-button ng-hide="container.inspect.State.Paused" class="md-raised"
+                                   ng-click="pauseContainer(container)">
+                            <i class="fa fa-pause"></i> Pause
+                        </md-button>
+                        <md-button ng-show="container.inspect.State.Paused" class="md-raised"
+                                   ng-click="unpauseContainer(container)">
+                            <i class="fa fa-pause"></i> Unpause
+                        </md-button>
+                        <md-button class="md-raised" ng-click="killContainer(container)">
+                            <i class="fa fa-crosshairs"></i> Kill
+                        </md-button>
                     </span>
 
-                <button ng-hide="container.inspect.State.Running" class="btn btn-default btn-xs"
-                        ng-click="removeContainer(container)">
+                <md-button ng-hide="container.inspect.State.Running" class="md-raised"
+                           ng-click="removeContainer(container)">
                     <i class="fa fa-trash"></i> Remove
-                </button>
+                </md-button>
 
             </td>
         </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-default" ng-click="viewRawJson=!viewRawJson">View Raw Json</button>
+    <md-button class="md-raised" ng-click="viewRawJson=!viewRawJson">View Raw Json</md-button>
 
     <pre ng-show="viewRawJson">{{containers | json}}</pre>
 </section>

@@ -148,9 +148,9 @@
             <td>
                 <div>
                 <span ng-show="gridItem.daemon.dockerStatusUp">
-                    <button ng-hide="gridItem.containerId" class="btn btn-xs btn-primary btn-sm"
-                            ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> Docker create
-                    </button>
+                    <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
+                               ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> Docker create
+                    </md-button>
 
                     <span ng-show="gridItem.containerId">
 
@@ -162,7 +162,7 @@
 
                             <div class="btn-group" dropdown is-open="status.isopen">
                                 <md-button class="md-raised md-primary" dropdown-toggle
-                                        ng-disabled="disabled">
+                                           ng-disabled="disabled">
                                     Action... <span class="caret"></span>
                                 </md-button>
                                 <ul class="dropdown-menu" role="menu">
@@ -183,9 +183,9 @@
                             </div>
                         </span>
 
-                        <button ng-hide="gridItem.inspect.State.Running" class="btn btn-warning btn-sm"
-                                ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
-                        </button>
+                        <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
+                                   ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
+                        </md-button>
                     </span>
                 </span>
                 </div>

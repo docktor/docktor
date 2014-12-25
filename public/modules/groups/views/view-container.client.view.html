@@ -59,7 +59,7 @@
                     <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
                     <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
                     <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
-                    <md-button class="md-raised" type="text" class="btn btn-default btn-xs" value="Click me!"
+                    <md-button class="md-raised" type="text"
                                tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
                                tooltip-placement="left">
                         <i class="fa fa-eye"> </i>
@@ -133,7 +133,6 @@
         </md-button>
 
         <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
-                   class="btn btn-default btn-sm"
                    ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
             Remove service from Group
         </md-button>
@@ -142,7 +141,7 @@
         </md-button>
         <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);"
                    ng-show="askDeleteService"
-                   class="btn btn-danger">
+                   class="md-raised md-warn">
             Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
         </md-button>
 

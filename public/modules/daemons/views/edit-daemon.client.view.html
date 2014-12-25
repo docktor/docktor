@@ -152,7 +152,7 @@
         </ul>
 
         <md-button class="md-raised" ng-hide="displayFormParameter"
-                ng-click="displayFormParameter=!displayFormParameter">
+                   ng-click="displayFormParameter=!displayFormParameter">
             <i class="fa fa-plus-square"></i>
         </md-button>
 
@@ -182,20 +182,20 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeletePort=false" ng-show="askDeletePort" class="btn btn-warning">
+                <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removePort(port);" ng-show="askDeletePort"
-                        class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removePort(port);" ng-show="askDeletePort"
+                           class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </li>
         </ul>
 
-        <button class="btn btn-default btn-xs" ng-hide="displayFormPort"
-                ng-click="displayFormPort=!displayFormPort">
+        <md-button class="md-raised" ng-hide="displayFormPort"
+                   ng-click="displayFormPort=!displayFormPort">
             <i class="fa fa-plus-square"></i>
-        </button>
+        </md-button>
 
         <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
             <fieldset>
@@ -228,21 +228,21 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
-                        class="btn btn-warning">
+                <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                           class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeVariable(variable);" ng-show="askDeleteVariable"
-                        class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removeVariable(variable);" ng-show="askDeleteVariable"
+                           class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </li>
         </ul>
 
-        <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
-                ng-click="displayFormVariable=!displayFormVariable">
+        <md-button class="md-raised" ng-hide="displayFormVariable"
+                   ng-click="displayFormVariable=!displayFormVariable">
             <i class="fa fa-plus-square"></i>
-        </button>
+        </md-button>
 
         <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
               autocomplete="off">
@@ -275,21 +275,21 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
-                        class="btn btn-warning">
+                <md-button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
+                           class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeVolume(volume);" ng-show="askDeleteVolume"
-                        class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removeVolume(volume);" ng-show="askDeleteVolume"
+                           class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </li>
         </ul>
 
-        <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
-                ng-click="displayFormVolume=!displayFormVolume">
+        <md-button class="md-raised" ng-hide="displayFormVolume"
+                   ng-click="displayFormVolume=!displayFormVolume">
             <i class="fa fa-plus-square"></i>
-        </button>
+        </md-button>
 
         <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
               autocomplete="off">

@@ -109,18 +109,18 @@
             <div ng-show="authentication.user.username===userToEdit.username" class="label label-warning">
                 You can't delete yourself.
             </div>
-            <button class="btn btn-danger" ng-click="askDeleteUser=true" ng-hide="askDeleteUser"
-                    ng-disabled="authentication.user.username===userToEdit.username">
+            <md-button class="md-raised md-warn" ng-click="askDeleteUser=true" ng-hide="askDeleteUser"
+                       ng-disabled="authentication.user.username===userToEdit.username">
                 <i class="fa fa-trash-o"></i> Delete User
-            </button>
+            </md-button>
             <br>
-            <button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="btn btn-warning">
+            <md-button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="md-raised md-warn">
                 No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </button>
-            <button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"
-                    class="btn btn-danger">
+            </md-button>
+            <md-button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"
+                       class="md-raised md-warn">
                 Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </button>
+            </md-button>
         </div>
     </div>
 </section>

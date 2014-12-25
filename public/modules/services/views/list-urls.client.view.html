@@ -1,7 +1,7 @@
 <h4>Urls
-    <button class="btn btn-default btn-xs" ng-click="addUrl()">
+    <md-button class="md-raised" ng-click="addUrl()">
         <i class="fa fa-plus-square"></i>
-    </button>
+    </md-button>
 </h4>
 
 <table class="table table-striped">
@@ -20,12 +20,12 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Url"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="btn btn-warning">
+                <md-button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeUrl(url);" ng-show="askDeleteUrl" class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removeUrl(url);" ng-show="askDeleteUrl" class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </div>
         </td>
         <td>

@@ -1,7 +1,7 @@
 <h4>Images
-    <button class="btn btn-default btn-xs" ng-click="addImage()">
+    <md-button class="md-raised" ng-click="addImage()">
         <i class="fa fa-plus-square"></i>
-    </button>
+    </md-button>
 </h4>
 
 <table class="table table-striped">
@@ -23,12 +23,12 @@
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Image"
                        tooltip-popup-delay='750'></i>
                 </a>
-                <button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="btn btn-warning">
+                <md-button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="md-raised md-warn">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </button>
-                <button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="btn btn-danger">
+                </md-button>
+                <md-button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </button>
+                </md-button>
             </div>
         </td>
         <td>
@@ -48,21 +48,21 @@
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
                            tooltip-popup-delay='750'></i>
                     </a>
-                    <button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
-                            class="btn btn-warning">
+                    <md-button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
+                               class="md-raised md-warn">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
-                    </button>
-                    <button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
-                            class="btn btn-danger">
+                    </md-button>
+                    <md-button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
+                               class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                    </button>
+                    </md-button>
                 </li>
             </ul>
 
-            <button class="btn btn-default btn-xs" ng-hide="displayFormParameter"
-                    ng-click="displayFormParameter=!displayFormParameter">
+            <md-button class="md-raised" ng-hide="displayFormParameter"
+                       ng-click="displayFormParameter=!displayFormParameter">
                 <i class="fa fa-plus-square"></i>
-            </button>
+            </md-button>
 
             <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
                   autocomplete="off">
@@ -74,7 +74,7 @@
                     <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
                            placeholder="description" class="form-control">
                     <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
-                            data-ng-click="addParameter(image); displayFormParameter=false">
+                               data-ng-click="addParameter(image); displayFormParameter=false">
                         Insert Parameter
                     </md-button>
                 </fieldset>
@@ -88,20 +88,20 @@
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
                            tooltip-popup-delay='750'></i>
                     </a>
-                    <button ng-click="askDeletePort=false" ng-show="askDeletePort" class="btn btn-warning">
+                    <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-warn">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
-                    </button>
-                    <button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
-                            class="btn btn-danger">
+                    </md-button>
+                    <md-button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
+                               class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                    </button>
+                    </md-button>
                 </li>
             </ul>
 
-            <button class="btn btn-default btn-xs" ng-hide="displayFormPort"
-                    ng-click="displayFormPort=!displayFormPort">
+            <md-button class="md-raised" ng-hide="displayFormPort"
+                       ng-click="displayFormPort=!displayFormPort">
                 <i class="fa fa-plus-square"></i>
-            </button>
+            </md-button>
 
             <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
                 <fieldset>
@@ -115,7 +115,7 @@
                            placeholder="description"
                            class="form-control">
                     <md-button ng-disabled="portForm.$invalid"
-                            data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
+                               data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
                         Insert Port
                     </md-button>
                 </fieldset>
@@ -129,21 +129,21 @@
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
                            tooltip-popup-delay='750'></i>
                     </a>
-                    <button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
-                            class="btn btn-warning">
+                    <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                               class="md-raised md-warn">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
-                    </button>
-                    <button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
-                            class="btn btn-danger">
+                    </md-button>
+                    <md-button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
+                               class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                    </button>
+                    </md-button>
                 </li>
             </ul>
 
-            <button class="btn btn-default btn-xs" ng-hide="displayFormVariable"
-                    ng-click="displayFormVariable=!displayFormVariable">
+            <md-button class="md-raised" ng-hide="displayFormVariable"
+                       ng-click="displayFormVariable=!displayFormVariable">
                 <i class="fa fa-plus-square"></i>
-            </button>
+            </md-button>
 
             <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
                   autocomplete="off">
@@ -156,8 +156,8 @@
                            placeholder="description"
                            class="form-control">
                     <md-button ng-disabled="variableForm.$invalid"
-                            data-ng-click="addVariable(image); displayFormVariable=false"
-                            class="md-raised md-primary">
+                               data-ng-click="addVariable(image); displayFormVariable=false"
+                               class="md-raised md-primary">
                         Insert Variable
                     </md-button>
                 </fieldset>
@@ -172,21 +172,21 @@
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
                            tooltip-popup-delay='750'></i>
                     </a>
-                    <button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
-                            class="btn btn-warning">
+                    <md-button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
+                               class="md-raised md-warn">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
-                    </button>
-                    <button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
-                            class="btn btn-danger">
+                    </md-button>
+                    <md-button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
+                               class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                    </button>
+                    </md-button>
                 </li>
             </ul>
 
-            <button class="btn btn-default btn-xs" ng-hide="displayFormVolume"
-                    ng-click="displayFormVolume=!displayFormVolume">
+            <md-button class="md-raised" ng-hide="displayFormVolume"
+                       ng-click="displayFormVolume=!displayFormVolume">
                 <i class="fa fa-plus-square"></i>
-            </button>
+            </md-button>
 
             <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
                   autocomplete="off">
@@ -202,8 +202,8 @@
                     <input type="text" name="descriptionVolume" data-ng-model="volume.description"
                            placeholder="description" class="form-control">
                     <md-button ng-disabled="volumeForm.$invalid"
-                            data-ng-click="addVolume(image); displayFormVolume=false"
-                            class="md-raised md-primary">
+                               data-ng-click="addVolume(image); displayFormVolume=false"
+                               class="md-raised md-primary">
                         Insert Volume
                     </md-button>
                 </fieldset>

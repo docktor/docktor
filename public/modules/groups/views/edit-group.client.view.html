@@ -80,10 +80,10 @@
             <div class="form-group">
                 <label class="control-label" for="title">Filesystem</label>
 
-                <button class="btn btn-default btn-xs" ng-hide="displayFormFilesystem"
+                <md-button class="md-raised" ng-hide="displayFormFilesystem"
                         ng-click="displayFormFilesystem=!displayFormFilesystem">
                     <i class="fa fa-plus-square"></i>
-                </button>
+                </md-button>
 
                 <div class="controls">
                     See
@@ -107,15 +107,15 @@
                                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
                                        tooltip-popup-delay='750'></i>
                                 </a>
-                                <button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                                        class="btn btn-warning">
+                                <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
+                                        class="md-raised md-warn">
                                     No, I don't want to delete this. <i class="fa fa-reply"></i>
-                                </button>
-                                <button data-ng-click="removeFilesystem(filesystem);"
+                                </md-button>
+                                <md-button data-ng-click="removeFilesystem(filesystem);"
                                         ng-show="askDeleteFilesystem"
-                                        class="btn btn-danger">
+                                        class="md-raised md-warn">
                                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                                </button>
+                                </md-button>
                             </li>
                         </ul>
 

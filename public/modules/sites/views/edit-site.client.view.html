@@ -42,17 +42,17 @@
             </fieldset>
         </form>
         <div class="row" ng-if="site._id">
-            <button class="btn btn-danger" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
+            <md-button class="md-raised md-warn" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
                 <i class="fa fa-trash-o"></i> Delete Site
-            </button>
+            </md-button>
             <br>
-            <button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="btn btn-warning">
+            <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-warn">
                 No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </button>
-            <button data-ng-click="remove(site);" ng-show="askDeleteSite"
-                    class="btn btn-danger">
+            </md-button>
+            <md-button data-ng-click="remove(site);" ng-show="askDeleteSite"
+                       class="md-raised md-warn">
                 Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </button>
+            </md-button>
         </div>
     </div>
 </section>

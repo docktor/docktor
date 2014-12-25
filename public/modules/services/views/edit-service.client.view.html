@@ -48,17 +48,17 @@
             </md-button>
 
             <hr>
-            <button class="btn btn-danger" ng-click="askDeleteService=true" ng-hide="askDeleteService">
+            <md-button class="md-raised md-warn" ng-click="askDeleteService=true" ng-hide="askDeleteService">
                 <i class="fa fa-trash-o"></i> Delete Service
-            </button>
+            </md-button>
             <br>
-            <button ng-click="askDeleteService=false" ng-show="askDeleteService" class="btn btn-warning">
+            <md-button ng-click="askDeleteService=false" ng-show="askDeleteService" class="md-raised md-warn">
                 No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </button>
-            <button data-ng-click="remove(service);" ng-show="askDeleteService"
-                    class="btn btn-danger">
+            </md-button>
+            <md-button data-ng-click="remove(service);" ng-show="askDeleteService"
+                    class="md-raised md-warn">
                 Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </button>
+            </md-button>
         </div>
 
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
