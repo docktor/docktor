@@ -2,7 +2,7 @@
 
     <h1>Services</h1>
 
-    <div class="pull-right">
+    <div layout="row" layout-align="end center">
         <md-button href="#!/admin/services/create" class="md-raised md-primary">
             <i class="fa fa-plus"> </i> New Service
         </md-button>
@@ -24,7 +24,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center" data-ng-if="services.$resolved && !services.length">
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="services.$resolved && !services.length">
         No services yet, why don't you <a href="/#!/admin/services/create">create one</a>?
-    </div>
+    </md-toolbar>
 </section>

@@ -1,10 +1,12 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
 
-    <div class="pull-right">
-        <small>
-            <p data-ng-bind="group.description"></p>
-        </small>
-        <div ng-show="authentication.isAdmin">
+    <div layout="row" layout-align="center center">
+        <h3 flex>
+            <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+            / {{group.title}}
+        </h3>
+        <span flex></span>
+        <div ng-show="authentication.isAdmin" flex>
             <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> </i> Deploy a service
             </md-button>
@@ -13,10 +15,8 @@
             </md-button>
         </div>
     </div>
-    <h3>
-        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
-        / {{group.title}}
-    </h3>
+
+    <p data-ng-bind="group.description"></p>
 
     <div class="col-sm-12 row">
         <h4><i class="fa fa-users"></i> Contacts</h4>

@@ -11,12 +11,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 ]);
 
 angular.module(ApplicationConfiguration.applicationModuleName)
-    .config(function($mdThemingProvider) {
+    .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryColor('green')
             .accentColor('teal');
     });
-
 
 //Then define the init function for starting up the application
 angular.element(document).ready(function () {

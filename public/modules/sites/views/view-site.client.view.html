@@ -6,18 +6,7 @@
 
     <p>Longitude : {{site.longitude}}</p>
 
-    <div>
-        <md-button class="md-raised md-primary" href="/#!/admin/sites/{{site._id}}/edit">
-            <i class="fa fa-edit"></i> Edit
-        </md-button>
-    </div>
-    <small>
-        <em class="text-muted">
-            Created at
-            <span data-ng-bind="site.created | date:'mediumDate'"></span>
-            by
-            <span data-ng-bind="site.user.displayName"></span>
-        </em>
-    </small>
-    <p class="lead" data-ng-bind="site.content"></p>
+    <md-button class="md-raised md-primary" href="/#!/admin/sites/{{site._id}}/edit">
+        <i class="fa fa-edit"></i> Edit
+    </md-button>
 </section>

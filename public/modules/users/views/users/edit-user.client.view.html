@@ -4,123 +4,70 @@
         <span ng-show="userToEdit._id">Edit user</span>
     </h1>
 
-    <div class="col-md-12">
-        <form name="userForm" class="form-horizontal" data-ng-submit="update()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="username">Username</label>
+    <div class="row">
+        <form name="userForm" data-ng-submit="update()" novalidate>
 
-                    <div class="col-sm-5 controls">
-                        <input name="username" type="text" data-ng-model="userToEdit.username" id="username"
-                               class="form-control"
-                               placeholder="Username" required>
-                    </div>
-                    <div ng-show="userForm.username.$invalid" class="help-block">
-                        <p ng-show="userForm.username.$error.required" class="text-danger">Username is required</p>
-                    </div>
+            <md-text-float label="Username" ng-model="userToEdit.username" type="text" required></md-text-float>
 
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="firstName">FirstName</label>
-
-                    <div class="col-sm-5">
-                        <input name="latitude" type="text" data-ng-model="userToEdit.firstName" id="firstName"
-                               class="form-control"
-                               placeholder="firstName" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="lastName">LastName</label>
-
-                    <div class="col-sm-5">
-                        <input name="lastName" type="text" data-ng-model="userToEdit.lastName" id="lastName"
-                               class="form-control"
-                               placeholder="lastName" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="email">Email</label>
-
-                    <div class="col-sm-5">
-                        <input name="email" type="text" data-ng-model="userToEdit.email" id="email"
-                               class="form-control"
-                               placeholder="email" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Role</label>
-
-                    <div class="col-sm-5">
-                        <div class="radio-inline">
-                            <label>
-                                <input type="radio" name="radio-inline" ng-model="userToEdit.role" ng-value="'user'">
-                                User
-                                <i class="fa fa-circle-o"></i>
-                            </label>
-                        </div>
-                        <div class="radio-inline">
-                            <label>
-                                <input type="radio" name="radio-inline" ng-model="userToEdit.role" ng-value="'admin'">
-                                Admin
-                                <i class="fa fa-circle-o"></i>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Groups</label>
-
-                    <div class="col-sm-5">
-                        <div class="checkbox" ng-repeat="group in groupsSelected | orderBy:'title'">
-                            <label>
-                                <input ng-show="" type="checkbox" checked
-                                       ng-click="removeGroup(group)"> {{group.title}}
-                                <i class="fa fa-square-o"></i>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        <div class="checkbox" ng-repeat="group in groups.all | orderBy:'title'">
-                            <label>
-                                <input ng-show="" type="checkbox"
-                                       ng-click="addGroup(group)"> {{group.title}}
-                                <i class="fa fa-square-o"></i>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <md-button type="submit" class="md-raised md-primary">
-                        <span ng-show="userToEdit._id"><i class="fa fa-save"></i> Update</span>
-                    </md-button>
-                </div>
-                <div class="row md-warn" ng-show="error">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
-
-        <div class="row">
-            <div ng-show="authentication.user.username===userToEdit.username" class="label label-warning">
-                You can't delete yourself.
+            <div ng-show="userForm.username.$invalid" class="help-block">
+                <p ng-show="userForm.username.$error.required" class="text-danger">Username is required</p>
             </div>
-            <md-button class="md-raised md-warn" ng-click="askDeleteUser=true" ng-hide="askDeleteUser"
-                       ng-disabled="authentication.user.username===userToEdit.username">
-                <i class="fa fa-trash-o"></i> Delete User
+
+            <md-text-float label="FirstName" ng-model="userToEdit.firstName" type="text" required></md-text-float>
+            <md-text-float label="LastName" ng-model="userToEdit.lastName" type="text" required></md-text-float>
+            <md-text-float label="Email" ng-model="userToEdit.email" type="email" required></md-text-float>
+
+            <label class="control-label col-sm-2">Role</label>
+            <md-radio-group ng-model="userToEdit.role">
+                <md-radio-button value="user"> User</md-radio-button>
+                <md-radio-button value="admin">Admin</md-radio-button>
+            </md-radio-group>
+
+            <div class="row">
+                <div flex>Selected Groups</div>
+                <div flex>Available Groups</div>
+            </div>
+
+            <div class="row">
+                <div flex>
+                    <md-checkbox ng-repeat="group in groupsSelected | orderBy:'title'"
+                                 ng-click="removeGroup(group)"> {{group.title}}
+                    </md-checkbox>
+                </div>
+
+                <div flex>
+                    <md-checkbox ng-repeat="group in groups.all | orderBy:'title'"
+                                 ng-click="addGroup(group)">{{group.title}}
+                    </md-checkbox>
+                </div>
+            </div>
+
+            <md-button type="submit" class="md-raised md-primary">
+                <span ng-show="userToEdit._id"><i class="fa fa-save"></i> Update</span>
             </md-button>
-            <br>
-            <md-button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="md-raised md-warn">
-                No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </md-button>
-            <md-button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"
-                       class="md-raised md-warn">
-                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </md-button>
-        </div>
+            <div class="row md-warn" ng-show="error">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </form>
     </div>
+    <div class="row">
+        <md-button ng-show="authentication.user.username===userToEdit.username" disabled="true"
+                   class="md-accent md-warn" layout-align="center center">
+            <i class="fa fa-trash-o"></i> You can't delete yourself.
+        </md-button>
+        <br>
+        <md-button class="md-raised md-warn" ng-click="askDeleteUser=true"
+                   ng-show="authentication.user.username!==userToEdit.username" ng-hide="askDeleteUser">
+            <i class="fa fa-trash-o"></i> Delete User
+        </md-button>
+
+        <md-button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="md-raised md-warn">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"
+                   class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
+    </div>
+
 </section>

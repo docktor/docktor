@@ -5,24 +5,26 @@
         <span ng-show="site._id">Edit Site</span>
     </h1>
 
-    <form name="siteForm2" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
-        <md-text-float label="Title" ng-model="site.title" required></md-text-float>
-        <md-text-float label="Latitude" ng-model="site.latitude" required></md-text-float>
-        <md-text-float label="Longitude" ng-model="site.longitude" required></md-text-float>
+    <div class="row">
+        <form name="siteForm2" data-ng-submit="submitForm()" novalidate>
+            <md-text-float label="Title" ng-model="site.title" type="text" required></md-text-float>
+            <md-text-float label="Latitude" ng-model="site.latitude" type="number" required></md-text-float>
+            <md-text-float label="Longitude" ng-model="site.longitude" type="number" required></md-text-float>
 
-        <md-button type="submit" class="md-raised md-primary">
-            <span ng-hide="site._id"><i class="fa fa-save"></i> Create</span>
-            <span ng-show="site._id"><i class="fa fa-save"></i> Update</span>
-        </md-button>
-        <div class="row md-warn" ng-show="error">
-            <strong data-ng-bind="error"></strong>
-        </div>
-    </form>
+            <md-button type="submit" class="md-raised md-primary">
+                <span ng-hide="site._id"><i class="fa fa-save"></i> Create</span>
+                <span ng-show="site._id"><i class="fa fa-save"></i> Update</span>
+            </md-button>
+            <div class="row md-warn" ng-show="error">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </form>
+    </div>
+    <br>
     <div class="row" ng-if="site._id">
         <md-button class="md-raised md-warn" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
             <i class="fa fa-trash-o"></i> Delete Site
         </md-button>
-        <br>
         <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-warn">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>

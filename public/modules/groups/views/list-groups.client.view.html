@@ -35,13 +35,12 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center"
-         data-ng-if="groups.$resolved && !groups.length">
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="groups.$resolved && !groups.length">
         <span ng-show="authentication.isAdmin">
             No group yet, why don't you <a href="/#!/admin/groups/create">create one</a>?
         </span>
         <span ng-hide="authentication.isAdmin">
             No group yet, ask the Administrators.
         </span>
-    </div>
+    </md-toolbar>
 </section>

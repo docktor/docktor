@@ -13,6 +13,7 @@ module.exports = {
     assets: {
         lib: {
             css: [
+                'public/lib/angular-material/default-theme.css',
                 'public/lib/angular-material/themes/green-theme.css',
                 'public/lib/angular-material/themes/grey-theme.css',
                 'public/lib/angular-material/angular-material.css',

@@ -81,7 +81,7 @@
                 <label class="control-label" for="title">Filesystem</label>
 
                 <md-button class="md-raised" ng-hide="displayFormFilesystem"
-                        ng-click="displayFormFilesystem=!displayFormFilesystem">
+                           ng-click="displayFormFilesystem=!displayFormFilesystem">
                     <i class="fa fa-plus-square"></i>
                 </md-button>
 
@@ -108,12 +108,12 @@
                                        tooltip-popup-delay='750'></i>
                                 </a>
                                 <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                                        class="md-raised md-warn">
+                                           class="md-raised md-warn">
                                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                                 </md-button>
                                 <md-button data-ng-click="removeFilesystem(filesystem);"
-                                        ng-show="askDeleteFilesystem"
-                                        class="md-raised md-warn">
+                                           ng-show="askDeleteFilesystem"
+                                           class="md-raised md-warn">
                                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                                 </md-button>
                             </li>
@@ -178,7 +178,7 @@
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button data-ng-click="remove();" ng-show="askDeleteGroup"
-                class="md-raised md-warn">
+                   class="md-raised md-warn">
             Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
         </md-button>
     </div>

@@ -1,7 +1,7 @@
 <section data-ng-controller="DaemonsController" data-ng-init="find()">
     <h1>Daemons</h1>
 
-    <div class="pull-right">
+    <div layout="row" layout-align="end center">
         <md-button href="#!/admin/daemons/create" class="md-raised md-primary">
             <i class="fa fa-plus"> </i> New Daemon
         </md-button>
@@ -65,8 +65,8 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center" data-ng-if="daemons.$resolved && !daemons.length">
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
         No daemons yet, why don't you <a href="/#!/admin/daemons/create">create one</a>?
-    </div>
+    </md-toolbar>
 
 </section>

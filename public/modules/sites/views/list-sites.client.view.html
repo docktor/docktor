@@ -2,7 +2,7 @@
 
     <h1>Sites</h1>
 
-    <div class="pull-right">
+    <div layout="row" layout-align="end center">
         <md-button href="#!/admin/sites/create" class="md-raised md-primary">
             <i class="fa fa-plus"> </i> New Site
         </md-button>
@@ -26,7 +26,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center" data-ng-if="sites.$resolved && !sites.length">
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="sites.$resolved && !sites.length">
         No sites yet, why don't you <md-button class="md-accent" href="/#!/admin/sites/create">create one</md-button> ?
-    </div>
+    </md-toolbar>
 </section>

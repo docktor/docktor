@@ -11,7 +11,8 @@
            ng-if="subitem.shouldRender(authentication.user);"
            ui-route="{{subitem.uiRoute}}"
            ng-class="{active: $uiRoute}"
-           href="/#!/{{subitem.link}}">
+           href="/#!/{{subitem.link}}"
+           ng-click="close('left')">
             <span>{{subitem.title}}</span>
         </a>
     </div>
