@@ -5,59 +5,30 @@
         <span ng-show="site._id">Edit Site</span>
     </h1>
 
+    <form name="siteForm2" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
+        <md-text-float label="Title" ng-model="site.title" required></md-text-float>
+        <md-text-float label="Latitude" ng-model="site.latitude" required></md-text-float>
+        <md-text-float label="Longitude" ng-model="site.longitude" required></md-text-float>
 
-    <md-text-float label="Latitude" ng-model="site.latitude"></md-text-float>
-    <md-text-float label="Latitude" ng-model="site.latitude"></md-text-float>
-    <md-text-float label="Longitude" ng-model="site.longitude"></md-text-float>
-
-    <div class="col-md-12">
-        <form name="siteForm2" class="form-horizontal" data-ng-submit="submitForm()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="latitude">Latitude</label>
-
-                    <div class="col-sm-5">
-                        <input name="latitude" type="number" data-ng-model="site.latitude" id="latitude"
-                               class="form-control"
-                               placeholder="latitude" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="longitude">Longitude</label>
-
-                    <div class="col-sm-5">
-                        <input name="longitude" type="number" data-ng-model="site.longitude" id="longitude"
-                               class="form-control"
-                               placeholder="longitude" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <md-button type="submit" class="md-raised md-primary">
-                        <span ng-hide="site._id"><i class="fa fa-save"></i> Create</span>
-                        <span ng-show="site._id"><i class="fa fa-save"></i> Update</span>
-                    </md-button>
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
-        <div class="row" ng-if="site._id">
-            <md-button class="md-raised md-warn" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
-                <i class="fa fa-trash-o"></i> Delete Site
-            </md-button>
-            <br>
-            <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-warn">
-                No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </md-button>
-            <md-button data-ng-click="remove(site);" ng-show="askDeleteSite"
-                       class="md-raised md-warn">
-                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </md-button>
+        <md-button type="submit" class="md-raised md-primary">
+            <span ng-hide="site._id"><i class="fa fa-save"></i> Create</span>
+            <span ng-show="site._id"><i class="fa fa-save"></i> Update</span>
+        </md-button>
+        <div class="row md-warn" ng-show="error">
+            <strong data-ng-bind="error"></strong>
         </div>
+    </form>
+    <div class="row" ng-if="site._id">
+        <md-button class="md-raised md-warn" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
+            <i class="fa fa-trash-o"></i> Delete Site
+        </md-button>
+        <br>
+        <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-warn">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button data-ng-click="remove(site);" ng-show="askDeleteSite"
+                   class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
     </div>
 </section>
