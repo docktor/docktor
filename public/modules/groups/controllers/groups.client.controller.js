@@ -9,6 +9,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         //TODO Grafana URL -> Admin Parameter
+        // See https://github.com/docktor/docktor/issues/64
         $scope.grafanaUrl = 'http://' + $location.host() + ':8090/#/dashboard/script/docktor.js';
 
         $scope.submitForm = function () {
@@ -155,17 +156,19 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         Daemons.get({
                             daemonId: daemonId
                         }, function (daemon) {
-                            Daemon.getDetails(daemon, function () {
-                                daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                                $scope.daemons.all.push(daemon);
-                                if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
-                                    $scope.group.selectDaemon = daemon;
-                                    if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                                }
-                                if (cb) cb(daemon);
+                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                            $scope.daemons.all.push(daemon);
+                            if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                                $scope.group.selectDaemon = daemon;
+                                // TODO https://github.com/docktor/docktor/issues/44
+                                if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                            }
+                            if (cb) cb(daemon);
+
+                            /*Daemon.getDetails(daemon, function () {
                             }, function (err) {
                                 if (cb) cb();
-                            });
+                            });*/
                         });
                     }
                 });
@@ -173,16 +176,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 // here : create group or edit group with no deployed containers
                 Daemons.query(function (daemons) {
                     daemons.forEach(function (daemon) {
-                        Daemon.getDetails(daemon, function () {
-                            daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                            $scope.daemons.all.push(daemon);
-                            if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
-                                $scope.group.selectDaemon = daemon;
-                                $scope.showFreePortRangeOnContainer();
-                                if (fsToCompute) $scope.computeFsForGroup($scope.group);
-                            }
-
-                        });
+                        daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                        $scope.daemons.all.push(daemon);
+                        if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
+                            $scope.group.selectDaemon = daemon;
+                            $scope.showFreePortRangeOnContainer();
+                            //if (fsToCompute) $scope.computeFsForGroup($scope.group);
+                        }
+                        /*Daemon.getDetails(daemon, function () {
+                        });*/
                     });
                 });
             }
@@ -326,6 +328,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.addFilesystem = function () {
+            // TODO https://github.com/docktor/docktor/issues/44
             if (!$scope.group.filesystems) $scope.group.filesystems = [];
             $scope.group.filesystems.push($scope.filesystem);
             $scope.filesystem = {};
