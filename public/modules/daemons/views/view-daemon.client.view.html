@@ -5,15 +5,6 @@
     <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
     <p>{{daemon.description}}</p>
-    <small>
-        <em class="text-muted">
-            Created on
-            <span data-ng-bind="daemon.created | date:'mediumDate'"></span>
-            by
-            <span data-ng-bind="daemon.user.displayName"></span>
-        </em>
-    </small>
-    <br>
 
     <h2>Actions</h2>
     <md-button class="md-raised md-primary" href="/#!/admin/daemons/edit/{{daemon._id}}">

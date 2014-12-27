@@ -743,3 +743,6 @@ form > .row {
         background-color: #ffccbc;
     }
 }
+
+md-input-group.long > input {
+    width: 264px; }

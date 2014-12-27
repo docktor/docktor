@@ -1,8 +1,6 @@
 <section data-ng-controller="UsersController" data-ng-init="findOne()">
 
-    <h1>
-        <span ng-show="userToEdit._id">Edit user</span>
-    </h1>
+    <h1>Edit user</h1>
 
     <div class="row">
         <form name="userForm" data-ng-submit="update()" novalidate>
@@ -19,7 +17,7 @@
 
             <label class="control-label col-sm-2">Role</label>
             <md-radio-group ng-model="userToEdit.role">
-                <md-radio-button value="user"> User</md-radio-button>
+                <md-radio-button value="user">User</md-radio-button>
                 <md-radio-button value="admin">Admin</md-radio-button>
             </md-radio-group>
 
@@ -31,7 +29,7 @@
             <div class="row">
                 <div flex>
                     <md-checkbox ng-repeat="group in groupsSelected | orderBy:'title'"
-                                 ng-click="removeGroup(group)"> {{group.title}}
+                                 ng-click="removeGroup(group)" ng-checked="true"> {{group.title}}
                     </md-checkbox>
                 </div>
 

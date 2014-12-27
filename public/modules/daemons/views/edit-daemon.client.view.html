@@ -5,132 +5,100 @@
         <span ng-show="daemon._id">Edit Daemon</span>
     </h1>
 
-    <div class="col-md-12">
-        <form name="daemonForm" class="form-horizontal" novalidate>
-            <fieldset>
-                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
-                    <label class="control-label col-sm-2" for="name">Name</label>
+    <form name="daemonForm" class="form-horizontal" novalidate>
 
-                    <div class="col-sm-5">
-                        <input name="name" type="text" data-ng-model="daemon.name" id="name" ng-pattern="patternTitle"
-                               class="form-control" placeholder="Title..." maxlength="200" required>
-                    </div>
-                    <div class="col-sm-5">
-                        <p ng-show="daemonForm.name.$error.required" class="text-danger">Title is required</p>
+        <div class="row">
+            <md-text-float label="Name" ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true">
+            </md-text-float>
 
-                        <p ng-show="daemonForm.name.$invalid" class="text-danger">
-                            The title have to match this pattern : [a-zA-Z0-9_]{1,200}</p>
-                    </div>
-                </div>
+            <div ng-show="daemonForm.name.$invalid" class="md-warn">
+                The title have to match this pattern : [a-zA-Z0-9_]{1,200}
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="name">Site</label>
+        <div class="row">
+            <div flex="10">Site</div>
 
-                    <div class="col-sm-5">
-                        <select ng-model="daemon.selectSite"
-                                ng-options="site.title for site in sites.all">
-                        </select>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="protocol">Docker Host</label>
+            <div flex>
+                <select ng-model="daemon.selectSite"
+                        ng-options="site as site.title for site in sites.all track by site._id">
+                </select>
+            </div>
+        </div>
 
-                    <div class="col-sm-1">
-                        <input name="protocol" type="text" data-ng-model="daemon.protocol" id="protocol"
-                               class="form-control" placeholder="http or https" required>
-                    </div>
-                    <div class="col-sm-2">
-                        <input name="host" type="text" data-ng-model="daemon.host" id="host" class="form-control"
-                               placeholder="ip or hostname" required>
-                    </div>
-                    <div class="col-sm-2">
-                        <input name="port" type="number" data-ng-model="daemon.port" id="port" class="form-control"
-                               placeholder="port" required>
-                    </div>
-                    <div class="col-sm-5">
+        <div class="row">
+            <label>Docker Host</label>
 
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.timedout.$invalid }">
-                    <label class="control-label col-sm-2" for="timedout">Timeout in ms</label>
+            <div>
+                <md-radio-group ng-model="daemon.protocol" required>
+                    <md-radio-button value="http">http</md-radio-button>
+                    <md-radio-button value="https">https</md-radio-button>
+                </md-radio-group>
+            </div>
+            <div>
+                <md-text-float label="IP or Hostname" ng-model="daemon.host" type="text" required="true">
+                </md-text-float>
+            </div>
+            <div>
+                <md-text-float label="Port" ng-model="daemon.port" type="number" required="true"></md-text-float>
+            </div>
+            <div>
+                <md-text-float label="Timeout in ms" ng-model="daemon.timedout" type="number"
+                               required="true"></md-text-float>
+            </div>
+        </div>
+        <div class="row">
 
-                    <div class="col-sm-5">
-                        <input name="timedout" type="number" data-ng-model="daemon.timedout" id="timedout"
-                               class="form-control"
-                               placeholder="timedout" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="ca">CA</label>
+            <div flex="10">CA</div>
 
-                    <div class="col-sm-5">
-                        <textarea name="ca" data-ng-model="daemon.ca" id="ca" class="form-control" cols="30" rows="10"
-                                  placeholder="CA Content File"></textarea>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="cert">CERT</label>
+            <div flex>
+                <md-input-group>
+                <textarea name="ca" data-ng-model="daemon.ca" id="ca" class="form-control" cols="40" rows="3"
+                          placeholder="CA Content File"></textarea>
+                </md-input-group>
+            </div>
 
-                    <div class="col-sm-5">
-                        <textarea name="cert" data-ng-model="daemon.cert" id="cert" class="form-control" cols="30"
-                                  rows="10" placeholder="CERT Content File"></textarea>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="cert">Key</label>
+        </div>
+        <div class="row">
+            <div flex="10">CERT</div>
 
-                    <div class="col-sm-5">
-                        <textarea name="key" data-ng-model="daemon.key" id="key" class="form-control" cols="30"
-                                  rows="10" placeholder="KEY Content File"></textarea>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="volume">Default data volume</label>
+            <div flex>
+                <md-input-group>
+                <textarea name="cert" data-ng-model="daemon.cert" id="cert" class="form-control" cols="40"
+                          rows="3" placeholder="CERT Content File"></textarea>
+                </md-input-group>
+            </div>
+        </div>
+        <div class="row">
+            <div flex="10">Key</div>
 
-                    <div class="col-sm-5">
-                        <input type="text" name="volume" data-ng-model="daemon.volume" id="volume" class="form-control"
-                               placeholder="/data"/>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': submitted &&  daemonForm.cadvisorApi.$invalid }">
-                    <label class="control-label col-sm-2" for="cadvisorApi">URL cAdvisor Api</label>
+            <div flex>
+                <md-input-group>
+                <textarea name="key" data-ng-model="daemon.key" id="key" class="form-control" cols="40"
+                          rows="3" placeholder="KEY Content File"></textarea>
+                </md-input-group>
+            </div>
+        </div>
+        <div class="row">
+            <md-text-float class="long" label="Default data volume" ng-model="daemon.volume"
+                           type="text"></md-text-float>
 
-                    <div class="col-sm-5">
-                        <input name="cadvisorApi" type="text" data-ng-model="daemon.cadvisorApi" id="cadvisorApi"
-                               class="form-control"
-                               placeholder="http://<host>:<port>/api/v1.0" required>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="description">Description</label>
+            <div>
+                Example : /data
+            </div>
+        </div>
+        <div class="row">
+            <md-text-float class="long" label="URL cAdvisor Api" ng-model="daemon.cadvisorApi"
+                           type="text"></md-text-float>
 
-                    <div class="col-sm-5">
-                        <input type="text" name="description" data-ng-model="daemon.description" id="description"
-                               class="form-control" cols="30" rows="10" placeholder="Description"/>
-                    </div>
-                    <div class="col-sm-5">
-                    </div>
-                </div>
-            </fieldset>
+            <div>http://host:port/api/v1.0</div>
+        </div>
+        <div class="row">
+            <md-text-float class="long" label="Description" ng-model="daemon.description" type="text"></md-text-float>
+        </div>
+    </form>
 
-        </form>
-    </div>
-
-    <div class="form-group">
+    <div class="row">
         <h3>Parameters</h3>
 
         <ul data-ng-repeat="parameter in daemon.parameters">
@@ -157,23 +125,20 @@
         </md-button>
 
         <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
-              autocomplete="off">
-            <fieldset>
-                <input type="text" name="name" data-ng-model="parameter.name"
-                       placeholder="name" class="form-control" ng-required="true">
-                <input type="text" name="value" data-ng-model="parameter.value"
-                       placeholder="defaultValue" class="form-control" ng-required="true">
-                <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
-                       placeholder="description" class="form-control">
-                <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
-                           data-ng-click="addParameter(); displayFormParameter=false">
-                    Insert Parameter
-                </md-button>
-            </fieldset>
+              autocomplete="off" layout="row">
+            <md-text-float label="Name" ng-model="parameter.name" type="text" ng-required="true"></md-text-float>
+            <md-text-float label="Default Value" ng-model="parameter.value" type="text"
+                           ng-required="true"></md-text-float>
+            <md-text-float label="Description" ng-model="parameter.description" type="text"></md-text-float>
+
+            <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
+                       data-ng-click="addParameter(); displayFormParameter=false">
+                Insert Parameter
+            </md-button>
         </form>
     </div>
 
-    <div class="form-group">
+    <div class="row">
         <h3>Ports</h3>
         <ul data-ng-repeat="port in daemon.ports">
             <li>-p &lg;externalPort-attributed-on-group&gt;:{{port.internal}}/{{port.protocol}}
@@ -197,26 +162,26 @@
             <i class="fa fa-plus-square"></i>
         </md-button>
 
-        <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
-            <fieldset>
-                <input type="number" name="internal" data-ng-model="port.internal"
-                       placeholder="internal" class="form-control" ng-required="true">
-                <select data-ng-model="port.protocol" class="form-control" ng-required="true">
-                    <option value="tcp">tcp</option>
-                    <option value="udp">udp</option>
-                </select>
-                <input type="text" name="descriptionPort" data-ng-model="port.description"
-                       placeholder="description"
-                       class="form-control">
-                <md-button ng-disabled="portForm.$invalid"
-                           data-ng-click="addPort(); displayFormPort=false" class="md-raised md-primary">
-                    Insert Port
-                </md-button>
-            </fieldset>
+        <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off" layout="row">
+            <md-text-float label="Internal Port" ng-model="port.internal" type="number"
+                           ng-required="true">
+            </md-text-float>
+
+            <md-radio-group ng-model="port.protocol" ng-required="true">
+                <md-radio-button value="tcp">tcp</md-radio-button>
+                <md-radio-button value="udp">udp</md-radio-button>
+            </md-radio-group>
+
+            <md-text-float label="Description" ng-model="port.description" type="text"></md-text-float>
+
+            <md-button ng-disabled="portForm.$invalid"
+                       data-ng-click="addPort(); displayFormPort=false" class="md-raised md-primary">
+                Insert Port
+            </md-button>
         </form>
     </div>
 
-    <div class="form-group">
+    <div class="row">
         <h3>Variables</h3>
         <ul data-ng-repeat="variable in daemon.variables">
             <li>
@@ -245,25 +210,20 @@
         </md-button>
 
         <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
-              autocomplete="off">
-            <fieldset>
-                <input type="text" name="name" data-ng-model="variable.name"
-                       placeholder="name" class="form-control" ng-required="true">
-                <input type="text" name="value" data-ng-model="variable.value"
-                       placeholder="default Value" class="form-control">
-                <input type="text" name="descriptionVariable" data-ng-model="variable.description"
-                       placeholder="description"
-                       class="form-control">
-                <md-button ng-disabled="variableForm.$invalid"
-                           data-ng-click="addVariable(); displayFormVariable=false"
-                           class="md-raised md-primary">
-                    Insert Variable
-                </md-button>
-            </fieldset>
+              autocomplete="off" layout="row">
+            <md-text-float label="Name" ng-model="variable.name" type="text" ng-required="true"></md-text-float>
+            <md-text-float label="Default Value" ng-model="variable.value" type="text"></md-text-float>
+            <md-text-float label="Description" ng-model="variable.description" type="text"></md-text-float>
+
+            <md-button ng-disabled="variableForm.$invalid"
+                       data-ng-click="addVariable(); displayFormVariable=false"
+                       class="md-raised md-primary">
+                Insert Variable
+            </md-button>
         </form>
     </div>
 
-    <div class="form-group">
+    <div class="row">
         <h3>Volume</h3>
         <ul data-ng-repeat="volume in daemon.volumes">
             <li>
@@ -292,28 +252,28 @@
         </md-button>
 
         <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
-              autocomplete="off">
-            <fieldset>
-                <input type="text" name="internal" data-ng-model="volume.internal"
-                       placeholder="internal" class="form-control" ng-required="true">
-                <input type="text" name="value" data-ng-model="volume.value"
-                       placeholder="/exemple/defaultValue" class="form-control">
-                <select data-ng-model="volume.rights" class="form-control" ng-required="true">
-                    <option value="ro">ro</option>
-                    <option value="rw">rw</option>
-                </select>
-                <input type="text" name="descriptionVolume" data-ng-model="volume.description"
-                       placeholder="description" class="form-control">
-                <md-button ng-disabled="volumeForm.$invalid"
-                           data-ng-click="addVolume(); displayFormVolume=false"
-                           class="md-raised md-primary">
-                    Insert Volume
-                </md-button>
+              autocomplete="off" layout="row">
+
+            <md-text-float label="Internal Volume" ng-model="volume.internal" type="text"
+                           ng-required="true"></md-text-float>
+            <md-text-float label="Default Value" ng-model="volume.value" type="text"></md-text-float>
+            <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
+                <md-radio-button value="rw">Read-Write</md-radio-button>
+                <md-radio-button value="ro">Read Only</md-radio-button>
+            </md-radio-group>
+            <md-text-float label="Description" ng-model="volume.description" type="text"></md-text-float>
+
+            <md-button ng-disabled="volumeForm.$invalid"
+                       data-ng-click="addVolume(); displayFormVolume=false"
+                       class="md-raised md-primary">
+                Insert Volume
+            </md-button>
             </fieldset>
         </form>
     </div>
+    <br>
 
-    <div class="form-group">
+    <div class="row">
         <md-button ng-click="submitForm(daemonForm.$valid)" class="md-raised md-primary">
             <span ng-hide="daemon._id"><i class="fa fa-save"></i> Create Daemon</span>
             <span ng-show="daemon._id"><i class="fa fa-save"></i> Update Daemon</span>
@@ -323,19 +283,19 @@
     <div class="row md-warn" ng-show="error">
         <strong data-ng-bind="error"></strong>
     </div>
+    <br>
 
-    <md-button class="md-raised md-warn" ng-click="askDeleteDaemon=true" ng-hide="askDeleteDaemon">
-        <i class="fa fa-trash-o" tooltip="Delete Daemon"
-           tooltip-popup-delay='750'> </i> Delete Deamon
-    </md-button>
-    <md-button ng-click="askDeleteDaemon=false" ng-show="askDeleteDaemon" class="md-raised md-warn">
-        No, I don't want to delete this. <i class="fa fa-reply"></i>
-    </md-button>
-    <md-button data-ng-click="remove(daemon);" ng-show="askDeleteDaemon"
-               class="md-raised md-warn">
-        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-    </md-button>
-
-    </fieldset>
+    <div class="row">
+        <md-button class="md-raised md-warn" ng-click="askDeleteDaemon=true" ng-hide="askDeleteDaemon">
+            <i class="fa fa-trash-o" tooltip="Delete Daemon"
+               tooltip-popup-delay='750'> </i> Delete Deamon
+        </md-button>
+        <md-button ng-click="askDeleteDaemon=false" ng-show="askDeleteDaemon" class="md-raised md-warn">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button data-ng-click="remove(daemon);" ng-show="askDeleteDaemon"
+                   class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
     </div>
 </section>
