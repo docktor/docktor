@@ -5,10 +5,11 @@ module.exports = {
     assets: {
         lib: {
             css: [
+                'public/lib/angular-material/default-theme.css',
                 'public/lib/angular-material/themes/green-theme.css',
                 'public/lib/angular-material/themes/grey-theme.css',
                 'public/lib/angular-material/angular-material.css',
-                'public/lib/fontawesome/css/font-awesome.min.css',
+                'public/lib/fontawesome/css/font-awesome.css',
                 'public/lib/trNgGrid/release/trNgGrid.min.css'
             ],
             js: [

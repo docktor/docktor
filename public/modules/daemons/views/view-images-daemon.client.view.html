@@ -38,7 +38,7 @@
 
     <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
         <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
-            {{line.id}}
+            {{line.id}}#
         </div>
     </alert>
 
