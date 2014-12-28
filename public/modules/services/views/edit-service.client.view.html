@@ -5,66 +5,58 @@
         <span ng-show="service._id">Edit Service</span>
     </h1>
 
-    <div class="col-md-12">
-        <form name="serviceForm" data-ng-submit="submitForm()" novalidate>
-            <fieldset>
+    <form name="serviceForm" data-ng-submit="submitForm()" novalidate>
+        <div class="row">
+            <md-text-float md-fid="title" label="Title" ng-model="service.title"
+                           ng-pattern="patternTitle" ng-required="true" type="text">
+            </md-text-float>
+            <div>
+                The title have to match this pattern : [a-zA-Z0-9_]{1,200}
+                <p ng-show="serviceForm.title.$error.required" class="text-danger">Title is required</p>
 
-                <div class="form-group" ng-class="{ 'has-error': submitted && daemonForm.name.$invalid }">
-                    <label class="control-label col-sm-2" for="title">Title</label>
-
-                    <div class="col-sm-5">
-                        <input name="title" type="text" data-ng-model="service.title" id="title"
-                               ng-pattern="patternTitle"
-                               class="form-control" placeholder="Title of service" maxlength="200" required>
-                    </div>
-                    <div class="col-sm-5">
-                        <p ng-show="serviceForm.title.$error.required" class="text-danger">Title is required</p>
-
-                        <p ng-show="serviceForm.title.$invalid" class="text-danger">
-                            The title have to match this pattern : [a-zA-Z0-9_]{1,200}</p>
-                    </div>
-                </div>
-
-                <div class="form-group" ng-hide="service._id">
-                    <md-button type="submit" class="md-raised md-primary">
-                        Create
-                    </md-button>
-                </div>
-                <div class="row md-warn" ng-show="error">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
-        <hr>
-
-        <div ng-if="service._id">
-            <div ng-include="'/modules/services/views/list-images.client.view.html'"></div>
-            <hr>
-            <div ng-include="'/modules/services/views/list-commands.client.view.html'"></div>
-            <hr>
-            <div ng-include="'/modules/services/views/list-urls.client.view.html'"></div>
-            <md-button ng-click="submitForm()" class="md-raised md-primary">
-                <i class="fa fa-save"></i> Save
-            </md-button>
-
-            <hr>
-            <md-button class="md-raised md-warn" ng-click="askDeleteService=true" ng-hide="askDeleteService">
-                <i class="fa fa-trash-o"></i> Delete Service
-            </md-button>
-            <br>
-            <md-button ng-click="askDeleteService=false" ng-show="askDeleteService" class="md-raised md-warn">
-                No, I don't want to delete this. <i class="fa fa-reply"></i>
-            </md-button>
-            <md-button data-ng-click="remove(service);" ng-show="askDeleteService"
-                    class="md-raised md-warn">
-                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-            </md-button>
+                <p ng-show="serviceForm.title.$invalid" class="text-danger">
+                    The title have to match this pattern : [a-zA-Z0-9_]{1,200}
+                </p>
+            </div>
         </div>
 
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-            <strong>{{alert.title}}</strong><br>
+        <div class="row" ng-hide="service._id">
+            <md-button type="submit" class="md-raised md-primary">
+                Create
+            </md-button>
+        </div>
+        <div class="row md-warn" ng-show="error">
+            <strong data-ng-bind="error"></strong>
+        </div>
+    </form>
 
-            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
-        </alert>
+    <div ng-if="service._id">
+        <div ng-include="'/modules/services/views/list-images.client.view.html'"></div>
+        <hr>
+        <div ng-include="'/modules/services/views/list-commands.client.view.html'"></div>
+        <hr>
+        <div ng-include="'/modules/services/views/list-urls.client.view.html'"></div>
+        <md-button ng-click="submitForm()" class="md-raised md-primary">
+            <i class="fa fa-save"></i> Save
+        </md-button>
+
+        <hr>
+        <md-button class="md-raised md-warn" ng-click="askDeleteService=true" ng-hide="askDeleteService">
+            <i class="fa fa-trash-o"></i> Delete Service
+        </md-button>
+        <br>
+        <md-button ng-click="askDeleteService=false" ng-show="askDeleteService" class="md-raised md-warn">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button data-ng-click="remove(service);" ng-show="askDeleteService"
+                   class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
     </div>
+
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <strong>{{alert.title}}</strong><br>
+
+        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+    </alert>
 </section>

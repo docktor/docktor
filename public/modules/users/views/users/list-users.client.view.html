@@ -2,7 +2,8 @@
 
     <h1>Users</h1>
 
-    <table tr-ng-grid="" items="users" fields="['username', 'firstName', 'lastName', 'email', 'role', 'created', 'groups']"
+    <table tr-ng-grid="" items="users"
+           fields="['username', 'firstName', 'lastName', 'email', 'role', 'created', 'groups']"
            class="table">
         <thead>
         <th field-name="username" display-name="Username" enable-filtering="true"></th>
@@ -23,7 +24,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-warning text-center" data-ng-if="users.$resolved && !users.length">
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="users.$resolved && !users.length">
         No users yet ?!
-    </div>
+    </md-toolbar>
 </section>

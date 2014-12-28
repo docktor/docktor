@@ -12,7 +12,6 @@
         / Edit Group
     </h3>
 
-
     <form name="groupForm" data-ng-submit="submitForm()" novalidate>
         <div class="row">
             <md-text-float md-fid="title" label="Title" ng-model="group.title" type="text"
@@ -107,7 +106,7 @@
                                 ng-options="fs.device for fs in group.selectDaemon.statsCompute.filesystem">
                         </select>
 
-                        <div class="col-sm-4" ng-show="group.currentFs">
+                        <div ng-show="group.currentFs">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-danger" role="progressbar"
                                      aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
@@ -117,7 +116,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-8" ng-show="group.currentFs">
+                        <div ng-show="group.currentFs">
                             <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Gb / {{group.currentFs.capacityInMB}} Gb ({{group.currentFs.usagePercent}}%)</span>
                         </div>
 
@@ -146,11 +145,11 @@
         <strong data-ng-bind="error"></strong>
     </div>
 
+    <br>
     <div ng-show="group._id" class="row">
         <md-button class="md-raised md-warn" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group
         </md-button>
-        <br>
         <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-warn">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>

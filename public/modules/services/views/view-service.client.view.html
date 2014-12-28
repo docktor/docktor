@@ -5,13 +5,14 @@
     <div>
         <h2>Images</h2>
 
-        <div ng-if="service.images.length <= 0" class="alert alert-warning">
+        <md-toolbar class="md-accent" layout-align="center center" ng-if="service.images.length <= 0">
             No associated image yet. Please add one by editing this service.
-        </div>
+        </md-toolbar>
         <ul data-ng-repeat="image in service.images">
             <li>{{image.name}}, active : {{image.active}}</li>
         </ul>
     </div>
+    <br>
     <div>
         <md-button class="md-raised md-primary" href="/#!/admin/services/{{service._id}}/edit">
             <i class="fa fa-edit"></i> Edit

@@ -32,15 +32,13 @@
             </div>
         </td>
         <td>
-            <div class="form-group">
-
-                <input name="imageName" type="text" data-ng-model="image.name" id="imageName"
-                       class="form-control" placeholder="imageName">
+            <div class="row">
+                <md-text-float label="Image Name" ng-model="image.name" type="text" required="true">
+                </md-text-float>
             </div>
             isActive : {{image.active}}
         </td>
         <td>
-
             <ul data-ng-repeat="parameter in image.parameters">
                 <li>{{parameter.name}}:{{parameter.value}}
                     <small><i>{{parameter.description}}</i></small>
@@ -64,20 +62,14 @@
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
-            <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
-                  autocomplete="off">
-                <fieldset>
-                    <input type="text" name="name" data-ng-model="parameter.name"
-                           placeholder="name" class="form-control" ng-required="true">
-                    <input type="text" name="value" data-ng-model="parameter.value"
-                           placeholder="defaultValue" class="form-control" ng-required="true">
-                    <input type="text" name="descriptionParameter" data-ng-model="parameter.description"
-                           placeholder="description" class="form-control">
-                    <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
-                               data-ng-click="addParameter(image); displayFormParameter=false">
-                        Insert Parameter
-                    </md-button>
-                </fieldset>
+            <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate autocomplete="off">
+                <md-text-float label="Name" ng-model="parameter.name" type="text" ng-required="true"></md-text-float>
+                <md-text-float label="Default Value" ng-model="parameter.value" type="text"></md-text-float>
+                <md-text-float label="Description" ng-model="parameter.description" type="text"></md-text-float>
+                <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
+                           data-ng-click="addParameter(image); displayFormParameter=false">
+                    Insert Parameter
+                </md-button>
             </form>
         </td>
         <td>
@@ -98,27 +90,24 @@
                 </li>
             </ul>
 
-            <md-button class="md-raised" ng-hide="displayFormPort"
-                       ng-click="displayFormPort=!displayFormPort">
+            <md-button class="md-raised" ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
             <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
-                <fieldset>
-                    <input type="number" name="internal" data-ng-model="port.internal"
-                           placeholder="internal" class="form-control" ng-required="true">
-                    <select data-ng-model="port.protocol" class="form-control" ng-required="true">
-                        <option value="tcp">tcp</option>
-                        <option value="udp">udp</option>
-                    </select>
-                    <input type="text" name="descriptionPort" data-ng-model="port.description"
-                           placeholder="description"
-                           class="form-control">
-                    <md-button ng-disabled="portForm.$invalid"
-                               data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
-                        Insert Port
-                    </md-button>
-                </fieldset>
+                <md-text-float label="Internal Port" ng-model="port.internal" type="number" ng-required="true">
+                </md-text-float>
+                <md-radio-group ng-model="port.protocol" ng-required="true">
+                    <md-radio-button value="tcp">tcp</md-radio-button>
+                    <md-radio-button value="udp">udp</md-radio-button>
+                </md-radio-group>
+                <md-text-float label="Description" ng-model="port.description" type="text"></md-text-float>
+
+                <md-button ng-disabled="portForm.$invalid"
+                           data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
+                    Insert Port
+                </md-button>
+
             </form>
         </td>
         <td>
@@ -145,22 +134,17 @@
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
-            <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
-                  autocomplete="off">
-                <fieldset>
-                    <input type="text" name="name" data-ng-model="variable.name"
-                           placeholder="name" class="form-control" ng-required="true">
-                    <input type="text" name="value" data-ng-model="variable.value"
-                           placeholder="default Value" class="form-control">
-                    <input type="text" name="descriptionVariable" data-ng-model="variable.description"
-                           placeholder="description"
-                           class="form-control">
-                    <md-button ng-disabled="variableForm.$invalid"
-                               data-ng-click="addVariable(image); displayFormVariable=false"
-                               class="md-raised md-primary">
-                        Insert Variable
-                    </md-button>
-                </fieldset>
+            <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate autocomplete="off">
+                <md-text-float label="Name" ng-model="variable.name" type="text" ng-required="true"></md-text-float>
+                <md-text-float label="Default Value" ng-model="variable.value" type="text"></md-text-float>
+                <md-text-float label="Description" ng-model="variable.description" type="text"></md-text-float>
+
+                <md-button ng-disabled="variableForm.$invalid"
+                           data-ng-click="addVariable(image); displayFormVariable=false"
+                           class="md-raised md-primary">
+                    Insert Variable
+                </md-button>
+
             </form>
         </td>
         <td>
@@ -188,25 +172,21 @@
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
-            <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
-                  autocomplete="off">
-                <fieldset>
-                    <input type="text" name="internal" data-ng-model="volume.internal"
-                           placeholder="internal" class="form-control" ng-required="true">
-                    <input type="text" name="value" data-ng-model="volume.value"
-                           placeholder="/exemple/defaultValue" class="form-control">
-                    <select data-ng-model="volume.rights" class="form-control" ng-required="true">
-                        <option value="ro">RO</option>
-                        <option value="rw">RW</option>
-                    </select>
-                    <input type="text" name="descriptionVolume" data-ng-model="volume.description"
-                           placeholder="description" class="form-control">
-                    <md-button ng-disabled="volumeForm.$invalid"
-                               data-ng-click="addVolume(image); displayFormVolume=false"
-                               class="md-raised md-primary">
-                        Insert Volume
-                    </md-button>
-                </fieldset>
+            <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate autocomplete="off">
+                <md-text-float label="Internal Volume" ng-model="volume.internal" type="text"
+                               ng-required="true"></md-text-float>
+                <md-text-float label="Default Value" ng-model="volume.value" type="text"></md-text-float>
+                <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
+                    <md-radio-button value="rw">Read-Write</md-radio-button>
+                    <md-radio-button value="ro">Read Only</md-radio-button>
+                </md-radio-group>
+                <md-text-float label="Description" ng-model="volume.description" type="text"></md-text-float>
+
+                <md-button ng-disabled="volumeForm.$invalid"
+                           data-ng-click="addVolume(image); displayFormVolume=false"
+                           class="md-raised md-primary">
+                    Insert Volume
+                </md-button>
             </form>
         </td>
     </tr>
