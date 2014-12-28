@@ -7,7 +7,7 @@
         / Service {{container.serviceTitle}}
     </h3>
 
-    <div class="col-sm-12 row">
+    <div class="row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
         <span ng-repeat="u in group.users">
             <md-button class="md-accent" href="mailto:{{u.email}}">
@@ -23,7 +23,7 @@
         <hr>
     </div>
 
-    <div class="col-sm-12 row">
+    <div class="row">
         <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
         <i class="fa fa-bar-chart"></i>
         <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
@@ -32,7 +32,7 @@
         <hr>
     </div>
 
-    <div class="col-sm-12 row">
+    <div class="row">
         <table class="table table-striped">
             <thead>
             <tr>

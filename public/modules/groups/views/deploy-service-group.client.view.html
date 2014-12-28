@@ -28,8 +28,8 @@
         <h4>Select an image of service {{services.select.title}} :</h4>
 
         <select ng-model="services.selectImage"
-                   ng-change="changeImage()"
-                   ng-options="image.name for image in services.select.images">
+                ng-change="changeImage()"
+                ng-options="image.name for image in services.select.images">
         </select>
     </div>
 
@@ -38,48 +38,48 @@
 
             <h4>Container</h4>
 
-            <div class="form-group" ng-class="{ 'has-error': deployForm.containerName.$invalid }">
-                <label class="control-label col-sm-2" for="containerName">Name</label>
+            <div class="row">
+                <md-text-float class="long" label="Name" ng-model="container.name" ng-pattern="patternName" type="text"
+                               required>
+                </md-text-float>
 
-                <div class="col-sm-5">
-                    <input name="containerName" type="text" ng-model="container.name" id="containerName"
-                           ng-pattern="patternName"
-                           class="form-control" maxlength="200" required>
-                </div>
-                <div class="col-sm-5">
+                <div>
                     <p ng-show="deployForm.containerName.$error.required" class="text-danger">Name is required</p>
 
                     <p ng-show="deployForm.containerName.$invalid" class="text-danger">
                         The name have to match this pattern : [/a-zA-Z0-9_\-]{1,200}</p>
 
-                    <p class="label label-default">
-                        It is not recommanded to modify default value from Docktor</p>
+                    <p>The name have to match this pattern : [/a-zA-Z0-9_\-]{1,200}.</p>
+
+                    <p>It is not recommanded to modify default value from Docktor</p>
                 </div>
             </div>
 
-            <div class="form-group" ng-class="{ 'has-error': deployForm.containerHostname.$invalid }">
-                <label class="control-label col-sm-2" for="containerHostname">Hostname</label>
+            <div class="row">
+                <md-text-float class="long" label="Hostname"
+                               ng-model="container.hostname" ng-pattern="patternHostname" type="text"
+                               required>
+                </md-text-float>
 
-                <div class="col-sm-5">
-                    <input name="containerHostname" type="text" ng-model="container.hostname" id="containerHostname"
-                           ng-pattern="patternHostname"
-                           class="form-control" maxlength="200" required>
-                </div>
-                <div class="col-sm-5">
-                    <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">Hostname is
-                        required</p>
+                <div>
+                    <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">
+                        Hostname is required.
+                    </p>
 
                     <p ng-show="deployForm.containerHostname.$invalid" class="text-danger">
                         The hostname shave to match this pattern : [a-zA-Z0-9_\-]{1,200}</p>
 
-                    <p class="label label-default">
-                        It is not recommanded to modify default value from Docktor</p>
+                    <p>The hostname shave to match this pattern : [a-zA-Z0-9_\-]{1,200}.</p>
+
+                    <p>It is not recommanded to modify default value from Docktor</p>
                 </div>
             </div>
 
             <h4>Parameters</h4>
 
-            <table class="table table-striped">
+            <div ng-show="services.selectImage.parameters.length === 0">No parameter</div>
+
+            <table class="table table-striped" ng-show="services.selectImage.parameters.length > 0">
                 <thead>
                 <tr>
                     <th>Description</th>
@@ -96,7 +96,8 @@
                         {{parameter.name}}
                     </td>
                     <td>
-                        <input type="text" ng-model="parameter.value" class="form-control">
+                        <md-text-float class="long" label="Value" ng-model="parameter.value"
+                                       type="text"></md-text-float>
                     </td>
                 </tr>
                 </tbody>
@@ -104,15 +105,15 @@
 
             <h4>Volumes :</h4>
 
-            <table class="table table-striped">
+            <div ng-show="services.selectImage.volumes.length === 0">No volume</div>
+
+            <table class="table table-striped" ng-show="services.selectImage.volumes.length > 0">
                 <thead>
                 <tr>
                     <th>Description</th>
                     <th>Internal</th>
                     <th>External</th>
-                    <th>Rights :<br>
-                        <small>RW Read-Write, RO : Read Only</small>
-                    </th>
+                    <th>Rights</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -124,13 +125,14 @@
                         {{volume.internal}}
                     </td>
                     <td>
-                        <input type="text" ng-model="volume.external" class="form-control">
+                        <md-text-float class="long" label="External Volume" ng-model="volume.external"
+                                       type="text"></md-text-float>
                     </td>
                     <td>
-                        <select ng-model="volume.rights" class="form-control" ng-required="true">
-                            <option value="ro">RO</option>
-                            <option value="rw">RW</option>
-                        </select>
+                        <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
+                            <md-radio-button value="rw">Read-Write</md-radio-button>
+                            <md-radio-button value="ro">Read Only</md-radio-button>
+                        </md-radio-group>
                     </td>
                 </tr>
                 </tbody>
@@ -138,7 +140,9 @@
 
             <h4>Ports</h4>
 
-            <table class="table table-striped">
+            <div ng-show="services.selectImage.ports.length === 0">No Port</div>
+
+            <table class="table table-striped" ng-show="services.selectImage.ports.length > 0">
                 <thead>
                 <tr>
                     <th>Description</th>
@@ -155,13 +159,14 @@
                         {{port.internal}}
                     </td>
                     <td>
-                        <input type="text" ng-model="port.external" class="form-control">
+                        <md-text-float class="long" label="External Port" ng-model="port.external"
+                                       type="text"></md-text-float>
                     </td>
                     <td>
-                        <select data-ng-model="port.protocol" class="form-control" ng-required="true">
-                            <option value="tcp">tcp</option>
-                            <option value="udp">udp</option>
-                        </select>
+                        <md-radio-group ng-model="port.protocol" ng-required="true">
+                            <md-radio-button value="tcp">tcp</md-radio-button>
+                            <md-radio-button value="udp">udp</md-radio-button>
+                        </md-radio-group>
                     </td>
                 </tr>
                 </tbody>
@@ -169,7 +174,9 @@
 
             <h4>Variables</h4>
 
-            <table class="table table-striped">
+            <div ng-show="services.selectImage.variables.length === 0">No Variable</div>
+
+            <table class="table table-striped" ng-show="services.selectImage.variables.length > 0">
                 <thead>
                 <tr>
                     <th>Description</th>
@@ -186,18 +193,17 @@
                         {{variable.name}}
                     </td>
                     <td>
-                        <input type="text" ng-model="variable.value" class="form-control">
+                        <md-text-float class="long" label="Value" ng-model="variable.value" type="text"></md-text-float>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <br>
 
             <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
-                    data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
+                       data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
                 Deploy Service
             </md-button>
-
         </form>
     </div>
-
 </section>
