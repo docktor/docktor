@@ -15,21 +15,25 @@ exports.infos = function (req, res) {
     var daemonInfos = {};
     req.daemonDocker.info(function (err, dataInfo) {
         daemonInfos.info = dataInfo;
-        req.daemonDocker.version(function (err, dataVersion) {
-            daemonInfos.version = dataVersion;
-            if (req.daemon.cadvisorApi) {
-                new Request(req.daemon.cadvisorApi + '/machine', function (err, response, machineInfo) {
-                    if (err) {
-                        daemonInfos.machineInfo = errorHandler.getErrorMessage(err);
-                    } else {
-                        daemonInfos.machineInfo = machineInfo;
-                    }
+        if (daemonInfos.info) {
+            req.daemonDocker.version(function (err, dataVersion) {
+                daemonInfos.version = dataVersion;
+                if (req.daemon.cadvisorApi) {
+                    new Request(req.daemon.cadvisorApi + '/machine', function (err, response, machineInfo) {
+                        if (err) {
+                            daemonInfos.machineInfo = errorHandler.getErrorMessage(err);
+                        } else {
+                            daemonInfos.machineInfo = machineInfo;
+                        }
+                        res.send(daemonInfos);
+                    });
+                } else {
                     res.send(daemonInfos);
-                });
-            } else {
-                res.send(daemonInfos);
-            }
-        });
+                }
+            });
+        } else {
+            res.send(daemonInfos);
+        }
     });
 
 };

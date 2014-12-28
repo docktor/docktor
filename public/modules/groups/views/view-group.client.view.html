@@ -195,26 +195,26 @@
                     <span ng-switch-when="checking" class="label label-default">
                         <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i>
                         <a ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">Checking</a>
-                        <span ng-hide="authentication.isAdmin">Checking</span>
+                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">{{gridItem.daemon.name}} checking...</a>
+                        <span ng-hide="authentication.isAdmin">{{gridItem.daemon.name}} checking...</span>
                     </span>
                     <span ng-switch-when="down">
                         <md-button class="md-warn" ng-show="authentication.isAdmin"
                                    href="#!/admin/daemons/view/{{gridItem.daemonId}}">
-                            {{getDaemon(gridItem.daemonId).name}}
+                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
                         </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-danger">
-                            {{getDaemon(gridItem.daemonId).name}}
+                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
                         </span>
                     </span>
 
                     <div ng-switch-when="up">
                         <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
                                    href="#!/admin/daemons/view/{{gridItem.daemonId}}">
-                            {{getDaemon(gridItem.daemonId).name}}
+                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
                         </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-success">
-                                {{getDaemon(gridItem.daemonId).name}}
+                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
                         </span>
                     </div>
 

@@ -165,10 +165,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             }
                             if (cb) cb(daemon);
 
-                            /*Daemon.getDetails(daemon, function () {
+                            Daemon.getDetails(daemon, function () {
                             }, function (err) {
-                                if (cb) cb();
-                            });*/
+                                //if (cb) cb();
+                            });
                         });
                     }
                 });
@@ -184,7 +184,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             //if (fsToCompute) $scope.computeFsForGroup($scope.group);
                         }
                         /*Daemon.getDetails(daemon, function () {
-                        });*/
+                         });*/
                     });
                 });
             }

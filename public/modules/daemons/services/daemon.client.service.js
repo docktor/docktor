@@ -12,7 +12,11 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                 DaemonsDocker.infos(daemon._id).
                     success(function (infos) {
                         daemon.dockerInfo = infos.info;
-                        daemon.dockerStatus = 'up';
+                        if (infos.info) {
+                            daemon.dockerStatus = 'up';
+                        } else {
+                            daemon.dockerStatus = 'down';
+                        }
                         daemon.dockerStatusUp = true;
                         daemon.dockerVersion = infos.version;
                         daemon.machineInfo = infos.machineInfo;
@@ -45,7 +49,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                             if (callback) callback();
                         }
                     })
-                    .error(function(data, status, headers, config) {
+                    .error(function (data, status, headers, config) {
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
                         console.log(data);
