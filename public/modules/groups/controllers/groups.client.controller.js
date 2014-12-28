@@ -1,11 +1,9 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts) {
         $scope.authentication = Authentication;
 
-        $scope.infos = [];
-        $scope.alerts = [];
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         //TODO Grafana URL -> Admin Parameter
@@ -48,7 +46,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     } else {
                         err.push(errorResponse);
                     }
-                    $scope.alerts.push({title: title, type: 'danger', msg: err});
+                    Toasts.addToast(title, 'danger', err);
                 });
             }
         };
@@ -206,28 +204,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
-            $scope.alerts.push({title: title, type: 'danger', msg: msg});
-            $scope.closeInfo(index);
+            Toasts.closeToast(index);
+            Toasts.addToast(title, 'danger', msg);
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            $scope.closeInfo(index);
+            Toasts.closeToast(index);
             cbSuccessEnd(container, data);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
-        $scope.closeInfo = function (index) {
-            $scope.infos.splice(index, 1);
-        };
-
-        $scope.addInfo = function (msg) {
-            var index = $scope.infos.length;
-            msg = moment().format('hh:mm:ss') + ' ' + msg;
-            $scope.infos.push({msg: msg});
-            return index;
         };
 
         $scope.gotoList = function () {
@@ -235,42 +218,42 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.removeServiceFromGroup = function (container) {
-            var index = $scope.addInfo('Removing service ' + container.serviceTitle + ' from group');
+            var index = Toasts.addToast('Removing service ' + container.serviceTitle + ' from group');
             GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackError);
         };
 
         $scope.createContainer = function (container) {
-            var index = $scope.addInfo('Create service ' + container.serviceTitle);
+            var index = Toasts.addToast('Create service ' + container.serviceTitle);
             GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
-            var index = $scope.addInfo('Starting service ' + container.serviceTitle);
+            var index = Toasts.addToast('Starting service ' + container.serviceTitle);
             GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.stopContainer = function (container) {
-            var index = $scope.addInfo('Stopping service ' + container.serviceTitle);
+            var index = Toasts.addToast('Stopping service ' + container.serviceTitle);
             GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.pauseContainer = function (container) {
-            var index = $scope.addInfo('Pausing service ' + container.serviceTitle);
+            var index = Toasts.addToast('Pausing service ' + container.serviceTitle);
             GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.unpauseContainer = function (container) {
-            var index = $scope.addInfo('Unpausing service ' + container.serviceTitle);
+            var index = Toasts.addToast('Unpausing service ' + container.serviceTitle);
             GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.removeContainer = function (container) {
-            var index = $scope.addInfo('Removing service ' + container.serviceTitle);
+            var index = Toasts.addToast('Removing service ' + container.serviceTitle);
             GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
-            var index = $scope.addInfo('Killing service ' + container.serviceTitle);
+            var index = Toasts.addToast('Killing service ' + container.serviceTitle);
             GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
@@ -283,7 +266,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     msg.push(value);
                 });
 
-                $scope.alerts.push({title: title, type: 'success', msg: msg});
+                Toasts.addToast(title, 'success', msg);
             }, $scope.callbackError);
         };
 
@@ -298,20 +281,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         msg.push(s);
                     }
                 }
-                $scope.alerts.push({title: title, type: 'success', msg: msg});
+                Toasts.addToast(title, 'success', msg);
             }, $scope.callbackError);
         };
 
         $scope.doExec = function (container, command) {
-            var index = $scope.addInfo('command ' + command.exec + ' on container ' + container.name);
+            var index = Toasts.addToast('command ' + command.exec + ' on container ' + container.name);
             GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
                 .success(function (data, status, headers, config) {
                     var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
-                    $scope.alerts.push({title: title, type: 'success', msg: data});
-                    $scope.closeInfo(index);
+                    Toasts.addToast(title, 'success', data);
+                    Toasts.closeToast(index);
                 })
                 .error(function (err, status, headers, config) {
-                    $scope.closeInfo(index);
+                    Toasts.closeToast(index);
                     $scope.callbackError(container, err);
                 });
         };

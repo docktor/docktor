@@ -33,7 +33,7 @@
     </div>
 
     <div class="row">
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tr>
                 <th>Name</th>
@@ -52,47 +52,54 @@
                 </td>
                 <td>
                     {{container.name}}<br>
-                    {{container.image}}<br>
-                    {{container.containerId | limitTo:12}}
+                    <small>{{container.image}}</small><br>
+                    <small>{{container.containerId | limitTo:12}}</small>
                 </td>
                 <td>
-                <span ng-show="container.daemon.dockerStatusUp">
-                    <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
-                    <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
-                    <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
-                    <md-button class="md-raised" type="text"
-                               tooltip-html-unsafe="{{container.inspect.State | json | nl2br}}" tooltip-trigger="focus"
-                               tooltip-placement="left">
-                        <i class="fa fa-eye"> </i>
-                    </md-button>
-                </span>
+                    <div ng-show="container.daemon.dockerStatusUp">
+                        <md-subheader ng-show="container.inspect.State.Running" class="md-primary">
+                            Running
+                        </md-subheader>
+                        <md-subheader ng-hide="container.inspect.State.Running" class="md-warn">
+                            Stopped
+                        </md-subheader>
+                        <md-subheader ng-show="container.inspect.State.Paused" class="md-accent">
+                            Paused
+                        </md-subheader>
+                    </div>
                 </td>
                 <td>
                     <div ng-switch="container.daemon.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i>
-                        <a ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{container.daemonId}}">Checking</a>
-                        <span ng-hide="authentication.isAdmin">Checking</span>
+                    <span ng-switch-when="checking" class="label label-default" layout="row"
+                          layout-align="center center">
+                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                        </md-progress-circular>
+                        <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                   href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
+                            <small>{{container.daemon.name}} <br>checking...</small>
+                        </md-button>
+
+                        <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
                     </span>
                     <span ng-switch-when="down">
-                        <a class="label label-danger" ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">
-                            {{getDaemon(container.daemonId).name}}
-                        </a>
+                        <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                   href="#!/admin/daemons/view/{{container.daemonId}}">
+                            {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                        </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-danger">
-                            {{getDaemon(container.daemonId).name}}
+                            {{container.daemon.name}} {{container.daemon.dockerStatus}}
                         </span>
                     </span>
-                    <span ng-switch-when="up">
-                        <a class="label label-success" ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{container.daemonId}}">
-                            {{getDaemon(container.daemonId).name}}
-                        </a>
+
+                        <div ng-switch-when="up">
+                            <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
+                                       href="#!/admin/daemons/view/{{container.daemonId}}">
+                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                            </md-button>
                         <span ng-hide="authentication.isAdmin" class="label label-success">
-                            {{getDaemon(container.daemonId).name}}
+                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
                         </span>
-                    </span>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -109,19 +116,15 @@
         </md-button>
     </div>
 
+    <h4>Status</h4>
+
+    <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+        <div>
+            {{container.inspect.State | json | nl2br}}
+        </div>
+    </md-whiteframe>
+
     <h4>Commands</h4>
-
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-        <strong>{{alert.title}}</strong><br>
-
-        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
-    </alert>
-
-    <div class="infos-bottom">
-        <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
-            {{info.msg}}...
-        </alert>
-    </div>
 
     <div ng-show="container.daemon.dockerStatusUp">
 

@@ -133,7 +133,8 @@
             <td field-name="name">
                 <div>
                     {{gridItem.name}}<br>
-                    <small>{{gridItem.image}}</small><br>
+                    <small>{{gridItem.image}}</small>
+                    <br>
                     <small>{{gridItem.containerId | limitTo:12}}</small>
                 </div>
             </td>
@@ -148,9 +149,15 @@
                     </div>
 
                     <div ng-switch-when="up">
-                        <span ng-show="gridItem.inspect.State.Running" class="label label-success">Running</span>
-                        <span ng-hide="gridItem.inspect.State.Running" class="label label-danger">Stopped</span>
-                        <span ng-show="gridItem.inspect.State.Paused" class="label label-warning">Paused</span>
+                        <md-subheader ng-show="gridItem.inspect.State.Running" class="md-primary">
+                            Running
+                        </md-subheader>
+                        <md-subheader ng-hide="gridItem.inspect.State.Running" class="md-warn">
+                            Stopped
+                        </md-subheader>
+                        <md-subheader ng-show="gridItem.inspect.State.Paused" class="md-accent">
+                            Paused
+                        </md-subheader>
                     </div>
                 </div>
             </td>

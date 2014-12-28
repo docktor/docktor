@@ -24,7 +24,7 @@ angular.element(document).ready(function () {
 
     //Then init the app
     angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
-    TrNgGrid.tableCssClass = "tr-ng-grid table table-hover";
+    TrNgGrid.tableCssClass = "tr-ng-grid table";
 
 });
 

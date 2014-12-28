@@ -1,0 +1,8 @@
+<md-toast layout="column">
+    <div ng-repeat="toast in toasts track by $index">
+        {{toast.title}} : {{toast.msg}}
+        <md-button ng-click="closeToast(toast.index)">
+            Close
+        </md-button>
+    </div>
+</md-toast>

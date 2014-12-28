@@ -46,9 +46,15 @@
                 </md-button>
             </td>
             <td>
-                <span ng-show="container.inspect.State.Running" class="label label-success">Running</span>
-                <span ng-hide="container.inspect.State.Running" class="label label-danger">Stopped</span>
-                <span ng-show="container.inspect.State.Paused" class="label label-warning">Paused</span>
+                <md-subheader ng-show="container.inspect.State.Running" class="md-primary">
+                    Running
+                </md-subheader>
+                <md-subheader ng-hide="container.inspect.State.Running" class="md-warn">
+                    Stopped
+                </md-subheader>
+                <md-subheader ng-show="container.inspect.State.Paused" class="md-accent">
+                    Paused
+                </md-subheader>
 
                 <md-button type="text" class="md-raised"
                            tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
