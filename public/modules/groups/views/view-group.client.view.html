@@ -6,6 +6,7 @@
             / {{group.title}}
         </h3>
         <span flex></span>
+
         <div ng-show="authentication.isAdmin" flex>
             <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> </i> Deploy a service
@@ -31,7 +32,6 @@
                 <i class="fa fa-envelope"></i> Mail All
             </md-button>
         </div>
-        <hr>
     </div>
 
     <div class="row">
@@ -72,7 +72,6 @@
             </md-button>
         </div>
     </div>
-    <hr>
     <div class="row">
         <h4><i class="fa fa-cloud"></i> Services</h4>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
