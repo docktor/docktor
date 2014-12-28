@@ -14,10 +14,11 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         daemon.dockerInfo = infos.info;
                         if (infos.info) {
                             daemon.dockerStatus = 'up';
+                            daemon.dockerStatusUp = true;
                         } else {
                             daemon.dockerStatus = 'down';
                         }
-                        daemon.dockerStatusUp = true;
+
                         daemon.dockerVersion = infos.version;
                         daemon.machineInfo = infos.machineInfo;
 

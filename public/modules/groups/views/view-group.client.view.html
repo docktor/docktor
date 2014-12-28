@@ -133,69 +133,94 @@
             <td field-name="name">
                 <div>
                     {{gridItem.name}}<br>
-                    {{gridItem.image}}<br>
-                    {{gridItem.containerId | limitTo:12}}
-                </div>
-            </td>
-            <td>
-                <div ng-show="gridItem.daemon.dockerStatusUp">
-                    <span ng-show="gridItem.inspect.State.Running" class="label label-success">Running</span>
-                    <span ng-hide="gridItem.inspect.State.Running" class="label label-danger">Stopped</span>
-                    <span ng-show="gridItem.inspect.State.Paused" class="label label-warning">Paused</span>
-                </div>
-            </td>
-            <td>
-                <div>
-                <span ng-show="gridItem.daemon.dockerStatusUp">
-                    <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
-                               ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> Docker create
-                    </md-button>
-
-                    <span ng-show="gridItem.containerId">
-
-                        <span ng-hide="gridItem.inspect.State.Running" class="btn btn-xs btn-primary btn-sm"
-                              ng-click="startContainer(gridItem)">
-                            <i class="fa fa-play"></i> Docker run
-                        </span>
-
-                        <span ng-show="gridItem.inspect.State.Running">
-
-                            <div class="btn-group" dropdown is-open="status.isopen">
-                                <md-button class="md-raised md-primary" dropdown-toggle
-                                           ng-disabled="disabled">
-                                    Action... <span class="caret"></span>
-                                </md-button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="stopContainer(gridItem)"><i class="fa fa-stop"></i> Docker stop
-                                    </a></li>
-                                    <li><a href="" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="pauseContainer(gridItem)"><i class="fa fa-pause"></i> Docker pause
-                                    </a></li>
-                                    <li><a href="" ng-show="gridItem.inspect.State.Paused"
-                                           ng-click="unpauseContainer(gridItem)"><i class="fa fa-pause"></i> Docker
-                                        unpause
-                                    </a></li>
-                                    <li><a href="" ng-click="killContainer(gridItem)"><i
-                                            class="fa fa-crosshairs"></i> Docker kill
-                                    </a></li>
-                                </ul>
-                            </div>
-                        </span>
-
-                        <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
-                                   ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
-                        </md-button>
-                    </span>
-                </span>
+                    <small>{{gridItem.image}}</small><br>
+                    <small>{{gridItem.containerId | limitTo:12}}</small>
                 </div>
             </td>
             <td>
                 <div ng-switch="gridItem.daemon.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i>
-                        <a ng-show="authentication.isAdmin"
-                           href="#!/admin/daemons/view/{{gridItem.daemonId}}">{{gridItem.daemon.name}} checking...</a>
+
+                    <div ng-switch-when="checking">
+                    </div>
+                    <div ng-switch-when="down">
+                        Down <br>
+                        <small>Daemon Down</small>
+                    </div>
+
+                    <div ng-switch-when="up">
+                        <span ng-show="gridItem.inspect.State.Running" class="label label-success">Running</span>
+                        <span ng-hide="gridItem.inspect.State.Running" class="label label-danger">Stopped</span>
+                        <span ng-show="gridItem.inspect.State.Paused" class="label label-warning">Paused</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div ng-switch="gridItem.daemon.dockerStatus">
+
+                    <div ng-switch-when="checking">
+                    </div>
+                    <div ng-switch-when="down">
+                        No Command <br>
+                        <small>Daemon Down</small>
+                    </div>
+
+                    <div ng-switch-when="up">
+                        <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
+                                   ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> Docker create
+                        </md-button>
+
+                        <span ng-show="gridItem.containerId">
+
+                            <span ng-hide="gridItem.inspect.State.Running" class="btn btn-xs btn-primary btn-sm"
+                                  ng-click="startContainer(gridItem)">
+                                <i class="fa fa-play"></i> Docker run
+                            </span>
+
+                            <span ng-show="gridItem.inspect.State.Running">
+
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <md-button class="md-raised md-primary" dropdown-toggle
+                                               ng-disabled="disabled">
+                                        Action... <span class="caret"></span>
+                                    </md-button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="" ng-hide="gridItem.inspect.State.Paused"
+                                               ng-click="stopContainer(gridItem)">
+                                            <i class="fa fa-stop"></i> Docker stop
+                                        </a></li>
+                                        <li><a href="" ng-hide="gridItem.inspect.State.Paused"
+                                               ng-click="pauseContainer(gridItem)"><i class="fa fa-pause"></i> Docker
+                                            pause
+                                        </a></li>
+                                        <li><a href="" ng-show="gridItem.inspect.State.Paused"
+                                               ng-click="unpauseContainer(gridItem)"><i class="fa fa-pause"></i> Docker
+                                            unpause
+                                        </a></li>
+                                        <li><a href="" ng-click="killContainer(gridItem)"><i
+                                                class="fa fa-crosshairs"></i> Docker kill
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </span>
+
+                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
+                                       ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> Docker remove
+                            </md-button>
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div ng-switch="gridItem.daemon.dockerStatus">
+                    <span ng-switch-when="checking" class="label label-default" layout="row"
+                          layout-align="center center">
+                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                        </md-progress-circular>
+                        <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}" layout="row">
+                            <small>{{gridItem.daemon.name}} <br>checking...</small>
+                        </md-button>
+
                         <span ng-hide="authentication.isAdmin">{{gridItem.daemon.name}} checking...</span>
                     </span>
                     <span ng-switch-when="down">
