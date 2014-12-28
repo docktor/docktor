@@ -30,34 +30,23 @@
             </div>
         </td>
         <td>
-            <div class="form-group">
-                <input name="commandName" type="text" data-ng-model="command.name" id="commandName"
-                       class="form-control" placeholder="Name">
+            <div class="row">
+                <md-text-float label="Command Name" ng-model="command.name" type="text" ng-required="true">
+                </md-text-float>
             </div>
         </td>
         <td>
-            <div class="form-group">
-                <input name="commandExec" type="text" data-ng-model="command.exec" id="commandExec"
-                       class="form-control" placeholder="echo 'foo'">
+            <div class="row">
+                <md-text-float label="Command Exec" ng-model="command.exec" type="text" ng-required="true">
+                </md-text-float>
             </div>
         </td>
         <td>
-            <div class="form-group">
-
-                <div class="radio-inline">
-                    <label>
-                        <input type="radio" name="commandRole{{command._id}}{{command.fooRoleName}}"
-                               ng-model="command.role" ng-value="'user'"> Users and Admins
-                        <i class="fa fa-circle-o"></i>
-                    </label>
-                </div>
-                <div class="radio-inline">
-                    <label>
-                        <input type="radio" name="commandRole{{command._id}}{{command.fooRoleName}}"
-                               ng-model="command.role" ng-value="'admin'"> Admins only
-                        <i class="fa fa-circle-o"></i>
-                    </label>
-                </div>
+            <div class="row">
+                <md-radio-group ng-model="command.role" ng-required="true" ng-required="true">
+                    <md-radio-button value="user">Users and Admins</md-radio-button>
+                    <md-radio-button value="admin">Admins only</md-radio-button>
+                </md-radio-group>
             </div>
         </td>
     </tr>

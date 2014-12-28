@@ -32,15 +32,18 @@
 
     <div ng-if="service._id">
         <div ng-include="'/modules/services/views/list-images.client.view.html'"></div>
-        <hr>
+        <br>
+
         <div ng-include="'/modules/services/views/list-commands.client.view.html'"></div>
-        <hr>
+        <br>
+
         <div ng-include="'/modules/services/views/list-urls.client.view.html'"></div>
+        <br>
         <md-button ng-click="submitForm()" class="md-raised md-primary">
             <i class="fa fa-save"></i> Save
         </md-button>
 
-        <hr>
+        <br><br>
         <md-button class="md-raised md-warn" ng-click="askDeleteService=true" ng-hide="askDeleteService">
             <i class="fa fa-trash-o"></i> Delete Service
         </md-button>
