@@ -15,10 +15,17 @@ angular.module('core').service('Toasts', ['$mdToast',
             getToasts: function () {
                 return toasts;
             },
-            addToast: function (title, type, msg) {
+            addToast: function (text, type, title) {
+                var msg = [];
+                if (!_.isArray(text)) {
+                    msg = text;
+                } else {
+                    msg.push(text);
+                }
                 var index = toasts.length;
                 if (type !== "danger") {
                     msg = moment().format('hh:mm:ss') + ' ' + msg;
+                    type = "success";
                 }
 
                 toasts.push({title: title, type: type, msg: msg, index: index});

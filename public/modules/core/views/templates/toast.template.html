@@ -1,8 +1,21 @@
-<md-toast layout="column">
-    <div ng-repeat="toast in toasts track by $index">
-        {{toast.title}} : {{toast.msg}}
-        <md-button ng-click="closeToast(toast.index)">
-            Close
-        </md-button>
+<md-toast layout="column" class="docktor">
+    <div ng-repeat="toast in toasts track by $index" layout="row">
+        <div flex="95">{{toast.title}} :
+            <span ng-repeat="msg in toast.msg track by $index">{{msg}}</span>
+        </div>
+        <div flex="5">
+            <div ng-switch="toast.type">
+                <div ng-switch-when="success">
+                    <md-button ng-click="closeToast(toast.index)" class="md-raised md-primary">
+                        <i class="fa fa-check"></i>
+                    </md-button>
+                </div>
+                <div ng-switch-when="danger">
+                    <md-button ng-click="closeToast(toast.index)" class="md-raised md-warn">
+                        <i class="fa fa-close"></i>
+                    </md-button>
+                </div>
+            </div>
+        </div>
     </div>
 </md-toast>

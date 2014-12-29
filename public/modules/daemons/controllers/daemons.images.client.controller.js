@@ -4,8 +4,6 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
     function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images) {
 
         $scope.viewRawJson = false;
-        $scope.infos = [];
-        $scope.alerts = [];
 
         $scope.findOne = function () {
             $scope.daemon = Daemons.get({
@@ -39,32 +37,17 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
-            $scope.alerts.push({title: title, type: 'danger', msg: msg});
-            $scope.closeInfo(index);
+            Toasts.closeToast(index);
+            Toasts.addToast(msg, 'danger', title);
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            $scope.closeInfo(index);
+            Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
 
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-
-        $scope.closeInfo = function (index) {
-            $scope.infos.splice(index, 1);
-        };
-
-        $scope.addInfo = function (msg) {
-            var index = $scope.infos.length;
-            msg = moment().format('hh:mm:ss') + ' ' + msg;
-            $scope.infos.push({msg: msg});
-            return index;
-        };
-
         $scope.removeImage = function (image) {
-            var index = $scope.addInfo('Removing ' + image.Id);
+            var index = Toasts.addToast('Removing ' + image.Id);
             Images.removeImage($scope.daemon._id, image, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 

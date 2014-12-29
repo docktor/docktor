@@ -868,3 +868,10 @@ form > .row {
 md-input-group.long > input {
     width: 264px;
 }
+
+md-toast.docktor {
+    max-width:300px;
+    height:auto;
+    max-height:600px;
+    font-size:11px;
+}

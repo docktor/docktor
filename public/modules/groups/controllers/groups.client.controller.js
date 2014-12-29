@@ -46,7 +46,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     } else {
                         err.push(errorResponse);
                     }
-                    Toasts.addToast(title, 'danger', err);
+                    Toasts.addToast(err, 'danger', title);
                 });
             }
         };
@@ -205,7 +205,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
             Toasts.closeToast(index);
-            Toasts.addToast(title, 'danger', msg);
+            Toasts.addToast(msg, 'danger', title);
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
@@ -266,7 +266,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     msg.push(value);
                 });
 
-                Toasts.addToast(title, 'success', msg);
+                Toasts.addToast(msg, 'success', title);
             }, $scope.callbackError);
         };
 
@@ -281,7 +281,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         msg.push(s);
                     }
                 }
-                Toasts.addToast(title, 'success', msg);
+                Toasts.addToast(msg, 'success', title);
             }, $scope.callbackError);
         };
 
@@ -290,7 +290,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
                 .success(function (data, status, headers, config) {
                     var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
-                    Toasts.addToast(title, 'success', data);
+                    Toasts.addToast(data, 'success', title);
                     Toasts.closeToast(index);
                 })
                 .error(function (err, status, headers, config) {

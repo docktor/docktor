@@ -36,11 +36,11 @@
         Pull <i class="fa fa-check"></i>
     </md-button>
 
-    <alert ng-show="pullImage.pulled" type="alert alert-{{pullImage.typeAlert}}" close="initPullImage()">
+    <div ng-show="pullImage.pulled" type="md-whiteframe-z2" close="initPullImage()">
         <div ng-repeat="line in pullImage.output track by $index">{{line.status}} {{line.progressDetail}}
             {{line.id}}#
         </div>
-    </alert>
+    </div>
 
     <table class="table table-striped table-condensed table-small-text">
         <thead>

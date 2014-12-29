@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services',
-    function ($scope, $stateParams, $location, Authentication, Services) {
+angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services', 'Toasts',
+    function ($scope, $stateParams, $location, Authentication, Services, Toasts) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -19,7 +19,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormCommand = false;
         $scope.commandRole = 'user';
         $scope.commandRoleName = '';
-        $scope.alerts = [];
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -58,7 +57,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
                     } else {
                         err.push(errorResponse);
                     }
-                    $scope.alerts.push({title: title, type: 'danger', msg: err});
+                    Toasts.addToast(err, 'danger', title);
                 });
             }
         };
@@ -159,10 +158,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeUrl = function (url) {
             $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
-        };
-
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
         };
 
     }

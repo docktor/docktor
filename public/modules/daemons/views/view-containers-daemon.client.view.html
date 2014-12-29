@@ -5,19 +5,7 @@
     <h3>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
     <p>{{daemon.description}}</p>
-
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-        <strong>{{alert.title}}</strong><br>
-
-        <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
-    </alert>
-
-    <div class="infos-bottom">
-        <alert ng-repeat="info in infos" type="info" close="closeInfo($index)">
-            {{info.msg}}...
-        </alert>
-    </div>
-
+    
     <table class="table table-striped table-condensed">
         <thead>
         <tr>
