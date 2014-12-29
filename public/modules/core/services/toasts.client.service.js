@@ -18,10 +18,11 @@ angular.module('core').service('Toasts', ['$mdToast',
             addToast: function (text, type, title) {
                 var msg = [];
                 if (!_.isArray(text)) {
-                    msg = text;
-                } else {
                     msg.push(text);
+                } else {
+                    msg = text;
                 }
+                console.log(msg);
                 var index = toasts.length;
                 if (type !== "danger") {
                     msg = moment().format('hh:mm:ss') + ' ' + msg;
@@ -29,6 +30,7 @@ angular.module('core').service('Toasts', ['$mdToast',
                 }
 
                 toasts.push({title: title, type: type, msg: msg, index: index});
+                console.log(toasts);
                 $mdToast.show({
                     controller: 'ToastsController',
                     templateUrl: 'modules/core/views/templates/toast.template.html',

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Containers', 'Toasts',
-    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Containers, Toasts) {
+angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Containers', 'Toasts', '$mdDialog',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Containers, Toasts, $mdDialog) {
 
         $scope.viewRawJson = false;
 
@@ -111,5 +111,27 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             }, $scope.callbackError);
         };
 
+        $scope.showInfo = function (container) {
+
+            $scope.currentContainer = container;
+            var content = "Name :" + container.inspect.Name + "<br>";
+            $mdDialog.show({
+                controller: 'ContainerInfosController',
+                templateUrl: 'modules/daemons/views/dialog.template.html',
+                locals: {currentContainer:container}
+            })
+        };
+    }
+]);
+
+angular.module('daemons').controller('ContainerInfosController', ['$scope', '$mdDialog','currentContainer',
+    function ($scope, $mdDialog, currentContainer) {
+        $scope.currentContainer = currentContainer;
+        $scope.hide = function () {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
     }
 ]);

@@ -3,7 +3,7 @@
 </md-toolbar>
 <md-content class="md-padding" ng-controller="HeaderController">
     <div ng-repeat="item in menu.items | orderBy: 'position'">
-        <span class="menu-item menu-title md-menu-item">
+        <span class="menu-item menu-title md-menu-item" ng-if="item.shouldRender(authentication.user);">
             {{item.title}}
         </span>
         <a ng-repeat="subitem in item.items | orderBy: 'position'"

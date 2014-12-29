@@ -870,7 +870,7 @@ md-input-group.long > input {
 }
 
 md-toast.docktor {
-    max-width:300px;
+    max-width:600px;
     height:auto;
     max-height:600px;
     font-size:11px;

@@ -5,12 +5,12 @@
     <h3>Containers on Daemon {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 
     <p>{{daemon.description}}</p>
-    
+
     <table class="table">
         <thead>
         <tr>
             <th>Id</th>
-            <th>Mapping</th>
+            <th>Info</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -22,36 +22,21 @@
                 Name : {{container.inspect.Name}}
             </td>
             <td>
-                <md-button type="text" class="md-raised"
-                           tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.Binds | json | nl2br}}</div>"
-                           tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i> Volumes
-                </md-button>
-                <md-button type="text" class="md-raised"
-                           tooltip-html-unsafe="<div style=' text-align: left; '>{{container.inspect.HostConfig.PortBindings | json | nl2br}}</div>"
-                           tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i> Ports
-                </md-button>
+                <md-button ng-click="showInfo(container)"><i class="fa fa-eye"> </i> Infos</md-button>
             </td>
             <td>
-                <md-subheader ng-show="container.inspect.State.Running" class="md-primary">
+                <md-subheader ng-show="container.inspect.State.Running" class="md-primary docktor">
                     Running
                 </md-subheader>
-                <md-subheader ng-hide="container.inspect.State.Running" class="md-warn">
+                <md-subheader ng-hide="container.inspect.State.Running" class="md-warn docktor">
                     Stopped
                 </md-subheader>
-                <md-subheader ng-show="container.inspect.State.Paused" class="md-accent">
+                <md-subheader ng-show="container.inspect.State.Paused" class="md-accent docktor">
                     Paused
                 </md-subheader>
-
-                <md-button type="text" class="md-raised"
-                           tooltip-html-unsafe="{{container.Status}}<br>{{container.inspect.State | json | nl2br}}"
-                           tooltip-trigger="focus" tooltip-placement="left">
-                    <i class="fa fa-eye"> </i>
-                </md-button>
             </td>
             <td>
-                <md-button ng-hide="container.inspect.State.Running" class="md-raised"
+                <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary"
                            ng-click="startContainer(container)">
                     <i class="fa fa-play"></i> Start
                 </md-button>

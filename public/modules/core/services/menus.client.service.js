@@ -67,15 +67,6 @@ angular.module('core').service('Menus', [
             return this.menus[menuId];
         };
 
-        // Remove existing menu object by menu id
-        this.removeMenu = function (menuId) {
-            // Validate that the menu exists
-            this.validateMenuExistance(menuId);
-
-            // Return the menu object
-            delete this.menus[menuId];
-        };
-
         // Add menu item object
         this.addMenuItem = function (menuId, menuItemTitle, menuItemURL, menuItemType, menuItemUIRoute, isPublic, roles, position) {
             // Validate that the menu exists
@@ -116,40 +107,6 @@ angular.module('core').service('Menus', [
                         position: position || 0,
                         shouldRender: shouldRender
                     });
-                }
-            }
-
-            // Return the menu object
-            return this.menus[menuId];
-        };
-
-        // Remove existing menu object by menu id
-        this.removeMenuItem = function (menuId, menuItemURL) {
-            // Validate that the menu exists
-            this.validateMenuExistance(menuId);
-
-            // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                if (this.menus[menuId].items[itemIndex].link === menuItemURL) {
-                    this.menus[menuId].items.splice(itemIndex, 1);
-                }
-            }
-
-            // Return the menu object
-            return this.menus[menuId];
-        };
-
-        // Remove existing menu object by menu id
-        this.removeSubMenuItem = function (menuId, submenuItemURL) {
-            // Validate that the menu exists
-            this.validateMenuExistance(menuId);
-
-            // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
-                        this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
-                    }
                 }
             }
 
