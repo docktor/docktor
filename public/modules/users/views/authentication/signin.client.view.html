@@ -9,9 +9,9 @@
                 <md-text-float type="password" label="Password" ng-model="credentials.password"></md-text-float>
             </div>
             <md-button type="submit" class="md-raised md-primary">Sign in</md-button>
-            <div class="row md-warn" ng-show="error">
+            <md-subheader class="row md-warn" ng-show="error">
                 <strong ng-bind="error"></strong>
-            </div>
+            </md-subheader>
             <div class="row">
                 <md-button class="md-primary" href="/#!/signup">Need an account?</md-button> |
                 <md-button class="md-primary" href="/#!/password/forgot">Forgot your password?</md-button>
