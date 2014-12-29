@@ -12,7 +12,7 @@
         <tr>
             <th field-name="name" display-name="Name" enable-filtering="true"></th>
             <th field-name="dockerStatus" display-name="Status" enable-filtering="true"></th>
-            <th field-name="host" display-name="Daemons" enable-filtering="true"></th>
+            <th field-name="host" display-name="Monitoring" enable-filtering="true"></th>
             <th field-name="dockerVersion.Version" display-name="Version" enable-filtering="true"></th>
             <th>
                 <div class="tr-ng-title">
@@ -25,40 +25,53 @@
         <tr>
             <td field-name="name">
                 <md-button class="md-accent" href="#!/admin/daemons/view/{{gridItem._id}}">{{gridItem.name}}</md-button>
+                <small><p class="list-group-item-text" data-ng-bind="gridItem.description"></p></small>
             </td>
             <td field-name="dockerStatus">
-                <span ng-switch="gridItem.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default">
-                        <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
-                    </span>
-                    <span ng-switch-when="down" class="label label-danger">Down</span>
-                    <span ng-switch-when="up" class="label label-success">UP</span>
-                </span>
+
+                <div ng-switch="gridItem.dockerStatus">
+                    <div ng-switch-when="checking" layout="row" layout-align="center center">
+                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                        </md-progress-circular>
+                        <md-subheader class="md-accent docktor" layout="row" layout-align="center center">
+                            Checking...
+                        </md-subheader>
+                    </div>
+                    <div ng-switch-when="up">
+                        <md-subheader class="md-primary docktor" layout="row" layout-align="center center">
+                            UP
+                        </md-subheader>
+                    </div>
+                    <div ng-switch-when="down">
+                        <md-subheader class="md-warn docktor">
+                            DOWN
+                        </md-subheader>
+                    </div>
+                </div>
             </td>
             <td field-name="host">
-                <div>
-                    <a href="{{gridItem.protocol}}://{{gridItem.host}}:{{gridItem.port}}/info">{{gridItem.protocol}}://{{gridItem.host}}:{{gridItem.port}}</a>
-                    <small><p class="list-group-item-text" data-ng-bind="gridItem.description"></p></small>
+                <div layout="column">
                     <md-button class="md-accent" ng-show="gridItem.cadvisorApi" href="{{gridItem.cadvisorUrl}}">
                         cAdvisor
+                    </md-button>
+                    <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.name}}">
+                        Grafana
                     </md-button>
                 </div>
             </td>
             <td field-name="dockerVersion.Version">
-                <div ng-show="gridItem.dockerStatusUp">{{gridItem.dockerVersion.Version}}</div>
+                <div layout="row" layout-align="center" ng-show="gridItem.dockerStatusUp">{{gridItem.dockerVersion.Version}}</div>
             </td>
             <td>
-                <div>
-                    <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/admin/daemons/view/containers/{{gridItem._id}}">
-                        {{gridItem.dockerInfo.Containers}}
-                        containers</a>
-                </div>
-                <div>
-                    <a ng-show="gridItem.dockerStatusUp" class="btn btn-default btn-xs"
-                       href="/#!/admin/daemons/view/images/{{gridItem._id}}">
-                        {{gridItem.dockerInfo.Images}}
-                        images</a>
+                <div layout="column">
+                    <md-button ng-show="gridItem.dockerStatusUp" class="md-accent"
+                               href="/#!/admin/daemons/view/containers/{{gridItem._id}}">
+                        {{gridItem.dockerInfo.Containers}} containers
+                    </md-button>
+                    <md-button ng-show="gridItem.dockerStatusUp" class="md-accent"
+                               href="/#!/admin/daemons/view/images/{{gridItem._id}}">
+                        {{gridItem.dockerInfo.Images}} images
+                    </md-button>
                 </div>
             </td>
         </tr>

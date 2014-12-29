@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('ToastController', ['$scope', '$mdToast', 'Toasts',
+angular.module('core').controller('ToastsController', ['$scope', '$mdToast', 'Toasts',
     function ($scope, $mdToast, Toasts) {
 
         $scope.closeToast = function (index) {

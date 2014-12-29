@@ -5,6 +5,10 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.authentication = Authentication;
         $scope.positions = {};
 
+        //TODO Grafana URL -> Admin Parameter
+        // See https://github.com/docktor/docktor/issues/64
+        $scope.grafanaUrl = 'http://' + $location.host() + ':8090/#/dashboard/script/docktor.js';
+
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         $scope.mapInitialized = false;

@@ -30,7 +30,7 @@ angular.module('core').service('Toasts', ['$mdToast',
 
                 toasts.push({title: title, type: type, msg: msg, index: index});
                 $mdToast.show({
-                    controller: 'ToastController',
+                    controller: 'ToastsController',
                     templateUrl: 'modules/core/views/templates/toast.template.html',
                     position: 'bottom',
                     hideDelay: 0
