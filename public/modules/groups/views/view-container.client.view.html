@@ -131,10 +131,6 @@
                    ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
         </md-button>
 
-        <md-button class="md-raised md-warn" ng-hide="!container.containerId || container.inspect.State.Running"
-                   ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
-        </md-button>
-
         <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
                    ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
             Remove service from Group
@@ -190,6 +186,10 @@
                     </md-button>
                 </span>
             </div>
+            <md-button class="md-raised md-warn" ng-hide="!container.containerId || container.inspect.State.Running"
+                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
+            </md-button>
+
         </div>
     </div>
 

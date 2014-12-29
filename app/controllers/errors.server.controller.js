@@ -33,6 +33,9 @@ exports.getErrorMessage = function (err) {
             case 11001:
                 message = getUniqueErrorMessage(err);
                 break;
+            case 'ECONNREFUSED':
+                message = 'Connection Refused';
+                break;
             default:
                 message = 'Something went wrong';
         }

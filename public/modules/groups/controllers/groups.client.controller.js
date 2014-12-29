@@ -189,13 +189,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.inspect = function (container, dataSuccess) {
-            var containerId = container.containerId;
-
-            /*if (!container.containerId && dataSuccess && dataSuccess.id) {
-                containerId = dataSuccess.id;
-            }*/
-            if (containerId) {
-                GroupsServices.inspect($scope.group._id, containerId).
+            if (!container.containerId && dataSuccess && dataSuccess.id) {
+                container.containerId = dataSuccess.id;
+            }
+            if (container.containerId) {
+                GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
                     }).
@@ -213,9 +211,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             Toasts.addToast(msg, 'danger', title);
         };
 
+        $scope.callbackSuccessRemove = function (container, data, index, cbSuccessEnd) {
+            container.containerId = null;
+            $scope.callbackSuccess(container, data, index, cbSuccessEnd);
+        };
+
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            console.log('data');
-            console.log(data);
             Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
@@ -256,7 +257,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeContainer = function (container) {
             var index = Toasts.addToast('Removing service ' + container.serviceTitle);
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
@@ -348,9 +349,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
                 if (!container.daemon) {
-                    console.log('container:');
-                    console.log(container);
-                    console.log(container.daemon.host);
                     url.urlCompute = 'POURT';
                 } else {
                     url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;
