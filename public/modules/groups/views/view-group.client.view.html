@@ -74,20 +74,13 @@
     </div>
     <div class="row">
         <h4><i class="fa fa-cloud"></i> Services</h4>
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-            <strong>{{alert.title}}</strong><br>
 
-            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
-        </alert>
-
-        <div class="infos-bottom">
-            <alert ng-repeat="info in infos" type="success" close="closeInfo($index)">
-                {{info.msg}}...
-            </alert>
+        <div ng-show="group.containers.length === 0">
+            No service deployed for this group.
         </div>
     </div>
 
-    <table tr-ng-grid="" items="group.containers" fields="" class="table">
+    <table ng-show="group.containers.length > 0" tr-ng-grid="" items="group.containers" fields="" class="table">
         <thead>
         <tr>
             <th field-name="serviceTitle" display-name="Service" enable-filtering="true"></th>

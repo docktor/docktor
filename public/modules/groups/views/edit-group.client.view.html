@@ -12,48 +12,50 @@
         / Edit Group
     </h3>
 
-    <form name="groupForm" data-ng-submit="submitForm()" novalidate>
-        <div class="row">
-            <md-text-float md-fid="title" label="Title" ng-model="group.title" type="text"
-                           ng-pattern="patternTitle" ng-required="true">
-            </md-text-float>
+    <div class="row">
+        <form name="groupForm" data-ng-submit="submitForm()" novalidate>
+            <div class="row">
+                <md-text-float md-fid="title" label="Title" ng-model="group.title" type="text"
+                               ng-pattern="patternTitle" ng-required="true">
+                </md-text-float>
 
-            <div>
-                Title have to match this pattern : [a-zA-Z0-9_]{1,200}
-                <p ng-show="groupForm.title.$error.required" class="md-warn">Title is required</p>
+                <div>
+                    Title have to match this pattern : [a-zA-Z0-9_]{1,200}
+                    <p ng-show="groupForm.title.$error.required" class="md-warn">Title is required</p>
 
-                <p ng-show="groupForm.title.$invalid" class="md-warn">
-                    The name have to match this pattern : [a-zA-Z0-9_]{1,200}
-                </p>
+                    <p ng-show="groupForm.title.$invalid" class="md-warn">
+                        The name have to match this pattern : [a-zA-Z0-9_]{1,200}
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div flex="10">Daemon</div>
-            <div flex>
-                <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
-                        ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
-                </select>
+            <div class="row">
+                <div flex="10">Daemon</div>
+                <div flex>
+                    <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
+                            ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
+                    </select>
+                </div>
             </div>
+            <div class="row">
+                <md-text-float md-fid="portminrange" label="Port Min Range" ng-model="group.portminrange" type="number">
 
-            <div ng-show="freePortRange">
-                <label class="control-label">Ports already used :</label>
-                <li ng-repeat="port in freePortRange">
-                    {{port}}
-                </li>
+                </md-text-float>
+                <md-text-float md-fid="portmaxrange" label="Port Max Range" ng-model="group.portmaxrange" type="number">
+                </md-text-float>
+                <div ng-show="freePortRange">
+                    <label class="control-label">Ports already used :</label>
+                    <li ng-repeat="port in freePortRange">
+                        {{port}}
+                    </li>
 
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <md-text-float md-fid="portminrange" label="Port Min Range" ng-model="group.portminrange" type="number">
-        </div>
-        <div class="row">
-            <md-text-float md-fid="portmaxrange" label="Port Max Range" ng-model="group.portmaxrange" type="number">
-        </div>
-        <div class="row">
-            <md-text-float class="long" md-fid="description" label="Description" ng-model="group.description"
-                           type="text">
-        </div>
-    </form>
+            <div class="row">
+                <md-text-float class="long" md-fid="description" label="Description" ng-model="group.description"
+                               type="text">
+            </div>
+        </form>
+    </div>
 
     <div class="row">
         <label class="control-label">Filesystem</label>
@@ -135,7 +137,9 @@
         </div>
     </div>
 
+    <br>
     <div class="row">
+
         <md-button class="md-raised md-primary" ng-click="submitForm()">
             <span ng-hide="group._id">Create</span>
             <span ng-show="group._id">Update</span>
@@ -146,6 +150,7 @@
     </div>
 
     <br>
+
     <div ng-show="group._id" class="row">
         <md-button class="md-raised md-warn" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group
