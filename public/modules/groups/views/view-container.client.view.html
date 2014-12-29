@@ -50,7 +50,8 @@
                 </td>
                 <td>
                     {{container.name}}<br>
-                    <small>{{container.image}}</small><br>
+                    <small>{{container.image}}</small>
+                    <br>
                     <small>{{container.containerId | limitTo:12}}</small>
                 </td>
                 <td>
@@ -118,7 +119,7 @@
 
     <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
         <div>
-            {{container.inspect.State | json | nl2br}}
+            <pre>{{container.inspect.State | json}}</pre>
         </div>
     </md-whiteframe>
 

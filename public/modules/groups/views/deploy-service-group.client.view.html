@@ -12,7 +12,7 @@
     <h4>Select a daemon :</h4>
 
     <select ng-model="daemons.select" ng-change="changeDaemon()"
-            ng-options="daemon.name for daemon in daemons.all">
+            ng-options="daemon.name for daemon in daemons.all | orderBy:'name'">
     </select>
 
     <div ng-show="daemons.select">
@@ -20,7 +20,7 @@
 
         <select ng-model="services.select" ng-required="true"
                 ng-change="changeService()"
-                ng-options="service.title for service in services.all">
+                ng-options="service.title for service in services.all | orderBy:'title'">
         </select>
     </div>
 
@@ -29,7 +29,7 @@
 
         <select ng-model="services.selectImage"
                 ng-change="changeImage()"
-                ng-options="image.name for image in services.select.images">
+                ng-options="image.name for image in services.select.images | orderBy:'name'">
         </select>
     </div>
 

@@ -188,9 +188,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.inspect = function (container) {
-            if (container.containerId) {
-                GroupsServices.inspect($scope.group._id, container._id).
+        $scope.inspect = function (container, dataSuccess) {
+            var containerId = container.containerId;
+
+            /*if (!container.containerId && dataSuccess && dataSuccess.id) {
+                containerId = dataSuccess.id;
+            }*/
+            if (containerId) {
+                GroupsServices.inspect($scope.group._id, containerId).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
                     }).
@@ -209,6 +214,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
+            console.log('data');
+            console.log(data);
             Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
