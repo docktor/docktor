@@ -4,7 +4,7 @@ angular.module('core').controller('ToastsController', ['$scope', '$mdToast', 'To
     function ($scope, $mdToast, Toasts) {
 
         $scope.closeToast = function (index) {
-            Toasts.closeToast(index);
+            Toasts.forceCloseToast(index);
         };
 
         $scope.toasts = Toasts.getToasts();

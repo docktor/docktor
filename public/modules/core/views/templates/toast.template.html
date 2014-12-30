@@ -1,6 +1,6 @@
 <md-toast layout="column" class="docktor">
     <div ng-repeat="toast in toasts track by $index" layout="row">
-        <div flex="95">{{toast.title}} :
+        <div flex="95">{{toast.title}}
             <span ng-repeat="msg in toast.msg track by $index">{{msg}}</span>
         </div>
         <div flex="5">

@@ -1,19 +1,23 @@
 'use strict';
 
-angular.module('core').service('Toasts', ['$mdToast',
+angular.module('core').service('Toasts', ['$mdToast', '$timeout',
 
-    function ($mdToast) {
-        var toasts = [];
-
-        return {
-            closeToast: function (index) {
-                toasts.splice(index, 1);
-                if (toasts.length === 0) {
+    function ($mdToast, $timeout) {
+        var service = {
+            toasts: [],
+            forceCloseToast: function (index) {
+                this.toasts.splice(index, 1);
+                if (this.toasts.length === 0) {
                     $mdToast.hide();
                 }
             },
+            closeToast: function (index) {
+                $timeout(function () {
+                    service.forceCloseToast(index);
+                }, 2000);
+            },
             getToasts: function () {
-                return toasts;
+                return this.toasts;
             },
             addToast: function (text, type, title) {
                 var msg = [];
@@ -22,13 +26,16 @@ angular.module('core').service('Toasts', ['$mdToast',
                 } else {
                     msg = text;
                 }
-                var index = toasts.length;
+                var index = this.toasts.length;
                 if (type !== "danger") {
                     msg = moment().format('hh:mm:ss') + ' ' + msg;
                     type = "success";
                 }
+                if (title) {
+                    title = title + ':';
+                }
 
-                toasts.push({title: title, type: type, msg: msg, index: index});
+                this.toasts.push({title: title, type: type, msg: msg, index: index});
                 $mdToast.show({
                     controller: 'ToastsController',
                     templateUrl: 'modules/core/views/templates/toast.template.html',
@@ -37,6 +44,7 @@ angular.module('core').service('Toasts', ['$mdToast',
                 });
                 return index;
             }
-        }
+        };
+        return service;
     }
 ]);
