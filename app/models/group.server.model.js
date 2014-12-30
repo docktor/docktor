@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Filesystem Schema, not useful outside Group
  */
 var FilesystemSchema = new Schema({
+    daemon: {
+        type: Schema.ObjectId,
+        ref: 'Daemon'
+    },
     partition: {
         type: String,
         trim: true,

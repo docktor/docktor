@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').factory('Daemon', ['DaemonsDocker',
-    function (DaemonsDocker) {
+angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
+    function (DaemonsDocker, Toasts) {
         return {
             getcAdvisorUrl: function (daemon) {
                 return daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
@@ -43,10 +43,12 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');
                                     console.log(data);
+                                    Toasts.addToast(data, 'danger', 'Error retrieving info on cAdvisor for daemon ' + daemon.name);
                                     if (callback) callback();
                                 });
                         } else {
                             console.log('noMachineInfo for daemon ' + daemon._id);
+                            Toasts.addToast(data, 'danger', 'Error with daemon' + daemon.name);
                             if (callback) callback();
                         }
                     })
@@ -54,6 +56,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker',
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
                         console.log(data);
+                        Toasts.addToast(data, 'danger', 'Error getting info with daemon' + daemon.name);
                         if (callback) callback();
                     });
             }

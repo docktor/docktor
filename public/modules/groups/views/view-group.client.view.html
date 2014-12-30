@@ -45,21 +45,14 @@
             <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
         </div>
 
-        <div ng-repeat="fs in group.filesystems" layout="row">
+        <div ng-repeat="fs in group.filesystems" layout="row" layout-margin>
             <div flex>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-danger" role="progressbar"
-                         aria-valuenow="{{fs.statsCompute.usage}}" aria-valuemin="0"
-                         aria-valuemax="{{fs.statsCompute.capacity}}"
-                         style="width: {{fs.statsCompute.usagePercent}}%;">
-                        <span>&nbsp;</span>
-                    </div>
-                </div>
+                <md-progress-linear class="md-warn" md-mode="determinate" ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
             </div>
 
             <div flex>
                 <div><i class="fa fa-pie-chart"></i>
-                    {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
+                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
                     ({{fs.statsCompute.usagePercent}}%)
                 </div>
                 <div><i>{{fs.description}}</i></div>

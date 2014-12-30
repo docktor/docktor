@@ -1,4 +1,4 @@
-<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+<section data-ng-controller="GroupsController" data-ng-init="findForCreateOrEditGroup()">
 
     <h3 ng-hide="group._id">
         <md-button class="md-accent" href="#!/groups">My Groups</md-button>
@@ -36,7 +36,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="group.selectDaemon">
                 <md-text-float md-fid="portminrange" label="Port Min Range" ng-model="group.portminrange" type="number">
 
                 </md-text-float>
@@ -44,21 +44,21 @@
                 </md-text-float>
                 <div ng-show="freePortRange">
                     <label class="control-label">Ports already used :</label>
+                    <span ng-show="freePortRange.length === 0">None</span>
                     <li ng-repeat="port in freePortRange">
                         {{port}}
                     </li>
-
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="group.selectDaemon">
                 <md-text-float class="long" md-fid="description" label="Description" ng-model="group.description"
                                type="text">
             </div>
         </form>
     </div>
 
-    <div class="row">
-        <label class="control-label">Filesystem</label>
+    <div class="row" ng-show="group.selectDaemon">
+        <h4>Filesystems</h4>
 
         <md-button class="md-raised" ng-hide="displayFormFilesystem"
                    ng-click="displayFormFilesystem=!displayFormFilesystem">
@@ -72,16 +72,17 @@
                 cAdvisor of daemon {{group.selectDaemon.name}}
             </md-button>
 
-            <div ng-hide="group.selectDaemon.cadvisorApi" class="alert alert-warning">
-                Daemon has no cAdvisor URL. Please check this
-                <md-button class="md-accent" href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">
-                    Daemon
-                </md-button>
-            </div>
+            <md-subheader ng-hide="group.selectDaemon.cadvisorApi" class="md-warn">
+                Daemon {{group.selectDaemon.name}} has no cAdvisor URL.
+            </md-subheader>
+            <md-button ng-hide="group.selectDaemon.cadvisorApi" class="md-raised md-accent"
+                       href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">
+                Check Daemon {{group.selectDaemon.name}} configuration - deploy cAdvisor on it.
+            </md-button>
 
             <div ng-show="group.selectDaemon.cadvisorApi">
                 <ul data-ng-repeat="filesystem in group.filesystems">
-                    <li>{{filesystem.partition}}:{{filesystem.value}}
+                    <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
                         <small><i>{{filesystem.description}}</i></small>
                         <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
                             <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
@@ -101,46 +102,54 @@
 
                 <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
                       autocomplete="off">
-                    <fieldset>
 
-                        <select ng-model="group.currentFs" theme="bootstrap" style="min-width: 300px;"
-                                ng-change="changefs()"
-                                ng-options="fs.device for fs in group.selectDaemon.statsCompute.filesystem">
+                    <div class="row">
+                        <div flex="10">Daemon</div>
+                        <div flex>
+                            <select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()"
+                                    ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-show="filesystem.selectDaemon.statsCompute">
+                        <div flex="10">FileSystem</div>
+                        <select ng-model="filesystem.currentFs" theme="bootstrap" style="min-width: 300px;"
+                                ng-change="changeFilesystem()"
+                                ng-options="fs.device for fs in filesystem.selectDaemon.statsCompute.filesystem">
                         </select>
+                    </div>
 
-                        <div ng-show="group.currentFs">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar"
-                                     aria-valuenow="{{group.currentFs.usage}}" aria-valuemin="0"
-                                     aria-valuemax="{{group.currentFs.capacity}}"
-                                     style="width: {{group.currentFs.usagePercent}}%;">
-                                    <span>&nbsp;</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div ng-show="group.currentFs">
-                            <span>{{group.currentFs.device}} : {{group.currentFs.usageInMB}} Gb / {{group.currentFs.capacityInMB}} Gb ({{group.currentFs.usagePercent}}%)</span>
+                    <div ng-show="filesystem.currentFs" class="row">
+                        <div flex>
+                            <md-progress-linear class="md-warn" md-mode="determinate"
+                                                ng-value="filesystem.currentFs.usagePercent"></md-progress-linear>
                         </div>
 
-                        <input type="text" name="name" data-ng-model="filesystem.partition"
-                               placeholder="name of the partition. Example /dev/sda1 " class="form-control"
-                               ng-required="true">
-                        <input type="text" name="descriptionFilesystem" data-ng-model="filesystem.description"
-                               placeholder="description" class="form-control">
-                        <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
-                                   data-ng-click="addFilesystem(); displayFormFilesystem=false">
-                            Insert Filesystem
-                        </md-button>
-                    </fieldset>
+                        <div ng-show="filesystem.currentFs" flex>
+                            <span>{{filesystem.currentFs.device}} : {{filesystem.currentFs.usageInMB}} Gb / {{filesystem.currentFs.capacityInMB}} Gb ({{filesystem.currentFs.usagePercent}}%)</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <md-text-float class="long" md-fid="partitionDescription" label="Description"
+                                       ng-model="filesystem.description" type="text">
+                    </div>
+                    <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
+                               data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                        <i class="fa fa-plus"></i> Insert Filesystem
+                    </md-button>
                 </form>
             </div>
         </div>
     </div>
 
     <br>
+
     <div class="row">
 
-        <md-button class="md-raised md-primary" ng-click="submitForm()">
+        <md-button class="md-raised md-primary" ng-click="submitForm()" ng-show="group.selectDaemon">
+            <i class="fa fa-save"></i>
             <span ng-hide="group._id">Create</span>
             <span ng-show="group._id">Update</span>
         </md-button>
