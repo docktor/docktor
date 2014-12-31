@@ -12,7 +12,10 @@
 See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 
 ## Screenshots
-
+![capture4](/screenshots/capture4.png)
+![capture1](/screenshots/capture1.png)
+![capture2](/screenshots/capture2.png)
+![capture3](/screenshots/capture3.png)
 
 ## License
 GNU GENERAL PUBLIC LICENSE 3
