@@ -11,6 +11,9 @@
 ## Roadmap
 See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 
+## Screenshots
+
+
 ## License
 GNU GENERAL PUBLIC LICENSE 3
 
