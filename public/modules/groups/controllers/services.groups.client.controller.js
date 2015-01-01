@@ -29,12 +29,12 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             });
         };
 
-        $scope.changeDaemon = function() {
+        $scope.changeDaemon = function () {
             $scope.services.select = null;
             $scope.services.selectImage = null;
         };
 
-        $scope.changeService = function() {
+        $scope.changeService = function () {
             $scope.services.selectImage = null;
         };
 
@@ -121,7 +121,10 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             });
 
             group.$update(function (groupSaved) {
-                var newContainer = _.where(groupSaved.containers, {"name": $scope.container.name, "daemonId": daemon._id})[0];
+                var newContainer = _.where(groupSaved.containers, {
+                    "name": $scope.container.name,
+                    "daemonId": daemon._id
+                })[0];
                 $location.path('groups/' + group._id + '/' + newContainer._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;

@@ -870,22 +870,22 @@ md-input-group.long > input {
 }
 
 md-toast.docktor {
-    max-width:600px;
-    height:auto;
-    max-height:600px;
-    font-size:11px;
+    max-width: 600px;
+    height: auto;
+    max-height: 600px;
+    font-size: 11px;
 }
 
 md-input-group.md-default-theme.tableDocktor label {
-    color:#757575;
+    color: #757575;
 }
 
 md-input-group.tableDocktor {
-    color:#757575;
-    margin : 10px 0 -14px 0;
-    text-align:center;
+    color: #757575;
+    margin: 10px 0 -14px 0;
+    text-align: center;
 }
 
 .md-subheader.docktor {
-    padding:0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }

@@ -47,12 +47,14 @@
 
         <div ng-repeat="fs in group.filesystems" layout="row" layout-margin>
             <div flex>
-                <md-progress-linear class="md-warn" md-mode="determinate" ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
+                <md-progress-linear class="md-warn" md-mode="determinate"
+                                    ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
             </div>
 
             <div flex>
                 <div><i class="fa fa-pie-chart"></i>
-                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
+                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb /
+                    {{fs.statsCompute.capacityInMB}} Gb
                     ({{fs.statsCompute.usagePercent}}%)
                 </div>
                 <div><i>{{fs.description}}</i></div>
@@ -135,7 +137,8 @@
                     </div>
 
                     <div ng-switch-when="up">
-                        <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused" class="md-primary">
+                        <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused"
+                                      class="md-primary">
                             Running
                         </md-subheader>
                         <md-subheader ng-hide="gridItem.inspect.State.Running" class="md-warn">

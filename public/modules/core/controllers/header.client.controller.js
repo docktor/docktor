@@ -9,7 +9,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
             $mdSidenav(side).toggle();
         };
 
-        $scope.close = function(side) {
+        $scope.close = function (side) {
             $mdSidenav(side).close();
         };
     }

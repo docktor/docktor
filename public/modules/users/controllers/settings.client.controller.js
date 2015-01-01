@@ -6,7 +6,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 
         // If user is not signed in then redirect back home
         if (!$scope.user) $location.path('/');
-        
+
         // Update a user profile
         $scope.updateUserProfile = function (isValid) {
             if (isValid) {

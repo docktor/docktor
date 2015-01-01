@@ -118,13 +118,13 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             $mdDialog.show({
                 controller: 'ContainerInfosController',
                 templateUrl: 'modules/daemons/views/dialog.template.html',
-                locals: {currentContainer:container}
+                locals: {currentContainer: container}
             })
         };
     }
 ]);
 
-angular.module('daemons').controller('ContainerInfosController', ['$scope', '$mdDialog','currentContainer',
+angular.module('daemons').controller('ContainerInfosController', ['$scope', '$mdDialog', 'currentContainer',
     function ($scope, $mdDialog, currentContainer) {
         $scope.currentContainer = currentContainer;
         $scope.hide = function () {
