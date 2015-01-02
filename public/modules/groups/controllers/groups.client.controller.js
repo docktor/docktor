@@ -270,37 +270,37 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.topContainer = function (container) {
             GroupsServices.action('top', $scope.group._id, container, function (container, data) {
                 var title = 'top on container ' + container.name;
-                var msg = [];
-                msg.push(data.Titles);
+                var results = [];
+                results.push(data.Titles);
                 angular.forEach(data.Processes, function (value, key) {
-                    msg.push(value);
+                    results.push(value);
                 });
 
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .title(title)
-                        .content(msg)
-                        .ok('Close'));
+                $mdDialog.show({
+                    controller: 'ContainerCmdDialogController',
+                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
+                    locals: {title: title, results: results}
+                });
+
             }, $scope.callbackError);
         };
 
         $scope.logsContainer = function (container) {
             GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
                 var title = 'Logs in container ' + container.name;
-                var msg = [];
+                var results = [];
                 for (var value in data) {
                     var s = '' + data[value];
                     // display only line with date 2014-...
                     if (s.length > 2 && s.substring(0, 2) === '20') {
-                        msg.push(s);
+                        results.push(s);
                     }
                 }
-                //Toasts.addToast(msg, 'success', title);
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .title(title)
-                        .content(msg)
-                        .ok('Close'));
+                $mdDialog.show({
+                    controller: 'ContainerCmdDialogController',
+                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
+                    locals: {title: title, results: results}
+                });
 
             }, $scope.callbackError);
         };

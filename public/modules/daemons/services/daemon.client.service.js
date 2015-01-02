@@ -48,7 +48,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                                 });
                         } else {
                             console.log('noMachineInfo for daemon ' + daemon._id);
-                            Toasts.addToast(data, 'danger', 'Error with daemon' + daemon.name);
+                            Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
                             if (callback) callback();
                         }
                     })
