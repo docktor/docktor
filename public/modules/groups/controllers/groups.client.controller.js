@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -276,7 +276,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     msg.push(value);
                 });
 
-                Toasts.addToast(msg, 'success', title);
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .title(title)
+                        .content(msg)
+                        .ok('Close'));
             }, $scope.callbackError);
         };
 
@@ -291,7 +295,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         msg.push(s);
                     }
                 }
-                Toasts.addToast(msg, 'success', title);
+                //Toasts.addToast(msg, 'success', title);
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .title(title)
+                        .content(msg)
+                        .ok('Close'));
+
             }, $scope.callbackError);
         };
 
