@@ -6,9 +6,11 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
         var service = {
             toasts: [],
             forceCloseToast: function (index) {
-                this.toasts.splice(index, 1);
-                if (this.toasts.length === 0) {
+                if (this.toasts.length === 1) {
+                    this.toasts = [];
                     $mdToast.hide();
+                } else {
+                    this.toasts.splice(index, 1);
                 }
             },
             closeToast: function (index) {
