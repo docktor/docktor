@@ -122,8 +122,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
             group.$update(function (groupSaved) {
                 var newContainer = _.where(groupSaved.containers, {
-                    "name": $scope.container.name,
-                    "daemonId": daemon._id
+                    'name': $scope.container.name,
+                    'daemonId': daemon._id
                 })[0];
                 $location.path('groups/' + group._id + '/' + newContainer._id);
             }, function (errorResponse) {

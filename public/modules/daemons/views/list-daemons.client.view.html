@@ -7,78 +7,77 @@
         </md-button>
     </div>
 
-    <table tr-ng-grid="" items="daemons" fields="" class="table">
-        <thead>
-        <tr>
-            <th field-name="name" display-name="Name" enable-filtering="true"></th>
-            <th field-name="dockerStatus" display-name="Status" enable-filtering="true"></th>
-            <th field-name="host" display-name="Monitoring" enable-filtering="true"></th>
-            <th field-name="dockerVersion.Version" display-name="Version" enable-filtering="true"></th>
-            <th>
-                <div class="tr-ng-title">
-                    Containers / Images
-                </div>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td field-name="name">
-                <md-button class="md-accent" href="#!/admin/daemons/view/{{gridItem._id}}">{{gridItem.name}}</md-button>
-                <small><p class="list-group-item-text" data-ng-bind="gridItem.description"></p></small>
-            </td>
-            <td field-name="dockerStatus">
+    <div layout="row">
+        <div flex="35">
+            <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px" width="320px"></leaflet>
+        </div>
 
-                <div ng-switch="gridItem.dockerStatus">
-                    <div ng-switch-when="checking" layout="row" layout-align="center center">
-                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
-                        </md-progress-circular>
-                        <md-subheader class="md-accent docktor" layout="row" layout-align="center center">
-                            Checking...
-                        </md-subheader>
-                    </div>
-                    <div ng-switch-when="up">
-                        <md-subheader class="md-primary docktor" layout="row" layout-align="center center">
-                            UP
-                        </md-subheader>
-                    </div>
-                    <div ng-switch-when="down">
-                        <md-subheader class="md-warn docktor">
-                            DOWN
-                        </md-subheader>
-                    </div>
-                </div>
-            </td>
-            <td field-name="host">
-                <div layout="column">
-                    <md-button class="md-accent" ng-show="gridItem.cadvisorApi" href="{{gridItem.cadvisorUrl}}">
-                        cAdvisor
-                    </md-button>
-                    <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.name}}">
-                        Grafana
-                    </md-button>
-                </div>
-            </td>
-            <td field-name="dockerVersion.Version">
-                <div layout="row" layout-align="center" ng-show="gridItem.dockerStatusUp">
-                    {{gridItem.dockerVersion.Version}}
-                </div>
-            </td>
-            <td>
-                <div layout="column">
-                    <md-button ng-show="gridItem.dockerStatusUp" class="md-accent"
-                               href="/#!/admin/daemons/view/containers/{{gridItem._id}}">
-                        {{gridItem.dockerInfo.Containers}} containers
-                    </md-button>
-                    <md-button ng-show="gridItem.dockerStatusUp" class="md-accent"
-                               href="/#!/admin/daemons/view/images/{{gridItem._id}}">
-                        {{gridItem.dockerInfo.Images}} images
-                    </md-button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <div flex="65" align="column">
+
+            <md-text-float md-fid="search" label="Search" ng-model="searchDaemon"></md-text-float>
+
+            <md-list>
+                <md-item ng-repeat="daemon in daemons | filter:searchDaemon">
+                    <md-item-content>
+
+                        <div class="md-tile-content" layout="row" layout-margin>
+                            <div flex layout="column" layout-align="center center">
+                                <div>{{daemon.name}}
+                                    <small>{{daemon.dockerVersion.Version}}</small>
+                                </div>
+
+                                <div ng-switch="daemon.dockerStatus" layout-align="center center">
+                                    <div ng-switch-when="checking" layout="row" layout-align="center">
+                                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24"
+                                                              md-mode="indeterminate">
+                                        </md-progress-circular>
+                                        <md-subheader class="md-accent docktor" layout="row"
+                                                      layout-align="center center">
+                                            Checking...
+                                        </md-subheader>
+                                    </div>
+                                    <div ng-switch-when="up">
+                                        <md-subheader class="md-primary docktor" layout="row"
+                                                      layout-align="center center">
+                                            UP
+                                        </md-subheader>
+                                    </div>
+                                    <div ng-switch-when="down">
+                                        <md-subheader class="md-warn docktor">
+                                            DOWN
+                                        </md-subheader>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div flex layout="column">
+                                <md-button class="md-accent" ng-show="daemon.cadvisorApi"
+                                           href="{{daemon.cadvisorUrl}}">
+                                    cAdvisor
+                                </md-button>
+                                <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.name}}">
+                                    Grafana
+                                </md-button>
+                            </div>
+
+                            <div flex layout="row">
+                                <md-button ng-show="daemon.dockerStatusUp" class="md-accent"
+                                           href="/#!/admin/daemons/view/containers/{{daemon._id}}">
+                                    {{daemon.dockerInfo.Containers}} containers
+                                </md-button>
+                            </div>
+                            <div flex layout="row">
+                                <md-button ng-show="daemon.dockerStatusUp" class="md-accent"
+                                           href="/#!/admin/daemons/view/images/{{daemon._id}}">
+                                    {{daemon.dockerInfo.Images}} images
+                                </md-button>
+                            </div>
+                        </div>
+                    </md-item-content>
+                </md-item>
+            </md-list>
+        </div>
+    </div>
 
     <md-toolbar class="md-accent" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
         No daemons yet, why don't you <a href="/#!/admin/daemons/create">create one</a>?

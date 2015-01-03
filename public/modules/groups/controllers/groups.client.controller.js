@@ -124,7 +124,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                 $scope.prepareDaemonsAll(allDaemonsContainer, function (daemon) {
                     $scope.group.containers.forEach(function (container) {
-                        if (container.daemonId == daemon._id) {
+                        if (container.daemonId === daemon._id) {
                             container.daemon = $scope.getDaemon(container.daemonId);
 
                             if ($stateParams.containerId && container._id === $stateParams.containerId) {

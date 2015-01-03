@@ -113,7 +113,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
 
         $scope.showInfo = function (container) {
             $scope.currentContainer = container;
-            var content = "Name :" + container.inspect.Name + "<br>";
+            var content = 'Name :' + container.inspect.Name + '<br>';
             $mdDialog.show({
                 controller: 'ContainerStatusDialogController',
                 templateUrl: 'modules/daemons/views/container.status.dialog.template.html',

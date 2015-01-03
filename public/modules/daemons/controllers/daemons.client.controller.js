@@ -11,8 +11,6 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
-        $scope.mapInitialized = false;
-        $scope.mapView = false;
         $scope.daemonsInitialized = false;
 
         $scope.markerInfo = '';
@@ -89,12 +87,36 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                     $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
                 $scope.daemonsInitialized = true;
+                $scope.initMap();
             });
         };
 
-        $scope.$on('mapInitialized', function (event, map) {
-            $scope.map = map;
-            $scope.mapInitialized = true;
+        $scope.initMap = function () {
+            var markers = {};
+            var center = {};
+
+            angular.forEach($scope.positions, function (position, idSite) {
+                var site = position.site;
+                center = {
+                    lat: site.latitude,
+                    lng: site.longitude,
+                    zoom: 4
+                };
+
+                markers[idSite] = {
+                    lat: site.latitude,
+                    lng: site.longitude,
+                    message: site.title,
+                    focus: true
+                };
+            });
+
+            $scope.markers = markers;
+            $scope.center = center;
+        };
+
+        $scope.$on('leafletDirectiveMarker.click', function (e, args) {
+            $scope.searchDaemon = $scope.positions[args.markerName].site.title;
         });
 
         $scope.addParameter = function () {

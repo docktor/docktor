@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Images',
-    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images) {
+angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Images', 'Toasts',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images, Toasts) {
 
         $scope.viewRawJson = false;
 

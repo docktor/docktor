@@ -18,7 +18,8 @@ module.exports = {
                 'public/lib/angular-material/themes/grey-theme.css',
                 'public/lib/angular-material/angular-material.css',
                 'public/lib/fontawesome/css/font-awesome.css',
-                'public/lib/trNgGrid/release/trNgGrid.min.css'
+                'public/lib/trNgGrid/release/trNgGrid.min.css',
+                'public/lib/leaflet/dist/leaflet.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
@@ -35,7 +36,9 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/trNgGrid/release/trNgGrid.min.js',
                 'public/lib/lodash/dist/lodash.underscore.min.js',
-                'public/lib/moment/min/moment.min.js'
+                'public/lib/moment/min/moment.min.js',
+                'public/lib/leaflet/dist/leaflet.js',
+                'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js'
             ]
         },
         css: [

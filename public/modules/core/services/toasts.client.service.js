@@ -38,9 +38,9 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
 
                 var index = _.random(0, 10000000);
 
-                if (type !== "danger") {
+                if (type !== 'danger') {
                     msg = moment().format('hh:mm:ss') + ' ' + msg;
-                    type = "success";
+                    type = 'success';
                 }
                 if (title) {
                     title = title + ':';
