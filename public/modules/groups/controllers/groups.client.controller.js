@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -205,12 +205,25 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
+        $scope.inspectAfterStart = function(container, dataSuccess) {
+            var index = Toasts.addToast('Please wait', 'info', 'waiting 5s after starting ' + container.name + ' to check it');
+            $timeout(function () {
+                Toasts.closeToast(index);
+                $scope.inspect(container, dataSuccess);
+            }, 5000);
+        };
+
         $scope.callbackError = function (container, err, index) {
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
             Toasts.closeToast(index);
             Toasts.addToast(msg, 'danger', title);
+        };
+
+        $scope.callbackErrorInspect = function (container, err, index) {
+            $scope.callbackError(container, err, index);
+            $scope.inspect(container);
         };
 
         $scope.callbackSuccessRemove = function (container, data, index, cbSuccessEnd) {
@@ -229,42 +242,134 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeServiceFromGroup = function (container) {
             var index = Toasts.addToast('Removing service ' + container.serviceTitle + ' from group');
-            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackError);
+            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackErrorInspect);
         };
 
         $scope.createContainer = function (container) {
             var index = Toasts.addToast('Create service ' + container.serviceTitle);
-            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.createContainers = function () {
+            var createOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (!container.containerId) {
+                    $scope.createContainer(container);
+                    createOne = true;
+                }
+            });
+            if (!createOne) {
+                Toasts.addToast('No service available to create');
+            }
         };
 
         $scope.startContainer = function (container) {
             var index = Toasts.addToast('Starting service ' + container.serviceTitle);
-            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspectAfterStart, $scope.callbackErrorInspect);
+        };
+
+        $scope.startContainers = function () {
+            var startOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (!container.inspect.State.Running) {
+                    $scope.startContainer(container);
+                    startOne = true;
+                }
+            });
+            if (!startOne) {
+                Toasts.addToast('No service available to start');
+            }
         };
 
         $scope.stopContainer = function (container) {
             var index = Toasts.addToast('Stopping service ' + container.serviceTitle);
-            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.stopContainers = function () {
+            var stopOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (container.inspect.State.Running && !container.inspect.State.Paused) {
+                    $scope.stopContainer(container);
+                    stopOne = true;
+                }
+            });
+            if (!stopOne) {
+                Toasts.addToast('No service available to stop');
+            }
         };
 
         $scope.pauseContainer = function (container) {
             var index = Toasts.addToast('Pausing service ' + container.serviceTitle);
-            GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.pauseContainers = function () {
+            var pauseOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (container.inspect.State.Running && !container.inspect.State.Paused) {
+                    $scope.pauseContainer(container);
+                    pauseOne = true;
+                }
+            });
+            if (!pauseOne) {
+                Toasts.addToast('No service available to pause');
+            }
         };
 
         $scope.unpauseContainer = function (container) {
             var index = Toasts.addToast('Unpausing service ' + container.serviceTitle);
-            GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.unpauseContainers = function () {
+            var unpauseOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (container.inspect.State.Running && container.inspect.State.Paused) {
+                    $scope.unpauseContainer(container);
+                    unpauseOne = true;
+                }
+            });
+            if (!unpauseOne) {
+                Toasts.addToast('No service available to unpause');
+            }
         };
 
         $scope.removeContainer = function (container) {
             var index = Toasts.addToast('Removing service ' + container.serviceTitle);
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.removeContainers = function () {
+            var removeOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (!container.inspect.State.Running) {
+                    $scope.removeContainer(container);
+                    removeOne = true;
+                }
+            });
+
+            if (!removeOne) {
+                Toasts.addToast('No service available to remove');
+            }
         };
 
         $scope.killContainer = function (container) {
             var index = Toasts.addToast('Killing service ' + container.serviceTitle);
-            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
+            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+        };
+
+        $scope.killContainers = function () {
+            var killOne = false;
+            $scope.group.containers.forEach(function (container) {
+                if (container.inspect.State.Running) {
+                    $scope.killContainer(container);
+                    killOne = true;
+                }
+            });
+            if (!killOne) {
+                Toasts.addToast('No service available to kill');
+            }
         };
 
         $scope.topContainer = function (container) {
@@ -282,7 +387,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     locals: {title: title, results: results}
                 });
 
-            }, $scope.callbackError);
+            }, $scope.callbackErrorInspect);
         };
 
         $scope.logsContainer = function (container) {
@@ -302,7 +407,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     locals: {title: title, results: results}
                 });
 
-            }, $scope.callbackError);
+            }, $scope.callbackErrorInspect);
         };
 
         $scope.doExec = function (container, command) {
@@ -314,8 +419,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     Toasts.closeToast(index);
                 })
                 .error(function (err, status, headers, config) {
-                    Toasts.closeToast(index);
-                    $scope.callbackError(container, err);
+                    $scope.callbackErrorInspect(container, err, index);
                 });
         };
 

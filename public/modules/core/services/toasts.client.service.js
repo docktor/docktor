@@ -38,12 +38,18 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
                 }
 
                 this.toasts.push({title: title, type: type, msg: msg, index: index});
-                $mdToast.show({
-                    controller: 'ToastsController',
-                    templateUrl: 'modules/core/views/templates/toast.template.html',
-                    position: 'bottom',
-                    hideDelay: 0
-                });
+
+                // timeout to avoid angular material error with many toasts.
+                $timeout(function () {
+                    $mdToast.hide();
+                    $mdToast.show({
+                        controller: 'ToastsController',
+                        templateUrl: 'modules/core/views/templates/toast.template.html',
+                        position: 'bottom',
+                        hideDelay: 0
+                    });
+                }, 1000);
+
                 return index;
             }
         };

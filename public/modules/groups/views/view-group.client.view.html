@@ -73,6 +73,28 @@
         <div ng-show="group.containers.length === 0">
             No service deployed for this group.
         </div>
+
+        <div ng-show="group.containers.length > 0" layout="row">
+            <md-button class="md-raised" ng-click="createContainers()">
+                <i class="fa fa-play"></i> Create All
+            </md-button>
+            <md-button class="md-raised" ng-click="startContainers()">
+                <i class="fa fa-play"></i> Run All
+            </md-button>
+            <md-button class="md-raised" ng-click="stopContainers()">
+                <i class="fa fa-stop"></i> Stop All
+            </md-button>
+            <md-button class="md-raised" ng-click="pauseContainers()">
+                <i class="fa fa-pause"></i> Pause All
+            </md-button>
+            <md-button class="md-raised" ng-click="unpauseContainers()">
+                <i class="fa fa-pause"></i> Unpause All
+            </md-button>
+            <md-button class="md-raised" ng-click="killContainers()">
+                <i class="fa fa-crosshairs"></i> Kill All
+            </md-button>
+        </div>
+
     </div>
 
     <table ng-show="group.containers.length > 0" tr-ng-grid="" items="group.containers" fields="" class="table">
