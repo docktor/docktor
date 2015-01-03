@@ -6,11 +6,9 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
         var service = {
             toasts: [],
             forceCloseToast: function (index) {
-                if (this.toasts.length === 1) {
-                    this.toasts = [];
+                this.toasts = _.reject(this.toasts, {'index': index});
+                if (this.toasts.length === 0) {
                     $mdToast.hide();
-                } else {
-                    this.toasts.splice(index, 1);
                 }
             },
             closeToast: function (index) {
@@ -28,7 +26,9 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
                 } else {
                     msg = text;
                 }
-                var index = this.toasts.length;
+
+                var index = _.random(0, 10000000);
+
                 if (type !== "danger") {
                     msg = moment().format('hh:mm:ss') + ' ' + msg;
                     type = "success";

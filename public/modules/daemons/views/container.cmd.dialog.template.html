@@ -4,7 +4,7 @@
         <div class="column">
             <table class="table table-bordered">
                 <tr ng-repeat="result in results">
-                    <td ng-repeat="resultColumn in result">
+                    <td ng-repeat="resultColumn in result track by $index">
                         {{resultColumn}}
                     </td>
                 </tr>
