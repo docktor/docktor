@@ -32,6 +32,16 @@
                 <i class="fa fa-envelope"></i> Mail All
             </md-button>
         </div>
+        <div ng-show="authentication.isAdmin || authentication.allowGrant">
+            <md-button ng-hide="showAddContact" ng-click="prepareAddContact()"><i class="fa fa-plus"></i></md-button>
+
+            <div ng-show="showAddContact">
+                <select ng-model="contactToAdd" ng-options="user.displayName for user in users | orderBy:'displayName'">
+                </select>
+                <md-button ng-show="contactToAdd" ng-click="addContact()">Add</md-button>
+                <md-button ng-show="contactToAdd" ng-click="cancelAddContact()">Cancel</md-button>
+            </div>
+        </div>
     </div>
 
     <div class="row">

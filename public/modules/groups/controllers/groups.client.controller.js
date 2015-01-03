@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'Users',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, Users) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
+        $scope.showAddContact = false;
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -483,6 +484,21 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 url.urlCompute = 'http://' + container.daemon.host + url.url;
             }
             return url;
+        };
+
+        $scope.prepareAddContact = function () {
+            $scope.showAddContact = true;
+            //FIXME do not user Users.query -> get only user_id and displayName
+            $scope.users = Users.query();
+        };
+
+        $scope.addContact = function() {
+            alert('Not yet implemented')
+        };
+
+        $scope.cancelAddContact = function () {
+            $scope.showAddContact = false;
+            $scope.contactToAdd = null;
         };
     }
 ]);
