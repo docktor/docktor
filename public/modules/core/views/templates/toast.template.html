@@ -6,12 +6,12 @@
         <div flex="5">
             <div ng-switch="toast.type">
                 <div ng-switch-when="success">
-                    <md-button ng-click="closeToast(toast.index)" class="md-raised md-primary">
+                    <md-button aria-label="Close" ng-click="closeToast(toast.index)" class="md-raised md-primary">
                         <i class="fa fa-check"></i>
                     </md-button>
                 </div>
                 <div ng-switch-when="danger">
-                    <md-button ng-click="closeToast(toast.index)" class="md-raised md-warn">
+                    <md-button aria-label="Close" ng-click="closeToast(toast.index)" class="md-raised md-warn">
                         <i class="fa fa-close"></i>
                     </md-button>
                 </div>
