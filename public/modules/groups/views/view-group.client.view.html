@@ -62,7 +62,7 @@
         </div>
         <div class="row">
             <i class="fa fa-bar-chart"></i>
-            <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}">
+            <md-button aria-label="Monitoring All" class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}">
                 Monitoring CPU / RAM - All Services
             </md-button>
         </div>
@@ -254,7 +254,7 @@
             </td>
             <td>
                 <div layout-align="center">
-                    <md-button class="md-fab"
+                    <md-button class="md-fab" aria-label="Monitoring Container"
                                href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">
                         <i class="fa fa-bar-chart"></i>
                     </md-button>

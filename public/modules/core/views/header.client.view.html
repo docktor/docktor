@@ -1,6 +1,7 @@
 <div class="md-toolbar-tools" layout="column" ng-controller="HeaderController">
     <div layout="row" flex>
         <md-button class="md-primary md-fab"
+                   aria-label="Left Menu"
                    ng-if="menu.shouldRender(authentication.user);"
                    ng-click="toggleCollapsibleMenu('left')">
             <img src="/modules/core/img/docktor.png">
