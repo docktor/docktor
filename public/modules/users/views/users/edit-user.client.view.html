@@ -15,8 +15,14 @@
             <md-text-float label="LastName" ng-model="userToEdit.lastName" type="text" required></md-text-float>
             <md-text-float label="Email" ng-model="userToEdit.email" type="email" required></md-text-float>
 
+            <div layout="row">
+                <md-checkbox ng-model="userToEdit.allowGrant" aria-label="Checkbox Allow Grant">
+                    Can add/remove user on group
+                </md-checkbox>
+            </div>
+
             <label>Role</label>
-            <md-radio-group ng-model="userToEdit.role">
+            <md-radio-group ng-model="userToEdit.role" layout="row">
                 <md-radio-button value="user">User</md-radio-button>
                 <md-radio-button value="admin">Admin</md-radio-button>
             </md-radio-group>

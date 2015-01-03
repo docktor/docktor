@@ -87,6 +87,10 @@ var UserSchema = new Schema({
     resetPasswordExpires: {
         type: Date
     },
+    allowGrant: {
+        type: Boolean,
+        default: false
+    },
     groups: [{
         type: Schema.ObjectId,
         ref: 'Group'
@@ -165,9 +169,21 @@ UserSchema.statics.getUsersOfOneGroup = function (idGroup) {
      */
     return _this.aggregate([
         {'$match': {'groups': {'$in': [idGroup]}}},
-        {'$group': {'_id': 0, 'users': {'$addToSet': {'id' : '$_id', 'username':'$username', 'email': '$email', 'displayName': '$displayName'}}}}
+        {
+            '$group': {
+                '_id': 0,
+                'users': {
+                    '$addToSet': {
+                        'id': '$_id',
+                        'username': '$username',
+                        'email': '$email',
+                        'displayName': '$displayName'
+                    }
+                }
+            }
+        }
     ]);
 };
 
 mongoose.model('User', UserSchema);
-module.exports=mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
