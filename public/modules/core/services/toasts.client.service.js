@@ -7,8 +7,17 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
             toasts: [],
             forceCloseToast: function (index) {
                 this.toasts = _.reject(this.toasts, {'index': index});
+
                 if (this.toasts.length === 0) {
                     $mdToast.hide();
+                } else {
+                    // refresh list
+                    $mdToast.show({
+                        controller: 'ToastsController',
+                        templateUrl: 'modules/core/views/templates/toast.template.html',
+                        position: 'bottom',
+                        hideDelay: 0
+                    });
                 }
             },
             closeToast: function (index) {
@@ -46,7 +55,8 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
                         controller: 'ToastsController',
                         templateUrl: 'modules/core/views/templates/toast.template.html',
                         position: 'bottom',
-                        hideDelay: 0
+                        hideDelay: 0,
+                        bindToController: true
                     });
                 }, 1000);
 
