@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'UsersService', 'RoleService',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, UsersService, RoleService) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'UsersService', 'RoleService', 'Menus',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, UsersService, RoleService, Menus) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -511,11 +511,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.addFavorite = function () {
             UsersService.addFavorite($scope.authentication.user._id, $scope.group._id)
                 .success(function (response) {
-                    // TODO refresh menu
                     UsersService.me().success(function (response) {
                         $scope.authentication.user = response;
                         $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
                         $scope.computeGroupFavorite();
+                        Menus.refreshFavorites();
                     });
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
@@ -524,7 +524,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.computeGroupFavorite = function() {
-            $scope.isGroupFavorite = _.contains($scope.authentication.user.favorites, $scope.group._id);
+            if (_.where($scope.authentication.user.favorites, {'_id': $scope.group._id}).length > 0) {
+                $scope.isGroupFavorite = true;
+            } else {
+                $scope.isGroupFavorite = false;
+            }
         };
 
         $scope.removeFavorite = function () {
@@ -534,6 +538,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             $scope.authentication.user = response;
                             $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
                             $scope.computeGroupFavorite();
+                            Menus.refreshFavorites();
                         });
                     }).error(function (err, status, headers, config) {
                         var title = 'Error - ' + moment().format('hh:mm:ss');

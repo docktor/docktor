@@ -6,7 +6,7 @@
         <span class="menu-item menu-title md-menu-item" ng-if="item.shouldRender(authentication.user);">
             {{item.title}}
         </span>
-        <md-content style="max-height: 200px;">
+        <md-content style="max-height: 222px;">
             <a ng-repeat="subitem in item.items | orderBy: 'position'"
                class="menu-item menu-sub-item md-menu-item"
                ng-if="subitem.shouldRender(authentication.user);"
@@ -14,7 +14,7 @@
                ng-class="{active: $uiRoute}"
                href="/#!/{{subitem.link}}"
                ng-click="close('left')">
-                <span>{{subitem.title}}</span>
+                <span> <i ng-show="subitem.isFavorite" class="fa fa-star"></i> {{subitem.title}}</span>
             </a>
         </md-content>
     </div>

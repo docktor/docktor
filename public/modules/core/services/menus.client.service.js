@@ -1,9 +1,9 @@
 'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', [
+angular.module('core').service('Menus', ['Authentication',
 
-    function () {
+    function (Authentication) {
         // Define a set of default roles
         this.defaultRoles = ['*'];
 
@@ -105,13 +105,41 @@ angular.module('core').service('Menus', [
                         isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? this.menus[menuId].items[itemIndex].isPublic : isPublic),
                         roles: ((roles === null || typeof roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : roles),
                         position: position || 0,
-                        shouldRender: shouldRender
+                        shouldRender: shouldRender,
+                        isFavorite: (menuItemURL.indexOf('groups/') === 0)
                     });
                 }
             }
 
             // Return the menu object
             return this.menus[menuId];
+        };
+
+        // Remove existing favorites object by menu id
+        this.removeAllFavorites = function (menuId) {
+            this.validateMenuExistance(menuId);
+
+            // Search for menu item to remove
+            for (var itemIndex in this.menus[menuId].items) {
+                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
+                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].isFavorite) {
+                        this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
+                    }
+                }
+            }
+
+            // Return the menu object
+            return this.menus[menuId];
+        };
+
+        this.refreshFavorites = function () {
+            this.validateMenuExistance('topbar');
+            this.removeAllFavorites('topbar');
+            for (var groupIndex in Authentication.user.favorites) {
+                var group = Authentication.user.favorites[groupIndex];
+                this.addSubMenuItem('topbar', 'groups', group.title, 'groups/' + group._id);
+            }
+            return this.menus['topbar'];
         };
 
         //Adding the topbar menu

@@ -31,7 +31,7 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-    User.find().populate('groups').populate('favorites').exec(function (err, users) {
+    User.find().populate('groups').exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -180,7 +180,20 @@ exports.read = function (req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-    res.jsonp(req.user || null);
+    User.findOne({_id: req.user._id}).populate('favorites', 'title').exec(function (err, user) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        }
+        if (!user) {
+            return res.status(400).send({
+                message: 'Failed to load User'
+            });
+        } else {
+            res.jsonp(user || null);
+        }
+    });
 };
 
 /**
@@ -222,13 +235,13 @@ exports.hasAllowGrantAuthorization = function (req, res, next) {
 };
 
 exports.hasAllowFavoriteAuthorization = function (req, res, next) {
-
-    if (req.group && !_.find(req.user.groups, req.group._id)) {
-        return res.status(403).send({
-            message: 'User is not authorized (not in group)'
-        });
+    if (req.user.role !== 'admin') {
+        if (req.group && !_.find(req.user.groups, req.group._id)) {
+            return res.status(403).send({
+                message: 'User is not authorized (not in group)'
+            });
+        }
     }
-
     next();
 };
 

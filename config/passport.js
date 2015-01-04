@@ -17,7 +17,7 @@ module.exports = function() {
 			_id: id
 		}, '-salt -password', function(err, user) {
 			done(err, user);
-		});
+		}).populate('favorites', 'title');
 	});
 
 	// Initialize strategies
