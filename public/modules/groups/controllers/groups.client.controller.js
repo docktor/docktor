@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'Users',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, Users) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'UsersService',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, UsersService) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
-        $scope.showAddContact = false;
+        $scope.showAddRemoveContact = false;
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -148,16 +148,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         }
                     });
                 });
-                GroupsServices.getUsersOnGroup($scope.group._id)
-                    .success(function (users) {
-                        $scope.group.users = users;
-                        var mailAll = '';
-                        users.forEach(function (user) {
-                            mailAll += user.email + ';';
-                        });
-                        $scope.group.mailAllUsers = mailAll;
-                    });
+                $scope.getUsersOnGroup();
             });
+        };
+
+        $scope.getUsersOnGroup = function () {
+            GroupsServices.getUsersOnGroup($scope.group._id)
+                .success(function (users) {
+                    $scope.group.users = users;
+                    var mailAll = '';
+                    users.forEach(function (user) {
+                        mailAll += user.email + ';';
+                    });
+                    $scope.group.mailAllUsers = mailAll;
+                });
         };
 
         $scope.computeFsForGroup = function () {
@@ -487,18 +491,57 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.prepareAddContact = function () {
-            $scope.showAddContact = true;
-            //FIXME do not user Users.query -> get only user_id and displayName
-            $scope.users = Users.query();
+            $scope.showAddRemoveContact = true;
+            UsersService.listUsersSimplified()
+                .success(function (users) {
+                    // a role=admin can add himself, not for role=user
+                    if ($scope.authentication.user.role !== 'admin') {
+                        $scope.users = _.reject(users, {'_id': $scope.authentication.user._id});
+                    } else {
+                        $scope.users = users;
+                    }
+                    angular.forEach($scope.group.users, function (user, key) {
+                        $scope.users = _.reject($scope.users, {'_id': user.id});
+                    });
+
+                });
         };
 
-        $scope.addContact = function() {
-            alert('Not yet implemented')
+        $scope.addContact = function () {
+            if ($scope.contactToAdd) {
+                UsersService.addGroup($scope.contactToAdd._id, $scope.group._id)
+                    .success(function () {
+                        $scope.getUsersOnGroup();
+                        $scope.cancelAddRemoveContact();
+                    }).error(function (err, status, headers, config) {
+                        var title = 'Error - ' + moment().format('hh:mm:ss');
+                        Toasts.addToast(err, 'danger', title);
+                    });
+            }
         };
 
-        $scope.cancelAddContact = function () {
-            $scope.showAddContact = false;
+        $scope.removeContact = function () {
+            if ($scope.contactToRemove) {
+                UsersService.removeGroup($scope.contactToRemove.id, $scope.group._id)
+                    .success(function () {
+                        if ($scope.authentication.user._id === $scope.contactToRemove.id) {
+                            $location.path('/');
+                        } else {
+                            $scope.getUsersOnGroup();
+                            $scope.cancelAddRemoveContact();
+                        }
+
+                    }).error(function (err, status, headers, config) {
+                        var title = 'Error - ' + moment().format('hh:mm:ss');
+                        Toasts.addToast(err, 'danger', title);
+                    });
+            }
+        };
+
+        $scope.cancelAddRemoveContact = function () {
+            $scope.showAddRemoveContact = false;
             $scope.contactToAdd = null;
+            $scope.contactToRemove = null;
         };
     }
 ]);

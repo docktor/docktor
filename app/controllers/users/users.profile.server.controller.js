@@ -43,12 +43,29 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List all users with displayName only
+ * @param req Request
+ * @param res Response
+ */
+exports.listSimplified = function (req, res) {
+    User.find({}, 'displayName').exec(function (err, users) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(users);
+        }
+    });
+};
+
+
+/**
  * Update user details
  */
 exports.update = function (req, res) {
     // Init Variables
     var user = req.profile;
-    var message = null;
 
     // For security measurement we remove the roles from the req.body object
     if (req.user._id === req.profile._id) {
@@ -89,6 +106,37 @@ exports.update = function (req, res) {
     }
 };
 
+exports.addGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToAdd = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$push': {'groups': groupToAdd._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.status(200).send('OK');
+        }
+    });
+
+};
+
+exports.removeGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToRemove = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$pull': {'groups': groupToRemove._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.status(200).send('OK');
+        }
+    });
+};
+
 /**
  * Show user
  */
@@ -121,6 +169,23 @@ exports.hasAdminAuthorization = function (req, res, next) {
         return res.status(403).send({
             message: 'User is not authorized (no Admin - users)'
         });
+    }
+    next();
+};
+
+exports.hasAllowGrantAuthorization = function (req, res, next) {
+    if (req.user.role !== 'admin') {
+        if (req.user.allowGrant === false) {
+            return res.status(403).send({
+                message: 'User is not authorized (allowGrant false - users)'
+            });
+        } else {
+            if (req.group && !_.find(req.user.groups, req.group._id)) {
+                return res.status(403).send({
+                    message: 'User is not authorized (not in group)'
+                });
+            }
+        }
     }
     next();
 };

@@ -12,3 +12,19 @@ angular.module('users').factory('Users', ['$resource',
         });
     }
 ]);
+
+angular.module('users').factory('UsersService', ['$http',
+    function ($http) {
+        return {
+            listUsersSimplified: function () {
+                return $http.get('/users/simplified');
+            },
+            addGroup: function (userId, groupId) {
+                return $http.put('/users/groups/' + userId + '/' + groupId, {groupId: groupId});
+            },
+            removeGroup: function (userId, groupId) {
+                return $http.delete('/users/groups/' + userId + '/' + groupId);
+            }
+        };
+    }
+]);

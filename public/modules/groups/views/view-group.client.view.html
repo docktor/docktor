@@ -32,14 +32,40 @@
                 <i class="fa fa-envelope"></i> Mail All
             </md-button>
         </div>
-        <div ng-show="authentication.isAdmin || authentication.allowGrant">
-            <md-button ng-hide="showAddContact" ng-click="prepareAddContact()"><i class="fa fa-plus"></i></md-button>
+        <div ng-show="authentication.isAdmin || authentication.user.allowGrant">
+            <md-button aria-label="Add / Remove Contact" ng-hide="showAddRemoveContact" ng-click="prepareAddContact()">
+                <small><i class="fa fa-plus"></i> / <i class="fa fa-minus"></i></small>
+            </md-button>
 
-            <div ng-show="showAddContact">
-                <select ng-model="contactToAdd" ng-options="user.displayName for user in users | orderBy:'displayName'">
-                </select>
-                <md-button ng-show="contactToAdd" ng-click="addContact()">Add</md-button>
-                <md-button ng-show="contactToAdd" ng-click="cancelAddContact()">Cancel</md-button>
+            <div ng-show="showAddRemoveContact" layout="column">
+                <div layout="row">
+                    <div flex="15">Add a contact</div>
+                    <div flex="85">
+                        <select ng-model="contactToAdd"
+                                ng-options="user.displayName for user in users | orderBy:'displayName'">
+                        </select>
+                        <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
+                                   ng-click="addContact()"><i class="fa fa-save"></i> Add
+                        </md-button>
+                    </div>
+                </div>
+                <div layout="row">
+                    <div flex="15">Remove a contact</div>
+                    <div flex="85">
+                        <select flex ng-model="contactToRemove"
+                                ng-options="user.displayName for user in group.users | orderBy:'displayName'">
+                        </select>
+                        <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove"
+                                   ng-click="removeContact()">Remove
+                        </md-button>
+                    </div>
+                </div>
+                <div>
+                    <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact"
+                               ng-click="cancelAddRemoveContact()"><i class="fa fa-save"></i> Cancel
+                    </md-button>
+                </div>
+
             </div>
         </div>
     </div>

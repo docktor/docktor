@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport');
+var groups = require('../../app/controllers/groups.server.controller');
 
 module.exports = function (app) {
     // User Routes
@@ -23,6 +23,10 @@ module.exports = function (app) {
     app.route('/auth/signin').post(users.signin);
     app.route('/auth/signout').get(users.signout);
 
+    app.route('/users/simplified').get(users.requiresLogin, users.hasAllowGrantAuthorization, users.listSimplified);
+    app.route('/users/groups/:userId/:groupId').put(users.requiresLogin, users.hasAllowGrantAuthorization, users.addGroup);
+    app.route('/users/groups/:userId/:groupId').delete(users.requiresLogin, users.hasAllowGrantAuthorization, users.removeGroup);
+
     app.route('/users/:userId')
         .get(users.requiresLogin, users.hasAuthorization, users.read)
         .put(users.requiresLogin, users.hasAuthorization, users.update)
@@ -32,4 +36,5 @@ module.exports = function (app) {
 
     // Finish by binding the user middleware
     app.param('userId', users.userByID);
+    app.param('groupId', groups.groupById);
 };

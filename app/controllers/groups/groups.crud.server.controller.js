@@ -175,12 +175,14 @@ exports.groupById = function (req, res, next, id) {
  * Group authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    if (req.user.role !== 'admin' && _.contains(req.user.groups, req.group._id)) {
+    // contains not work _.contains(req.user.groups, req.group._id)
+    if (req.user.role !== 'admin' && !_.where(req.user.groups, req.group._id).length > 0) {
         return res.status(403).send({
             message: 'User is not authorized (user - groups)'
         });
+    } else {
+        next();
     }
-    next();
 };
 
 exports.hasAdminAuthorization = function (req, res, next) {
@@ -188,6 +190,7 @@ exports.hasAdminAuthorization = function (req, res, next) {
         return res.status(403).send({
             message: 'User is not authorized (no Admin - groups)'
         });
+    } else {
+        next();
     }
-    next();
 };
