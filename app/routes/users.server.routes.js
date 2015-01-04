@@ -26,6 +26,8 @@ module.exports = function (app) {
     app.route('/users/simplified').get(users.requiresLogin, users.hasAllowGrantAuthorization, users.listSimplified);
     app.route('/users/groups/:userId/:groupId').put(users.requiresLogin, users.hasAllowGrantAuthorization, users.addGroup);
     app.route('/users/groups/:userId/:groupId').delete(users.requiresLogin, users.hasAllowGrantAuthorization, users.removeGroup);
+    app.route('/users/favorites/:userId/:groupId').put(users.requiresLogin, users.hasAuthorization, users.hasAllowFavoriteAuthorization, users.addFavoriteGroup);
+    app.route('/users/favorites/:userId/:groupId').delete(users.requiresLogin, users.hasAuthorization, users.hasAllowFavoriteAuthorization, users.removeFavoriteGroup);
 
     app.route('/users/:userId')
         .get(users.requiresLogin, users.hasAuthorization, users.read)

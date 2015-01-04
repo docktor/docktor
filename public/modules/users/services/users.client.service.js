@@ -24,6 +24,15 @@ angular.module('users').factory('UsersService', ['$http',
             },
             removeGroup: function (userId, groupId) {
                 return $http.delete('/users/groups/' + userId + '/' + groupId);
+            },
+            addFavorite: function (userId, groupId) {
+                return $http.put('/users/favorites/' + userId + '/' + groupId, {groupId: groupId});
+            },
+            removeFavorite: function (userId, groupId) {
+                return $http.delete('/users/favorites/' + userId + '/' + groupId);
+            },
+            me: function () {
+                return $http.get('/users/me');
             }
         };
     }

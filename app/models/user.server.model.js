@@ -94,6 +94,10 @@ var UserSchema = new Schema({
     groups: [{
         type: Schema.ObjectId,
         ref: 'Group'
+    }],
+    favorites: [{
+        type: Schema.ObjectId,
+        ref: 'Group'
     }]
 });
 

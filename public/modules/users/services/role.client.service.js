@@ -8,8 +8,6 @@ angular.module('users').factory('RoleService', [
 
         return {
             validateRoleAdmin: function (currentUser) {
-                console.log('validateRoleAdmin');
-                console.log(_.contains(adminRoles, currentUser.role));
                 return currentUser ? _.contains(adminRoles, currentUser.role) : false;
             },
 

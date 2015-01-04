@@ -4,9 +4,15 @@
         <h3 flex>
             <md-button class="md-accent" href="#!/groups">My Groups</md-button>
             / {{group.title}}
+
+            <md-button ng-hide="isGroupFavorite" aria-label="Add Favorite" ng-click="addFavorite()">
+                <i class="fa fa-star-o"></i>
+            </md-button>
+            <md-button ng-show="isGroupFavorite" aria-label="Remove Favorite" ng-click="removeFavorite()">
+                <i class="fa fa-star"></i>
+            </md-button>
         </h3>
         <span flex></span>
-
         <div ng-show="authentication.isAdmin" flex>
             <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
                 <i class="fa fa-plus"> </i> Deploy a service

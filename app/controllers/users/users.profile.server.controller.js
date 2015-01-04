@@ -31,7 +31,7 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-    User.find().populate('groups').exec(function (err, users) {
+    User.find().populate('groups').populate('favorites').exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -137,6 +137,37 @@ exports.removeGroup = function (req, res) {
     });
 };
 
+exports.addFavoriteGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToAdd = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$push': {'favorites': groupToAdd._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.status(200).send('OK');
+        }
+    });
+
+};
+
+exports.removeFavoriteGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToRemove = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$pull': {'favorites': groupToRemove._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.status(200).send('OK');
+        }
+    });
+};
+
 /**
  * Show user
  */
@@ -187,6 +218,17 @@ exports.hasAllowGrantAuthorization = function (req, res, next) {
             }
         }
     }
+    next();
+};
+
+exports.hasAllowFavoriteAuthorization = function (req, res, next) {
+
+    if (req.group && !_.find(req.user.groups, req.group._id)) {
+        return res.status(403).send({
+            message: 'User is not authorized (not in group)'
+        });
+    }
+
     next();
 };
 

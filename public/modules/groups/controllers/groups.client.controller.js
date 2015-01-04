@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'UsersService',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, UsersService) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', 'Toasts', '$mdDialog', '$timeout', 'UsersService', 'RoleService',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, Toasts, $mdDialog, $timeout, UsersService, RoleService) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -149,6 +149,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     });
                 });
                 $scope.getUsersOnGroup();
+                $scope.computeGroupFavorite();
             });
         };
 
@@ -505,6 +506,39 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     });
 
                 });
+        };
+
+        $scope.addFavorite = function () {
+            UsersService.addFavorite($scope.authentication.user._id, $scope.group._id)
+                .success(function (response) {
+                    // TODO refresh menu
+                    UsersService.me().success(function (response) {
+                        $scope.authentication.user = response;
+                        $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                        $scope.computeGroupFavorite();
+                    });
+                }).error(function (err, status, headers, config) {
+                    var title = 'Error - ' + moment().format('hh:mm:ss');
+                    Toasts.addToast(err, 'danger', title);
+                });
+        };
+
+        $scope.computeGroupFavorite = function() {
+            $scope.isGroupFavorite = _.contains($scope.authentication.user.favorites, $scope.group._id);
+        };
+
+        $scope.removeFavorite = function () {
+                UsersService.removeFavorite($scope.authentication.user._id, $scope.group._id)
+                    .success(function (response) {
+                        UsersService.me().success(function (response) {
+                            $scope.authentication.user = response;
+                            $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                            $scope.computeGroupFavorite();
+                        });
+                    }).error(function (err, status, headers, config) {
+                        var title = 'Error - ' + moment().format('hh:mm:ss');
+                        Toasts.addToast(err, 'danger', title);
+                    });
         };
 
         $scope.addContact = function () {
