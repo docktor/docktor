@@ -523,7 +523,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
         };
 
-        $scope.computeGroupFavorite = function() {
+        $scope.computeGroupFavorite = function () {
             if (_.where($scope.authentication.user.favorites, {'_id': $scope.group._id}).length > 0) {
                 $scope.isGroupFavorite = true;
             } else {
@@ -532,18 +532,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.removeFavorite = function () {
-                UsersService.removeFavorite($scope.authentication.user._id, $scope.group._id)
-                    .success(function (response) {
-                        UsersService.me().success(function (response) {
-                            $scope.authentication.user = response;
-                            $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
-                            $scope.computeGroupFavorite();
-                            Menus.refreshFavorites();
-                        });
-                    }).error(function (err, status, headers, config) {
-                        var title = 'Error - ' + moment().format('hh:mm:ss');
-                        Toasts.addToast(err, 'danger', title);
+            UsersService.removeFavorite($scope.authentication.user._id, $scope.group._id)
+                .success(function (response) {
+                    UsersService.me().success(function (response) {
+                        $scope.authentication.user = response;
+                        $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                        $scope.computeGroupFavorite();
+                        Menus.refreshFavorites();
                     });
+                }).error(function (err, status, headers, config) {
+                    var title = 'Error - ' + moment().format('hh:mm:ss');
+                    Toasts.addToast(err, 'danger', title);
+                });
         };
 
         $scope.addContact = function () {
@@ -564,7 +564,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 UsersService.removeGroup($scope.contactToRemove.id, $scope.group._id)
                     .success(function () {
                         if ($scope.authentication.user._id === $scope.contactToRemove.id) {
-                            $location.path('/');
+                            UsersService.me().success(function (response) {
+                                $scope.authentication.user = response;
+                                $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                                $scope.computeGroupFavorite();
+                                Menus.refreshFavorites();
+                                $location.path('/');
+                            });
                         } else {
                             $scope.getUsersOnGroup();
                             $scope.cancelAddRemoveContact();

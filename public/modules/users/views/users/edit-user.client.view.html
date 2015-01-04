@@ -34,13 +34,13 @@
 
             <div class="row">
                 <div flex>
-                    <md-checkbox ng-repeat="group in groupsSelected | orderBy:'title'"
+                    <md-checkbox aria-label="Remove Group" ng-repeat="group in groupsSelected | orderBy:'title'"
                                  ng-click="removeGroup(group)" ng-checked="true"> {{group.title}}
                     </md-checkbox>
                 </div>
 
                 <div flex>
-                    <md-checkbox ng-repeat="group in groups.all | orderBy:'title'"
+                    <md-checkbox aria-label="Add Group" ng-repeat="group in groups.all | orderBy:'title'"
                                  ng-click="addGroup(group)">{{group.title}}
                     </md-checkbox>
                 </div>

@@ -132,7 +132,7 @@ exports.removeGroup = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.status(200).send('OK');
+            removeFavoriteGroup(req, res);
         }
     });
 };
@@ -153,10 +153,9 @@ exports.addFavoriteGroup = function (req, res) {
 
 };
 
-exports.removeFavoriteGroup = function (req, res) {
+var removeFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToRemove = req.group;
-
     User.update({'_id': userToUpdate._id}, {'$pull': {'favorites': groupToRemove._id}}, function (err) {
         if (err) {
             return res.status(400).send({
@@ -167,6 +166,8 @@ exports.removeFavoriteGroup = function (req, res) {
         }
     });
 };
+
+exports.removeFavoriteGroup = removeFavoriteGroup;
 
 /**
  * Show user

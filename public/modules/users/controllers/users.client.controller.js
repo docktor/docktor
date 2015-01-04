@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Users', 'Groups',
-    function ($scope, $stateParams, $location, Authentication, Users, Groups) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Users', 'Groups', 'UsersService',
+    function ($scope, $stateParams, $location, Authentication, Users, Groups, UsersService) {
         $scope.authentication = Authentication;
 
         $scope.roles = ['user', 'admin'];
@@ -54,15 +54,21 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
         };
 
         $scope.addGroup = function (group) {
-            $scope.userToEdit.groups = _.union($scope.userToEdit.groups, [group._id]);
-            $scope.groupsSelected.push(group);
-            $scope.groups.all = _.without($scope.groups.all, group);
+            UsersService.addGroup($scope.userToEdit._id, group._id)
+                .success(function () {
+                    $scope.userToEdit.groups = _.union($scope.userToEdit.groups, [group._id]);
+                    $scope.groupsSelected.push(group);
+                    $scope.groups.all = _.without($scope.groups.all, group);
+                });
         };
 
         $scope.removeGroup = function (group) {
-            $scope.userToEdit.groups = _.without($scope.userToEdit.groups, group._id);
-            $scope.groupsSelected = _.without($scope.groupsSelected, group);
-            $scope.groups.all.push(group);
+            UsersService.removeGroup($scope.userToEdit._id, group._id)
+                .success(function () {
+                    $scope.userToEdit.groups = _.without($scope.userToEdit.groups, group._id);
+                    $scope.groupsSelected = _.without($scope.groupsSelected, group);
+                    $scope.groups.all.push(group);
+                });
         };
     }
 ]);
