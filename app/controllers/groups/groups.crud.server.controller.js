@@ -176,7 +176,7 @@ exports.groupById = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     // contains not work _.contains(req.user.groups, req.group._id)
-    if (req.user.role !== 'admin' && !_.where(req.user.groups, req.group._id).length > 0) {
+    if (req.user.role !== 'admin' && _.where(req.user.groups, req.group._id).length <= 0) {
         return res.status(403).send({
             message: 'User is not authorized (user - groups)'
         });
