@@ -3,11 +3,11 @@
     <h1>Users</h1>
 
     <table tr-ng-grid="" items="users"
-           fields="['username', 'firstName', 'lastName', 'role', 'created', 'groups']"
+           fields="['username', 'displayName', 'role', 'groups']"
            class="table">
         <thead>
         <th field-name="username" display-name="Username" enable-filtering="true"></th>
-        <th field-name="created" display-format="date:'mediumDate'"></th>
+        <th field-name="displayName" display-name="Name" enable-filtering="true"></th>
         <th field-name="groups"></th>
         </thead>
         <tbody>
@@ -15,9 +15,11 @@
             <td field-name="username">
                 <md-button class="md-accent" href="#!/admin/users/{{gridItem._id}}">{{gridItem.username}}</md-button>
             </td>
-            <td field-name="groups">
-                <span ng-repeat="g in gridItem.groups">
-                    <a href="/#!/groups/g._id">{{g.title}}</a>
+            <td field-name="groups" layout="row">
+                <span ng-repeat="group in gridItem.groups">
+                    <md-button class="md-accent" href="/#!/groups/{{group._id}}">
+                        {{group.title}}
+                    </md-button>
                 </span>
             </td>
         </tr>
