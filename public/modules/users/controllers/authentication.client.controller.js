@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication', 'RoleService',
-    function ($scope, $http, $location, Authentication, RoleService) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication', 'RoleService', 'Menus',
+    function ($scope, $http, $location, Authentication, RoleService, Menus) {
         $scope.authentication = Authentication;
 
         // If user is signed in then redirect back home
@@ -12,6 +12,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 // If successful we assign the response to the global user model
                 $scope.authentication.user = response;
                 $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                Menus.refreshFavorites();
 
                 // And redirect to the index page
                 $location.path('/');
@@ -25,6 +26,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 // If successful we assign the response to the global user model
                 $scope.authentication.user = response;
                 $scope.authentication.isAdmin = RoleService.validateRoleAdmin(response);
+                Menus.refreshFavorites();
 
                 // And redirect to the index page
                 $location.path('/');
