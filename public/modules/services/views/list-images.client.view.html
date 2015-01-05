@@ -19,16 +19,21 @@
     <tr data-ng-repeat="image in service.images">
         <td style="width: 30px;">
             <div>
-                <a ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
+                <md-button ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Image"
                        tooltip-popup-delay='750'></i>
-                </a>
-                <md-button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="md-raised md-warn">
+                </md-button>
+                <md-button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
                 <md-button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
+
+                <a>
+                    <i class="fa fa-lg fa-copy-o cursor-pointer" tooltip="Duplicate Image"
+                       tooltip-popup-delay='750'></i>
+                </a>
             </div>
         </td>
         <td>
@@ -42,12 +47,12 @@
             <ul data-ng-repeat="parameter in image.parameters">
                 <li>{{parameter.name}}:{{parameter.value}}
                     <small><i>{{parameter.description}}</i></small>
-                    <a ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
+                    <md-button ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
                            tooltip-popup-delay='750'></i>
-                    </a>
+                    </md-button>
                     <md-button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
-                               class="md-raised md-warn">
+                               class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="removeParameter(image, parameter);" ng-show="askDeleteParameter"
@@ -76,11 +81,11 @@
             <ul data-ng-repeat="port in image.ports">
                 <li>-p :{{port.internal}}/{{port.protocol}}
                     <small><i>{{port.description}}</i></small>
-                    <a ng-click="askDeletePort=true" ng-hide="askDeletePort">
+                    <md-button ng-click="askDeletePort=true" ng-hide="askDeletePort">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
                            tooltip-popup-delay='750'></i>
-                    </a>
-                    <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-warn">
+                    </md-button>
+                    <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
@@ -114,12 +119,12 @@
             <ul data-ng-repeat="variable in image.variables">
                 <li>-e {{variable.name}}:{{variable.value}}
                     <small><i>{{variable.description}}</i></small>
-                    <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
+                    <md-button ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
                            tooltip-popup-delay='750'></i>
-                    </a>
+                    </md-button>
                     <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
-                               class="md-raised md-warn">
+                               class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
@@ -152,12 +157,12 @@
                 <li>-v {{volume.value}}:{{volume.internal}}<span
                         ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
                     <small><i>{{volume.description}}</i></small>
-                    <a ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
+                    <md-button ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                         <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
                            tooltip-popup-delay='750'></i>
-                    </a>
+                    </md-button>
                     <md-button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
-                               class="md-raised md-warn">
+                               class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"

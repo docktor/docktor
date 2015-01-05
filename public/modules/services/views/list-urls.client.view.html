@@ -16,11 +16,11 @@
     <tr data-ng-repeat="url in service.urls">
         <td style="width: 30px;">
             <div>
-                <a ng-click="askDeleteUrl=true" ng-hide="askDeleteUrl">
+                <md-button ng-click="askDeleteUrl=true" ng-hide="askDeleteUrl">
                     <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Url"
                        tooltip-popup-delay='750'></i>
-                </a>
-                <md-button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="md-raised md-warn">
+                </md-button>
+                <md-button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
                 <md-button data-ng-click="removeUrl(url);" ng-show="askDeleteUrl" class="md-raised md-warn">
