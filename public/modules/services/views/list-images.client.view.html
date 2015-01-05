@@ -1,5 +1,5 @@
 <h4>Images
-    <md-button class="md-raised" ng-click="addImage()">
+    <md-button ng-click="addImage()">
         <i class="fa fa-plus-square"></i>
     </md-button>
 </h4>
@@ -30,7 +30,7 @@
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
 
-                <md-button>
+                <md-button ng-click="duplicateImage(image)">
                     <i class="fa fa-copy" tooltip="Duplicate Image"
                        tooltip-popup-delay='750'></i>
                 </md-button>
@@ -38,7 +38,7 @@
         </td>
         <td>
             <div class="row">
-                <md-text-float label="Image Name" ng-model="image.name" type="text" required="true">
+                <md-text-float class="long" label="Image Name" ng-model="image.name" type="text" required="true">
                 </md-text-float>
             </div>
             isActive : {{image.active}}
@@ -62,7 +62,7 @@
                 </li>
             </ul>
 
-            <md-button class="md-raised" ng-hide="displayFormParameter"
+            <md-button ng-hide="displayFormParameter"
                        ng-click="displayFormParameter=!displayFormParameter">
                 <i class="fa fa-plus-square"></i>
             </md-button>
@@ -95,7 +95,7 @@
                 </li>
             </ul>
 
-            <md-button class="md-raised" ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
+            <md-button ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
@@ -134,7 +134,7 @@
                 </li>
             </ul>
 
-            <md-button class="md-raised" ng-hide="displayFormVariable"
+            <md-button ng-hide="displayFormVariable"
                        ng-click="displayFormVariable=!displayFormVariable">
                 <i class="fa fa-plus-square"></i>
             </md-button>
@@ -172,7 +172,7 @@
                 </li>
             </ul>
 
-            <md-button class="md-raised" ng-hide="displayFormVolume"
+            <md-button ng-hide="displayFormVolume"
                        ng-click="displayFormVolume=!displayFormVolume">
                 <i class="fa fa-plus-square"></i>
             </md-button>

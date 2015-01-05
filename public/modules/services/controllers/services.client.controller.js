@@ -92,6 +92,23 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.service.images.splice($scope.service.images.indexOf(image), 1);
         };
 
+        $scope.duplicateImage = function(image) {
+            var newImage = angular.copy(image);
+            delete newImage._id;
+            delete newImage.created;
+            newImage.name = newImage.name + '_copy';
+            angular.forEach(newImage.volumes, function (volume, key) {
+                delete volume._id;
+            });
+            angular.forEach(newImage.ports, function (port, key) {
+                delete port._id;
+            });
+            angular.forEach(newImage.variables, function (variable, key) {
+                delete variable._id;
+            });
+            $scope.service.images.push(newImage);
+        };
+
         $scope.addParameter = function (image) {
             image.parameters.push($scope.parameter);
             $scope.parameter = {};
