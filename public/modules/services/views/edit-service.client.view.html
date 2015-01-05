@@ -1,9 +1,11 @@
 <section data-ng-controller="ServicesController" data-ng-init="findOne()">
 
-    <h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/services">Services</md-button>
+        /
         <span ng-hide="service._id">Create Service</span>
         <span ng-show="service._id">Edit Service</span>
-    </h1>
+    </h2>
 
     <form name="serviceForm" data-ng-submit="submitForm()" novalidate>
         <div class="row">

@@ -1,6 +1,9 @@
 <section data-ng-controller="UsersController" data-ng-init="findOne()">
 
-    <h1 data-ng-bind="userToEdit.displayName"></h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/users">Users</md-button>
+        / {{userToEdit.displayName}}
+    </h2>
 
     <p>Username : {{userToEdit.username}}</p>
 

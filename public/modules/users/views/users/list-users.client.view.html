@@ -1,6 +1,8 @@
 <section data-ng-controller="UsersController" data-ng-init="find()">
 
-    <h1>Users</h1>
+    <div layout="row">
+        <h2 flex>Admin / Users</h2>
+    </div>
 
     <table tr-ng-grid="" items="users"
            fields="['username', 'displayName', 'role', 'groups']"

@@ -1,9 +1,11 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
 
-    <h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/daemons">Daemons</md-button>
+        /
         <span ng-hide="daemon._id">Create Daemon</span>
         <span ng-show="daemon._id">Edit Daemon</span>
-    </h1>
+    </h2>
 
     <form name="daemonForm" novalidate>
 

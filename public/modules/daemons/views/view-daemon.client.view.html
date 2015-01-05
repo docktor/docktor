@@ -1,6 +1,9 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
 
-    <h1>{{daemon.name}}</h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/daemons">Daemons</md-button>
+        / {{daemon.name}}
+    </h2>
 
     <h3>Daemon on {{daemon.protocol}}://{{daemon.host}}:{{daemon.port}}</h3>
 

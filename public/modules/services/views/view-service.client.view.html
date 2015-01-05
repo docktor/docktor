@@ -1,6 +1,9 @@
 <section data-ng-controller="ServicesController" data-ng-init="findOne()">
 
-    <h1 data-ng-bind="service.title"></h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/services">Services</md-button>
+        / {{service.title}}
+    </h2>
 
     <div>
         <h2>Images</h2>

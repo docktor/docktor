@@ -1,11 +1,13 @@
 <section data-ng-controller="ServicesController" data-ng-init="find()">
 
-    <h1>Services</h1>
+    <div layout="row">
+        <h2 flex>Admin / Services</h2>
 
-    <div layout="row" layout-align="end center">
-        <md-button href="#!/admin/services/create" class="md-raised md-primary">
-            <i class="fa fa-plus"> </i> New Service
-        </md-button>
+        <div flex layout="row" layout-align="end center">
+            <md-button href="#!/admin/services/create" class="md-raised md-primary">
+                <i class="fa fa-plus"> </i> New Service
+            </md-button>
+        </div>
     </div>
 
     <table tr-ng-grid="" items="services" fields="" class="table">

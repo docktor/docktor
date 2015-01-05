@@ -1,10 +1,12 @@
 <section data-ng-controller="DaemonsController" data-ng-init="find()">
-    <h1>Daemons</h1>
+    <div layout="row">
+        <h2 flex>Admin / Deamons</h2>
 
-    <div layout="row" layout-align="end center">
-        <md-button href="#!/admin/daemons/create" class="md-raised md-primary">
-            <i class="fa fa-plus"> </i> New Daemon
-        </md-button>
+        <div flex layout="row" layout-align="end center">
+            <md-button href="#!/admin/daemons/create" class="md-raised md-primary">
+                <i class="fa fa-plus"> </i> New Daemon
+            </md-button>
+        </div>
     </div>
 
     <div layout="row">
@@ -22,13 +24,12 @@
                     <md-item-content>
 
                         <div class="md-tile-content" layout="column">
-                            <div layout="row">
-
-                                Docker {{daemon.dockerVersion.Version}} on
-                                {{daemon.name}} - {{daemon.site.title}}
-
-                            </div>
-                            <div layout="row">
+                            <div layout="row" layout-margin>
+                                <md-button class="md-raised"
+                                           href="/#!/admin/daemons/view/{{daemon._id}}">
+                                    Docker {{daemon.dockerVersion.Version}} on {{daemon.name}}
+                                    - {{daemon.site.title}}
+                                </md-button>
 
                                 <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
                                     <div ng-switch-when="checking" layout="row" layout-align="center">
@@ -52,7 +53,8 @@
                                         </md-subheader>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div layout="row">
                                 <div flex>
                                     <md-button class="md-accent" ng-show="daemon.cadvisorApi"
                                                href="{{daemon.cadvisorUrl}}">

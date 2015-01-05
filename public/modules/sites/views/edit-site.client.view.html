@@ -1,9 +1,11 @@
 <section data-ng-controller="SitesController" data-ng-init="findOne()">
 
-    <h1>
+    <h2 flex>Admin /
+        <md-button class="md-accent" href="#!/admin/sites">Sites</md-button>
+        /
         <span ng-hide="site._id">Create Site</span>
         <span ng-show="site._id">Edit Site</span>
-    </h1>
+    </h2>
 
     <div class="row">
         <form name="siteForm2" data-ng-submit="submitForm()" novalidate>

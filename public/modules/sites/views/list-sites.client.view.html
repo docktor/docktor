@@ -1,11 +1,13 @@
 <section data-ng-controller="SitesController" data-ng-init="find()">
 
-    <h1>Sites</h1>
+    <div layout="row">
+        <h2 flex>Admin / Sites</h2>
 
-    <div layout="row" layout-align="end center">
-        <md-button href="#!/admin/sites/create" class="md-raised md-primary">
-            <i class="fa fa-plus"> </i> New Site
-        </md-button>
+        <div flex layout="row" layout-align="end center">
+            <md-button href="#!/admin/sites/create" class="md-raised md-primary">
+                <i class="fa fa-plus"> </i> New Site
+            </md-button>
+        </div>
     </div>
 
     <table tr-ng-grid="" items="sites" fields="['title','created', 'latitude', 'longitude']">
