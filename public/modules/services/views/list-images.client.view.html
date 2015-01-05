@@ -20,7 +20,7 @@
         <td style="width: 30px;">
             <div>
                 <md-button ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
-                    <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Image"
+                    <i class="fa fa-trash-o" tooltip="Delete Image"
                        tooltip-popup-delay='750'></i>
                 </md-button>
                 <md-button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="md-raised md-accent md-hue-1">
@@ -30,10 +30,10 @@
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
 
-                <a>
-                    <i class="fa fa-lg fa-copy-o cursor-pointer" tooltip="Duplicate Image"
+                <md-button>
+                    <i class="fa fa-copy" tooltip="Duplicate Image"
                        tooltip-popup-delay='750'></i>
-                </a>
+                </md-button>
             </div>
         </td>
         <td>
@@ -48,7 +48,7 @@
                 <li>{{parameter.name}}:{{parameter.value}}
                     <small><i>{{parameter.description}}</i></small>
                     <md-button ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
-                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Parameter"
+                        <i class="fa fa-trash-o" tooltip="Delete Parameter"
                            tooltip-popup-delay='750'></i>
                     </md-button>
                     <md-button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
@@ -82,7 +82,7 @@
                 <li>-p :{{port.internal}}/{{port.protocol}}
                     <small><i>{{port.description}}</i></small>
                     <md-button ng-click="askDeletePort=true" ng-hide="askDeletePort">
-                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Port"
+                        <i class="fa fa-trash-o" tooltip="Delete Port"
                            tooltip-popup-delay='750'></i>
                     </md-button>
                     <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-accent md-hue-1">
@@ -120,7 +120,7 @@
                 <li>-e {{variable.name}}:{{variable.value}}
                     <small><i>{{variable.description}}</i></small>
                     <md-button ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
-                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Variable"
+                        <i class="fa fa-trash-o" tooltip="Delete Variable"
                            tooltip-popup-delay='750'></i>
                     </md-button>
                     <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
@@ -158,7 +158,7 @@
                         ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
                     <small><i>{{volume.description}}</i></small>
                     <md-button ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
-                        <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Volume"
+                        <i class="fa fa-trash-o" tooltip="Delete Volume"
                            tooltip-popup-delay='750'></i>
                     </md-button>
                     <md-button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"

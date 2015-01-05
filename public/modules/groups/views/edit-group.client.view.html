@@ -85,7 +85,7 @@
                     <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
                         <small><i>{{filesystem.description}}</i></small>
                         <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
-                            <i class="fa fa-lg fa-trash-o cursor-pointer" tooltip="Delete Filesystem"
+                            <i class="fa fa-trash-o" tooltip="Delete Filesystem"
                                tooltip-popup-delay='750'></i>
                         </a>
                         <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
