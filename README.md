@@ -14,7 +14,7 @@ See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
 
 ## Integration with Docktor Monitoring Stack
-Stack : cAdvisor - goryCadvisor - Riemann - InfluxDB
+Stack : cAdvisor - goryCadvisor - Riemann - InfluxDB - Grafana
 
 There is an issue for a complete integration of monitoring stack here : https://github.com/docktor/docktor/issues/64 
 But, all images (Riemann, etc...) may be already deployed with Docktor Images. See https://github.com/docktor/dockerfiles
