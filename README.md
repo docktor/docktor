@@ -6,10 +6,21 @@
 
 [![wercker status](https://app.wercker.com/status/aa752d73aaa88276a33d3911d2c11043/m "wercker status")](https://app.wercker.com/project/bykey/aa752d73aaa88276a33d3911d2c11043)
 
-## Dev In Progress !
 
 ## Roadmap
 See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
+
+## Run 
+See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
+
+## Integration with Docktor Monitoring Stack
+Stack : cAdvisor - goryCadvisor - Riemann - InfluxDB
+
+There is an issue for a complete integration of monitoring stack here : https://github.com/docktor/docktor/issues/64 
+But, all images (Riemann, etc...) may be already deployed with Docktor Images. See https://github.com/docktor/dockerfiles
+
+## Use in "production"
+Yes, you can, even if there is not yet a 1.0 version. It is a simple tool for deploy and monitor Docker Containers over many servers. But Docktor does not aim being as powerful as other orchestration tools such Kubernetes for example.
 
 ## Screenshots
 ![capture4](/screenshots/capture4.png)
