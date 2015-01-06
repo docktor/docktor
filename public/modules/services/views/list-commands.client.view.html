@@ -1,5 +1,5 @@
 <h4>Commands
-    <md-button ng-click="addCommand()">
+    <md-button aria-label="Add a Command" ng-click="addCommand()">
         <i class="fa fa-plus-square"></i>
     </md-button>
 </h4>
@@ -17,15 +17,14 @@
     <tr data-ng-repeat="command in service.commands">
         <td style="width: 30px;">
             <div>
-                <md-button ng-click="askDeleteCommand=true" ng-hide="askDeleteCommand">
-                    <i class="fa fa-trash-o" tooltip="Delete Command"
-                       tooltip-popup-delay='750'></i>
+                <md-button aria-label="Delete Command" ng-click="askDeleteCommand=true" ng-hide="askDeleteCommand">
+                    <i class="fa fa-trash-o" title="Delete Command"></i>
                 </md-button>
-                <md-button ng-click="askDeleteCommand=false" ng-show="askDeleteCommand"
+                <md-button aria-label="Don't Delete Command" ng-click="askDeleteCommand=false" ng-show="askDeleteCommand"
                            class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
-                <md-button data-ng-click="removeCommand(command);" ng-show="askDeleteCommand" class="md-raised md-warn">
+                <md-button aria-label="Confirme Delete Command" data-ng-click="removeCommand(command);" ng-show="askDeleteCommand" class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
             </div>

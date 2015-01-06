@@ -1,5 +1,5 @@
 <h4>Images
-    <md-button ng-click="addImage()">
+    <md-button aria-label="Add an Image" ng-click="addImage()">
         <i class="fa fa-plus-square"></i>
     </md-button>
 </h4>
@@ -19,20 +19,20 @@
     <tr data-ng-repeat="image in service.images">
         <td style="width: 30px;">
             <div>
-                <md-button ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
-                    <i class="fa fa-trash-o" tooltip="Delete Image"
-                       tooltip-popup-delay='750'></i>
+                <md-button aria-label="Delete Image" ng-click="askDeleteImage=true" ng-hide="askDeleteImage">
+                    <i class="fa fa-trash-o" title="Delete Image"></i>
                 </md-button>
-                <md-button ng-click="askDeleteImage=false" ng-show="askDeleteImage" class="md-raised md-accent md-hue-1">
+                <md-button aria-label="Don't Delete" ng-click="askDeleteImage=false" ng-show="askDeleteImage"
+                           class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
-                <md-button data-ng-click="removeImage(image);" ng-show="askDeleteImage" class="md-raised md-warn">
+                <md-button aria-label="Confirm Delete" data-ng-click="removeImage(image);" ng-show="askDeleteImage"
+                           class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
 
-                <md-button ng-click="duplicateImage(image)">
-                    <i class="fa fa-copy" tooltip="Duplicate Image"
-                       tooltip-popup-delay='750'></i>
+                <md-button aria-label="Duplicate Image" ng-click="duplicateImage(image)">
+                    <i class="fa fa-copy" title="Duplicate Image"></i>
                 </md-button>
             </div>
         </td>
@@ -62,7 +62,7 @@
                 </li>
             </ul>
 
-            <md-button ng-hide="displayFormParameter"
+            <md-button aria-label="Add parameter" ng-hide="displayFormParameter"
                        ng-click="displayFormParameter=!displayFormParameter">
                 <i class="fa fa-plus-square"></i>
             </md-button>
@@ -81,21 +81,21 @@
             <ul data-ng-repeat="port in image.ports">
                 <li>-p :{{port.internal}}/{{port.protocol}}
                     <small><i>{{port.description}}</i></small>
-                    <md-button ng-click="askDeletePort=true" ng-hide="askDeletePort">
-                        <i class="fa fa-trash-o" tooltip="Delete Port"
-                           tooltip-popup-delay='750'></i>
+                    <md-button aria-label="Delete Port" ng-click="askDeletePort=true" ng-hide="askDeletePort">
+                        <i class="fa fa-trash-o" title="Delete Port"></i>
                     </md-button>
-                    <md-button ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-accent md-hue-1">
+                    <md-button aria-label="Don't delete port" ng-click="askDeletePort=false" ng-show="askDeletePort"
+                               class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
-                    <md-button data-ng-click="removePort(image, port);" ng-show="askDeletePort"
-                               class="md-raised md-warn">
+                    <md-button aria-label="Confirm delete port" data-ng-click="removePort(image, port);"
+                               ng-show="askDeletePort" class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                     </md-button>
                 </li>
             </ul>
 
-            <md-button ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
+            <md-button aria-label="Add a Port" ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
                 <i class="fa fa-plus-square"></i>
             </md-button>
 
@@ -108,7 +108,7 @@
                 </md-radio-group>
                 <md-text-float label="Description" ng-model="port.description" type="text"></md-text-float>
 
-                <md-button ng-disabled="portForm.$invalid"
+                <md-button aria-label="Insert Port" ng-disabled="portForm.$invalid"
                            data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
                     Insert Port
                 </md-button>
@@ -119,22 +119,22 @@
             <ul data-ng-repeat="variable in image.variables">
                 <li>-e {{variable.name}}:{{variable.value}}
                     <small><i>{{variable.description}}</i></small>
-                    <md-button ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
-                        <i class="fa fa-trash-o" tooltip="Delete Variable"
-                           tooltip-popup-delay='750'></i>
+                    <md-button aria-label="Delete a Variable" ng-click="askDeleteVariable=true"
+                               ng-hide="askDeleteVariable">
+                        <i class="fa fa-trash-o" title="Delete Variable"></i>
                     </md-button>
-                    <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
-                               class="md-raised md-accent md-hue-1">
+                    <md-button aria-label="Don't delete variable" ng-click="askDeleteVariable=false"
+                               ng-show="askDeleteVariable" class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
-                    <md-button data-ng-click="removeVariable(image, variable);" ng-show="askDeleteVariable"
-                               class="md-raised md-warn">
+                    <md-button aria-label="Confirm delete variable" data-ng-click="removeVariable(image, variable);"
+                               ng-show="askDeleteVariable" class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                     </md-button>
                 </li>
             </ul>
 
-            <md-button ng-hide="displayFormVariable"
+            <md-button aria-label="Add a variable" ng-hide="displayFormVariable"
                        ng-click="displayFormVariable=!displayFormVariable">
                 <i class="fa fa-plus-square"></i>
             </md-button>
@@ -157,22 +157,22 @@
                 <li>-v {{volume.value}}:{{volume.internal}}<span
                         ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
                     <small><i>{{volume.description}}</i></small>
-                    <md-button ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
+                    <md-button aria-label="Ask Delete Volume" ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
                         <i class="fa fa-trash-o" tooltip="Delete Volume"
                            tooltip-popup-delay='750'></i>
                     </md-button>
-                    <md-button ng-click="askDeleteVolume=false" ng-show="askDeleteVolume"
-                               class="md-raised md-accent md-hue-1">
+                    <md-button aria-label="Don't delete volume" ng-click="askDeleteVolume=false"
+                               ng-show="askDeleteVolume" class="md-raised md-accent md-hue-1">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
-                    <md-button data-ng-click="removeVolume(image, volume);" ng-show="askDeleteVolume"
-                               class="md-raised md-warn">
+                    <md-button aria-label="Confirm delete volume" data-ng-click="removeVolume(image, volume);"
+                               ng-show="askDeleteVolume" class="md-raised md-warn">
                         Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                     </md-button>
                 </li>
             </ul>
 
-            <md-button ng-hide="displayFormVolume"
+            <md-button aria-label="Add a volume" ng-hide="displayFormVolume"
                        ng-click="displayFormVolume=!displayFormVolume">
                 <i class="fa fa-plus-square"></i>
             </md-button>

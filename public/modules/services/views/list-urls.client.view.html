@@ -1,5 +1,5 @@
 <h4>Urls
-    <md-button ng-click="addUrl()">
+    <md-button aria-label="Add an URL" ng-click="addUrl()">
         <i class="fa fa-plus-square"></i>
     </md-button>
 </h4>
@@ -16,14 +16,15 @@
     <tr data-ng-repeat="url in service.urls">
         <td style="width: 30px;">
             <div>
-                <md-button ng-click="askDeleteUrl=true" ng-hide="askDeleteUrl">
-                    <i class="fa fa-trash-o" tooltip="Delete Url"
-                       tooltip-popup-delay='750'></i>
+                <md-button aria-label="Delete Url" ng-click="askDeleteUrl=true" ng-hide="askDeleteUrl">
+                    <i class="fa fa-trash-o" title="Delete Url"></i>
                 </md-button>
-                <md-button ng-click="askDeleteUrl=false" ng-show="askDeleteUrl" class="md-raised md-accent md-hue-1">
+                <md-button aria-label="Don't Delete Url" ng-click="askDeleteUrl=false" ng-show="askDeleteUrl"
+                           class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
-                <md-button data-ng-click="removeUrl(url);" ng-show="askDeleteUrl" class="md-raised md-warn">
+                <md-button aria-label="Confirm Delete Url" data-ng-click="removeUrl(url);" ng-show="askDeleteUrl"
+                           class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
             </div>
