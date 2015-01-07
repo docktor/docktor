@@ -92,7 +92,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.service.images.splice($scope.service.images.indexOf(image), 1);
         };
 
-        $scope.duplicateImage = function(image) {
+        $scope.duplicateImage = function (image) {
             var newImage = angular.copy(image);
             delete newImage._id;
             delete newImage.created;

@@ -20,11 +20,13 @@
                 <md-button aria-label="Delete Command" ng-click="askDeleteCommand=true" ng-hide="askDeleteCommand">
                     <i class="fa fa-trash-o" title="Delete Command"></i>
                 </md-button>
-                <md-button aria-label="Don't Delete Command" ng-click="askDeleteCommand=false" ng-show="askDeleteCommand"
+                <md-button aria-label="Don't Delete Command" ng-click="askDeleteCommand=false"
+                           ng-show="askDeleteCommand"
                            class="md-raised md-accent md-hue-1">
                     No, I don't want to delete this. <i class="fa fa-reply"></i>
                 </md-button>
-                <md-button aria-label="Confirme Delete Command" data-ng-click="removeCommand(command);" ng-show="askDeleteCommand" class="md-raised md-warn">
+                <md-button aria-label="Confirme Delete Command" data-ng-click="removeCommand(command);"
+                           ng-show="askDeleteCommand" class="md-raised md-warn">
                     Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
             </div>
