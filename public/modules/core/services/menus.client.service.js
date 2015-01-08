@@ -121,11 +121,7 @@ angular.module('core').service('Menus', ['Authentication',
 
             // Search for menu item to remove
             for (var itemIndex in this.menus[menuId].items) {
-                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].isFavorite) {
-                        this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
-                    }
-                }
+                this.menus[menuId].items[itemIndex].items = _.filter(this.menus[menuId].items[itemIndex].items, {'isFavorite': false});
             }
 
             // Return the menu object
