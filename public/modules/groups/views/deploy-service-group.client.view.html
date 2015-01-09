@@ -39,9 +39,10 @@
             <h4>Container</h4>
 
             <div class="row">
-                <md-text-float class="long" label="Name" ng-model="container.name" ng-pattern="patternName" type="text"
-                               required>
-                </md-text-float>
+                <md-input-container>
+                    <label>Name</label>
+                    <input class="long" ng-model="container.name" ng-pattern="patternName" type="text" required>
+                </md-input-container>
 
                 <div>
                     <p ng-show="deployForm.containerName.$error.required" class="text-danger">Name is required</p>
@@ -56,10 +57,10 @@
             </div>
 
             <div class="row">
-                <md-text-float class="long" label="Hostname"
-                               ng-model="container.hostname" ng-pattern="patternHostname" type="text"
-                               required>
-                </md-text-float>
+                <md-input-container>
+                    <label>Hostname</label>
+                    <input class="long" ng-model="container.hostname" ng-pattern="patternHostname" type="text" required>
+                </md-input-container>
 
                 <div>
                     <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">
@@ -96,8 +97,10 @@
                         {{parameter.name}}
                     </td>
                     <td>
-                        <md-text-float class="long" label="Value" ng-model="parameter.value"
-                                       type="text"></md-text-float>
+                        <md-input-container>
+                            <label>Value</label>
+                            <input class="long" ng-model="parameter.value" type="text">
+                        </md-input-container>
                     </td>
                 </tr>
                 </tbody>
@@ -125,8 +128,10 @@
                         {{volume.internal}}
                     </td>
                     <td>
-                        <md-text-float class="long" label="External Volume" ng-model="volume.external"
-                                       type="text"></md-text-float>
+                        <md-input-container>
+                            <label>External Volume</label>
+                            <input class="long" ng-model="volume.external" type="text">
+                        </md-input-container>
                     </td>
                     <td>
                         <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
@@ -159,8 +164,10 @@
                         {{port.internal}}
                     </td>
                     <td>
-                        <md-text-float class="long" label="External Port" ng-model="port.external"
-                                       type="text"></md-text-float>
+                        <md-input-container>
+                            <label>External Port</label>
+                            <input class="long" ng-model="port.external" type="text">
+                        </md-input-container>
                     </td>
                     <td>
                         <md-radio-group ng-model="port.protocol" ng-required="true">
@@ -193,7 +200,10 @@
                         {{variable.name}}
                     </td>
                     <td>
-                        <md-text-float class="long" label="Value" ng-model="variable.value" type="text"></md-text-float>
+                        <md-input-container>
+                            <label>Value</label>
+                            <input class="long" ng-model="variable.value" type="text">
+                        </md-input-container>
                     </td>
                 </tr>
                 </tbody>

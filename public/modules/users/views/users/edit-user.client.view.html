@@ -8,15 +8,27 @@
     <div class="row">
         <form name="userForm" data-ng-submit="update()" novalidate>
 
-            <md-text-float label="Username" ng-model="userToEdit.username" type="text" required></md-text-float>
+            <md-input-container>
+                <label>Username</label>
+                <input ng-model="userToEdit.username" type="text" required>
+            </md-input-container>
 
             <div ng-show="userForm.username.$invalid" class="help-block">
                 <p ng-show="userForm.username.$error.required" class="text-danger">Username is required</p>
             </div>
 
-            <md-text-float label="FirstName" ng-model="userToEdit.firstName" type="text" required></md-text-float>
-            <md-text-float label="LastName" ng-model="userToEdit.lastName" type="text" required></md-text-float>
-            <md-text-float label="Email" ng-model="userToEdit.email" type="email" required></md-text-float>
+            <md-input-container>
+                <label>FirstName</label>
+                <input ng-model="userToEdit.firstName" type="text" required>
+            </md-input-container>
+            <md-input-container>
+                <label>LastName</label>
+                <input ng-model="userToEdit.lastName" type="text" required>
+            </md-input-container>
+            <md-input-container>
+                <label>Email</label>
+                <input ng-model="userToEdit.email" type="email" required>
+            </md-input-container>
 
             <div layout="row">
                 <md-checkbox ng-model="userToEdit.allowGrant" aria-label="Checkbox Allow Grant">

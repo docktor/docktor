@@ -7,12 +7,24 @@
               layout-padding
               layout="column" layout-align="space-around center">
             <div class="row">
-                <md-text-float label="First Name" ng-model="user.firstName"></md-text-float>
-                <md-text-float label="Last Name" ng-model="user.lastName"></md-text-float>
+                <md-input-container>
+                    <label>First Name</label>
+                    <input ng-model="user.firstName">
+                </md-input-container>
+                <md-input-container>
+                    <label>Last Name</label>
+                    <input ng-model="user.lastName">
+                </md-input-container>
             </div>
             <div class="row">
-                <md-text-float label="Email" ng-model="user.email"></md-text-float>
-                <md-text-float label="Username" ng-model="user.username"></md-text-float>
+                <md-input-container>
+                    <label>Email</label>
+                    <input ng-model="user.email">
+                </md-input-container>
+                <md-input-container>
+                    <label>Username</label>
+                    <input ng-model="user.username">
+                </md-input-container>
             </div>
             <md-button type="submit" class="md-raised md-primary"><i class="fa fa-save"></i> Save Profile</md-button>
             <div ng-show="error" class="text-danger row">

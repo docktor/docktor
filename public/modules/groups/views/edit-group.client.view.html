@@ -15,9 +15,10 @@
     <div class="row">
         <form name="groupForm" data-ng-submit="submitForm()" novalidate>
             <div class="row">
-                <md-text-float md-fid="title" label="Title" ng-model="group.title" type="text"
-                               ng-pattern="patternTitle" ng-required="true">
-                </md-text-float>
+                <md-input-container>
+                    <label>Title</label>
+                    <input id="title" ng-model="group.title" type="text" ng-pattern="patternTitle" ng-required="true">
+                </md-input-container>
 
                 <div>
                     Title have to match this pattern : [a-zA-Z0-9_]{1,200}
@@ -37,11 +38,15 @@
                 </div>
             </div>
             <div class="row" ng-show="group.selectDaemon">
-                <md-text-float md-fid="portminrange" label="Port Min Range" ng-model="group.portminrange" type="number">
+                <md-input-container>
+                    <label>Port Min Range</label>
+                    <input id="portminrange" ng-model="group.portminrange" type="number">
+                </md-input-container>
 
-                </md-text-float>
-                <md-text-float md-fid="portmaxrange" label="Port Max Range" ng-model="group.portmaxrange" type="number">
-                </md-text-float>
+                <md-input-container>
+                    <label>Port Max Range</label>
+                    <input id="portmaxrange" ng-model="group.portmaxrange" type="number">
+                </md-input-container>
                 <div ng-show="freePortRange">
                     <label class="control-label">Ports already used :</label>
                     <span ng-show="freePortRange.length === 0">None</span>
@@ -51,8 +56,10 @@
                 </div>
             </div>
             <div class="row" ng-show="group.selectDaemon">
-                <md-text-float class="long" md-fid="description" label="Description" ng-model="group.description"
-                               type="text">
+                <md-input-container>
+                    <label>Description</label>
+                    <input class="long" ng-model="group.description" type="text">
+                </md-input-container>
             </div>
         </form>
     </div>
@@ -132,8 +139,10 @@
                     </div>
 
                     <div class="row">
-                        <md-text-float class="long" md-fid="partitionDescription" label="Description"
-                                       ng-model="filesystem.description" type="text">
+                        <md-input-container>
+                            <label>Description</label>
+                            <input id="partitionDescriptio" ng-model="filesystem.description" type="text">
+                        </md-input-container>
                     </div>
                     <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
                                data-ng-click="addFilesystem(); displayFormFilesystem=false">

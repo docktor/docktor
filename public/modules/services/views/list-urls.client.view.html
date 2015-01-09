@@ -31,14 +31,18 @@
         </td>
         <td>
             <div class="row">
-                <md-text-float label="URL Label" ng-model="url.label" type="text" ng-required="true">
-                </md-text-float>
+                <md-input-container>
+                    <label>URL Label</label>
+                    <input ng-model="url.label" type="text" ng-required="true">
+                </md-input-container>
             </div>
         </td>
         <td>
             <div class="row">
-                <md-text-float label="URL" ng-model="url.url" type="text" ng-required="true">
-                </md-text-float>
+                <md-input-container>
+                    <label>URL</label>
+                    <input ng-model="url.url" type="text" ng-required="true">
+                </md-input-container>
                 Put an internal port here, docktor will retrieve external
                 port on each container. Example: <b>:8080/foo</b> or just <b>:8080</b>
             </div>

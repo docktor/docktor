@@ -7,8 +7,14 @@
         <form ng-submit="signin()" style="padding: 20px;" autocomplete="off" layout-margin layout-padding
               layout="column" layout-align="space-around center">
             <div class="row">
-                <md-text-float label="Username" ng-model="credentials.username"></md-text-float>
-                <md-text-float type="password" label="Password" ng-model="credentials.password"></md-text-float>
+                <md-input-container>
+                    <label>Username</label>
+                    <input ng-model="credentials.username">
+                </md-input-container>
+                <md-input-container>
+                    <label>Password</label>
+                    <input type="password" ng-model="credentials.password">
+                </md-input-container>
             </div>
             <md-button type="submit" class="md-raised md-primary">Sign in</md-button>
             <md-subheader class="row md-warn" ng-show="error">

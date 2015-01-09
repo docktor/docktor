@@ -7,15 +7,30 @@
         <form ng-submit="signup()" style="padding: 20px;" autocomplete="off" layout-margin layout-padding
               layout="column" layout-align="space-around center">
             <div class="row">
-                <md-text-float label="First Name" ng-model="credentials.firstName"></md-text-float>
-                <md-text-float label="Last Name" ng-model="credentials.lastName"></md-text-float>
+                <md-input-container>
+                    <label>First Name</label>
+                    <input ng-model="credentials.firstName">
+                </md-input-container>
+                <md-input-container>
+                    <label>Last Name</label>
+                    <input ng-model="credentials.lastName">
+                </md-input-container>
             </div>
             <div class="row">
-                <md-text-float label="Username" ng-model="credentials.username"></md-text-float>
-                <md-text-float type="password" label="Password" ng-model="credentials.password"></md-text-float>
+                <md-input-container>
+                    <label>Username</label>
+                    <input ng-model="credentials.username">
+                </md-input-container>
+                <md-input-container>
+                    <label>Password</label>
+                    <input type="password" ng-model="credentials.password">
+                </md-input-container>
             </div>
             <div class="row">
-                <md-text-float class="long" type="email" label="Email" ng-model="credentials.email"></md-text-float>
+                <md-input-container>
+                    <label>Email</label>
+                    <input class="long" type="email" label="Email" ng-model="credentials.email">
+                </md-input-container>
             </div>
             <div class="row">
                 <md-button type="submit" class="md-raised md-primary">Sign Up</md-button>

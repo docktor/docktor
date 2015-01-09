@@ -9,9 +9,10 @@
 
     <form name="serviceForm" data-ng-submit="submitForm()" novalidate>
         <div class="row">
-            <md-text-float md-fid="title" label="Title" ng-model="service.title"
-                           ng-pattern="patternTitle" ng-required="true" type="text">
-            </md-text-float>
+            <md-input-container>
+                <label>Title</label>
+                <input id="title" ng-model="service.title" ng-pattern="patternTitle" ng-required="true" type="text">
+            </md-input-container>
             <div>
                 The title have to match this pattern : [a-zA-Z0-9_]{1,200}
                 <p ng-show="serviceForm.title.$error.required" class="text-danger">Title is required</p>

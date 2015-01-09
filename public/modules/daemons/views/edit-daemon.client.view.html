@@ -10,8 +10,10 @@
     <form name="daemonForm" novalidate>
 
         <div class="row">
-            <md-text-float label="Name" ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true">
-            </md-text-float>
+            <md-input-container>
+                <label>Name</label>
+                <input ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true">
+            </md-input-container>
 
             <div ng-show="daemonForm.name.$invalid" class="md-warn">
                 The title have to match this pattern : [a-zA-Z0-9_]{1,200}
@@ -38,15 +40,22 @@
                 </md-radio-group>
             </div>
             <div>
-                <md-text-float label="IP or Hostname" ng-model="daemon.host" type="text" required="true">
-                </md-text-float>
+                <md-input-container>
+                    <label>IP or Hostname</label>
+                    <input ng-model="daemon.host" type="text" required="true">
+                </md-input-container>
             </div>
             <div>
-                <md-text-float label="Port" ng-model="daemon.port" type="number" required="true"></md-text-float>
+                <md-input-container>
+                    <label>Port</label>
+                    <input ng-model="daemon.port" type="number" required="true">
+                </md-input-container>
             </div>
             <div>
-                <md-text-float label="Timeout in ms" ng-model="daemon.timedout" type="number"
-                               required="true"></md-text-float>
+                <md-input-container>
+                    <label>Timeout in ms</label>
+                    <input ng-model="daemon.timedout" type="number" required="true">
+                </md-input-container>
             </div>
         </div>
         <div class="row">
@@ -54,10 +63,10 @@
             <div flex="10">CA</div>
 
             <div flex>
-                <md-input-group>
+                <md-input-container>
                 <textarea name="ca" data-ng-model="daemon.ca" id="ca" class="form-control" cols="40" rows="3"
                           placeholder="CA Content File"></textarea>
-                </md-input-group>
+                </md-input-container>
             </div>
 
         </div>
@@ -65,38 +74,45 @@
             <div flex="10">CERT</div>
 
             <div flex>
-                <md-input-group>
+                <md-input-container>
                 <textarea name="cert" data-ng-model="daemon.cert" id="cert" class="form-control" cols="40"
                           rows="3" placeholder="CERT Content File"></textarea>
-                </md-input-group>
+                </md-input-container>
             </div>
         </div>
         <div class="row">
             <div flex="10">Key</div>
 
             <div flex>
-                <md-input-group>
+                <md-input-container>
                 <textarea name="key" data-ng-model="daemon.key" id="key" class="form-control" cols="40"
                           rows="3" placeholder="KEY Content File"></textarea>
-                </md-input-group>
+                </md-input-container>
             </div>
         </div>
         <div class="row">
-            <md-text-float class="long" label="Default data volume" ng-model="daemon.volume"
-                           type="text"></md-text-float>
+            <md-input-container>
+                <label>Default data volume</label>
+                <input class="long" label="Default data volume" ng-model="daemon.volume" type="text">
+            </md-input-container>
 
             <div>
                 Example : /data
             </div>
         </div>
         <div class="row">
-            <md-text-float class="long" label="URL cAdvisor Api" ng-model="daemon.cadvisorApi"
-                           type="text"></md-text-float>
+            <md-input-container>
+                <label> URL cAdvisor Api</label>
+                <input class="long" ng-model="daemon.cadvisorApi" type="text">
+            </md-input-container>
 
             <div>http://host:port/api/v1.0</div>
         </div>
         <div class="row">
-            <md-text-float class="long" label="Description" ng-model="daemon.description" type="text"></md-text-float>
+            <md-input-container>
+                <label> Description</label>
+                <input class="long" ng-model="daemon.description" type="text">
+            </md-input-container>
         </div>
     </form>
 
@@ -128,10 +144,18 @@
 
         <form ng-show="displayFormParameter" name="parameterForm" id="parameterForm" novalidate
               autocomplete="off" layout="row">
-            <md-text-float label="Name" ng-model="parameter.name" type="text" ng-required="true"></md-text-float>
-            <md-text-float label="Default Value" ng-model="parameter.value" type="text"
-                           ng-required="true"></md-text-float>
-            <md-text-float label="Description" ng-model="parameter.description" type="text"></md-text-float>
+            <md-input-container>
+                <label>Name</label>
+                <input ng-model="parameter.name" type="text" ng-required="true">
+            </md-input-container>
+            <md-input-container>
+                <label>Default Value</label>
+                <input ng-model="parameter.value" type="text" ng-required="true">
+            </md-input-container>
+            <md-input-container>
+                <label>Description</label>
+                <input ng-model="parameter.description" type="text">
+            </md-input-container>
 
             <md-button ng-disabled="parameterForm.$invalid" class="md-raised md-primary"
                        data-ng-click="addParameter(); displayFormParameter=false">
@@ -165,16 +189,20 @@
         </md-button>
 
         <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off" layout="row">
-            <md-text-float label="Internal Port" ng-model="port.internal" type="number"
-                           ng-required="true">
-            </md-text-float>
+            <md-input-container>
+                <label>Internal Port</label>
+                <input ng-model="port.internal" type="number" ng-required="true">
+            </md-input-container>
 
             <md-radio-group ng-model="port.protocol" ng-required="true">
                 <md-radio-button value="tcp">tcp</md-radio-button>
                 <md-radio-button value="udp">udp</md-radio-button>
             </md-radio-group>
 
-            <md-text-float label="Description" ng-model="port.description" type="text"></md-text-float>
+            <md-input-container>
+                <label>Description</label>
+                <input ng-model="port.description" type="text">
+            </md-input-container>
 
             <md-button ng-disabled="portForm.$invalid"
                        data-ng-click="addPort(); displayFormPort=false" class="md-raised md-primary">
@@ -213,9 +241,18 @@
 
         <form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate
               autocomplete="off" layout="row">
-            <md-text-float label="Name" ng-model="variable.name" type="text" ng-required="true"></md-text-float>
-            <md-text-float label="Default Value" ng-model="variable.value" type="text"></md-text-float>
-            <md-text-float label="Description" ng-model="variable.description" type="text"></md-text-float>
+            <md-input-container>
+                <label>Name</label>
+                <input ng-model="variable.name" type="text" ng-required="true">
+            </md-input-container>
+            <md-input-container>
+                <label>Default Value</label>
+                <input ng-model="variable.value" type="text">
+            </md-input-container>
+            <md-input-container>
+                <label>Description</label>
+                <input ng-model="variable.description" type="text">
+            </md-input-container>
 
             <md-button ng-disabled="variableForm.$invalid"
                        data-ng-click="addVariable(); displayFormVariable=false"
@@ -256,14 +293,22 @@
         <form ng-show="displayFormVolume" name="volumeForm" id="volumeForm" novalidate
               autocomplete="off" layout="row">
 
-            <md-text-float label="Internal Volume" ng-model="volume.internal" type="text"
-                           ng-required="true"></md-text-float>
-            <md-text-float label="Default Value" ng-model="volume.value" type="text"></md-text-float>
+            <md-input-container>
+                <label>Internal Volume</label>
+                <input ng-model="volume.internal" type="text" ng-required="true">
+            </md-input-container>
+            <md-input-container>
+                <label>Default Value</label>
+                <input ng-model="volume.value" type="text">
+            </md-input-container>
             <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
                 <md-radio-button value="rw">Read-Write</md-radio-button>
                 <md-radio-button value="ro">Read Only</md-radio-button>
             </md-radio-group>
-            <md-text-float label="Description" ng-model="volume.description" type="text"></md-text-float>
+            <md-input-container>
+                <label>Description</label>
+                <input ng-model="volume.description" type="text">
+            </md-input-container>
 
             <md-button ng-disabled="volumeForm.$invalid"
                        data-ng-click="addVolume(); displayFormVolume=false"
