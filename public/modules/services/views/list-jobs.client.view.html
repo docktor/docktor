@@ -51,6 +51,13 @@
                 </md-radio-group>
             </div>
         </td>
+        <td>
+            <div class="row">
+                <md-switch ng-show="job._id" ng-model="job.isActive" aria-label="Job is active ?" ng-change="activationJob(job)">
+                    Is Active : {{ job.isActive }}
+                </md-switch>
+            </div>
+        </td>
     </tr>
     </tbody>
 </table>

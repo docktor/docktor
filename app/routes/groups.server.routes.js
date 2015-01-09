@@ -7,7 +7,7 @@ var users = require('../../app/controllers/users.server.controller'),
     groups = require('../../app/controllers/groups.server.controller');
 
 module.exports = function (app) {
-    // Group Routes
+
     app.route('/groups')
         .get(users.requiresLogin, groups.listGroups)
         .post(users.requiresLogin, groups.hasAdminAuthorization, groups.create);

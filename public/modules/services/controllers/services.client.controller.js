@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services', 'Toasts',
-    function ($scope, $stateParams, $location, Authentication, Services, Toasts) {
+angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services', 'Toasts', 'ServicesServices',
+    function ($scope, $stateParams, $location, Authentication, Services, Toasts, ServicesServices) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -158,7 +158,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.commandName = '';
             $scope.commandExec = '';
             $scope.commandRole = 'user';
-
         };
 
         $scope.removeCommand = function (command) {
@@ -180,6 +179,26 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeJob = function (job) {
             $scope.service.jobs.splice($scope.service.jobs.indexOf(job), 1);
+        };
+
+        $scope.activationJob = function (job) {
+            if (job.isActive) {
+                ServicesServices.activateJob($scope.service._id, job._id)
+                    .success(function (response) {
+                        console.log('Success activation job');
+                    }).error(function (err, status, headers, config) {
+                        var title = 'Error - ' + moment().format('hh:mm:ss');
+                        Toasts.addToast(err, 'danger', title);
+                    });
+            } else {
+                ServicesServices.desactivateJob($scope.service._id, job._id)
+                    .success(function (response) {
+                        console.log('Success desactivation job');
+                    }).error(function (err, status, headers, config) {
+                        var title = 'Error - ' + moment().format('hh:mm:ss');
+                        Toasts.addToast(err, 'danger', title);
+                    });
+            }
         };
 
         $scope.addUrl = function () {

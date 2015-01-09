@@ -6,7 +6,7 @@
 var groups = require('../../app/controllers/groups.server.controller');
 
 module.exports = function (app) {
-    // User Routes
+
     var users = require('../../app/controllers/users.server.controller');
 
     // Setting up the users profile api

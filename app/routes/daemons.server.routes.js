@@ -7,7 +7,7 @@ var users = require('../../app/controllers/users.server.controller'),
     daemons = require('../../app/controllers/daemons.server.controller');
 
 module.exports = function (app) {
-    // Daemon Routes
+
     app.route('/daemons')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.list)
         .post(users.requiresLogin, daemons.hasAdminAuthorization, daemons.create);

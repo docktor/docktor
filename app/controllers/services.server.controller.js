@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Service = mongoose.model('Service'),
     Group = mongoose.model('Group'),
+    scheduler = require('../../config/scheduler'),
     _ = require('lodash');
 
 /**
@@ -105,6 +106,36 @@ exports.list = function (req, res) {
 
 exports.getUrlsAndCommands = function (req, res) {
     res.jsonp({'commands': req.service.commands, 'urls': req.service.urls});
+};
+
+exports.activateJob = function (req, res) {
+    var service = req.service;
+    var jobId = req.params.jobId;
+    var jobName = jobId + ' on ' + service._id;
+    console.log('activateJob ' + jobId);
+
+    scheduler.define(jobName, function (job, done) {
+        console.log('COUCOU');
+        done();
+    });
+    scheduler.every('* * * * *', jobName);
+
+    res.jsonp({msg: 'End Activate job ' + jobName});
+};
+
+exports.desactivateJob = function (req, res) {
+    var service = req.service;
+    var jobId = req.params.jobId;
+    var jobName = jobId + ' on ' + service._id;
+    console.log('desactivateJob ' + jobId);
+
+    scheduler.cancel({name: jobName}, function (err, numRemoved) {
+        console.log('err:');
+        console.log(err);
+        console.log('numRemoved : ' + numRemoved);
+    });
+
+    res.jsonp({msg: 'End Desactivate job ' + jobName});
 };
 
 /**

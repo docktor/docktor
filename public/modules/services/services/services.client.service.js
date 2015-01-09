@@ -18,6 +18,12 @@ angular.module('services').factory('ServicesServices', ['$http',
         return {
             getUrlsAndCommands: function (serviceId, groupId) {
                 return $http.get('/services/urlsandcommands/' + serviceId + '/' + groupId);
+            },
+            activateJob: function (serviceId, jobId) {
+                return $http.put('/services/jobs/activate/' + serviceId + '/' + jobId, {jobId: jobId});
+            },
+            desactivateJob: function (serviceId, jobId) {
+                return $http.delete('/services/jobs/desactivate/' + serviceId + '/' + jobId);
             }
         };
     }

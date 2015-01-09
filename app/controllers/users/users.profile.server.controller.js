@@ -121,23 +121,7 @@ exports.addGroup = function (req, res) {
 
 };
 
-exports.addFavoriteGroup = function (req, res) {
-    var userToUpdate = req.profile;
-    var groupToAdd = req.group;
-
-    User.update({'_id': userToUpdate._id}, {'$push': {'favorites': groupToAdd._id}}, function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.status(200).send('OK');
-        }
-    });
-
-};
-
-exports.removeFavoriteGroup = function (req, res) {
+var removeFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToRemove = req.group;
     User.update({'_id': userToUpdate._id}, {'$pull': {'favorites': groupToRemove._id}}, function (err) {
@@ -150,6 +134,8 @@ exports.removeFavoriteGroup = function (req, res) {
         }
     });
 };
+
+exports.removeFavoriteGroup = removeFavoriteGroup;
 
 exports.removeGroup = function (req, res) {
     var userToUpdate = req.profile;
@@ -164,6 +150,22 @@ exports.removeGroup = function (req, res) {
             removeFavoriteGroup(req, res);
         }
     });
+};
+
+exports.addFavoriteGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToAdd = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$push': {'favorites': groupToAdd._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.status(200).send('OK');
+        }
+    });
+
 };
 
 /**
