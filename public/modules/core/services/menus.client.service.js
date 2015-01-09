@@ -129,13 +129,14 @@ angular.module('core').service('Menus', ['Authentication',
         };
 
         this.refreshFavorites = function () {
-            this.validateMenuExistance('topbar');
-            this.removeAllFavorites('topbar');
+            var menuId = 'topbar';
+            this.validateMenuExistance(menuId);
+            this.removeAllFavorites(menuId);
             for (var groupIndex in Authentication.user.favorites) {
                 var group = Authentication.user.favorites[groupIndex];
-                this.addSubMenuItem('topbar', 'groups', group.title, 'groups/' + group._id);
+                this.addSubMenuItem(menuId, 'groups', group.title, 'groups/' + group._id);
             }
-            return this.menus['topbar'];
+            return this.menus[menuId];
         };
 
         //Adding the topbar menu

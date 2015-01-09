@@ -139,6 +139,36 @@ var UrlSchema = new Schema({
 });
 
 /**
+ * Job Schema, not useful outside Service
+ */
+var JobSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Job Name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'Value of job (url or command) cannot be blank'
+    },
+    type: {
+        type: String,
+        enum: ['url', 'exec'],
+        required: 'Type of job cannot be blank'
+    },
+    description: {
+        type: String,
+        default: '',
+        trim: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+/**
  * Image Schema, not useful outside Service
  */
 var ImageSchema = new Schema({
@@ -178,6 +208,7 @@ var ServiceSchema = new Schema({
     images: [ImageSchema],
     commands: [CommandSchema],
     urls: [UrlSchema],
+    jobs: [JobSchema],
     user: {
         type: Schema.ObjectId,
         ref: 'User'

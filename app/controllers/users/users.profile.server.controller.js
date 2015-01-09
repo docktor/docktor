@@ -6,7 +6,6 @@
 var _ = require('lodash'),
     errorHandler = require('../errors.server.controller'),
     mongoose = require('mongoose'),
-    passport = require('passport'),
     User = require('../../models/user.server.model');
 
 
@@ -122,21 +121,6 @@ exports.addGroup = function (req, res) {
 
 };
 
-exports.removeGroup = function (req, res) {
-    var userToUpdate = req.profile;
-    var groupToRemove = req.group;
-
-    User.update({'_id': userToUpdate._id}, {'$pull': {'groups': groupToRemove._id}}, function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            removeFavoriteGroup(req, res);
-        }
-    });
-};
-
 exports.addFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToAdd = req.group;
@@ -153,7 +137,7 @@ exports.addFavoriteGroup = function (req, res) {
 
 };
 
-var removeFavoriteGroup = function (req, res) {
+exports.removeFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToRemove = req.group;
     User.update({'_id': userToUpdate._id}, {'$pull': {'favorites': groupToRemove._id}}, function (err) {
@@ -167,7 +151,20 @@ var removeFavoriteGroup = function (req, res) {
     });
 };
 
-exports.removeFavoriteGroup = removeFavoriteGroup;
+exports.removeGroup = function (req, res) {
+    var userToUpdate = req.profile;
+    var groupToRemove = req.group;
+
+    User.update({'_id': userToUpdate._id}, {'$pull': {'groups': groupToRemove._id}}, function (err) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            removeFavoriteGroup(req, res);
+        }
+    });
+};
 
 /**
  * Show user

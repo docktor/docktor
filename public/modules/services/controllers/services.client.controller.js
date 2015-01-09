@@ -19,6 +19,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormCommand = false;
         $scope.commandRole = 'user';
         $scope.commandRoleName = '';
+        $scope.jobType = 'url';
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -162,6 +163,23 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeCommand = function (command) {
             $scope.service.commands.splice($scope.service.commands.indexOf(command), 1);
+        };
+
+        $scope.addJob = function () {
+            var jobToAdd = {
+                name: $scope.jobName,
+                value: $scope.jobValue,
+                type: $scope.jobType
+            };
+            $scope.service.jobs.push(jobToAdd);
+            $scope.jobName = '';
+            $scope.jobValue = '';
+            $scope.jobType = 'url';
+
+        };
+
+        $scope.removeJob = function (job) {
+            $scope.service.jobs.splice($scope.service.jobs.indexOf(job), 1);
         };
 
         $scope.addUrl = function () {

@@ -1,0 +1,56 @@
+<h4>Jobs
+    <md-button aria-label="Add a Job" ng-click="addJob()">
+        <i class="fa fa-plus-square"></i>
+    </md-button>
+</h4>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-ng-repeat="job in service.jobs">
+        <td style="width: 30px;">
+            <div>
+                <md-button aria-label="Delete Job" ng-click="askDeleteJob=true" ng-hide="askDeleteJob">
+                    <i class="fa fa-trash-o" title="Delete Job"></i>
+                </md-button>
+                <md-button aria-label="Don't Delete Job" ng-click="askDeleteJob=false"
+                           ng-show="askDeleteJob"
+                           class="md-raised md-accent md-hue-1">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </md-button>
+                <md-button aria-label="Confirme Delete Job" data-ng-click="removeJob(job);"
+                           ng-show="askDeleteJob" class="md-raised md-warn">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </md-button>
+            </div>
+        </td>
+        <td>
+            <div class="row">
+                <md-text-float label="Job Name" ng-model="job.name" type="text" ng-required="true">
+                </md-text-float>
+            </div>
+        </td>
+        <td>
+            <div class="row">
+                <md-text-float label="Job Value" ng-model="job.value" type="text" ng-required="true">
+                </md-text-float>
+            </div>
+        </td>
+        <td>
+            <div class="row">
+                <md-radio-group ng-model="job.type" ng-required="true" ng-required="true">
+                    <md-radio-button value="url">Url</md-radio-button>
+                    <md-radio-button value="exec">Docker exec</md-radio-button>
+                </md-radio-group>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
