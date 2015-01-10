@@ -889,3 +889,7 @@ md-input-group.tableDocktor {
 .md-subheader.docktor {
     padding: 0px 0px 0px 0px;
 }
+
+md-tabs-ink-bar {
+    background-color: #000000 !important;
+}
