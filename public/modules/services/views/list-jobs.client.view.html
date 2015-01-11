@@ -11,6 +11,7 @@
         <th>Name</th>
         <th>Value</th>
         <th>Type</th>
+        <th>Activation</th>
     </tr>
     </thead>
     <tbody>
@@ -57,10 +58,9 @@
         </td>
         <td>
             <div class="row">
-                <md-switch ng-show="job._id" ng-model="job.isActive" aria-label="Job is active ?"
-                           ng-change="activationJob(job)">
-                    Is Active : {{ job.isActive }}
-                </md-switch>
+                <md-button class="md-raised">
+                    Activate this job on all <br>deployed services (Todo)
+                </md-button>
             </div>
         </td>
     </tr>
