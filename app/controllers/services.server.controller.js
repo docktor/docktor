@@ -111,16 +111,33 @@ exports.getUrlsAndCommands = function (req, res) {
 exports.activateJob = function (req, res) {
     var service = req.service;
     var jobId = req.params.jobId;
-    var jobName = jobId + ' on ' + service._id;
     console.log('activateJob ' + jobId);
 
-    scheduler.define(jobName, function (job, done) {
-        console.log('COUCOU');
-        done();
-    });
-    scheduler.every('* * * * *', jobName);
+    Group.getContainersOfOneService(service._id.toString()).exec(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            if (data && data[0] && data[0].groups.length > 0) {
+                var titles = '';
+                data[0].containers.forEach(function (container) {
+                    titles += ' ' + container.title;
 
-    res.jsonp({msg: 'End Activate job ' + jobName});
+                    var jobName = jobId + ' on ' + service._id + ' container ' + container.id;
+
+                    scheduler.define(jobName, function (job, done) {
+                        console.log('COUCOU');
+                        done();
+                    });
+                    scheduler.every('* * * * *', jobName);
+                    console.log('Activate job on ' + titles);
+                });
+            }
+        }
+    });
+
+    res.jsonp({msg: 'End Activate job '});
 };
 
 exports.desactivateJob = function (req, res) {

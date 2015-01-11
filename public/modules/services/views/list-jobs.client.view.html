@@ -11,7 +11,7 @@
         <th>Name</th>
         <th>Value</th>
         <th>Type</th>
-        <th>Activation</th>
+        <th>Actions on all deployed {{service.title}} services</th>
     </tr>
     </thead>
     <tbody>
@@ -58,8 +58,11 @@
         </td>
         <td>
             <div class="row">
-                <md-button class="md-raised">
-                    Activate this job on all <br>deployed services (Todo)
+                <md-button class="md-raised" ng-click="activateJob()">
+                    Activate
+                </md-button>
+                <md-button class="md-raised" ng-click="desactivateJob()">
+                    Desactivate
                 </md-button>
             </div>
         </td>

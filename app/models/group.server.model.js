@@ -241,4 +241,14 @@ GroupSchema.statics.getGroupsOfOneService = function (idService) {
     ]);
 };
 
+GroupSchema.statics.getContainersOfOneService = function (idService) {
+    var _this = this;
+
+    return _this.aggregate([
+        {'$unwind': '$containers'},
+        {'$match': {'containers.serviceId': {'$in': [idService]}}},
+        {'$group': {'_id': 0, 'containers': {'$addToSet': {'id': '$containers._id', 'title': '$containers.hostname'}}}}
+    ]);
+};
+
 mongoose.model('Group', GroupSchema);
