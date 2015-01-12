@@ -97,6 +97,29 @@ var VolumeContainerSchema = new Schema({
     }
 });
 
+
+/**
+ * Job Container Schema, not useful outside Image
+ */
+var JobContainerSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'Name cannot be blank'
+    },
+    status: {
+        type: String,
+        trim: true,
+        required: 'Status cannot be blank'
+    },
+    lastExecution: {
+        type: Date,
+        default: Date.now,
+        required: 'lastExecution cannot be blank'
+    }
+});
+
+
 /**
  * Container Schema, not useful outside Group
  */
@@ -132,6 +155,7 @@ var ContainerSchema = new Schema({
     ports: [PortContainerSchema],
     variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],
+    jobs: [JobContainerSchema],
     daemonId: { // TODO use Schema.ObjectId
         type: String,
         trim: true

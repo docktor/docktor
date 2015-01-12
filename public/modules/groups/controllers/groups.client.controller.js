@@ -204,6 +204,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
+                        // TODO JOB display job result
                     }).
                     error(function (err, status, headers, config) {
                         $scope.callbackError(container, err);

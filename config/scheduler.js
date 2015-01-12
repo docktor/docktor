@@ -19,6 +19,7 @@ module.exports.defineJob = function (jobName) {
     agenda.define(jobName, function (jobSchedule, done) {
         console.log(jobSchedule);
         if (jobSchedule.attrs.data.type === 'url') {
+            // TODO JOB add Job on containers
             console.log('TODO WGET URL on ' + jobSchedule.attrs.data.value);
         } else {
             console.log('TODO docker exec');

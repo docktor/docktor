@@ -22,7 +22,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
-                $scope.update();
+                $scope.update(true);
             } else {
                 $scope.create();
             }
@@ -36,10 +36,12 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             });
         };
 
-        $scope.update = function () {
+        $scope.update = function (redirect) {
             var service = $scope.service;
             service.$update(function () {
-                $location.path('admin/services/' + service._id);
+                if (redirect === true) {
+                    $location.path('admin/services/' + service._id);
+                }
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -165,17 +167,26 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.addJob = function () {
             var jobToAdd = {
-                name: '',
-                value: '',
+                name: 'JobName',
+                value: ':8080',
                 type: 'url',
                 interval: '* * * * *',
                 active: false
             };
             $scope.service.jobs.push(jobToAdd);
+
+            var service = $scope.service;
+            service.$update(function (service) {
+                $scope.service = service;
+            }, function (err) {
+                var title = 'Error - ' + moment().format('hh:mm:ss');
+                Toasts.addToast(err, 'danger', title);
+            });
         };
 
         $scope.removeJob = function (job) {
             $scope.service.jobs.splice($scope.service.jobs.indexOf(job), 1);
+            $scope.update(false);
         };
 
         $scope.activationJob = function (job) {
@@ -190,6 +201,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             ServicesServices.activateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success activation job');
+                    $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
                     Toasts.addToast(err, 'danger', title);
@@ -199,6 +211,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             ServicesServices.desactivateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success desactivation job');
+                    $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
                     Toasts.addToast(err, 'danger', title);
