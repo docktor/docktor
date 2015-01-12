@@ -4,68 +4,68 @@
     </md-button>
 </div>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Value</th>
-        <th>Type</th>
-        <th>Actions on all deployed {{service.title}} services</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr data-ng-repeat="job in service.jobs">
-        <td style="width: 30px;">
-            <div>
-                <md-button aria-label="Delete Job" ng-click="askDeleteJob=true" ng-hide="askDeleteJob">
-                    <i class="fa fa-trash-o" title="Delete Job"></i>
-                </md-button>
-                <md-button aria-label="Don't Delete Job" ng-click="askDeleteJob=false"
-                           ng-show="askDeleteJob"
-                           class="md-raised md-accent md-hue-1">
-                    No, I don't want to delete this. <i class="fa fa-reply"></i>
-                </md-button>
-                <md-button aria-label="Confirme Delete Job" data-ng-click="removeJob(job);"
-                           ng-show="askDeleteJob" class="md-raised md-warn">
-                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                </md-button>
+<div class="row">
+    <h3>Usage :</h3>
+    <ul>
+        <li>Interval : it is syntax of crontab (ex every 5 min : */5 * * * *)</li>
+        <li>Job Value for type "Url" :
+            Put an internal port here, docktor will retrieve external
+            port on each container. <br>Example: <b>:8080/foo</b> or just <b>:8080</b>
+        </li>
+        <li>Job Value for type "Docker exec" : A unix command</li>
+        <li>Activate : for all deployed services, activate this job</li>
+        <li>Desactivate : for all deployed services, desactivate this job</li>
+    </ul>
+</div>
+
+<md-list>
+    <md-item ng-repeat="job in service.jobs">
+        <md-item-content>
+            <div class="md-tile-content" layout="row">
+                <div>
+                    <md-button aria-label="Delete Job" ng-click="askDeleteJob=true" ng-hide="askDeleteJob">
+                        <i class="fa fa-trash-o" title="Delete Job"></i>
+                    </md-button>
+                    <md-button aria-label="Don't Delete Job" ng-click="askDeleteJob=false"
+                               ng-show="askDeleteJob"
+                               class="md-raised md-accent md-hue-1">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </md-button>
+                    <md-button aria-label="Confirme Delete Job" data-ng-click="removeJob(job);"
+                               ng-show="askDeleteJob" class="md-raised md-warn">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </md-button>
+                </div>
+
+                <div class="row">
+                    <md-input-container>
+                        <label>Job Name</label>
+                        <input ng-model="job.name" type="text" ng-required="true">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Interval</label>
+                        <input ng-model="job.interval" type="text" ng-required="true">
+                    </md-input-container>
+                </div>
+
+                <div class="row">
+                    <md-radio-group ng-model="job.type" ng-required="true" ng-required="true" layout="row">
+                        <md-radio-button value="url">Url</md-radio-button>
+                        <md-radio-button value="exec">Docker exec</md-radio-button>
+                    </md-radio-group>
+                    <md-input-container class="long">
+                        <label>Job Value</label>
+                        <input ng-model="job.value" type="text" ng-required="true">
+                    </md-input-container>
+                </div>
+
+                <div class="row">
+                    <md-switch ng-model="job.active" aria-label="Job is active ?" ng-click="activationJob(job)">
+                        Active : <span ng-if="job.active">On</span>
+                        <span ng-if="!job.active">Off</span>
+                    </md-switch>
+                </div>
             </div>
-        </td>
-        <td>
-            <div class="row">
-                <md-input-container>
-                    <label>Job Name</label>
-                    <input ng-model="job.name" type="text" ng-required="true">
-                </md-input-container>
-            </div>
-        </td>
-        <td>
-            <div class="row">
-                <md-input-container>
-                    <label>Job Value</label>
-                    <input ng-model="job.value" type="text" ng-required="true">
-                </md-input-container>
-            </div>
-        </td>
-        <td>
-            <div class="row">
-                <md-radio-group ng-model="job.type" ng-required="true" ng-required="true">
-                    <md-radio-button value="url">Url</md-radio-button>
-                    <md-radio-button value="exec">Docker exec</md-radio-button>
-                </md-radio-group>
-            </div>
-        </td>
-        <td>
-            <div class="row">
-                <md-button class="md-raised" ng-click="activateJob()">
-                    Activate
-                </md-button>
-                <md-button class="md-raised" ng-click="desactivateJob()">
-                    Desactivate
-                </md-button>
-            </div>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </md-item-content>
+    </md-item>
+</md-list>

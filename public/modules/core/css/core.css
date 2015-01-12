@@ -865,7 +865,7 @@ form > .row {
     }
 }
 
-md-input-group.long > input {
+md-input-container.long > input {
     width: 264px;
 }
 

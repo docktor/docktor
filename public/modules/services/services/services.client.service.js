@@ -19,11 +19,11 @@ angular.module('services').factory('ServicesServices', ['$http',
             getUrlsAndCommands: function (serviceId, groupId) {
                 return $http.get('/services/urlsandcommands/' + serviceId + '/' + groupId);
             },
-            activateJob: function (serviceId, jobId) {
-                return $http.put('/services/jobs/activate/' + serviceId + '/' + jobId, {jobId: jobId});
+            activateJob: function (serviceId, job) {
+                return $http.put('/services/jobs/activate/' + serviceId + '/' + job._id, {job: job});
             },
-            desactivateJob: function (serviceId, jobId) {
-                return $http.delete('/services/jobs/desactivate/' + serviceId + '/' + jobId);
+            desactivateJob: function (serviceId, job) {
+                return $http.delete('/services/jobs/desactivate/' + serviceId + '/' + job._id);
             }
         };
     }

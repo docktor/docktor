@@ -152,6 +152,11 @@ var JobSchema = new Schema({
         trim: true,
         required: 'Value of job (url or command) cannot be blank'
     },
+    interval: {
+        type: String,
+        trim: true,
+        required: 'Interval of job cannot be blank'
+    },
     type: {
         type: String,
         enum: ['url', 'exec'],
@@ -161,6 +166,10 @@ var JobSchema = new Schema({
         type: String,
         default: '',
         trim: true
+    },
+    active: {
+        type: Boolean,
+        required: 'Active or not is required'
     },
     created: {
         type: Date,
@@ -225,5 +234,20 @@ ServiceSchema.statics.getExec = function (serviceId, commandId) {
             {'$project': {_id: 0, commands: 1}}
         ]);
 };
+
+ServiceSchema.statics.getAllJobs = function () {
+    var _this = this;
+
+    return _this.aggregate([
+        {'$unwind': '$jobs'},
+        {'$group': {'_id': 0, 'jobs': {'$addToSet': {
+            'serviceId': '$_id',
+            'id': '$jobs._id',
+            'name': '$jobs.name',
+            'value': '$jobs.value',
+            'type': '$jobs.type'}}}}
+    ]);
+};
+
 
 mongoose.model('Service', ServiceSchema);

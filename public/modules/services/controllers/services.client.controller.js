@@ -19,7 +19,6 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormCommand = false;
         $scope.commandRole = 'user';
         $scope.commandRoleName = '';
-        $scope.jobType = 'url';
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -166,23 +165,29 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.addJob = function () {
             var jobToAdd = {
-                name: $scope.jobName,
-                value: $scope.jobValue,
-                type: $scope.jobType
+                name: '',
+                value: '',
+                type: 'url',
+                interval: '* * * * *',
+                active: false
             };
             $scope.service.jobs.push(jobToAdd);
-            $scope.jobName = '';
-            $scope.jobValue = '';
-            $scope.jobType = 'url';
-
         };
 
         $scope.removeJob = function (job) {
             $scope.service.jobs.splice($scope.service.jobs.indexOf(job), 1);
         };
 
+        $scope.activationJob = function (job) {
+            if (job.active) {
+                $scope.activateJob(job);
+            } else {
+                $scope.desactivateJob(job);
+            }
+        };
+
         $scope.activateJob = function (job) {
-            ServicesServices.activateJob($scope.service._id, job._id)
+            ServicesServices.activateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success activation job');
                 }).error(function (err, status, headers, config) {
@@ -191,7 +196,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
                 });
         };
         $scope.desactivateJob = function (job) {
-            ServicesServices.desactivateJob($scope.service._id, job._id)
+            ServicesServices.desactivateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success desactivation job');
                 }).error(function (err, status, headers, config) {

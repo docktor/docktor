@@ -111,6 +111,7 @@ exports.getUrlsAndCommands = function (req, res) {
 exports.activateJob = function (req, res) {
     var service = req.service;
     var jobId = req.params.jobId;
+    var job = req.body.job;
     console.log('activateJob ' + jobId);
 
     Group.getContainersOfOneService(service._id.toString()).exec(function (err, data) {
@@ -119,40 +120,43 @@ exports.activateJob = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            if (data && data[0] && data[0].groups.length > 0) {
-                var titles = '';
+            console.log('DATA');
+            console.log(data);
+
+            var dataJob = {};
+            if (data && data[0] && data[0].containers.length > 0) {
+                dataJob.type = job.type;
+                dataJob.value = job.value;
+                dataJob.name = job._id;
+                dataJob.containers = [];
+                dataJob.interval = job.interval;
                 data[0].containers.forEach(function (container) {
-                    titles += ' ' + container.title;
-
-                    var jobName = jobId + ' on ' + service._id + ' container ' + container.id;
-
-                    scheduler.define(jobName, function (job, done) {
-                        console.log('COUCOU');
-                        done();
-                    });
-                    scheduler.every('* * * * *', jobName);
-                    console.log('Activate job on ' + titles);
+                    dataJob.containers.push(container.id);
                 });
+            }
+
+            if (!_.isEmpty(dataJob)) {
+                scheduler.defineJob(job._id);
+                scheduler.scheduleJob(dataJob);
+            } else {
+                console.log('no deployed container, no schedule');
             }
         }
     });
 
-    res.jsonp({msg: 'End Activate job '});
+    res.jsonp({msg: 'End Activate job'});
 };
 
 exports.desactivateJob = function (req, res) {
-    var service = req.service;
     var jobId = req.params.jobId;
-    var jobName = jobId + ' on ' + service._id;
-    console.log('desactivateJob ' + jobId);
 
-    scheduler.cancel({name: jobName}, function (err, numRemoved) {
+    scheduler.cancel({name: jobId}, function (err, numRemoved) {
         console.log('err:');
         console.log(err);
         console.log('numRemoved : ' + numRemoved);
     });
 
-    res.jsonp({msg: 'End Desactivate job ' + jobName});
+    res.jsonp({msg: 'End Desactivate job ' + jobId});
 };
 
 /**
