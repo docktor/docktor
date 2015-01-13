@@ -81,6 +81,7 @@ module.exports.jobCheckUrl = function (jobSchedule, group, container) {
         };
         if (resp && resp.statusCode === 200) {
             job.status = 'success';
+            job.result = 'HTTP status code received : ' + resp.statusCode;
         } else {
             job.status = 'error';
             if (resp) {

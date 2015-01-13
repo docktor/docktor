@@ -893,3 +893,15 @@ md-input-group.tableDocktor {
 md-tabs-ink-bar {
     background-color: #000000 !important;
 }
+
+.job {
+    width: 40px;
+}
+
+.job.error {
+    background-color: rgb(244,67,54);
+}
+
+.job.success {
+    background-color: rgb(76,175,80);
+}

@@ -240,6 +240,25 @@ GroupSchema.statics.getUsedPorts = function (idGroup) {
     ]);
 };
 
+GroupSchema.statics.getJobs = function () {
+    var _this = this;
+    return _this.aggregate([
+        {'$unwind': '$containers'},
+        {'$unwind': '$containers.jobs'},
+        {
+            '$group': {
+                _id: {
+                    'groupTitle': '$title',
+                    'serviceTitle': '$containers.title',
+                    'name': '$containers.name',
+                    'hostname': '$containers.hostname'
+                },
+                'jobs': {$addToSet: '$containers.jobs'}
+            }
+        }
+    ]);
+};
+
 GroupSchema.statics.getGroupsOfOneDaemon = function (idDaemon) {
     var _this = this;
     /*

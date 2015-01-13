@@ -95,6 +95,18 @@ exports.delete = function (req, res) {
     }
 };
 
+exports.getJobs = function (req, res) {
+    Group.getJobs().exec(function (err, data) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(data);
+        }
+    });
+};
+
 exports.getFreePortsOnContainer = function (req, res) {
     var containerId = req.param('idContainer');
     Group.find().where('daemon')

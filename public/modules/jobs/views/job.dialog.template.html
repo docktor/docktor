@@ -1,0 +1,35 @@
+<md-dialog aria-label="Job Info">
+    <md-content>
+        <h2>Container Info</h2>
+        <md-subheader class="md-primary">
+
+            Group : {{info.groupTitle}}<br>
+            Hostname: {{info.hostname}}<br>
+            Name: {{info.name}}<br>
+        </md-subheader>
+        <h2>Job Info</h2>
+
+        <div class="column">
+            <p>
+                Execution At : {{job.lastExecution}}<br>
+                Name : {{job.name}}<br>
+                Status : {{job.status}}<br>
+            </p>
+        </div>
+
+        <div class="column">
+            <h4>Description</h4>
+
+            <p>{{job.description}}</p>
+        </div>
+        <div class="column">
+            <h4>Result</h4>
+            <pre>{{job.result}}</pre>
+        </div>
+    </md-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="cancel()" class="md-primary">
+            Close
+        </md-button>
+    </div>
+</md-dialog>

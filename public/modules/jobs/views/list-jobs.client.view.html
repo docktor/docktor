@@ -1,0 +1,26 @@
+<section data-ng-controller="JobsController" data-ng-init="find()">
+
+    <div layout="row">
+        <h2 flex>Admin / Jobs</h2>
+
+        <div flex layout="row" layout-align="end center">
+            <div>Legend : </div>
+            <div class="job success">Ok</div>
+            <div class="job error">Ko</div>
+        </div>
+    </div>
+
+    <div ng-repeat="group in groups" layout="row">
+        <div flex>{{group._id.groupTitle}} {{group._id.name}}</div>
+        <div ng-repeat="job in group.jobs" layout="column" class="job" ng-click="showInfo(group._id, job)">
+            <md-button ng-if="job.status==='success'" class="job success">.
+            </md-button>
+            <md-button ng-if="job.status==='error'" class="job error">.
+            </md-button>
+        </div>
+    </div>
+
+    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="jobs.$resolved && !jobs.length">
+        No jobs yet
+    </md-toolbar>
+</section>
