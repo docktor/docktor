@@ -237,17 +237,23 @@ ServiceSchema.statics.getExec = function (serviceId, commandId) {
 
 ServiceSchema.statics.getAllJobs = function () {
     var _this = this;
-
     return _this.aggregate([
         {'$unwind': '$jobs'},
-        {'$group': {'_id': 0, 'jobs': {'$addToSet': {
-            'serviceId': '$_id',
-            'id': '$jobs._id',
-            'name': '$jobs.name',
-            'value': '$jobs.value',
-            'type': '$jobs.type'}}}}
+        {
+            '$group': {
+                '_id': 0, 'jobs': {
+                    '$addToSet': {
+                        'serviceId': '$_id',
+                        'id': '$jobs._id',
+                        'name': '$jobs.name',
+                        'active': '$jobs.active',
+                        'value': '$jobs.value',
+                        'type': '$jobs.type'
+                    }
+                }
+            }
+        }
     ]);
 };
-
 
 mongoose.model('Service', ServiceSchema);

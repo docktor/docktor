@@ -119,7 +119,7 @@ module.exports = function (db) {
         require(path.resolve(routePath))(app);
     });
 
-    //TODO app.use('/agenda-ui', agendaui(scheduler, {'pool': 5000}));
+    app.use('/agenda-ui', agendaui(scheduler, {'pool': 5000}));
 
     scheduler.defineAll();
 

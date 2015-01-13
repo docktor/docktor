@@ -60,10 +60,16 @@
                 </div>
 
                 <div class="row">
-                    <md-switch ng-model="job.active" aria-label="Job is active ?" ng-click="activationJob(job)">
-                        Active : <span ng-if="job.active">On</span>
-                        <span ng-if="!job.active">Off</span>
-                    </md-switch>
+                    <md-input-container class="long">
+                        <label>Description</label>
+                        <input ng-model="job.description" type="text" ng-required="true">
+                    </md-input-container>
+                    <md-input-container>
+                        <md-switch ng-model="job.active" aria-label="Job is active ?" ng-click="activationJob(job)">
+                            Active : <span ng-if="job.active">On</span>
+                            <span ng-if="!job.active">Off</span>
+                        </md-switch>
+                    </md-input-container>
                 </div>
             </div>
         </md-item-content>

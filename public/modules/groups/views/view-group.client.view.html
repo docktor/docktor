@@ -192,26 +192,40 @@
                 </div>
             </td>
             <td>
-                <div ng-switch="gridItem.daemon.dockerStatus">
+                <div>
+                    <div ng-switch="gridItem.daemon.dockerStatus">
+                        <div ng-switch-when="checking">
+                        </div>
+                        <div ng-switch-when="down">
+                            <md-subheader class="docktor md-warn">Down</md-subheader>
+                            <small>Daemon Down</small>
+                        </div>
 
-                    <div ng-switch-when="checking">
+                        <div ng-switch-when="up">
+                            <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused"
+                                          class="md-primary">
+                                Running
+                            </md-subheader>
+                            <md-subheader ng-hide="gridItem.inspect.State.Running" class="md-warn">
+                                Stopped
+                            </md-subheader>
+                            <md-subheader ng-show="gridItem.inspect.State.Paused" class="md-accent">
+                                Paused
+                            </md-subheader>
+                        </div>
                     </div>
-                    <div ng-switch-when="down">
-                        Down <br>
-                        <small>Daemon Down</small>
-                    </div>
-
-                    <div ng-switch-when="up">
-                        <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused"
-                                      class="md-primary">
-                            Running
-                        </md-subheader>
-                        <md-subheader ng-hide="gridItem.inspect.State.Running" class="md-warn">
-                            Stopped
-                        </md-subheader>
-                        <md-subheader ng-show="gridItem.inspect.State.Paused" class="md-accent">
-                            Paused
-                        </md-subheader>
+                    <div>
+                        <div ng-repeat="job in gridItem.jobs | orderBy:'lastExecution':1 | limitTo:4">
+                            <div ng-switch="job.status">
+                                <div ng-switch-when="error">
+                                    <md-subheader class="docktor md-warn">{{job.name}}</md-subheader>
+                                </div>
+                                <div ng-switch-when="success">
+                                    <md-subheader class="docktor md-primary">{{job.name}}
+                                    </md-subheader>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </td>

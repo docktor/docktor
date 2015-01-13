@@ -1,7 +1,9 @@
 'use strict';
 
 var config = require('./config'),
-    Agenda = require('agenda');
+    Agenda = require('agenda'),
+    request = require('request'),
+    _ = require('lodash');
 
 var agenda = new Agenda({
     db: {
@@ -12,23 +14,37 @@ var agenda = new Agenda({
 module.exports = agenda;
 
 module.exports.scheduleJob = function (job) {
-    agenda.every(job.interval, job.name, job);
+    agenda.every(job.interval, job.jobId, job);
 };
 
 module.exports.defineJob = function (jobName) {
-    agenda.define(jobName, function (jobSchedule, done) {
-        console.log(jobSchedule);
-        if (jobSchedule.attrs.data.type === 'url') {
-            // TODO JOB add Job on containers
-            console.log('TODO WGET URL on ' + jobSchedule.attrs.data.value);
-        } else {
-            console.log('TODO docker exec');
-        }
-        done();
+    console.log('Scheduler defineJob ' + jobName);
+
+    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+
+    agenda.define(jobName, function (jobSchedule) {
+        console.log('CALL JOB ' + jobName);
+        _.forEach(jobSchedule.attrs.data.containers, function (container) {
+            var containerId = container.containerId;
+            Group.findById(container.groupId).populate('daemon').exec(function (err, group) {
+                if (err) console.log(err);
+                var containerFound = group.containers.id(containerId);
+                if (!containerFound) {
+                    console.log('Failed to load container ' + containerId);
+                } else {
+                    if (jobSchedule.attrs.data.type === 'url') {
+                        agenda.jobCheckUrl(jobSchedule, group, containerFound);
+                    } else {
+                        agenda.jobDockerExec(jobSchedule, group, containerFound);
+                    }
+                }
+            });
+        });
     });
 };
 
 module.exports.defineAll = function () {
+    console.log('Scheduler defineAll');
 
     var mongoose = require('mongoose'),
         Service = mongoose.model('Service'),
@@ -36,14 +52,130 @@ module.exports.defineAll = function () {
 
     Service.getAllJobs().exec(function (err, data) {
         if (err) {
-            console.log('ERROR');
+            console.log('ERROR :');
             console.log(err);
         } else {
             if (data[0]) {
                 data[0].jobs.forEach(function (job) {
-                    agenda.defineJob(job.id);
+                    if (job.active === true) {
+                        agenda.defineJob(job.id);
+                    } else {
+                        console.log('Job ' + job.id + ' active false');
+                    }
                 });
             }
         }
     });
+};
+
+module.exports.jobCheckUrl = function (jobSchedule, group, container) {
+    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+    var url = agenda.computeUrl(jobSchedule.attrs.data.value, group, container);
+    request(url, function (err, resp) {
+        var job = {
+            'jobId': jobSchedule.attrs.data.jobId,
+            'name': jobSchedule.attrs.data.name,
+            'description': 'Check status 200 on ' + url,
+            'result': '',
+            'lastExecution': Date.now
+        };
+        if (resp && resp.statusCode === 200) {
+            job.status = 'success';
+        } else {
+            job.status = 'error';
+            if (resp) {
+                job.result = 'StatusCode : ' + resp.statusCode;
+            } else {
+                job.result = 'url unreachable : ' + url;
+            }
+        }
+        Group.insertJob(group._id, container._id, job);
+    });
+};
+
+module.exports.computeUrl = function (jobValue, group, container) {
+    if (jobValue.substr(0, 1) === ':') {
+        var urlWithoutPort = '';
+        var portInContainer = jobValue.substr(1, jobValue.length);
+        var pos = jobValue.indexOf('/');
+        if (pos > 0) {
+            portInContainer = jobValue.substr(1, pos);
+            urlWithoutPort = jobValue.substr(pos, jobValue.length);
+            if (!urlWithoutPort) urlWithoutPort = '';
+        }
+        var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
+        var portExternal = '';
+        if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
+
+        if (!group.daemon) {
+            return jobValue + ' no daemon found';
+        } else {
+            return 'http://' + group.daemon.host + portExternal + urlWithoutPort;
+        }
+    }
+    return jobValue;
+};
+
+module.exports.jobDockerExec = function (jobSchedule, group, container) {
+    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+
+    var jobValue = jobSchedule.attrs.data.value;
+
+    var command = jobValue.split(' ');
+    var options = {
+        'AttachStdout': true,
+        'AttachStderr': true,
+        'Tty': false,
+        Cmd: command
+    };
+
+    var daemonDocker = group.daemon.getDaemonDocker();
+    var dockerContainer = daemonDocker.getContainer(container.containerId);
+
+    dockerContainer.exec(options, function (err, exec) {
+
+        console.log('Exec in dockerContainer');
+
+        var job = {
+            'jobId': jobSchedule.attrs.data.jobId,
+            'name': jobSchedule.attrs.data.name,
+            'description': 'Exec ' + jobValue,
+            'result': '',
+            'lastExecution': Date.now
+        };
+
+        if (err) {
+            job.status = 'error';
+            job.result = err;
+            Group.insertJob(group._id, container._id, job);
+            console.log('ERROR');
+            console.log(err);
+            return;
+        }
+
+        exec.start(function (err, stream) {
+            if (err) {
+                job.status = 'err';
+                job.result = err;
+                Group.insertJob(group._id, container._id, job);
+                console.log('ERROR');
+                console.log(err);
+                return;
+            }
+
+            var string = [];
+            stream.on('data', function (buffer) {
+                console.log('Receive buffer');
+                console.log(buffer);
+                var part = buffer;
+                string.push(part.toString());
+            });
+            stream.on('end', function () {
+                job.status = 'success';
+                job.result = 'TODO';
+                Group.insertJob(group._id, container._id, job);
+            });
+        });
+    });
+
 };

@@ -107,6 +107,21 @@ var JobContainerSchema = new Schema({
         trim: true,
         required: 'Name cannot be blank'
     },
+    jobId: {
+        type: String,
+        trim: true,
+        required: 'jobId cannot be blank'
+    },
+    description: {
+        type: String,
+        trim: true,
+        required: 'description cannot be blank'
+    },
+    result: {
+        type: String,
+        trim: true,
+        required: 'description cannot be blank'
+    },
     status: {
         type: String,
         trim: true,
@@ -251,7 +266,8 @@ GroupSchema.statics.getGroupsOfOneService = function (idService) {
     var _this = this;
     /*
      Example of result :
-     { "_id" : 0,
+     {
+     "_id" : 0,
      "groups" : [ {
      "id" : ObjectId("546b185246be610000ce23b2"),
      "title" : "GroupCCCD"
@@ -271,8 +287,39 @@ GroupSchema.statics.getContainersOfOneService = function (idService) {
     return _this.aggregate([
         {'$unwind': '$containers'},
         {'$match': {'containers.serviceId': {'$in': [idService]}}},
-        {'$group': {'_id': 0, 'containers': {'$addToSet': {'id': '$containers._id', 'title': '$containers.hostname'}}}}
+        {
+            '$group': {
+                '_id': 0,
+                'containers': {
+                    '$addToSet': {
+                        'id': '$containers._id',
+                        'groupId': '$_id',
+                        'title': '$containers.hostname'
+                    }
+                }
+            }
+        }
     ]);
+};
+
+GroupSchema.statics.insertJob = function (groupId, containerId, job) {
+    var _this = this;
+    _this.update(
+        {'_id': groupId, 'containers._id': containerId},
+        {
+            '$push': {
+                'containers.$.jobs': {
+                    '$each': [job],
+                    '$sort': {'lastExecution': 1},
+                    '$slice': -10
+                }
+            }
+        },
+        function (err) {
+            if (err) console.log('Erreur while updating container : ' + err);
+        }
+    );
+
 };
 
 mongoose.model('Group', GroupSchema);

@@ -110,9 +110,7 @@ exports.getUrlsAndCommands = function (req, res) {
 
 exports.activateJob = function (req, res) {
     var service = req.service;
-    var jobId = req.params.jobId;
     var job = req.body.job;
-    console.log('activateJob ' + jobId);
 
     Group.getContainersOfOneService(service._id.toString()).exec(function (err, data) {
         if (err) {
@@ -120,18 +118,19 @@ exports.activateJob = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            console.log('DATA');
-            console.log(data);
-
             var dataJob = {};
             if (data && data[0] && data[0].containers.length > 0) {
                 dataJob.type = job.type;
                 dataJob.value = job.value;
-                dataJob.name = job._id;
+                dataJob.jobId = job._id;
+                dataJob.name = job.name;
                 dataJob.containers = [];
                 dataJob.interval = job.interval;
                 data[0].containers.forEach(function (container) {
-                    dataJob.containers.push(container.id);
+                    dataJob.containers.push({
+                        'groupId': container.groupId,
+                        'containerId': container.id
+                    });
                 });
             }
 
@@ -151,9 +150,7 @@ exports.desactivateJob = function (req, res) {
     var jobId = req.params.jobId;
 
     scheduler.cancel({name: jobId}, function (err, numRemoved) {
-        console.log('err:');
-        console.log(err);
-        console.log('numRemoved : ' + numRemoved);
+        if (err) console.log(err);
     });
 
     res.jsonp({msg: 'End Desactivate job ' + jobId});
