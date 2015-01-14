@@ -26,7 +26,7 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                             $scope.overview[group._id].services[service._id].containers = {};
                         });
                     });
-                    
+
                     GroupsServices.getJobs().success(function (response) {
                         $scope.jobs = response;
 
@@ -40,6 +40,8 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                                         '_id': groupJobs._id,
                                         'status': job.status,
                                         'name': job.name,
+                                        'description': job.description,
+                                        'result' : job.result,
                                         'lastExecution': job.lastExecution
                                     };
                                 }

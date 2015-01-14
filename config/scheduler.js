@@ -36,6 +36,13 @@ module.exports.defineJob = function (jobName) {
                     var dockerContainer = daemonDocker.getContainer(containerFound.containerId);
 
                     dockerContainer.inspect(function (err, info) {
+                        console.log(containerFound);
+                        console.log('ERR');
+                        console.log(err);
+                        console.log('INFO');
+                        console.log(info);
+                        console.log('STATE');
+                        console.log(info.State);
                         if (err || (info.State && (info.State.Running === false || info.State.Paused === true))) {
                             var job = {
                                 'jobId': jobSchedule.attrs.data.jobId,
@@ -48,7 +55,7 @@ module.exports.defineJob = function (jobName) {
                             if (err) {
                                 job.result = err;
                             } else if (info.State) {
-                                job.result = 'Container state : ' + info.State;
+                                job.result = 'Container state Running:' + info.State.Running + ' Paused:' + info.State.Paused;
                             } else {
                                 job.result = 'Result Unknown';
                             }
