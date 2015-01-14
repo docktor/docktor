@@ -16,14 +16,14 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
 
                     angular.forEach($scope.groups, function (group, keyGroup) {
                         $scope.overview[group._id] = {
-                            'groupId' : group._id,
+                            'groupId': group._id,
                             'title': group.title
                         };
 
                         $scope.overview[group._id].services = {};
                         angular.forEach($scope.services, function (service, keyService) {
                             $scope.overview[group._id].services[service._id] = {'title': service.title};
-                            $scope.overview[group._id].services[service._id].jobs = {};
+                            $scope.overview[group._id].services[service._id].containers = {};
                         });
                     });
 
@@ -33,12 +33,14 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                     GroupsServices.getJobs().success(function (response) {
                         $scope.jobs = response;
 
-                        angular.forEach($scope.jobs, function (groupsJobs, keyJob) {
-                            angular.forEach(groupsJobs.jobs, function (job, keyJob) {
+                        angular.forEach($scope.jobs, function (groupJobs, keyJob) {
+                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId] = {};
+                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs = {};
+                            angular.forEach(groupJobs.jobs, function (job, keyJob) {
                                 // use if ! to keep the newest jobId
-                                if (!$scope.overview[groupsJobs._id.groupId].services[groupsJobs._id.serviceId].jobs[job.jobId]) {
-                                    $scope.overview[groupsJobs._id.groupId].services[groupsJobs._id.serviceId].jobs[job.jobId] = {
-                                        '_id': groupsJobs._id,
+                                if (!$scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs[job.jobId]) {
+                                    $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs[job.jobId] = {
+                                        '_id': groupJobs._id,
                                         'status': job.status,
                                         'name': job.name,
                                         'lastExecution': job.lastExecution

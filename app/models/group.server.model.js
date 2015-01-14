@@ -251,6 +251,7 @@ GroupSchema.statics.getJobs = function () {
                     'groupId': '$_id',
                     'groupTitle': '$title',
                     'serviceId': '$containers.serviceId',
+                    'containerId': '$containers._id',
                     'name': '$containers.name',
                     'hostname': '$containers.hostname'
                 },

@@ -19,7 +19,8 @@
             <th ng-repeat="service in services">
 
                 <md-button class="md-raised job">.
-                    <md-tooltip>{{service.title}}</md-tooltip></md-button>
+                    <md-tooltip>{{service.title}}</md-tooltip>
+                </md-button>
             </th>
         </tr>
         </thead>
@@ -28,14 +29,14 @@
         <tr ng-repeat="group in groups">
             <td>{{group.title}}</td>
             <td ng-repeat="service in services">
-                <span ng-repeat="job in overview[group._id].services[service._id].jobs"
-                     ng-click="showInfo(job._id, job)">
+                <div ng-repeat="container in overview[group._id].services[service._id].containers">
+                <span ng-repeat="job in container.jobs" ng-click="showInfo(job._id, job)">
                     <md-button ng-if="job.status==='success'" class="job success">.
                     </md-button>
                     <md-button ng-if="job.status==='error'" class="job error">.
                     </md-button>
+                </div>
                 </span>
-
             </td>
         </tr>
         </tbody>
