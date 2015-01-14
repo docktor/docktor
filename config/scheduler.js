@@ -23,7 +23,6 @@ module.exports.defineJob = function (jobName) {
     var mongoose = require('mongoose'), Group = mongoose.model('Group'), Daemon = mongoose.model('Daemon');
 
     agenda.define(jobName, function (jobSchedule) {
-        console.log('CALL JOB ' + jobName);
         _.forEach(jobSchedule.attrs.data.containers, function (container) {
             var containerId = container.containerId;
             Group.findById(container.groupId).populate('daemon').exec(function (err, group) {
@@ -32,7 +31,6 @@ module.exports.defineJob = function (jobName) {
                 if (!containerFound) {
                     console.log('Failed to load container ' + containerId);
                 } else {
-
                     Daemon.findById(containerFound.daemonId).exec(function (err, daemon) {
                         if (err) {
                             console.log('ERR');
@@ -47,13 +45,6 @@ module.exports.defineJob = function (jobName) {
                         var dockerContainer = daemonDocker.getContainer(containerFound.containerId);
 
                         dockerContainer.inspect(function (err, info) {
-                            console.log(containerFound);
-                            console.log('ERR');
-                            console.log(err);
-                            console.log('INFO');
-                            console.log(info);
-                            console.log('STATE');
-                            console.log(info.State);
                             if (err || (info.State && (info.State.Running === false || info.State.Paused === true))) {
                                 var job = {
                                     'jobId': jobSchedule.attrs.data.jobId,

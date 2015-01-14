@@ -3,9 +3,15 @@
         <h2>Container Info</h2>
         <md-subheader class="md-primary">
 
-            Group : {{info.groupTitle}}<br>
+            Group :
+            <md-button class="md-accent" href="#!/groups/{{info.groupId}}">{{info.groupTitle}}</md-button>
+            <br>
             Hostname: {{info.hostname}}<br>
-            Name: {{info.name}}<br>
+            Deployed Service:
+            <md-button class="md-accent" href="#!/groups/{{info.groupId}}/{{info.containerId}}">
+                {{info.name}}
+            </md-button>
+            <br>
         </md-subheader>
         <h2>Job Info</h2>
 
