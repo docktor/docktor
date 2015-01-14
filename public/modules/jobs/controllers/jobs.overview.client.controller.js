@@ -26,20 +26,17 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                             $scope.overview[group._id].services[service._id].containers = {};
                         });
                     });
-
-                    console.log('GROUPS');
-                    console.log($scope.overview);
-
+                    
                     GroupsServices.getJobs().success(function (response) {
                         $scope.jobs = response;
 
                         angular.forEach($scope.jobs, function (groupJobs, keyJob) {
-                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId] = {};
-                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs = {};
+                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId] = {};
+                            $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs = {};
                             angular.forEach(groupJobs.jobs, function (job, keyJob) {
                                 // use if ! to keep the newest jobId
-                                if (!$scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs[job.jobId]) {
-                                    $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs.containerId].jobs[job.jobId] = {
+                                if (!$scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs[job.jobId]) {
+                                    $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs[job.jobId] = {
                                         '_id': groupJobs._id,
                                         'status': job.status,
                                         'name': job.name,

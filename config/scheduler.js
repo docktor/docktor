@@ -32,11 +32,37 @@ module.exports.defineJob = function (jobName) {
                 if (!containerFound) {
                     console.log('Failed to load container ' + containerId);
                 } else {
-                    if (jobSchedule.attrs.data.type === 'url') {
-                        agenda.jobCheckUrl(jobSchedule, group, containerFound);
-                    } else {
-                        agenda.jobDockerExec(jobSchedule, group, containerFound);
-                    }
+                    var daemonDocker = group.daemon.getDaemonDocker();
+                    var dockerContainer = daemonDocker.getContainer(containerFound.containerId);
+
+                    dockerContainer.inspect(function (err, info) {
+                        if (err || (info.State && (info.State.Running === false || info.State.Paused === true))) {
+                            var job = {
+                                'jobId': jobSchedule.attrs.data.jobId,
+                                'name': jobSchedule.attrs.data.name,
+                                'description': 'Check container status',
+                                'result': err,
+                                'status': 'warning',
+                                'lastExecution': Date.now
+                            };
+                            if (err) {
+                                job.result = err;
+                            } else if (info.State) {
+                                job.result = 'Container state : ' + info.State;
+                            } else {
+                                job.result = 'Result Unknown';
+                            }
+
+                            Group.insertJob(group._id, containerFound._id, job);
+                        } else {
+                            if (jobSchedule.attrs.data.type === 'url') {
+                                agenda.jobCheckUrl(jobSchedule, group, containerFound);
+                            } else {
+                                agenda.jobDockerExec(jobSchedule, group, containerFound, dockerContainer);
+                            }
+                        }
+                    });
+
                 }
             });
         });
@@ -117,7 +143,7 @@ module.exports.computeUrl = function (jobValue, group, container) {
     return jobValue;
 };
 
-module.exports.jobDockerExec = function (jobSchedule, group, container) {
+module.exports.jobDockerExec = function (jobSchedule, group, container, dockerContainer) {
     var mongoose = require('mongoose'), Group = mongoose.model('Group');
 
     var jobValue = jobSchedule.attrs.data.value;
@@ -130,13 +156,8 @@ module.exports.jobDockerExec = function (jobSchedule, group, container) {
         Cmd: command
     };
 
-    var daemonDocker = group.daemon.getDaemonDocker();
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
     dockerContainer.exec(options, function (err, exec) {
-
         console.log('Exec in dockerContainer');
-
         var job = {
             'jobId': jobSchedule.attrs.data.jobId,
             'name': jobSchedule.attrs.data.name,

@@ -895,11 +895,19 @@ md-tabs-ink-bar {
 }
 
 .job {
-    width: 20px;
+    width: 15px;
+}
+
+.job.legend{
+    width: 100px;
 }
 
 .job.error {
     background-color: rgb(244,67,54);
+}
+
+.job.warning {
+    background-color: #cddc39;
 }
 
 .job.success {

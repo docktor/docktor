@@ -5,8 +5,9 @@
 
         <div flex layout="row" layout-align="end center">
             <div>Legend :</div>
-            <div class="job success">Ok</div>
-            <div class="job error">Ko</div>
+            <div class="job legend success">Success</div>
+            <div class="job legend warning">Service Down</div>
+            <div class="job legend error">Error</div>
         </div>
     </div>
 
@@ -32,6 +33,8 @@
                 <div ng-repeat="container in overview[group._id].services[service._id].containers">
                 <span ng-repeat="job in container.jobs" ng-click="showInfo(job._id, job)">
                     <md-button ng-if="job.status==='success'" class="job success">.
+                    </md-button>
+                    <md-button ng-if="job.status==='warning'" class="job warning">.
                     </md-button>
                     <md-button ng-if="job.status==='error'" class="job error">.
                     </md-button>
