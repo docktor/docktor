@@ -17,7 +17,9 @@
         <tr>
             <th>Groups</th>
             <th ng-repeat="service in services">
-                {{service.title}}
+
+                <md-button class="md-raised job">.
+                    <md-tooltip>{{service.title}}</md-tooltip></md-button>
             </th>
         </tr>
         </thead>
