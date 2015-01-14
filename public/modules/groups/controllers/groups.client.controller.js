@@ -144,6 +144,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                         });
                                     });
                             }
+
+                            $scope.prepareJobs(container);
                             $scope.inspect(container);
                         }
                     });
@@ -151,6 +153,33 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.getUsersOnGroup();
                 $scope.computeGroupFavorite();
             });
+        };
+
+        $scope.prepareJobs = function(container) {
+            // reverse to keep last execution
+            var jobs = _(container.jobs).reverse();
+            angular.forEach(jobs, function (job, key) {
+                // keep last jobId
+                if (!jobs[job.jobId]) {
+                    jobs[job.jobId] = {
+                        '_id': {
+                            'containerId' : container._id,
+                            'groupId' : $scope.group._id,
+                            'groupTitle' : $scope.group.title,
+                            'hostname' : container.hostname,
+                            'name' : container.name,
+                            'serviceId' : container.serviceId
+                        },
+                        'status': job.status,
+                        'name': job.name,
+                        'description': job.description,
+                        'result' : job.result,
+                        'lastExecution': job.lastExecution
+                    }
+                }
+            });
+
+            container.jobsCompute = jobs;
         };
 
         $scope.getUsersOnGroup = function () {
@@ -204,7 +233,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
-                        // TODO JOB display job result
                     }).
                     error(function (err, status, headers, config) {
                         $scope.callbackError(container, err);
@@ -588,6 +616,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.showAddRemoveContact = false;
             $scope.contactToAdd = null;
             $scope.contactToRemove = null;
+        };
+
+        $scope.showJob  = function (info, job) {
+            $mdDialog.show({
+                controller: 'JobDialogController',
+                templateUrl: 'modules/jobs/views/job.dialog.template.html',
+                locals: {currentJob: job, info: info}
+            });
         };
     }
 ]);

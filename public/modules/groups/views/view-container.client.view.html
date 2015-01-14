@@ -56,39 +56,49 @@
                 </td>
                 <td>
                     <div ng-show="container.daemon.dockerStatusUp">
-                        <md-subheader ng-show="container.inspect.State.Running" class="md-primary">
+                        <md-subheader ng-show="container.inspect.State.Running" class="docktor md-primary">
                             Running
                         </md-subheader>
-                        <md-subheader ng-hide="container.inspect.State.Running" class="md-warn">
+                        <md-subheader ng-hide="container.inspect.State.Running" class="docktor md-warn">
                             Stopped
                         </md-subheader>
-                        <md-subheader ng-show="container.inspect.State.Paused" class="md-accent">
+                        <md-subheader ng-show="container.inspect.State.Paused" class="docktor md-accent">
                             Paused
                         </md-subheader>
+                    </div>
+                    <div layout="row">
+                        <div ng-repeat="job in container.jobsCompute" ng-click="showJob(job._id, job)">
+                            <md-button ng-if="job.status==='success'" class="job success">.
+                            </md-button>
+                            <md-button ng-if="job.status==='warning'" class="job warning">.
+                            </md-button>
+                            <md-button ng-if="job.status==='error'" class="job error">.
+                            </md-button>
+                        </div>
                     </div>
                 </td>
                 <td>
                     <div ng-switch="container.daemon.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default" layout="row"
-                          layout-align="center center">
-                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
-                        </md-progress-circular>
-                        <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                   href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
-                            <small>{{container.daemon.name}} <br>checking...</small>
-                        </md-button>
+                        <span ng-switch-when="checking" class="label label-default" layout="row"
+                              layout-align="center center">
+                            <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                            </md-progress-circular>
+                            <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                       href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
+                                <small>{{container.daemon.name}} <br>checking...</small>
+                            </md-button>
 
-                        <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
-                    </span>
-                    <span ng-switch-when="down">
-                        <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                   href="#!/admin/daemons/view/{{container.daemonId}}">
-                            {{container.daemon.name}} {{container.daemon.dockerStatus}}
-                        </md-button>
-                        <span ng-hide="authentication.isAdmin" class="label label-danger">
-                            {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                            <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
                         </span>
-                    </span>
+                        <span ng-switch-when="down">
+                            <md-button class="md-warn" ng-show="authentication.isAdmin"
+                                       href="#!/admin/daemons/view/{{container.daemonId}}">
+                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                            </md-button>
+                            <span ng-hide="authentication.isAdmin" class="label label-danger">
+                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                            </span>
+                        </span>
 
                         <div ng-switch-when="up">
                             <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"

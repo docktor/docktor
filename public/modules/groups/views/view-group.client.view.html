@@ -214,17 +214,15 @@
                             </md-subheader>
                         </div>
                     </div>
-                    <div>
-                        <div ng-repeat="job in gridItem.jobs | orderBy:'lastExecution':1 | limitTo:4">
-                            <div ng-switch="job.status">
-                                <div ng-switch-when="error">
-                                    <md-subheader class="docktor md-warn">{{job.name}}</md-subheader>
-                                </div>
-                                <div ng-switch-when="success">
-                                    <md-subheader class="docktor md-primary">{{job.name}}
-                                    </md-subheader>
-                                </div>
-                            </div>
+                    <div layout="row">
+                        <div ng-repeat="job in gridItem.jobsCompute"
+                             ng-click="showJob(job._id, job)">
+                            <md-button ng-if="job.status==='success'" class="job success">.
+                            </md-button>
+                            <md-button ng-if="job.status==='warning'" class="job warning">.
+                            </md-button>
+                            <md-button ng-if="job.status==='error'" class="job error">.
+                            </md-button>
                         </div>
                     </div>
                 </div>
