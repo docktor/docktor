@@ -248,8 +248,9 @@ GroupSchema.statics.getJobs = function () {
         {
             '$group': {
                 _id: {
+                    'groupId': '$_id',
                     'groupTitle': '$title',
-                    'serviceTitle': '$containers.title',
+                    'serviceId': '$containers.serviceId',
                     'name': '$containers.name',
                     'hostname': '$containers.hostname'
                 },
@@ -338,7 +339,21 @@ GroupSchema.statics.insertJob = function (groupId, containerId, job) {
             if (err) console.log('Erreur while updating container : ' + err);
         }
     );
+};
 
+GroupSchema.statics.listSimplified = function () {
+    var _this = this;
+    return _this.aggregate(
+        [{
+            '$project': {
+                '_id': 1,
+                'title': 1,
+                'insensitive': {'$toLower': '$title'}
+            }
+        }, {
+            $sort: {'insensitive': 1}
+        }]
+    );
 };
 
 mongoose.model('Group', GroupSchema);

@@ -12,6 +12,9 @@ module.exports = function (app) {
         .get(users.requiresLogin, services.hasAdminAuthorization, services.list)
         .post(users.requiresLogin, services.hasAdminAuthorization, services.create);
 
+    app.route('/services/simplified')
+        .get(users.requiresLogin, services.hasAdminAuthorization, services.listSimplified);
+
     app.route('/services/jobs/activate/:serviceId/:jobId')
         .put(users.requiresLogin, services.hasAdminAuthorization, services.activateJob);
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jobs').controller('JobsController', ['$scope', 'Authentication', 'GroupsServices', 'Toasts', '$mdDialog',
+angular.module('jobs').controller('JobsHistoryController', ['$scope', 'Authentication', 'GroupsServices', 'Toasts', '$mdDialog',
     function ($scope, Authentication, GroupsServices, Toasts, $mdDialog) {
         $scope.authentication = Authentication;
 
@@ -19,6 +19,6 @@ angular.module('jobs').controller('JobsController', ['$scope', 'Authentication',
                 templateUrl: 'modules/jobs/views/job.dialog.template.html',
                 locals: {currentJob: job, info: info}
             });
-        }
+        };
     }
 ]);

@@ -16,6 +16,9 @@ angular.module('services').factory('Services', ['$resource',
 angular.module('services').factory('ServicesServices', ['$http',
     function ($http) {
         return {
+            getListSimplified: function () {
+                return $http.get('/services/simplified');
+            },
             getUrlsAndCommands: function (serviceId, groupId) {
                 return $http.get('/services/urlsandcommands/' + serviceId + '/' + groupId);
             },

@@ -171,6 +171,18 @@ exports.listGroups = function (req, res) {
     });
 };
 
+exports.listSimplified = function (req, res) {
+    Group.listSimplified().exec(function (err, groups) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(groups);
+        }
+    });
+};
+
 /**
  * Group middleware
  */

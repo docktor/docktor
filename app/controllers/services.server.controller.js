@@ -93,7 +93,19 @@ exports.delete = function (req, res) {
  * List of Services
  */
 exports.list = function (req, res) {
-    Service.find().sort('-created').populate('user', 'displayName').exec(function (err, services) {
+    Service.find({}).sort('-created').populate('user', 'displayName').exec(function (err, services) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.jsonp(services);
+        }
+    });
+};
+
+exports.listSimplified = function (req, res) {
+    Service.listSimplified().exec(function (err, services) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

@@ -256,4 +256,19 @@ ServiceSchema.statics.getAllJobs = function () {
     ]);
 };
 
+ServiceSchema.statics.listSimplified = function () {
+    var _this = this;
+    return _this.aggregate(
+        [{
+            '$project': {
+                '_id': 1,
+                'title': 1,
+                'insensitive': {'$toLower': '$title'}
+            }
+        }, {
+            $sort: {'insensitive': 1}
+        }]
+    );
+};
+
 mongoose.model('Service', ServiceSchema);

@@ -3,11 +3,14 @@
 // Setting up route
 angular.module('jobs').config(['$stateProvider',
     function ($stateProvider) {
-        // Jobs state routing
         $stateProvider.
-            state('listJobs', {
-                url: '/admin/jobs',
-                templateUrl: 'modules/jobs/views/list-jobs.client.view.html'
+            state('listJobsHistory', {
+                url: '/admin/jobs/history',
+                templateUrl: 'modules/jobs/views/list-jobs-history.client.view.html'
+            }).
+            state('listJobsOverview', {
+                url: '/admin/jobs/overview',
+                templateUrl: 'modules/jobs/views/list-jobs-overview.client.view.html'
             });
     }
 ]);
