@@ -20,7 +20,7 @@ module.exports.scheduleJob = function (job) {
 module.exports.defineJob = function (jobName) {
     console.log('Scheduler defineJob ' + jobName);
 
-    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+    var mongoose = require('mongoose'), Group = mongoose.model('Group'), Daemon = mongoose.model('Daemon');
 
     agenda.define(jobName, function (jobSchedule) {
         console.log('CALL JOB ' + jobName);
@@ -32,44 +32,55 @@ module.exports.defineJob = function (jobName) {
                 if (!containerFound) {
                     console.log('Failed to load container ' + containerId);
                 } else {
-                    var daemonDocker = group.daemon.getDaemonDocker();
-                    var dockerContainer = daemonDocker.getContainer(containerFound.containerId);
 
-                    dockerContainer.inspect(function (err, info) {
-                        console.log(containerFound);
-                        console.log('ERR');
-                        console.log(err);
-                        console.log('INFO');
-                        console.log(info);
-                        console.log('STATE');
-                        console.log(info.State);
-                        if (err || (info.State && (info.State.Running === false || info.State.Paused === true))) {
-                            var job = {
-                                'jobId': jobSchedule.attrs.data.jobId,
-                                'name': jobSchedule.attrs.data.name,
-                                'description': 'Check container status',
-                                'result': err,
-                                'status': 'warning',
-                                'lastExecution': Date.now
-                            };
-                            if (err) {
-                                job.result = err;
-                            } else if (info.State) {
-                                job.result = 'Container state Running:' + info.State.Running + ' Paused:' + info.State.Paused;
-                            } else {
-                                job.result = 'Result Unknown';
-                            }
-
-                            Group.insertJob(group._id, containerFound._id, job);
-                        } else {
-                            if (jobSchedule.attrs.data.type === 'url') {
-                                agenda.jobCheckUrl(jobSchedule, group, containerFound);
-                            } else {
-                                agenda.jobDockerExec(jobSchedule, group, containerFound, dockerContainer);
-                            }
+                    Daemon.findById(containerFound.daemonId).exec(function (err, daemon) {
+                        if (err) {
+                            console.log('ERR');
+                            containerFound(err);
                         }
-                    });
+                        if (!daemon) {
+                            console.log('Failed to load daemon');
+                        }
+                        containerFound.daemon = daemon;
+                        var daemonDocker = daemon.getDaemonDocker();
 
+                        var dockerContainer = daemonDocker.getContainer(containerFound.containerId);
+
+                        dockerContainer.inspect(function (err, info) {
+                            console.log(containerFound);
+                            console.log('ERR');
+                            console.log(err);
+                            console.log('INFO');
+                            console.log(info);
+                            console.log('STATE');
+                            console.log(info.State);
+                            if (err || (info.State && (info.State.Running === false || info.State.Paused === true))) {
+                                var job = {
+                                    'jobId': jobSchedule.attrs.data.jobId,
+                                    'name': jobSchedule.attrs.data.name,
+                                    'description': 'Check container status',
+                                    'result': err,
+                                    'status': 'warning',
+                                    'lastExecution': Date.now
+                                };
+                                if (err) {
+                                    job.result = err;
+                                } else if (info.State) {
+                                    job.result = 'Container state Running:' + info.State.Running + ' Paused:' + info.State.Paused;
+                                } else {
+                                    job.result = 'Result Unknown';
+                                }
+
+                                Group.insertJob(group._id, containerFound._id, job);
+                            } else {
+                                if (jobSchedule.attrs.data.type === 'url') {
+                                    agenda.jobCheckUrl(jobSchedule, group, containerFound);
+                                } else {
+                                    agenda.jobDockerExec(jobSchedule, group, containerFound, dockerContainer);
+                                }
+                            }
+                        });
+                    });
                 }
             });
         });
@@ -103,7 +114,7 @@ module.exports.defineAll = function () {
 
 module.exports.jobCheckUrl = function (jobSchedule, group, container) {
     var mongoose = require('mongoose'), Group = mongoose.model('Group');
-    var url = agenda.computeUrl(jobSchedule.attrs.data.value, group, container);
+    var url = agenda.computeUrl(jobSchedule.attrs.data.value, container);
     request(url, function (err, resp) {
         var job = {
             'jobId': jobSchedule.attrs.data.jobId,
@@ -127,7 +138,7 @@ module.exports.jobCheckUrl = function (jobSchedule, group, container) {
     });
 };
 
-module.exports.computeUrl = function (jobValue, group, container) {
+module.exports.computeUrl = function (jobValue, container) {
     if (jobValue.substr(0, 1) === ':') {
         var urlWithoutPort = '';
         var portInContainer = jobValue.substr(1, jobValue.length);
@@ -141,10 +152,10 @@ module.exports.computeUrl = function (jobValue, group, container) {
         var portExternal = '';
         if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
-        if (!group.daemon) {
+        if (!container.daemon) {
             return jobValue + ' no daemon found';
         } else {
-            return 'http://' + group.daemon.host + portExternal + urlWithoutPort;
+            return 'http://' + container.daemon.host + portExternal + urlWithoutPort;
         }
     }
     return jobValue;
