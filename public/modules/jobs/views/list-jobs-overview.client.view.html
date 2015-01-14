@@ -10,7 +10,9 @@
         </div>
     </div>
 
-    <table class="table">
+    <md-button class="md-accent" href="#!/admin/jobs/history">View all history</md-button>
+
+    <table style="width:100%; overflow-x: scroll; width: auto;">
         <thead>
         <tr>
             <th>Groups</th>
@@ -23,21 +25,19 @@
 
         <tr ng-repeat="group in groups">
             <td>{{group.title}}</td>
-            <td ng-repeat="service in services" layout="row">
-                <div ng-repeat="job in overview[group._id].services[service._id].jobs" layout="row" class="job"
-                     ng-click="showInfo(group._id, job)">
+            <td ng-repeat="service in services">
+                <span ng-repeat="job in overview[group._id].services[service._id].jobs"
+                     ng-click="showInfo(job._id, job)">
                     <md-button ng-if="job.status==='success'" class="job success">.
                     </md-button>
                     <md-button ng-if="job.status==='error'" class="job error">.
                     </md-button>
-                </div>
+                </span>
+
             </td>
         </tr>
         </tbody>
     </table>
-
-    <md-button class="md-accent" href="#!/admin/jobs/history">View all history</md-button>
-
     <md-toolbar class="md-accent" layout-align="center center" data-ng-if="jobs.$resolved && !jobs.length">
         No jobs yet
     </md-toolbar>

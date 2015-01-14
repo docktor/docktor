@@ -35,11 +35,15 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
 
                         angular.forEach($scope.jobs, function (groupsJobs, keyJob) {
                             angular.forEach(groupsJobs.jobs, function (job, keyJob) {
-                                $scope.overview[groupsJobs._id.groupId].services[groupsJobs._id.serviceId].jobs[job.jobId] = {
-                                    'status': job.status,
-                                    'name': job.name,
-                                    'lastExecution' : job.lastExecution
-                                };
+                                // use if ! to keep the newest jobId
+                                if (!$scope.overview[groupsJobs._id.groupId].services[groupsJobs._id.serviceId].jobs[job.jobId]) {
+                                    $scope.overview[groupsJobs._id.groupId].services[groupsJobs._id.serviceId].jobs[job.jobId] = {
+                                        '_id': groupsJobs._id,
+                                        'status': job.status,
+                                        'name': job.name,
+                                        'lastExecution': job.lastExecution
+                                    };
+                                }
                             });
                         });
                     }).error(function (err, status, headers, config) {
