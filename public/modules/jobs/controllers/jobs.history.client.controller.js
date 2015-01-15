@@ -20,5 +20,13 @@ angular.module('jobs').controller('JobsHistoryController', ['$scope', 'Authentic
                 locals: {currentJob: job, info: info}
             });
         };
+
+        $scope.getDisplay = function(lastExecution) {
+            if (moment().diff(moment(lastExecution), 'minutes') > 60) {
+                return '!';
+            } else {
+                return '.';
+            }
+        }
     }
 ]);

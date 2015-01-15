@@ -4,10 +4,11 @@
         <h2 flex>Admin / Jobs / Overview</h2>
 
         <div flex layout="row" layout-align="end center">
-            <div>Legend :</div>
+            <div>Legend : </div>
             <div class="job legend success">Success</div>
             <div class="job legend warning">Service Down</div>
             <div class="job legend error">Error</div>
+            <div class="job " style="width:120px"><b>!</b> <small>Older than 60 mins</small></div>
         </div>
     </div>
 
@@ -32,11 +33,14 @@
             <td ng-repeat="service in services">
                 <div ng-repeat="container in overview[group._id].services[service._id].containers">
                 <span ng-repeat="job in container.jobs" ng-click="showInfo(job._id, job)">
-                    <md-button ng-if="job.status==='success'" class="job success">.
+                    <md-button ng-if="job.status==='success'" class="job success">
+                        {{getDisplay(job.lastExecution)}}
                     </md-button>
-                    <md-button ng-if="job.status==='warning'" class="job warning">.
+                    <md-button ng-if="job.status==='warning'" class="job warning">
+                        {{getDisplay(job.lastExecution)}}
                     </md-button>
-                    <md-button ng-if="job.status==='error'" class="job error">.
+                    <md-button ng-if="job.status==='error'" class="job error">
+                        {{getDisplay(job.lastExecution)}}
                     </md-button>
                 </span>
                 </div>

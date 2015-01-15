@@ -8,17 +8,18 @@
             <div class="job legend success">Success</div>
             <div class="job legend warning">Service Down</div>
             <div class="job legend error">Error</div>
+            <div class="job " style="width:120px"><b>!</b> <small>Older than 60 mins</small></div>
         </div>
     </div>
 
     <div ng-repeat="group in groups" layout="row">
         <div flex>{{group._id.groupTitle}} {{group._id.name}}</div>
         <div ng-repeat="job in group.jobs" layout="row" class="job" ng-click="showInfo(group._id, job)">
-            <md-button ng-if="job.status==='success'" class="job success">.
+            <md-button ng-if="job.status==='success'" class="job success">{{getDisplay(job.lastExecution)}}
             </md-button>
-            <md-button ng-if="job.status==='warning'" class="job warning">.
+            <md-button ng-if="job.status==='warning'" class="job warning">{{getDisplay(job.lastExecution)}}
             </md-button>
-            <md-button ng-if="job.status==='error'" class="job error">.
+            <md-button ng-if="job.status==='error'" class="job error">{{getDisplay(job.lastExecution)}}
             </md-button>
         </div>
     </div>

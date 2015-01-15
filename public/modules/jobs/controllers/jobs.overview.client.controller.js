@@ -41,8 +41,9 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                                         'status': job.status,
                                         'name': job.name,
                                         'description': job.description,
-                                        'result' : job.result,
-                                        'lastExecution': job.lastExecution
+                                        'result': job.result,
+                                        'lastExecution': job.lastExecution,
+                                        'lastExecutionInMinutes': moment().diff(moment(job.lastExecution), 'minutes')
                                     };
                                 }
                             });
@@ -73,5 +74,13 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                 locals: {currentJob: job, info: info}
             });
         };
+
+        $scope.getDisplay = function(lastExecution) {
+            if (moment().diff(moment(lastExecution), 'minutes') > 60) {
+                return '!';
+            } else {
+                return '.';
+            }
+        }
     }
 ]);
