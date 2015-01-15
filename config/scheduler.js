@@ -241,6 +241,7 @@ module.exports.activateJob = function (job, serviceId, cbSuccess, cbError) {
             } else {
                 console.log('no deployed container, no schedule');
             }
+            cbSuccess();
         }
     });
 };
