@@ -175,7 +175,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                         'description': job.description,
                         'result' : job.result,
                         'lastExecution': job.lastExecution
-                    }
+                    };
                 }
             });
 

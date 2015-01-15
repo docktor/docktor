@@ -5,10 +5,12 @@ var config = require('./config'),
     request = require('request'),
     _ = require('lodash');
 
+var collectionAgenda = 'agendaJobs';
+
 var agenda = new Agenda({
     db: {
         address: config.db,
-        collection: 'agendaJobs'
+        collection: collectionAgenda
     }
 });
 module.exports = agenda;
@@ -18,8 +20,6 @@ module.exports.scheduleJob = function (job) {
 };
 
 module.exports.defineJob = function (jobName) {
-    console.log('Scheduler defineJob ' + jobName);
-
     var mongoose = require('mongoose'), Group = mongoose.model('Group'), Daemon = mongoose.model('Daemon');
 
     agenda.define(jobName, function (jobSchedule) {
@@ -208,5 +208,96 @@ module.exports.jobDockerExec = function (jobSchedule, group, container, dockerCo
             });
         });
     });
+
+};
+
+module.exports.activateJob = function (job, serviceId, cbSuccess, cbError) {
+    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+
+    Group.getContainersOfOneService(serviceId.toString()).exec(function (err, data) {
+        if (err) {
+            cbError(err);
+        } else {
+            var dataJob = {};
+            if (data && data[0] && data[0].containers.length > 0) {
+                dataJob.type = job.type;
+                dataJob.value = job.value;
+                dataJob.jobId = job._id;
+                dataJob.name = job.name;
+                dataJob.containers = [];
+                dataJob.interval = job.interval;
+                dataJob.serviceId = serviceId.toString();
+                data[0].containers.forEach(function (container) {
+                    dataJob.containers.push({
+                        'groupId': container.groupId,
+                        'containerId': container.id
+                    });
+                });
+            }
+
+            if (!_.isEmpty(dataJob)) {
+                agenda.defineJob(job._id);
+                agenda.scheduleJob(dataJob);
+            } else {
+                console.log('no deployed container, no schedule');
+            }
+        }
+    });
+};
+
+module.exports.desactivateJob = function (jobId, cb) {
+    agenda.cancel({name: jobId}, function (err, numRemoved) {
+        if (err) console.log(err);
+        if (cb) cb(numRemoved);
+    });
+};
+
+/**
+ * Desactivate then activate all jobs attached to a service
+ * @param serviceId
+ */
+module.exports.reactivateJobsOnService = function (serviceId) {
+    var mongoose = require('mongoose'), Group = mongoose.model('Group');
+
+    var requestJobs = function (err, collection) {
+        collection.find({'data.serviceId': serviceId}).toArray(function (err, jobs) {
+
+            if (err) {
+                console.log('ERR reactivateJobsOnService');
+                console.log(err);
+            }
+
+            _.forEach(jobs, function (job) {
+                agenda.desactivateJob(job.data.jobId);
+
+                // activate job
+                Group.getContainersOfOneService(serviceId.toString()).exec(function (err, data) {
+                    if (err) {
+                        console.log('ERR');
+                        console.log(err);
+                    } else {
+                        var dataJob = job.data;
+                        dataJob.containers = [];
+                        if (data && data[0] && data[0].containers.length > 0) {
+                            data[0].containers.forEach(function (container) {
+                                dataJob.containers.push({
+                                    'groupId': container.groupId,
+                                    'containerId': container.id
+                                });
+                            });
+                        }
+
+                        if (!_.isEmpty(dataJob)) {
+                            agenda.defineJob(dataJob.jobId);
+                            agenda.scheduleJob(dataJob);
+                        } else {
+                            console.log('no deployed container, no schedule');
+                        }
+                    }
+                });
+            });
+        });
+    };
+    mongoose.connection.db.collection(collectionAgenda, requestJobs);
 
 };

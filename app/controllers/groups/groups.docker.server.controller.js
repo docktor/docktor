@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Group = mongoose.model('Group'),
     Daemon = mongoose.model('Daemon'),
     Service = mongoose.model('Service'),
+    scheduler = require('../../../config/scheduler'),
     _ = require('lodash');
 
 
@@ -63,6 +64,7 @@ exports.createContainer = function (req, res) {
                             message: errorHandler.getErrorMessage(err)
                         });
                     } else {
+                        scheduler.reactivateJobsOnService(container.serviceId);
                         res.jsonp(containerCreated);
                     }
                 });
@@ -189,6 +191,7 @@ exports.removeContainerFromGroup = function (req, res) {
                             message: errorHandler.getErrorMessage(err)
                         });
                     } else {
+                        scheduler.reactivateJobsOnService(container.serviceId);
                         res.jsonp(container._id + ' removed from ' + group._id);
                     }
                 });
@@ -212,6 +215,7 @@ exports.removeContainer = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+            scheduler.reactivateJobsOnService(container.serviceId);
             Group.resetContainerId(group._id, container._id);
             res.jsonp(containerRemoved);
         }

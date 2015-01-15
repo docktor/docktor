@@ -121,51 +121,19 @@ exports.getUrlsAndCommands = function (req, res) {
 };
 
 exports.activateJob = function (req, res) {
-    var service = req.service;
-    var job = req.body.job;
-
-    Group.getContainersOfOneService(service._id.toString()).exec(function (err, data) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            var dataJob = {};
-            if (data && data[0] && data[0].containers.length > 0) {
-                dataJob.type = job.type;
-                dataJob.value = job.value;
-                dataJob.jobId = job._id;
-                dataJob.name = job.name;
-                dataJob.containers = [];
-                dataJob.interval = job.interval;
-                data[0].containers.forEach(function (container) {
-                    dataJob.containers.push({
-                        'groupId': container.groupId,
-                        'containerId': container.id
-                    });
-                });
-            }
-
-            if (!_.isEmpty(dataJob)) {
-                scheduler.defineJob(job._id);
-                scheduler.scheduleJob(dataJob);
-            } else {
-                console.log('no deployed container, no schedule');
-            }
-        }
+    scheduler.activateJob(req.body.job, req.service._id, function () {
+        res.jsonp({msg: 'End Activate job'});
+    }, function (err) {
+        return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+        });
     });
-
-    res.jsonp({msg: 'End Activate job'});
 };
 
 exports.desactivateJob = function (req, res) {
-    var jobId = req.params.jobId;
-
-    scheduler.cancel({name: jobId}, function (err, numRemoved) {
-        if (err) console.log(err);
+    scheduler.desactivateJob(req.params.jobId, function (numRemoved) {
+        res.jsonp({msg: 'End Desactivate job (' + numRemoved + ' removed)'});
     });
-
-    res.jsonp({msg: 'End Desactivate job ' + jobId});
 };
 
 /**
