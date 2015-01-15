@@ -625,5 +625,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 locals: {currentJob: job, info: info}
             });
         };
+
+        $scope.getDisplayJob = function(lastExecution) {
+            if (moment().diff(moment(lastExecution), 'minutes') > 60) {
+                return '!';
+            } else {
+                return '.';
+            }
+        }
     }
 ]);

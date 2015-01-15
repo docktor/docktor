@@ -68,11 +68,14 @@
                     </div>
                     <div layout="row">
                         <div ng-repeat="job in container.jobsCompute" ng-click="showJob(job._id, job)">
-                            <md-button ng-if="job.status==='success'" class="job success">.
+                            <md-button ng-if="job.status==='success'" class="job success">
+                                {{getDisplayJob(job.lastExecution)}}
                             </md-button>
-                            <md-button ng-if="job.status==='warning'" class="job warning">.
+                            <md-button ng-if="job.status==='warning'" class="job warning">
+                                {{getDisplayJob(job.lastExecution)}}
                             </md-button>
-                            <md-button ng-if="job.status==='error'" class="job error">.
+                            <md-button ng-if="job.status==='error'" class="job error">
+                                {{getDisplayJob(job.lastExecution)}}
                             </md-button>
                         </div>
                     </div>
