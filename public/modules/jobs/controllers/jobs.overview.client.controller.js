@@ -44,8 +44,7 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                                         'name': job.name,
                                         'description': job.description,
                                         'result': job.result,
-                                        'lastExecution': job.lastExecution,
-                                        'lastExecutionInMinutes': moment().diff(moment(job.lastExecution), 'minutes')
+                                        'lastExecution': job.lastExecution
                                     };
                                 }
                             });
