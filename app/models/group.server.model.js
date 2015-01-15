@@ -255,7 +255,7 @@ GroupSchema.statics.getJobs = function () {
                     'name': '$containers.name',
                     'hostname': '$containers.hostname'
                 },
-                'jobs': {$addToSet: '$containers.jobs'}
+                'jobs': {$push: '$containers.jobs'}
             }
         }
     ]);
