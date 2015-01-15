@@ -33,7 +33,9 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
                         angular.forEach($scope.jobs, function (groupJobs, keyJob) {
                             $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId] = {};
                             $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs = {};
-                            angular.forEach(groupJobs.jobs, function (job, keyJob) {
+                            // reverse to keep last execution
+                            var jobs = _(groupJobs.jobs).reverse();
+                            angular.forEach(jobs, function (job, keyJob) {
                                 // use if ! to keep the newest jobId
                                 if (!$scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs[job.jobId]) {
                                     $scope.overview[groupJobs._id.groupId].services[groupJobs._id.serviceId].containers[groupJobs._id.containerId].jobs[job.jobId] = {
