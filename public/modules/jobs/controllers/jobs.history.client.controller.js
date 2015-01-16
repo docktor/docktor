@@ -21,7 +21,7 @@ angular.module('jobs').controller('JobsHistoryController', ['$scope', 'Authentic
             });
         };
 
-        $scope.getDisplay = function(lastExecution) {
+        $scope.getDisplay = function (lastExecution) {
             if (moment().diff(moment(lastExecution), 'minutes') > 60) {
                 return '!';
             } else {

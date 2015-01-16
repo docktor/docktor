@@ -76,7 +76,7 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
             });
         };
 
-        $scope.getDisplay = function(lastExecution) {
+        $scope.getDisplay = function (lastExecution) {
             if (moment().diff(moment(lastExecution), 'minutes') > 60) {
                 return '!';
             } else {
