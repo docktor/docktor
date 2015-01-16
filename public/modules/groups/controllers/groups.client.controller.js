@@ -155,7 +155,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.prepareJobs = function(container) {
+        $scope.prepareJobs = function (container) {
             // reverse to keep last execution
             var jobs = _(container.jobs).reverse();
             angular.forEach(jobs, function (job, key) {
@@ -163,17 +163,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 if (!jobs[job.jobId]) {
                     jobs[job.jobId] = {
                         '_id': {
-                            'containerId' : container._id,
-                            'groupId' : $scope.group._id,
-                            'groupTitle' : $scope.group.title,
-                            'hostname' : container.hostname,
-                            'name' : container.name,
-                            'serviceId' : container.serviceId
+                            'containerId': container._id,
+                            'groupId': $scope.group._id,
+                            'groupTitle': $scope.group.title,
+                            'hostname': container.hostname,
+                            'name': container.name,
+                            'serviceId': container.serviceId
                         },
                         'status': job.status,
                         'name': job.name,
                         'description': job.description,
-                        'result' : job.result,
+                        'result': job.result,
                         'lastExecution': job.lastExecution
                     };
                 }
@@ -618,7 +618,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.contactToRemove = null;
         };
 
-        $scope.showJob  = function (info, job) {
+        $scope.showJob = function (info, job) {
             $mdDialog.show({
                 controller: 'JobDialogController',
                 templateUrl: 'modules/jobs/views/job.dialog.template.html',
@@ -626,7 +626,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.getDisplayJob = function(lastExecution) {
+        $scope.getDisplayJob = function (lastExecution) {
             if (moment().diff(moment(lastExecution), 'minutes') > 60) {
                 return '!';
             } else {

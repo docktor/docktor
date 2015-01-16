@@ -898,13 +898,13 @@ md-tabs-ink-bar {
     width: 15px;
 }
 
-.job.legend{
+.job.legend {
     width: 100px;
-    text-align:center;
+    text-align: center;
 }
 
 .job.error {
-    background-color: rgb(244,67,54);
+    background-color: rgb(244, 67, 54);
 }
 
 .job.warning {
@@ -912,5 +912,5 @@ md-tabs-ink-bar {
 }
 
 .job.success {
-    background-color: rgb(76,175,80);
+    background-color: rgb(76, 175, 80);
 }
