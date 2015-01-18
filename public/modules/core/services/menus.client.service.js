@@ -40,8 +40,6 @@ angular.module('core').service('Menus', ['Authentication',
             } else {
                 throw new Error('MenuId was not provided');
             }
-
-            return false;
         };
 
         // Get the menu object by menu id
@@ -128,14 +126,17 @@ angular.module('core').service('Menus', ['Authentication',
             return this.menus[menuId];
         };
 
+        /**
+         * Refresh favorites (groups) on menu, order by title.
+         */
         this.refreshFavorites = function () {
             var menuId = 'topbar';
+            var _this = this;
             this.validateMenuExistance(menuId);
             this.removeAllFavorites(menuId);
-            for (var groupIndex in Authentication.user.favorites) {
-                var group = Authentication.user.favorites[groupIndex];
-                this.addSubMenuItem(menuId, 'groups', group.title, 'groups/' + group._id);
-            }
+            _.sortBy(Authentication.user.favorites, 'title').forEach(function (group) {
+                _this.addSubMenuItem(menuId, 'groups', group.title, 'groups/' + group._id);
+            });
             return this.menus[menuId];
         };
 
