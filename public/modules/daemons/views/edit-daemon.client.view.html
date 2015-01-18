@@ -91,9 +91,9 @@
             </div>
         </div>
         <div class="row">
-            <md-input-container>
+            <md-input-container class="long">
                 <label>Default data volume</label>
-                <input class="long" label="Default data volume" ng-model="daemon.volume" type="text">
+                <input label="Default data volume" ng-model="daemon.volume" type="text">
             </md-input-container>
 
             <div>
@@ -101,17 +101,17 @@
             </div>
         </div>
         <div class="row">
-            <md-input-container>
+            <md-input-container class="long">
                 <label> URL cAdvisor Api</label>
-                <input class="long" ng-model="daemon.cadvisorApi" type="text">
+                <input ng-model="daemon.cadvisorApi" type="text">
             </md-input-container>
 
             <div>http://host:port/api/v1.0</div>
         </div>
         <div class="row">
-            <md-input-container>
+            <md-input-container class="long">
                 <label> Description</label>
-                <input class="long" ng-model="daemon.description" type="text">
+                <input ng-model="daemon.description" type="text">
             </md-input-container>
         </div>
     </form>

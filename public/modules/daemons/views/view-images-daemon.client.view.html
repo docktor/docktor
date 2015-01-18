@@ -23,9 +23,9 @@
            tooltip-popup-delay='750'> </i> Pull an image
     </md-button>
 
-    <md-input-container>
+    <md-input-container class="long">
         <label>image:version</label>
-        <input ng-show="pullImage.askToPull" class="long" ng-model="pullImage.name" type="text">
+        <input ng-show="pullImage.askToPull" ng-model="pullImage.name" type="text">
     </md-input-container>
 
     <md-button ng-click="pullImage.askToPull=false" ng-show="pullImage.askToPull" class="md-raised md-warn"
