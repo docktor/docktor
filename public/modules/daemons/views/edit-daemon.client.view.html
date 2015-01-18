@@ -10,14 +10,17 @@
     <form name="daemonForm" novalidate>
 
         <div class="row">
-            <md-input-container>
+            <md-input-container class="long long">
                 <label>Name</label>
-                <input ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true">
-            </md-input-container>
+                <input name="name" ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true"
+                       md-maxlength="200">
 
-            <div ng-show="daemonForm.name.$invalid" class="md-warn">
-                The title have to match this pattern : [a-zA-Z0-9_]{1,200}
-            </div>
+                <div ng-messages="daemonForm.name.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="md-maxlength">Max length of title : 200</div>
+                    <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                </div>
+            </md-input-container>
         </div>
 
         <div class="row">
@@ -42,19 +45,33 @@
             <div>
                 <md-input-container>
                     <label>IP or Hostname</label>
-                    <input ng-model="daemon.host" type="text" required="true">
+                    <input name="host" ng-model="daemon.host" type="text" required="true">
+
+                    <div ng-messages="daemonForm.host.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
                 </md-input-container>
             </div>
             <div>
                 <md-input-container>
                     <label>Port</label>
-                    <input ng-model="daemon.port" type="number" required="true">
+                    <input name="port" ng-model="daemon.port" type="number" required="true">
+
+                    <div ng-messages="daemonForm.port.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="number">Number is invalid.</div>
+                    </div>
                 </md-input-container>
             </div>
             <div>
                 <md-input-container>
                     <label>Timeout in ms</label>
-                    <input ng-model="daemon.timedout" type="number" required="true">
+                    <input name="timedout" ng-model="daemon.timedout" type="number" required="true">
+
+                    <div ng-messages="daemonForm.timedout.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="number">Number is invalid.</div>
+                    </div>
                 </md-input-container>
             </div>
         </div>
@@ -191,7 +208,11 @@
         <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off" layout="row">
             <md-input-container>
                 <label>Internal Port</label>
-                <input ng-model="port.internal" type="number" ng-required="true">
+                <input name="port" ng-model="port.internal" type="number" ng-required="true">
+                <div ng-messages="portForm.port.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="number">Number is invalid.</div>
+                </div>
             </md-input-container>
 
             <md-radio-group ng-model="port.protocol" ng-required="true">
@@ -332,7 +353,7 @@
     </md-subheader>
     <br>
 
-    <div class="row">
+    <div class="row" ng-show="daemon._id">
         <md-button class="md-raised md-warn" ng-click="askDeleteDaemon=true" ng-hide="askDeleteDaemon">
             <i class="fa fa-trash-o" tooltip="Delete Daemon"
                tooltip-popup-delay='750'> </i> Delete Deamon

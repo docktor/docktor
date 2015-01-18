@@ -15,19 +15,16 @@
     <div class="row">
         <form name="groupForm" data-ng-submit="submitForm()" novalidate>
             <div class="row">
-                <md-input-container>
+                <md-input-container class="long long">
                     <label>Title</label>
-                    <input id="title" ng-model="group.title" type="text" ng-pattern="patternTitle" ng-required="true">
+                    <input name="title" ng-model="group.title" type="text" ng-pattern="patternTitle" ng-required="true"
+                           md-maxlength="200">
+
+                    <div ng-messages="groupForm.title.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                    </div>
                 </md-input-container>
-
-                <div>
-                    Title have to match this pattern : [a-zA-Z0-9_]{1,200}
-                    <p ng-show="groupForm.title.$error.required" class="md-warn">Title is required</p>
-
-                    <p ng-show="groupForm.title.$invalid" class="md-warn">
-                        The name have to match this pattern : [a-zA-Z0-9_]{1,200}
-                    </p>
-                </div>
             </div>
             <div class="row">
                 <div flex="10">Daemon</div>
@@ -40,17 +37,27 @@
             <div class="row" ng-show="group.selectDaemon">
                 <md-input-container>
                     <label>Port Min Range</label>
-                    <input id="portminrange" ng-model="group.portminrange" type="number">
+                    <input name="portminrange" ng-model="group.portminrange" type="number">
+
+                    <div ng-messages="groupForm.portminrange.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="number">Number is invalid.</div>
+                    </div>
                 </md-input-container>
 
                 <md-input-container>
                     <label>Port Max Range</label>
-                    <input id="portmaxrange" ng-model="group.portmaxrange" type="number">
+                    <input name="portmaxrange" ng-model="group.portmaxrange" type="number">
+
+                    <div ng-messages="groupForm.portmaxrange.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="number">Number is invalid.</div>
+                    </div>
                 </md-input-container>
                 <div ng-show="freePortRange">
                     <label class="control-label">Ports already used :</label>
                     <span ng-show="freePortRange.length === 0">None</span>
-                    <li ng-repeat="port in freePortRange">
+                    <li ng-repeat="port in freePortRange track by $index">
                         {{port}}
                     </li>
                 </div>
@@ -67,64 +74,65 @@
     <div class="row" ng-show="group.selectDaemon">
         <h4>Filesystems</h4>
 
-        <md-button class="md-raised" ng-hide="displayFormFilesystem"
+        <md-button aria-label="Add a filesystem to monitor" class="md-raised" ng-hide="displayFormFilesystem"
                    ng-click="displayFormFilesystem=!displayFormFilesystem">
             <i class="fa fa-plus-square"></i>
         </md-button>
 
         <div class="controls">
-            See
-            <md-button class="md-accent" ng-show="group.selectDaemon.cadvisorApi"
-                       href="{{group.selectDaemon.cadvisorUrl}}">
-                cAdvisor of daemon {{group.selectDaemon.name}}
-            </md-button>
+            <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on
+                Docktor.</p>
 
-            <md-subheader ng-hide="group.selectDaemon.cadvisorApi" class="md-warn">
-                Daemon {{group.selectDaemon.name}} has no cAdvisor URL.
-            </md-subheader>
-            <md-button ng-hide="group.selectDaemon.cadvisorApi" class="md-raised md-accent"
-                       href="#!/admin/daemons/edit/{{group.selectDaemon._id}}">
-                Check Daemon {{group.selectDaemon.name}} configuration - deploy cAdvisor on it.
-            </md-button>
+            <ul data-ng-repeat="filesystem in group.filesystems">
+                <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
+                    <small><i>{{filesystem.description}}</i></small>
+                    <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
+                        <i class="fa fa-trash-o" tooltip="Delete Filesystem"
+                           tooltip-popup-delay='750'></i>
+                    </a>
+                    <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
+                               class="md-raised md-accent md-hue-1">
+                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    </md-button>
+                    <md-button data-ng-click="removeFilesystem(filesystem);"
+                               ng-show="askDeleteFilesystem"
+                               class="md-raised md-warn">
+                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    </md-button>
+                </li>
+            </ul>
 
-            <div ng-show="group.selectDaemon.cadvisorApi">
-                <ul data-ng-repeat="filesystem in group.filesystems">
-                    <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
-                        <small><i>{{filesystem.description}}</i></small>
-                        <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
-                            <i class="fa fa-trash-o" tooltip="Delete Filesystem"
-                               tooltip-popup-delay='750'></i>
-                        </a>
-                        <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                                   class="md-raised md-accent md-hue-1">
-                            No, I don't want to delete this. <i class="fa fa-reply"></i>
-                        </md-button>
-                        <md-button data-ng-click="removeFilesystem(filesystem);"
-                                   ng-show="askDeleteFilesystem"
-                                   class="md-raised md-warn">
-                            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                        </md-button>
-                    </li>
-                </ul>
+            <form aria-label="Form Filesystem" ng-show="displayFormFilesystem" name="filesystemForm"
+                  id="filesystemForm" novalidate
+                  autocomplete="off">
 
-                <form ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate
-                      autocomplete="off">
-
-                    <div class="row">
-                        <div flex="10">Daemon</div>
-                        <div flex>
-                            <select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()"
-                                    ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
-                            </select>
-                        </div>
+                <div class="row">
+                    <div flex="10">Daemon</div>
+                    <div flex>
+                        <select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()"
+                                ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
+                        </select>
                     </div>
+                </div>
 
-                    <div class="row" ng-show="filesystem.selectDaemon.statsCompute">
+                <div ng-show="filesystem.pleaseWait">
+                    <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                    </md-progress-circular>
+                    Please Wait... Checking in progress...
+                </div>
+
+                <div ng-hide="filesystem.pleaseWait">
+                    <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem > 0">
                         <div flex="10">FileSystem</div>
-                        <select ng-model="filesystem.currentFs" theme="bootstrap" style="min-width: 300px;"
-                                ng-change="changeFilesystem()"
+                        <select ng-model="filesystem.currentFs" style="min-width: 300px;" ng-change="changeFilesystem()"
                                 ng-options="fs.device for fs in filesystem.selectDaemon.statsCompute.filesystem">
                         </select>
+                    </div>
+
+                    <div class="row" ng-if="filesystem.selectDaemon">
+                        <div ng-if="!filesystem.selectDaemon.statsCompute.filesystem">No filesystem found on
+                            {{filesystem.selectDaemon.name}}. Please check cAdvisor on it.
+                        </div>
                     </div>
 
                     <div ng-show="filesystem.currentFs" class="row">
@@ -148,8 +156,9 @@
                                data-ng-click="addFilesystem(); displayFormFilesystem=false">
                         <i class="fa fa-plus"></i> Insert Filesystem
                     </md-button>
-                </form>
-            </div>
+
+                </div>
+            </form>
         </div>
     </div>
 
@@ -159,8 +168,8 @@
 
         <md-button class="md-raised md-primary" ng-click="submitForm()" ng-show="group.selectDaemon">
             <i class="fa fa-save"></i>
-            <span ng-hide="group._id">Create</span>
-            <span ng-show="group._id">Update</span>
+            <span ng-hide="group._id">Create Daemon</span>
+            <span ng-show="group._id">Update Daemon</span>
         </md-button>
     </div>
     <md-subheader class="row md-warn" ng-show="error">

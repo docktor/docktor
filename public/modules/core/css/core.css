@@ -869,6 +869,10 @@ md-input-container.long > input {
     width: 264px;
 }
 
+md-input-container.long.long > input {
+    width: 528px;
+}
+
 md-toast.docktor {
     max-width: 600px;
     height: auto;

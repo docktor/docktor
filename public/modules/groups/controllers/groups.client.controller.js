@@ -6,6 +6,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
         $scope.showAddRemoveContact = false;
+        $scope.freePortRange = [];
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -475,7 +476,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.changeDaemonFilesystem = function () {
             $scope.filesystem.currentFs = null;
+            $scope.filesystem.pleaseWait = true;
             Daemon.getDetails($scope.filesystem.selectDaemon, function () {
+                $scope.filesystem.pleaseWait = false;
             });
         };
 

@@ -3,27 +3,43 @@
     <h1>Edit your profile</h1>
 
     <md-content class="md-whiteframe-z1">
-        <form ng-submit="updateUserProfile(userForm.$valid)" style="padding: 20px;" autocomplete="off" layout-margin
-              layout-padding
-              layout="column" layout-align="space-around center">
+        <form name="profileForm" ng-submit="updateUserProfile(userForm.$valid)" style="padding: 20px;"
+              autocomplete="off" layout-margin layout-padding layout="column" layout-align="space-around center">
             <div class="row">
                 <md-input-container>
                     <label>First Name</label>
-                    <input ng-model="user.firstName">
+                    <input name="firstName" ng-model="user.firstName" required="true">
+
+                    <div ng-messages="profileForm.firstName.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
                 </md-input-container>
                 <md-input-container>
                     <label>Last Name</label>
-                    <input ng-model="user.lastName">
+                    <input name="lastName" ng-model="user.lastName" required="true">
+
+                    <div ng-messages="profileForm.lastName.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
                 </md-input-container>
             </div>
             <div class="row">
                 <md-input-container>
                     <label>Email</label>
-                    <input ng-model="user.email">
+                    <input name="email" type="email" ng-model="user.email" required="true">
+
+                    <div ng-messages="profileForm.email.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="email">Your email address is invalid.</div>
+                    </div>
                 </md-input-container>
                 <md-input-container>
                     <label>Username</label>
-                    <input ng-model="user.username">
+                    <input name="username" ng-model="user.username">
+
+                    <div ng-messages="profileForm.username.$error" required="true">
+                        <div ng-message="required">This is required.</div>
+                    </div>
                 </md-input-container>
             </div>
             <md-button type="submit" class="md-raised md-primary"><i class="fa fa-save"></i> Save Profile</md-button>

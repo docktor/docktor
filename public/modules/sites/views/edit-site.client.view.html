@@ -11,24 +11,40 @@
         <form name="siteForm2" data-ng-submit="submitForm()" novalidate>
             <md-input-container>
                 <label>Title</label>
-                <input ng-model="site.title" type="text" required>
+                <input name="title" ng-model="site.title" type="text" required>
+
+                <div ng-messages="siteForm2.title.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
             </md-input-container>
             <md-input-container>
                 <label>Latitude</label>
-                <input ng-model="site.latitude" type="number" required>
+                <input name="latitude" ng-model="site.latitude" type="number" required>
+
+                <div ng-messages="siteForm2.latitude.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="number">Number is invalid.</div>
+                </div>
             </md-input-container>
             <md-input-container>
                 <label>Longitude</label>
-                <input ng-model="site.longitude" type="number" required>
+                <input name="longitude" ng-model="site.longitude" type="number" required>
+
+                <div ng-messages="siteForm2.longitude.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="number">Number is invalid.</div>
+                </div>
             </md-input-container>
 
-            <md-button type="submit" class="md-raised md-primary">
-                <span ng-hide="site._id"><i class="fa fa-save"></i> Create</span>
-                <span ng-show="site._id"><i class="fa fa-save"></i> Update</span>
-            </md-button>
             <md-subheader class="row md-warn" ng-show="error">
                 <strong data-ng-bind="error"></strong>
             </md-subheader>
+
+            <md-button type="submit" class="md-raised md-primary">
+                <span ng-hide="site._id"><i class="fa fa-save"></i> Create Site</span>
+                <span ng-show="site._id"><i class="fa fa-save"></i> Update Site</span>
+            </md-button>
+
         </form>
     </div>
     <br>

@@ -116,7 +116,12 @@
             <form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
                 <md-input-container>
                     <label>Internal Port</label>
-                    <input ng-model="port.internal" type="number" ng-required="true">
+                    <input name="internal" ng-model="port.internal" type="number" ng-required="true">
+
+                    <div ng-messages="displayFormPort.internal.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="number">Number is invalid.</div>
+                    </div>
                 </md-input-container>
                 <md-radio-group ng-model="port.protocol" ng-required="true">
                     <md-radio-button value="tcp">tcp</md-radio-button>

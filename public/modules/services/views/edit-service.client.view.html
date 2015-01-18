@@ -9,22 +9,21 @@
 
     <form name="serviceForm" novalidate>
         <div class="row">
-            <md-input-container>
+            <md-input-container class="long long">
                 <label>Title</label>
-                <input id="title" ng-model="service.title" ng-pattern="patternTitle" ng-required="true" type="text">
-            </md-input-container>
-            <div>
-                The title have to match this pattern : [a-zA-Z0-9_]{1,200}
-                <p ng-show="serviceForm.title.$error.required" class="text-danger">Title is required</p>
+                <input name="title" ng-model="service.title" ng-pattern="patternTitle" ng-required="true" type="text"
+                        md-maxlength="200">
 
-                <p ng-show="serviceForm.title.$invalid" class="text-danger">
-                    The title have to match this pattern : [a-zA-Z0-9_]{1,200}
-                </p>
-            </div>
+                <div ng-messages="serviceForm.title.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="md-maxlength">Max length of title : 200</div>
+                    <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                </div>
+            </md-input-container>
 
             <div>
                 <div class="row" ng-hide="service._id">
-                    <md-button type="submit" class="md-raised md-primary">
+                    <md-button type="submit" class="md-raised md-primary" ng-click="submitForm()">
                         Create
                     </md-button>
                 </div>
@@ -48,13 +47,12 @@
             </div>
         </div>
 
-
         <md-subheader class="row md-warn" ng-show="error">
             <strong data-ng-bind="error"></strong>
         </md-subheader>
     </form>
 
-    <div>
+    <div ng-if="service._id">
         <md-tabs class="md-primary" md-selected="tabs.selectedIndex">
             <md-tab id="tabImages" aria-controls="tabImages-content">
                 Images
@@ -69,7 +67,7 @@
                 Jobs
             </md-tab>
         </md-tabs>
-        <ng-switch ng-if="service._id" on="tabs.selectedIndex">
+        <ng-switch on="tabs.selectedIndex">
             <div role="tabpanel" id="tabImages-content" aria-labelledby="tabImages" ng-switch-when="0">
                 <div class="md-whiteframe-z5" ng-include="'/modules/services/views/list-images.client.view.html'"></div>
             </div>
