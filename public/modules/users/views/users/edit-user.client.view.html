@@ -72,10 +72,10 @@
                 </div>
 
                 <div flex>
-
                     <select ng-if="groups.all.length > 0" ng-model="newGroup" ng-change="addGroup(newGroup)"
                             ng-options="group as group.title for group in groups.all | orderBy:'title'">
                     </select>
+
                     <p ng-if="groups.all.length <= 0">No Group available</p>
                 </div>
             </div>
