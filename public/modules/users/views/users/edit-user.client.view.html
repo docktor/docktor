@@ -10,7 +10,11 @@
 
             <md-input-container>
                 <label>Username</label>
-                <input ng-model="userToEdit.username" type="text" required>
+                <input name="username" ng-model="userToEdit.username" type="text" required>
+
+                <div ng-messages="userForm.username.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
             </md-input-container>
 
             <div ng-show="userForm.username.$invalid" class="help-block">
@@ -19,15 +23,28 @@
 
             <md-input-container>
                 <label>FirstName</label>
-                <input ng-model="userToEdit.firstName" type="text" required>
+                <input name="firstName" ng-model="userToEdit.firstName" type="text" required>
+
+                <div ng-messages="userForm.firstName.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
             </md-input-container>
             <md-input-container>
                 <label>LastName</label>
-                <input ng-model="userToEdit.lastName" type="text" required>
+                <input name="lastName" ng-model="userToEdit.lastName" type="text" required>
+
+                <div ng-messages="userForm.lastName.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
             </md-input-container>
             <md-input-container>
                 <label>Email</label>
-                <input ng-model="userToEdit.email" type="email" required>
+                <input name="email" ng-model="userToEdit.email" type="email" required>
+
+                <div ng-messages="userForm.email.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="email">Email address is invalid.</div>
+                </div>
             </md-input-container>
 
             <div layout="row">
@@ -47,7 +64,7 @@
                 <div flex>Available Groups</div>
             </div>
 
-            <div class="row">
+            <div layout="row" layout-align="center start">
                 <div flex>
                     <md-checkbox aria-label="Remove Group" ng-repeat="group in groupsSelected | orderBy:'title'"
                                  ng-click="removeGroup(group)" ng-checked="true"> {{group.title}}
@@ -55,9 +72,11 @@
                 </div>
 
                 <div flex>
-                    <md-checkbox aria-label="Add Group" ng-repeat="group in groups.all | orderBy:'title'"
-                                 ng-click="addGroup(group)">{{group.title}}
-                    </md-checkbox>
+
+                    <select ng-if="groups.all.length > 0" ng-model="newGroup" ng-change="addGroup(newGroup)"
+                            ng-options="group as group.title for group in groups.all | orderBy:'title'">
+                    </select>
+                    <p ng-if="groups.all.length <= 0">No Group available</p>
                 </div>
             </div>
 
