@@ -6,6 +6,6 @@ module.exports = function (app) {
     var core = require('../../app/controllers/core.server.controller');
     app.route('/').get(core.index);
 
-    app.route('/version/info').get(version.getInfo)
+    app.route('/version/info').get(version.getInfo);
 
 };

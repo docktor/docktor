@@ -27,6 +27,6 @@ angular.module('jobs').controller('JobsHistoryController', ['$scope', 'Authentic
             } else {
                 return '.';
             }
-        }
+        };
     }
 ]);

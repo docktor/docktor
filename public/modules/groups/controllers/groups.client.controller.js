@@ -635,6 +635,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             } else {
                 return '.';
             }
-        }
+        };
     }
 ]);

@@ -82,6 +82,6 @@ angular.module('jobs').controller('JobsOverviewController', ['$scope', 'Authenti
             } else {
                 return '.';
             }
-        }
+        };
     }
 ]);
