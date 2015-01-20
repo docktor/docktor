@@ -1,8 +1,9 @@
-<div flex>
+<div flex ng-controller="FooterController">
     <small layout="row" layout-align="center center">
         <br><br><br><br>
 
         <div>Hello! I'm your friendly footer. If you're actually reading this, I'm impressed....
+            v{{info.version.local}}
         </div>
         <div>
             <md-button aria-label="Docktor on Github" class="md-accent" href="https://github.com/docktor/docktor">

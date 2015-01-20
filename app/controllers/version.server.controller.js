@@ -5,6 +5,5 @@
  */
 exports.getInfo = function (req, res) {
     var pjson = require('../../package.json');
-    return json({'version': {'local': pjson.version}});
+    return res.json({'version': {'local': pjson.version}});
 };
-
