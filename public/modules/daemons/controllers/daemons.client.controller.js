@@ -25,7 +25,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.submitForm = function () {
             if ($scope.daemon._id) {
-                $scope.update();
+                $scope.update(true);
             } else {
                 $scope.create();
             }

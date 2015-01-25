@@ -179,7 +179,11 @@ DaemonSchema.methods.getDaemonDocker = function () {
         protocol: this.protocol,
         host: this.host,
         port: this.port,
-        timeout: this.timedout
+        timeout: this.timedout,
+        ca: this.ca,
+        key: this.key,
+        cert: this.cert
+
     });
 };
 
