@@ -35,7 +35,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             var daemon = $scope.daemon;
             $scope.daemon.site = $scope.daemon.selectSite._id;
             daemon.$save(function (response) {
-                $location.path('admin/daemons/view/' + response._id);
+                $location.path('admin/daemons/edit/' + response._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -49,11 +49,13 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             }
         };
 
-        $scope.update = function () {
+        $scope.update = function (withRedirect) {
             $scope.daemon.site = $scope.daemon.selectSite._id;
             var daemon = $scope.daemon;
             daemon.$update(function () {
-                $location.path('admin/daemons/view/' + daemon._id);
+                if (withRedirect === true) {
+                    $location.path('admin/daemons/view/' + daemon._id);
+                }
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -70,6 +72,8 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 });
             } else {
                 $scope.daemon = new Daemons();
+                $scope.daemon.timedout = 30000;
+                $scope.daemon.protocol = 'http';
             }
         };
 
@@ -122,37 +126,45 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.addParameter = function () {
             $scope.daemon.parameters.push($scope.parameter);
             $scope.parameter = {};
+            $scope.update(true);
         };
 
         $scope.removeParameter = function (parameter) {
             $scope.daemon.parameters.splice($scope.daemon.parameters.indexOf(parameter), 1);
+            $scope.update(true);
         };
 
         $scope.addPort = function () {
             $scope.daemon.ports.push($scope.port);
             $scope.port = {'protocol': 'tcp'};
+            $scope.update(true);
         };
 
         $scope.removePort = function (port) {
             $scope.daemon.ports.splice($scope.daemon.ports.indexOf(port), 1);
+            $scope.update(true);
         };
 
         $scope.addVariable = function () {
             $scope.daemon.variables.push($scope.variable);
             $scope.variable = {};
+            $scope.update(true);
         };
 
         $scope.removeVariable = function (variable) {
             $scope.daemon.variables.splice($scope.daemon.variables.indexOf(variable), 1);
+            $scope.update(true);
         };
 
         $scope.addVolume = function () {
             $scope.daemon.volumes.push($scope.volume);
             $scope.volume = {};
+            $scope.update(true);
         };
 
         $scope.removeVolume = function (volume) {
             $scope.daemon.volumes.splice($scope.daemon.volumes.indexOf(volume), 1);
+            $scope.update(true);
         };
 
     }

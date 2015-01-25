@@ -47,8 +47,11 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                                     if (callback) callback();
                                 });
                         } else {
-                            console.log('noMachineInfo for daemon ' + daemon._id);
-                            Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
+                            // display error only if there is a cAdvisorApi attached to this daemon.
+                            if (daemon.cadvisorApi) {
+                                console.log('noMachineInfo for daemon ' + daemon._id);
+                                Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
+                            }
                             if (callback) callback();
                         }
                     })

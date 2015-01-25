@@ -18,7 +18,11 @@
     </ul>
 </div>
 
-<md-list>
+<md-toolbar class="md-raised" layout-align="center center" data-ng-if="service.jobs.length===0">
+    No job yet
+</md-toolbar>
+
+<md-list data-ng-if="service.jobs.length > 0">
     <md-item ng-repeat="job in service.jobs">
         <md-item-content>
             <div class="md-tile-content" layout="row">
@@ -53,14 +57,14 @@
                         <md-radio-button value="url">Url</md-radio-button>
                         <md-radio-button value="exec">Docker exec</md-radio-button>
                     </md-radio-group>
-                    <md-input-container class="long">
+                    <md-input-container class="medium">
                         <label>Job Value</label>
                         <input ng-model="job.value" type="text" ng-required="true">
                     </md-input-container>
                 </div>
 
                 <div class="row">
-                    <md-input-container class="long">
+                    <md-input-container class="medium">
                         <label>Description</label>
                         <input ng-model="job.description" type="text" ng-required="true">
                     </md-input-container>

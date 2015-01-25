@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <table tr-ng-grid="" items="services" fields="" class="table">
+    <table tr-ng-grid="" items="services" fields="" class="table" ng-if="services.$resolved && services.length">
         <thead>
         <th field-name="title" display-name="Title" enable-filtering="true"></th>
         <th field-name="created" display-format="date:'mediumDate'"></th>
@@ -27,6 +27,7 @@
     </table>
 
     <md-toolbar class="md-accent" layout-align="center center" data-ng-if="services.$resolved && !services.length">
-        No services yet, why don't you <a href="/#!/admin/services/create">create one</a>?
+        No service yet, why don't you
+        <md-button href="/#!/admin/services/create">create one ?</md-button>
     </md-toolbar>
 </section>

@@ -865,12 +865,16 @@ form > .row {
     }
 }
 
+md-input-container.medium > input {
+    width: 310px;
+}
+
 md-input-container.long > input {
     width: 264px;
 }
 
 md-input-container.long.long > input {
-    width: 528px;
+    width: 488px;
 }
 
 md-toast.docktor {
@@ -917,4 +921,8 @@ md-tabs-ink-bar {
 
 .job.success {
     background-color: rgb(76, 175, 80);
+}
+
+.md-sidenav-left, md-sidenav {
+    z-index: 2000;
 }

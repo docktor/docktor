@@ -1,0 +1,64 @@
+<div flex layout="row" layout-align="end center">
+    <md-button class="md-raised" aria-label="Add a Variable" ng-click="displayFormVariable=!displayFormVariable">
+        <i class="fa fa-plus-square"></i> Add a variable
+    </md-button>
+</div>
+
+<div layout="row" class="row">
+    <p>These variables are used to have common variables on all services deployed on this daemon.
+        You can add / remove / modify variables when you deploy a new service on a group.
+    </p>
+</div>
+
+<md-toolbar class="md-raised" layout-align="center center"
+            data-ng-if="daemon.variables.length===0 && !displayFormVariable">
+    No variable yet
+</md-toolbar>
+
+<form ng-show="displayFormVariable" name="variableForm" id="variableForm" novalidate autocomplete="off">
+    <h2>New Variable</h2>
+
+    <div layout="row">
+        <md-input-container>
+            <label>Name</label>
+            <input ng-model="variable.name" type="text" ng-required="true">
+        </md-input-container>
+        <md-input-container>
+            <label>Default Value</label>
+            <input ng-model="variable.value" type="text">
+        </md-input-container>
+        <md-input-container>
+            <label>Description</label>
+            <input ng-model="variable.description" type="text">
+        </md-input-container>
+    </div>
+
+    <md-button ng-disabled="variableForm.$invalid"
+               data-ng-click="addVariable(); displayFormVariable=false" class="md-raised md-primary">
+        <i class="fa fa-save"></i> Save Variable
+    </md-button>
+    <md-button class="md-raised md-default" data-ng-click="displayFormVariable=false;">
+        Cancel
+    </md-button>
+</form>
+
+<ul data-ng-repeat="variable in daemon.variables">
+    <li>
+        <span ng-show="variable.value">-e {{variable.name}}:{{variable.value}}</span>
+        <span ng-hide="variable.value">-e {{variable.name}}:&lg;nameVariable-attributed-on-group&gt;</span>
+
+        <small><i>{{variable.description}}</i></small>
+        <a ng-click="askDeleteVariable=true" ng-hide="askDeleteVariable">
+            <i class="fa fa-trash-o" tooltip="Delete Variable"
+               tooltip-popup-delay='750'></i>
+        </a>
+        <md-button ng-click="askDeleteVariable=false" ng-show="askDeleteVariable"
+                   class="md-raised md-accent md-hue-1">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button data-ng-click="removeVariable(variable);" ng-show="askDeleteVariable"
+                   class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
+    </li>
+</ul>

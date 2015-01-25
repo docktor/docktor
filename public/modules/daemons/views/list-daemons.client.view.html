@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div layout="row">
+    <div layout="row" data-ng-if="daemons.$resolved && daemons.length">
         <div flex="35">
             <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px"
                      width="320px"></leaflet>
@@ -89,7 +89,8 @@
     </div>
 
     <md-toolbar class="md-accent" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
-        No daemons yet, why don't you <a href="/#!/admin/daemons/create">create one</a>?
+        No daemon yet, why don't you
+        <md-button href="/#!/admin/daemons/create">create one ?</md-button>
     </md-toolbar>
 
 </section>

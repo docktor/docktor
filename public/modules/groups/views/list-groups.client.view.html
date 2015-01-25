@@ -37,7 +37,7 @@
 
     <md-toolbar class="md-accent" layout-align="center center" data-ng-if="groups.$resolved && !groups.length">
         <span ng-show="authentication.isAdmin">
-            No group yet, why don't you <a href="/#!/admin/groups/create">create one</a>?
+            No group yet, why don't you <md-button href="/#!/admin/groups/create">create one ?</md-button>
         </span>
         <span ng-hide="authentication.isAdmin">
             No group yet for you, ask the Administrators.

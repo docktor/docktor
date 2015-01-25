@@ -4,7 +4,11 @@
     </md-button>
 </div>
 
-<table class="table table-striped">
+<md-toolbar class="md-raised" layout-align="center center" data-ng-if="service.images.length===0">
+    No image yet
+</md-toolbar>
+
+<table class="table table-striped" data-ng-if="service.images.length > 0">
     <thead>
     <tr>
         <th></th>

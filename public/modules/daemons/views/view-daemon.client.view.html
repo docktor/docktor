@@ -17,12 +17,28 @@
     <h2>Status</h2>
 
     <div>
-        <div ng-switch="daemon.dockerStatus">
-            <span ng-switch-when="checking" class="label label-default">
-                <i ng-switch-when="checking" class="fa fa-spinner fa-spin"> </i> Checking
-            </span>
-            <span ng-switch-when="down" class="label label-danger">Down</span>
-            <span ng-switch-when="up" class="label label-success">UP</span>
+
+        <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
+            <div ng-switch-when="checking" layout="row" layout-align="center">
+                <md-progress-circular class="md-accent md-hue-1" md-diameter="24"
+                                      md-mode="indeterminate">
+                </md-progress-circular>
+                <md-subheader class="md-accent docktor" layout="row"
+                              layout-align="center center">
+                    Checking...
+                </md-subheader>
+            </div>
+            <div ng-switch-when="up">
+                <md-subheader class="md-primary docktor" layout="row"
+                              layout-align="center center">
+                    UP
+                </md-subheader>
+            </div>
+            <div ng-switch-when="down">
+                <md-subheader class="md-warn docktor">
+                    DOWN
+                </md-subheader>
+            </div>
 
             <p ng-switch-when="up">Docker info : </p>
             <pre ng-switch-when="up">{{daemon.dockerInfo | json}}</pre>

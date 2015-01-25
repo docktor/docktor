@@ -156,7 +156,9 @@
                                data-ng-click="addFilesystem(); displayFormFilesystem=false">
                         <i class="fa fa-plus"></i> Insert Filesystem
                     </md-button>
-
+                    <md-button class="md-raised" data-ng-click="displayFormFilesystem=false">
+                        <i class="fa fa-plus"></i> Cancel
+                    </md-button>
                 </div>
             </form>
         </div>
@@ -165,7 +167,6 @@
     <br>
 
     <div class="row">
-
         <md-button class="md-raised md-primary" ng-click="submitForm()" ng-show="group.selectDaemon">
             <i class="fa fa-save"></i>
             <span ng-hide="group._id">Create Daemon</span>
