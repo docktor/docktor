@@ -1,22 +1,22 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
 
     <h3>
-        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
         /
-        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
         / Service {{container.serviceTitle}}
     </h3>
 
     <div class="row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
         <span ng-repeat="u in group.users">
-            <md-button class="md-accent" href="mailto:{{u.email}}">
+            <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
                 <i class="fa fa-envelope"></i> {{u.displayName}}
             </md-button>
         </span>
 
         <div>
-            <md-button class="md-accent" href="mailto:{{group.mailAllUsers}}">
+            <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
                 <i class="fa fa-envelope"></i> Mail All
             </md-button>
         </div>
@@ -25,7 +25,7 @@
     <div class="row">
         <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
         <i class="fa fa-bar-chart"></i>
-        <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
+        <md-button class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
             Monitoring CPU / RAM on this service.
         </md-button>
     </div>
@@ -62,7 +62,7 @@
                         <md-subheader ng-hide="container.inspect.State.Running" class="docktor md-warn">
                             Stopped
                         </md-subheader>
-                        <md-subheader ng-show="container.inspect.State.Paused" class="docktor md-accent">
+                        <md-subheader ng-show="container.inspect.State.Paused" class="docktor md-accent md-hue-3">
                             Paused
                         </md-subheader>
                     </div>
@@ -84,7 +84,7 @@
                     <div ng-switch="container.daemon.dockerStatus">
                         <span ng-switch-when="checking" class="label label-default" layout="row"
                               layout-align="center center">
-                            <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                            <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                             </md-progress-circular>
                             <md-button class="md-warn" ng-show="authentication.isAdmin"
                                        href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
@@ -123,7 +123,7 @@
 
     <div ng-hide="container.urls.length > 0" class="label label-info">No url attached to this srvice.</div>
     <div ng-repeat="url in container.urls">
-        <md-button class="md-accent" href={{url.urlCompute}}>
+        <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
             <i class="fa fa-link"></i> {{url.label}}
         </md-button>
     </div>
@@ -148,7 +148,7 @@
                    ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
             Remove service from Group
         </md-button>
-        <md-button class="md-raised md-accent md-hue-1" ng-click="askDeleteService=false" ng-show="askDeleteService">
+        <md-button class="md-raised md-accent md-hue-3" ng-click="askDeleteService=false" ng-show="askDeleteService">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);"

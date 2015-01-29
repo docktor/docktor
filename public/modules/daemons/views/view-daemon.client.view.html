@@ -1,7 +1,7 @@
 <section data-ng-controller="DaemonsController" data-ng-init="findOne()">
 
     <h2 flex>Admin /
-        <md-button class="md-accent" href="#!/admin/daemons">Daemons</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/admin/daemons">Daemons</md-button>
         / {{daemon.name}}
     </h2>
 
@@ -20,10 +20,10 @@
 
         <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
             <div ng-switch-when="checking" layout="row" layout-align="center">
-                <md-progress-circular class="md-accent md-hue-1" md-diameter="24"
+                <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
                                       md-mode="indeterminate">
                 </md-progress-circular>
-                <md-subheader class="md-accent docktor" layout="row"
+                <md-subheader class="md-accent md-hue-3 docktor" layout="row"
                               layout-align="center center">
                     Checking...
                 </md-subheader>

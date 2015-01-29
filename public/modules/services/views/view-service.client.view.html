@@ -1,13 +1,13 @@
 <section data-ng-controller="ServicesController" data-ng-init="findOne()">
 
     <h2 flex>Admin /
-        <md-button class="md-accent" href="#!/admin/services">Services</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/admin/services">Services</md-button>
         / {{service.title}}
     </h2>
 
     <div>
         <h2>Images</h2>
-        <md-toolbar class="md-accent" layout-align="center center" ng-if="service.images.length <= 0">
+        <md-toolbar class="md-accent md-hue-3" layout-align="center center" ng-if="service.images.length <= 0">
             No associated image yet. Please add one by editing this service.
         </md-toolbar>
         <ul data-ng-repeat="image in service.images">

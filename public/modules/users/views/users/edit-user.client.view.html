@@ -1,7 +1,7 @@
 <section data-ng-controller="UsersController" data-ng-init="findOne()">
 
     <h2 flex>Admin /
-        <md-button class="md-accent" href="#!/admin/users">Users</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/admin/users">Users</md-button>
         / {{userToEdit.displayName}}
     </h2>
 
@@ -90,7 +90,7 @@
     </div>
     <div class="row">
         <md-button ng-show="authentication.user.username===userToEdit.username" disabled="true"
-                   class="md-accent md-warn" layout-align="center center">
+                   class="md-accent md-hue-3 md-warn" layout-align="center center">
             <i class="fa fa-trash-o"></i> You can't delete yourself.
         </md-button>
         <br>
@@ -99,7 +99,7 @@
             <i class="fa fa-trash-o"></i> Delete User
         </md-button>
 
-        <md-button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="md-raised md-accent md-hue-1">
+        <md-button ng-click="askDeleteUser=false" ng-show="askDeleteUser" class="md-raised md-accent md-hue-3">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button data-ng-click="remove(userToEdit);" ng-show="askDeleteUser"

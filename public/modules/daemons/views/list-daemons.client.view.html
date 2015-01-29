@@ -36,10 +36,10 @@
 
                                 <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
                                     <div ng-switch-when="checking" layout="row" layout-align="center">
-                                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24"
+                                        <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
                                                               md-mode="indeterminate">
                                         </md-progress-circular>
-                                        <md-subheader class="md-accent docktor" layout="row"
+                                        <md-subheader class="md-accent md-hue-3 docktor" layout="row"
                                                       layout-align="center center">
                                             Checking...
                                         </md-subheader>
@@ -59,23 +59,23 @@
                             </div>
                             <div layout="row">
                                 <div flex>
-                                    <md-button class="md-accent" ng-show="daemon.cadvisorApi"
+                                    <md-button class="md-accent md-hue-3" ng-show="daemon.cadvisorApi"
                                                href="{{daemon.cadvisorUrl}}">
                                         cAdvisor
                                     </md-button>
-                                    <md-button class="md-accent" href="{{grafanaUrl}}?groupName={{group.name}}">
+                                    <md-button class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.name}}">
                                         Grafana
                                     </md-button>
                                 </div>
 
                                 <div flex>
-                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent"
+                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3"
                                                href="/#!/admin/daemons/view/containers/{{daemon._id}}">
                                         {{daemon.dockerInfo.Containers}} containers
                                     </md-button>
                                 </div>
                                 <div flex>
-                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent"
+                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3"
                                                href="/#!/admin/daemons/view/images/{{daemon._id}}">
                                         {{daemon.dockerInfo.Images}} images
                                     </md-button>
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <md-toolbar class="md-accent" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
+    <md-toolbar class="md-accent md-hue-3" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
         No daemon yet, why don't you
         <md-button href="/#!/admin/daemons/create">create one ?</md-button>
     </md-toolbar>

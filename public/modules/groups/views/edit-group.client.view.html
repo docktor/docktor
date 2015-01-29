@@ -1,14 +1,14 @@
 <section data-ng-controller="GroupsController" data-ng-init="findForCreateOrEditGroup()">
 
     <h3 ng-hide="group._id">
-        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
         / Create Group
     </h3>
 
     <h3 ng-show="group._id">
-        <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
         /
-        <md-button class="md-accent" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
         / Edit Group
     </h3>
 
@@ -91,7 +91,7 @@
                            tooltip-popup-delay='750'></i>
                     </a>
                     <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                               class="md-raised md-accent md-hue-1">
+                               class="md-raised md-accent md-hue-3">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="removeFilesystem(filesystem);"
@@ -116,7 +116,7 @@
                 </div>
 
                 <div ng-show="filesystem.pleaseWait">
-                    <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                    <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                     </md-progress-circular>
                     Please Wait... Checking in progress...
                 </div>
@@ -183,7 +183,7 @@
         <md-button class="md-raised md-warn" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
             <i class="fa fa-trash-o"> </i> Delete Group
         </md-button>
-        <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-accent md-hue-1">
+        <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-accent md-hue-3">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button data-ng-click="remove();" ng-show="askDeleteGroup"

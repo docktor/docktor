@@ -1,7 +1,7 @@
 <section data-ng-controller="SitesController" data-ng-init="findOne()">
 
     <h2 flex>Admin /
-        <md-button class="md-accent" href="#!/admin/sites">Sites</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/admin/sites">Sites</md-button>
         /
         <span ng-hide="site._id">Create Site</span>
         <span ng-show="site._id">Edit Site</span>
@@ -53,7 +53,7 @@
         <md-button class="md-raised md-warn" ng-click="askDeleteSite=true" ng-hide="askDeleteSite">
             <i class="fa fa-trash-o"></i> Delete Site
         </md-button>
-        <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-accent md-hue-1">
+        <md-button ng-click="askDeleteSite=false" ng-show="askDeleteSite" class="md-raised md-accent md-hue-3">
             No, I don't want to delete this. <i class="fa fa-reply"></i>
         </md-button>
         <md-button data-ng-click="remove(site);" ng-show="askDeleteSite"

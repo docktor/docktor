@@ -1,7 +1,7 @@
 <section data-ng-controller="ServicesController" data-ng-init="findOne()">
 
     <h2 flex>Admin /
-        <md-button class="md-accent" href="#!/admin/services">Services</md-button>
+        <md-button class="md-accent md-hue-3" href="#!/admin/services">Services</md-button>
         /
         <span ng-hide="service._id">Create Service</span>
         <span ng-show="service._id">Edit Service</span>
@@ -36,7 +36,7 @@
                         <i class="fa fa-trash-o"></i> Delete Service
                     </md-button>
                     <md-button ng-click="askDeleteService=false" ng-show="askDeleteService"
-                               class="md-raised md-accent md-hue-1">
+                               class="md-raised md-accent md-hue-3">
                         No, I don't want to delete this. <i class="fa fa-reply"></i>
                     </md-button>
                     <md-button data-ng-click="remove(service);" ng-show="askDeleteService"

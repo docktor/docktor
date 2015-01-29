@@ -2,7 +2,7 @@
 
     <div layout="row" layout-align="center center">
         <h3 flex>
-            <md-button class="md-accent" href="#!/groups">My Groups</md-button>
+            <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
             / {{group.title}}
 
             <md-button ng-hide="isGroupFavorite" aria-label="Add Favorite" ng-click="addFavorite()">
@@ -29,13 +29,13 @@
     <div class="row">
         <h4><i class="fa fa-users"></i> Contacts</h4>
         <span ng-repeat="u in group.users">
-            <md-button class="md-accent" href="mailto:{{u.email}}">
+            <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
                 <i class="fa fa-envelope"></i> {{u.displayName}}
             </md-button>
         </span>
 
         <div>
-            <md-button class="md-accent" href="mailto:{{group.mailAllUsers}}">
+            <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
                 <i class="fa fa-envelope"></i> Mail All
             </md-button>
         </div>
@@ -83,7 +83,7 @@
         <div ng-hide="group.filesystems" class="alert alert-danger">
             No filesystem attached to this group.
             <span ng-show="authentication.isAdmin">Try to add one by
-                <md-button class="md-accent" href="#!/admin/groups/{{group._id}}/edit">editing this group</md-button>.
+                <md-button class="md-accent md-hue-3" href="#!/admin/groups/{{group._id}}/edit">editing this group</md-button>.
             </span>
             <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
         </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="row">
             <i class="fa fa-bar-chart"></i>
-            <md-button aria-label="Monitoring All" class="md-accent" href="{{grafanaUrl}}?groupName={{group.title}}">
+            <md-button aria-label="Monitoring All" class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.title}}">
                 Monitoring CPU / RAM - All Services
             </md-button>
         </div>
@@ -170,14 +170,14 @@
         <tbody>
         <tr>
             <td field-name="serviceTitle">
-                <md-button class="md-accent" href="#!/groups/{{group._id}}/{{gridItem._id}}">
+                <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
                     {{gridItem.serviceTitle}}
                 </md-button>
 
                 <div>
                 <span ng-repeat="url in gridItem.urls">
-                    <md-button class="md-accent" href={{url.urlCompute}}>
+                    <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
                         <i class="fa fa-link"></i> {{url.label}}
                     </md-button>
                 </span>
@@ -209,7 +209,7 @@
                             <md-subheader ng-hide="gridItem.inspect.State.Running" class="docktor md-warn">
                                 Stopped
                             </md-subheader>
-                            <md-subheader ng-show="gridItem.inspect.State.Paused" class="docktor md-accent">
+                            <md-subheader ng-show="gridItem.inspect.State.Paused" class="docktor md-accent md-hue-3">
                                 Paused
                             </md-subheader>
                         </div>
@@ -280,7 +280,7 @@
                 <div ng-switch="gridItem.daemon.dockerStatus">
                     <span ng-switch-when="checking" class="label label-default" layout="row"
                           layout-align="center center">
-                        <md-progress-circular class="md-accent md-hue-1" md-diameter="24" md-mode="indeterminate">
+                        <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                         </md-progress-circular>
                         <md-button class="md-warn" ng-show="authentication.isAdmin"
                                    href="#!/admin/daemons/view/{{gridItem.daemonId}}" layout="row">
