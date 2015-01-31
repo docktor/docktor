@@ -1,0 +1,49 @@
+<h4>Ports</h4>
+<ul data-ng-repeat="port in image.ports">
+    <li>-p :{{port.internal}}/{{port.protocol}}
+        <small><i>{{port.description}}</i></small>
+        <md-button aria-label="Delete Port" ng-click="askDeletePort=true" ng-hide="askDeletePort">
+            <i class="fa fa-trash-o" title="Delete Port"></i>
+        </md-button>
+        <md-button aria-label="Don't delete port" ng-click="askDeletePort=false" ng-show="askDeletePort"
+                   class="md-raised md-accent md-hue-3">
+            No, I don't want to delete this. <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button aria-label="Confirm delete port" data-ng-click="removePort(image, port);"
+                   ng-show="askDeletePort" class="md-raised md-warn">
+            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
+    </li>
+</ul>
+
+<md-button aria-label="Add a Port" ng-hide="displayFormPort" ng-click="displayFormPort=!displayFormPort">
+    <i class="fa fa-plus-square"></i> Add a port
+</md-button>
+
+<form ng-show="displayFormPort" name="portForm" id="portForm" novalidate autocomplete="off">
+    <md-input-container>
+        <label>Internal Port</label>
+        <input name="internal" ng-model="port.internal" type="number" ng-required="true">
+
+        <div ng-messages="displayFormPort.internal.$error">
+            <div ng-message="required">This is required.</div>
+            <div ng-message="number">Number is invalid.</div>
+        </div>
+    </md-input-container>
+    <md-radio-group ng-model="port.protocol" ng-required="true">
+        <md-radio-button value="tcp">tcp</md-radio-button>
+        <md-radio-button value="udp">udp</md-radio-button>
+    </md-radio-group>
+    <md-input-container>
+        <label>Description</label>
+        <input ng-model="port.description" type="text">
+    </md-input-container>
+
+    <md-button aria-label="Insert Port" ng-disabled="portForm.$invalid"
+               data-ng-click="addPort(image); displayFormPort=false" class="md-raised md-primary">
+        <i class="fa fa-save"></i> Insert Port
+    </md-button>
+    <md-button data-ng-click="displayFormPort=false" class="md-raised">
+        <i class="fa fa-reply"></i> Cancel
+    </md-button>
+</form>

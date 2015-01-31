@@ -12,7 +12,7 @@
             <md-input-container class="long long">
                 <label>Title</label>
                 <input name="title" ng-model="service.title" ng-pattern="patternTitle" ng-required="true" type="text"
-                        md-maxlength="200">
+                       md-maxlength="200">
 
                 <div ng-messages="serviceForm.title.$error">
                     <div ng-message="required">This is required.</div>
@@ -69,7 +69,8 @@
         </md-tabs>
         <ng-switch on="tabs.selectedIndex">
             <div role="tabpanel" id="tabImages-content" aria-labelledby="tabImages" ng-switch-when="0">
-                <div class="md-whiteframe-z5" ng-include="'/modules/services/views/list-images.client.view.html'"></div>
+                <div class="md-whiteframe-z5"
+                     ng-include="'/modules/services/views/images/list-images.client.view.html'"></div>
             </div>
             <div role="tabpanel" id="tabCommands-content" aria-labelledby="tabCommands" ng-switch-when="1">
                 <div class="md-whiteframe-z5"

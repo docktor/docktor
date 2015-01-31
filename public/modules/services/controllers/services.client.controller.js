@@ -41,6 +41,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             service.$update(function () {
                 if (redirect === true) {
                     $location.path('admin/services/' + service._id);
+                } else {
+                    Toasts.addToast('Service ' + service.title + ' successfully saved', 'success');
                 }
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -201,6 +203,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             ServicesServices.activateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success activation job');
+                    Toasts.addToast('Success activation job', 'info');
                     $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
@@ -211,6 +214,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             ServicesServices.desactivateJob($scope.service._id, job)
                 .success(function (response) {
                     console.log('Success desactivation job');
+                    Toasts.addToast('Success desactivation job', 'info');
                     $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
