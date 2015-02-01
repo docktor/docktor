@@ -30,7 +30,7 @@
 
                 <div class="column" ng-show="service._id">
                     <md-button ng-click="submitForm()" class="md-raised md-primary" ng-hide="askDeleteService">
-                        <i class="fa fa-save"></i> Save
+                        <i class="fa fa-save"></i> Save Service
                     </md-button>
                     <md-button class="md-raised md-warn" ng-click="askDeleteService=true" ng-hide="askDeleteService">
                         <i class="fa fa-trash-o"></i> Delete Service
@@ -46,7 +46,6 @@
                 </div>
             </div>
         </div>
-
         <md-subheader class="row md-warn" ng-show="error">
             <strong data-ng-bind="error"></strong>
         </md-subheader>
@@ -83,5 +82,10 @@
                 <div class="md-whiteframe-z5" ng-include="'/modules/services/views/list-jobs.client.view.html'"></div>
             </div>
         </ng-switch>
+        <div class="md-whiteframe-z5">
+            <md-button ng-click="submitForm()" class="md-raised md-primary" ng-hide="askDeleteService">
+                <i class="fa fa-save"></i> Save Service
+            </md-button>
+        </div>
     </div>
 </section>

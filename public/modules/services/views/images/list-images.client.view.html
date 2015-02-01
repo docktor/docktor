@@ -25,8 +25,7 @@
                         <span ng-if="!image.active">Off</span>
                     </md-switch>
 
-                    <md-button ng-click="showTabs=!showTabs" class="md-raised"
-                               ng-hide="askDeleteImage || showTabs">
+                    <md-button ng-click="showTabs=!showTabs" class="md-raised" ng-hide="askDeleteImage || showTabs">
                         <a class="fa fa-edit"></a> Edit
                     </md-button>
 
@@ -55,35 +54,38 @@
                 </div>
             </div>
 
-            <md-tabs class="md-primary" md-selected="imageTab.selectedIndex">
-                <md-tab id="tabParameters" aria-controls="tabParameters-content" ng-click="imageTab.selectedIndex=0">
-                    Parameters
-                </md-tab>
-                <md-tab id="tabPorts" aria-controls="tabPorts-content" ng-click="imageTab.selectedIndex=1">
-                    Ports
-                </md-tab>
-                <md-tab id="tabVariables" aria-controls="tabVariables-content" ng-click="imageTab.selectedIndex=2">
-                    Variables
-                </md-tab>
-                <md-tab id="tabVolumes" aria-controls="tabVolumes-content"
-                        ng-click="imageTab.selectedIndex=1;imageTab.selectedIndex=2;imageTab.selectedIndex=3">
-                    Volumes
-                </md-tab>
-            </md-tabs>
-            <ng-switch on="imageTab.selectedIndex">
-                <div role="tabpanel" id="tabParameters-content" aria-labelledby="tabParameters" ng-switch-when="0">
-                    <div ng-include="'/modules/services/views/images/list-parameters.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabPorts-content" aria-labelledby="tabPorts" ng-switch-when="1">
-                    <div ng-include="'/modules/services/views/images/list-ports.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabVariables-content" aria-labelledby="tabVariables" ng-switch-when="2">
-                    <div ng-include="'/modules/services/views/images/list-variables.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabVolumes-content" aria-labelledby="tabVolumes" ng-switch-when="3">
-                    <div ng-include="'/modules/services/views/images/list-volumes.client.view.html'"></div>
-                </div>
-            </ng-switch>
+            <div ng-if="showTabs">
+                <md-tabs class="md-primary" md-selected="imageTab.selectedIndex">
+                    <md-tab id="tabParameters" aria-controls="tabParameters-content"
+                            ng-click="imageTab.selectedIndex=0">
+                        Parameters
+                    </md-tab>
+                    <md-tab id="tabPorts" aria-controls="tabPorts-content" ng-click="imageTab.selectedIndex=1">
+                        Ports
+                    </md-tab>
+                    <md-tab id="tabVariables" aria-controls="tabVariables-content" ng-click="imageTab.selectedIndex=2">
+                        Variables
+                    </md-tab>
+                    <md-tab id="tabVolumes" aria-controls="tabVolumes-content"
+                            ng-click="imageTab.selectedIndex=1;imageTab.selectedIndex=2;imageTab.selectedIndex=3">
+                        Volumes
+                    </md-tab>
+                </md-tabs>
+                <ng-switch on="imageTab.selectedIndex">
+                    <div role="tabpanel" id="tabParameters-content" aria-labelledby="tabParameters" ng-switch-when="0">
+                        <parameters-directive parameters="image.parameters"></parameters-directive>
+                    </div>
+                    <div role="tabpanel" id="tabPorts-content" aria-labelledby="tabPorts" ng-switch-when="1">
+                        <ports-directive ports="image.ports" display-external-port="false"></ports-directive>
+                    </div>
+                    <div role="tabpanel" id="tabVariables-content" aria-labelledby="tabVariables" ng-switch-when="2">
+                        <variables-directive variables="image.variables"></variables-directive>
+                    </div>
+                    <div role="tabpanel" id="tabVolumes-content" aria-labelledby="tabVolumes" ng-switch-when="3">
+                        <volumes-directive volumes="image.volumes" display-external-volume="false"></volumes-directive>
+                    </div>
+                </ng-switch>
+            </div>
         </td>
     </tr>
     </tbody>

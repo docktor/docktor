@@ -27,8 +27,7 @@
     <div ng-show="services.select">
         <h4>Select an image of service {{services.select.title}} :</h4>
 
-        <select ng-model="services.selectImage"
-                ng-change="changeImage()"
+        <select ng-model="services.selectImage" ng-change="changeImage()"
                 ng-options="image.name for image in services.select.images | orderBy:'name'">
         </select>
     </div>
@@ -41,173 +40,46 @@
             <div class="row">
                 <md-input-container class="long">
                     <label>Name</label>
-                    <input ng-model="container.name" ng-pattern="patternName" type="text" required>
+                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName"
+                           type="text" required md-maxlength="200">
+
+                    <div ng-messages="deployForm.containerName.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="md-maxlength">Max length of name : 200</div>
+                        <div ng-message="pattern">Name have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                    </div>
                 </md-input-container>
-
-                <div>
-                    <p ng-show="deployForm.containerName.$error.required" class="text-danger">Name is required</p>
-
-                    <p ng-show="deployForm.containerName.$invalid" class="text-danger">
-                        The name have to match this pattern : [/a-zA-Z0-9_\-]{1,200}</p>
-
-                    <p>The name have to match this pattern : [/a-zA-Z0-9_\-]{1,200}.</p>
-
-                    <p>It is not recommanded to modify default value from Docktor</p>
-                </div>
+                <p>It is not recommanded to modify default value from Docktor</p>
             </div>
 
             <div class="row">
                 <md-input-container class="long">
                     <label>Hostname</label>
-                    <input ng-model="container.hostname" ng-pattern="patternHostname" type="text" required>
+                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname"
+                           ng-pattern="patternHostname" type="text" required md-maxlength="200">
+
+                    <div ng-messages="deployForm.containerHostname.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="md-maxlength">Max length of hostname : 200</div>
+                        <div ng-message="pattern">Hostname have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                    </div>
                 </md-input-container>
-
-                <div>
-                    <p ng-show="deployForm.containerHostname.$error.required" class="text-danger">
-                        Hostname is required.
-                    </p>
-
-                    <p ng-show="deployForm.containerHostname.$invalid" class="text-danger">
-                        The hostname shave to match this pattern : [a-zA-Z0-9_\-]{1,200}</p>
-
-                    <p>The hostname shave to match this pattern : [a-zA-Z0-9_\-]{1,200}.</p>
-
-                    <p>It is not recommanded to modify default value from Docktor</p>
-                </div>
+                <p>It is not recommanded to modify default value from Docktor</p>
             </div>
 
-            <h4>Parameters</h4>
+            <parameters-directive with-title="true"
+                                  parameters="services.selectImage.parameters">
+            </parameters-directive>
+            <ports-directive with-title="true" ports="services.selectImage.ports"
+                             display-external-port="true">
+            </ports-directive>
+            <variables-directive with-title="true"
+                                 variables="services.selectImage.variables">
+            </variables-directive>
+            <volumes-directive with-title="true" volumes="services.selectImage.volumes"
+                               display-external-volume="true">
+            </volumes-directive>
 
-            <div ng-show="services.selectImage.parameters.length === 0">No parameter</div>
-
-            <table class="table table-striped" ng-show="services.selectImage.parameters.length > 0">
-                <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="parameter in services.selectImage.parameters | orderBy:'name'">
-                    <td>
-                        {{parameter.description}}
-                    </td>
-                    <td>
-                        {{parameter.name}}
-                    </td>
-                    <td>
-                        <md-input-container class="long">
-                            <label>Value</label>
-                            <input ng-model="parameter.value" type="text">
-                        </md-input-container>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <h4>Volumes :</h4>
-
-            <div ng-show="services.selectImage.volumes.length === 0">No volume</div>
-
-            <table class="table table-striped" ng-show="services.selectImage.volumes.length > 0">
-                <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Internal</th>
-                    <th>External</th>
-                    <th>Rights</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="volume in services.selectImage.volumes | orderBy:'internal'">
-                    <td>
-                        {{volume.description}}
-                    </td>
-                    <td>
-                        {{volume.internal}}
-                    </td>
-                    <td>
-                        <md-input-container class="long">
-                            <label>External Volume</label>
-                            <input ng-model="volume.external" type="text">
-                        </md-input-container>
-                    </td>
-                    <td>
-                        <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
-                            <md-radio-button value="rw">Read-Write</md-radio-button>
-                            <md-radio-button value="ro">Read Only</md-radio-button>
-                        </md-radio-group>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <h4>Ports</h4>
-
-            <div ng-show="services.selectImage.ports.length === 0">No Port</div>
-
-            <table class="table table-striped" ng-show="services.selectImage.ports.length > 0">
-                <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Internal</th>
-                    <th>External</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="port in services.selectImage.ports | orderBy:'internal'">
-                    <td>
-                        {{port.description}}
-                    </td>
-                    <td>
-                        {{port.internal}}
-                    </td>
-                    <td>
-                        <md-input-container class="long">
-                            <label>External Port</label>
-                            <input ng-model="port.external" type="text">
-                        </md-input-container>
-                    </td>
-                    <td>
-                        <md-radio-group ng-model="port.protocol" ng-required="true">
-                            <md-radio-button value="tcp">tcp</md-radio-button>
-                            <md-radio-button value="udp">udp</md-radio-button>
-                        </md-radio-group>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <h4>Variables</h4>
-
-            <div ng-show="services.selectImage.variables.length === 0">No Variable</div>
-
-            <table class="table table-striped" ng-show="services.selectImage.variables.length > 0">
-                <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="variable in services.selectImage.variables | orderBy:'name'">
-                    <td>
-                        {{variable.description}}
-                    </td>
-                    <td>
-                        {{variable.name}}
-                    </td>
-                    <td>
-                        <md-input-container class="long">
-                            <label>Value</label>
-                            <input ng-model="variable.value" type="text">
-                        </md-input-container>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
             <br>
 
             <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"

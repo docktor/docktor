@@ -1,0 +1,43 @@
+<div>
+    <div ng-if="withTitle">
+        <h4>Parameters</h4>
+    </div>
+
+    <p><i>Example of name parameter : CpuShares, CpuSet, Memory, MemorySwap, etc...</i></p>
+
+    <div ng-if="parameters.length === 0">No parameter</div>
+
+    <ul ng-repeat="parameter in parameters">
+        <li layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center">
+                <md-button ng-click="askDeleteParameter=true" ng-hide="askDeleteParameter">
+                    <i class="fa fa-trash-o" tooltip="Delete Parameter" tooltip-popup-delay='750'></i>
+                </md-button>
+                <md-button ng-click="askDeleteParameter=false" ng-show="askDeleteParameter"
+                           class="md-raised md-accent md-hue-3">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </md-button>
+                <md-button data-ng-click="removeParameter(parameter);" ng-show="askDeleteParameter"
+                           class="md-raised md-warn">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </md-button>
+                <md-input-container>
+                    <label>Name</label>
+                    <input ng-model="parameter.name" type="text" ng-required="true">
+                </md-input-container>
+                <md-input-container>
+                    <label>Value</label>
+                    <input ng-model="parameter.value" type="text">
+                </md-input-container>
+                <md-input-container>
+                    <label>Description</label>
+                    <input ng-model="parameter.description" type="text">
+                </md-input-container>
+            </div>
+        </li>
+    </ul>
+
+    <md-button aria-label="Add parameter" ng-hide="displayFormParameter" ng-click="addParameter()">
+        <i class="fa fa-plus-square"></i> Add a parameter
+    </md-button>
+</div>

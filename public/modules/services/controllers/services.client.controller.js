@@ -6,6 +6,8 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
+        var self = this;
+
         $scope.displayFormImage = false;
         $scope.parameter = {};
         $scope.displayFormParameter = false;
@@ -19,6 +21,10 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.displayFormCommand = false;
         $scope.commandRole = 'user';
         $scope.commandRoleName = '';
+
+        $scope.isClean = function () {
+            return angular.equals(self.serviceOriginal, $scope.service);
+        };
 
         $scope.submitForm = function () {
             if ($scope.service._id) {
@@ -72,9 +78,17 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.findOne = function () {
             if ($stateParams.serviceId) {
-                $scope.service = Services.get({
+                Services.get({
                     serviceId: $stateParams.serviceId
+                }, function (response) {
+                    self.serviceOriginal = response;
+                    $scope.service = new Services(self.serviceOriginal);
+                }, function (err, status, headers, config) {
+                    var title = 'Error getting service - ' + moment().format('hh:mm:ss');
+                    Toasts.addToast(err, 'danger', title);
                 });
+
+
             } else {
                 $scope.service = new Services();
             }

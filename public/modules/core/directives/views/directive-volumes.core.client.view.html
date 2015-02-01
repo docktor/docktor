@@ -1,0 +1,55 @@
+<div>
+    <div ng-if="withTitle">
+        <h4>Volumes</h4>
+    </div>
+    <p><i>docker [...] -v externalVolume:internalVolume</i></p>
+
+    <div ng-if="volumes.length === 0">No volume</div>
+
+    <ul data-ng-repeat="volume in volumes">
+        <li layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center">
+                <md-button aria-label="Ask Delete Volume" ng-click="askDeleteVolume=true" ng-hide="askDeleteVolume">
+                    <i class="fa fa-trash-o" tooltip="Delete Volume" stooltip-popup-delay='750'></i>
+                </md-button>
+                <md-button aria-label="Don't delete volume" ng-click="askDeleteVolume=false"
+                           ng-show="askDeleteVolume" class="md-raised md-accent md-hue-3">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </md-button>
+                <md-button aria-label="Confirm delete volume" data-ng-click="removeVolume(volume);"
+                           ng-show="askDeleteVolume" class="md-raised md-warn">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </md-button>
+
+                <div ng-if="displayExternalVolume">
+                    <md-input-container>
+                        <label>External Volume</label>
+                        <input ng-model="volume.external" type="text" ng-required="true">
+                    </md-input-container>
+                </div>
+                <div ng-if="!displayExternalVolume">
+                    <md-input-container>
+                        <label>Default Value</label>
+                        <input ng-model="volume.value" type="text">
+                    </md-input-container>
+                </div>
+                <md-input-container>
+                    <label>Internal Volume</label>
+                    <input ng-model="volume.internal" type="text" ng-required="true">
+                </md-input-container>
+                <md-radio-group ng-model="volume.rights" ng-required="true" ng-required="true">
+                    <md-radio-button value="rw">Read-Write</md-radio-button>
+                    <md-radio-button value="ro">Read Only</md-radio-button>
+                </md-radio-group>
+                <md-input-container>
+                    <label>Description</label>
+                    <input ng-model="volume.description" type="text">
+                </md-input-container>
+            </div>
+        </li>
+    </ul>
+
+    <md-button aria-label="Add a volume" ng-hide="displayFormVolume" ng-click="addVolume()">
+        <i class="fa fa-plus-square"></i> Add a volume
+    </md-button>
+</div>
