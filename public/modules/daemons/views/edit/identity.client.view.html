@@ -20,12 +20,15 @@
 </div>
 
 <div layout="row" class="row">
-    <div flex="5">Site</div>
+    <div flex="5" layout="row" layout-align="start end">Site</div>
 
-    <div>
-        <select ng-model="daemon.selectSite"
-                ng-options="site as site.title for site in sites.all | orderBy:'title' track by site._id ">
-        </select>
+    <div flex layout="row" layout-align="start end">
+        <md-select ng-model="daemon.selectSite" placeholder="Please select a site">
+            <md-select-label>{{daemon.selectSite.title}}</md-select-label>
+            <md-option ng-value="site" ng-repeat="site in sites.all | orderBy:'title' track by site._id ">
+                {{ site.title }}
+            </md-option>
+        </md-select>
     </div>
 </div>
 
