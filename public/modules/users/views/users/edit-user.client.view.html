@@ -72,10 +72,12 @@
                 </div>
 
                 <div flex>
-                    <select ng-if="groups.all.length > 0" ng-model="newGroup" ng-change="addGroup(newGroup)"
-                            ng-options="group as group.title for group in groups.all | orderBy:'title'">
-                    </select>
-
+                    <md-select ng-if="groups.all.length > 0" ng-model="newGroup" ng-change="addGroup(newGroup)">
+                        <md-select-label>{{ group ? group.title  : 'choose one or more groups' }}</md-select-label>
+                        <md-option ng-value="group" ng-repeat="group in groups.all | orderBy:'title'">
+                            {{group.title}}
+                        </md-option>
+                    </md-select>
                     <p ng-if="groups.all.length <= 0">No Group available</p>
                 </div>
             </div>

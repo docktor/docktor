@@ -926,3 +926,8 @@ md-tabs-ink-bar {
 .md-sidenav-left, md-sidenav {
     z-index: 2000;
 }
+
+md-select {
+    margin-top: 14px;
+    margin-bottom: 11px;
+}

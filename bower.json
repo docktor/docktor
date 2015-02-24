@@ -17,7 +17,7 @@
     "fontawesome": "~4.2.0",
     "lodash": "~2.4.1",
     "moment": "~2.8.4",
-    "angular-material": "v0.8.0-rc1-master-abaca00",
+    "angular-material": "v0.8.0-master-69053a3",
     "leaflet": "0.7.3",
     "angular-leaflet-directive": "0.7.10"
   }
