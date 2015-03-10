@@ -59,7 +59,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
                         console.log(data);
-                        Toasts.addToast(data, 'danger', 'Error getting info with daemon' + daemon.name);
+                        Toasts.addToast(data, 'danger', 'Error getting info with daemon ' + daemon.name);
                         if (callback) callback();
                     });
             }
