@@ -17,7 +17,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="container in containers">
-            <td class="table-small-text">{{container.Id}}<br>
+            <td class="table-small-text"><strong>{{container.Id | limitTo: 12}}</strong><br>
                 Image : {{container.Image}}<br>
                 Name : {{container.inspect.Name}}
             </td>
