@@ -931,3 +931,31 @@ md-select {
     margin-top: 14px;
     margin-bottom: 11px;
 }
+
+a.toolbarTitre.md-button {
+    color:white;  
+}
+
+md-toolbar{
+    min-height: 35px;
+}
+.cards {
+    width: 300px;
+    float:left;
+}
+
+.flexContainer{
+    display:flex;
+    justify-content: space-between;
+}
+
+.serviceContent{
+    padding: 15px;
+}
+.cardItem{
+    padding-bottom: 10px;
+}
+.cardContentTitre{
+    font-size: 18px;
+    margin-right: 10px;
+}
