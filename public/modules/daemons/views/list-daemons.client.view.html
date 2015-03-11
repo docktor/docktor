@@ -25,45 +25,37 @@
             <md-list>
                 <md-item ng-repeat="daemon in daemons | filter:searchDaemon">
                     <md-item-content>
-
-                        <div class="md-tile-content" layout="column">
-                            <div layout="row" layout-margin>
-                                <md-button class="md-raised"
-                                           href="/#!/admin/daemons/view/{{daemon._id}}">
-                                    Docker {{daemon.dockerVersion.Version}} on {{daemon.name}}
-                                    - {{daemon.site.title}}
-                                </md-button>
-
-                                <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
-                                    <div ng-switch-when="checking" layout="row" layout-align="center">
-                                        <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
-                                                              md-mode="indeterminate">
-                                        </md-progress-circular>
-                                        <md-subheader class="md-accent md-hue-3 docktor" layout="row"
-                                                      layout-align="center center">
-                                            Checking...
-                                        </md-subheader>
-                                    </div>
-                                    <div ng-switch-when="up">
-                                        <md-subheader class="md-primary docktor" layout="row"
-                                                      layout-align="center center">
-                                            UP
-                                        </md-subheader>
-                                    </div>
-                                    <div ng-switch-when="down">
-                                        <md-subheader class="md-warn docktor">
-                                            DOWN
-                                        </md-subheader>
-                                    </div>
+                        <div class="md-tile-left">
+                            <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
+                                <div ng-switch-when="checking" layout="row" layout-align="center">
+                                    <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
+                                                          md-mode="indeterminate">
+                                    </md-progress-circular>
+                                </div>
+                                <div ng-switch-when="up">
+                                    <md-button class="md-primary docktor md-fab" layout="row"
+                                                  layout-align="center center">
+                                        UP
+                                    </md-button>
+                                </div>
+                                <div ng-switch-when="down">
+                                    <md-button class="md-warn docktor md-fab">
+                                        DOWN
+                                    </md-button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="md-tile-content">
+                            <h3><md-button href="/#!/admin/daemons/view/{{daemon._id}}">{{daemon.name}}</md-button > <small>{{daemon.dockerVersion.Version}} - {{daemon.site.title}}</small></h3>
+
                             <div layout="row">
                                 <div flex>
                                     <md-button class="md-accent md-hue-3" ng-show="daemon.cadvisorApi"
                                                href="{{daemon.cadvisorUrl}}">
                                         cAdvisor
                                     </md-button>
-                                    <md-button class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.name}}">
+                                    <md-button class="md-accent md-hue-3"
+                                               href="{{grafanaUrl}}?groupName={{group.name}}">
                                         Grafana
                                     </md-button>
                                 </div>
@@ -88,7 +80,8 @@
         </div>
     </div>
 
-    <md-toolbar class="md-accent md-hue-3" layout-align="center center" data-ng-if="daemons.$resolved && !daemons.length">
+    <md-toolbar class="md-accent md-hue-3" layout-align="center center"
+                data-ng-if="daemons.$resolved && !daemons.length">
         No daemon yet, why don't you
         <md-button href="/#!/admin/daemons/create">create one ?</md-button>
     </md-toolbar>
