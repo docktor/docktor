@@ -29,9 +29,13 @@
             <div class="row" layout-align="start start">
                 <div flex="10">Daemon</div>
                 <div flex>
-                    <select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()"
-                            ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
-                    </select>
+                    <md-select ng-model="group.selectDaemon" ng-change="showFreePortRangeOnContainer()">
+                        <md-select-label>{{ group.selectDaemon ? group.selectDaemon.name : 'choose a daemon' }}
+                        </md-select-label>
+                        <md-option ng-value="daemon" ng-repeat="daemon in daemons.all track by daemon._id">
+                            {{ daemon.name }}
+                        </md-option>
+                    </md-select>
                 </div>
             </div>
             <div class="row" ng-show="group.selectDaemon">
@@ -109,9 +113,14 @@
                 <div class="row">
                     <div flex="10">Daemon</div>
                     <div flex>
-                        <select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()"
-                                ng-options="daemon as daemon.name for daemon in daemons.all track by daemon._id">
-                        </select>
+                        <md-select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()">
+                            <md-select-label>
+                                {{ filesystem.selectDaemon.name ? filesystem.selectDaemon.name : 'choose an daemon' }}
+                            </md-select-label>
+                            <md-option ng-value="daemon" ng-repeat="daemon in daemons.all track by daemon._id">
+                                {{ daemon.name }}
+                            </md-option>
+                        </md-select>
                     </div>
                 </div>
 
@@ -124,9 +133,15 @@
                 <div ng-hide="filesystem.pleaseWait">
                     <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem > 0">
                         <div flex="10">FileSystem</div>
-                       <select ng-model="filesystem.currentFs" style="min-width: 300px;" ng-change="changeFilesystem()"
-                                ng-options="fs.device for fs in filesystem.selectDaemon.statsCompute.filesystem">
-                        </select>
+                        <md-select ng-model="filesystem.currentFs" style="min-width: 300px;"
+                                   ng-change="changeFilesystem()">
+                            <md-select-label>
+                                {{ filesystem.currentFs.device ? filesystem.currentFs.device : 'choose an filesystem' }}
+                            </md-select-label>
+                            <md-option ng-value="fs" ng-repeat="fs in filesystem.selectDaemon.statsCompute.filesystem">
+                                {{ fs.device }}
+                            </md-option>
+                        </md-select>
                     </div>
 
                     <div class="row" ng-if="filesystem.selectDaemon">
