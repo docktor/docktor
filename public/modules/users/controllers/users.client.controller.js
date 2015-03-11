@@ -29,7 +29,15 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
         };
 
         $scope.find = function () {
-            $scope.users = Users.query();
+            var users = Users.query();
+            users.$promise.then(function(values){
+                values.sort(function(a,b){
+                    if (a.username > b.username) return 1;
+                    if (a.username < b.username) return -1;
+                    return 0;
+                })
+            });
+            $scope.users = users;
         };
 
         $scope.findOne = function () {
