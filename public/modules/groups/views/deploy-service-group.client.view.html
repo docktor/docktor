@@ -11,40 +11,25 @@
 
     <h4>Select a daemon :</h4>
 
-    <md-select ng-model="daemons.select" ng-change="changeDaemon()">
-        <md-select-label>
-            {{ daemons.select.name ? daemons.select.name : 'choose a daemon' }}
-        </md-select-label>
-
-        <md-option ng-value="daemon" ng-repeat="daemon in daemons.all | orderBy:'name'">
-            {{ daemon.name }}
-        </md-option>
-    </md-select>
+    <select ng-model="daemons.select" ng-change="changeDaemon()"
+            ng-options="daemon.name for daemon in daemons.all | orderBy:'name'">
+    </select>
 
     <div ng-show="daemons.select">
         <h4>Select a service :</h4>
 
-        <md-select ng-model="services.select" ng-required="true" ng-change="changeService()">
-            <md-select-label>
-                {{ services.select.title ? services.select.title : 'choose a service' }}
-            </md-select-label>
-            <md-option ng-value="service" ng-repeat="service in services.all | orderBy:'title'">
-                {{ service.title }}
-            </md-option>
-        </md-select>
+        <select ng-model="services.select" ng-required="true"
+                ng-change="changeService()"
+                ng-options="service.title for service in services.all | orderBy:'title'">
+        </select>
     </div>
 
     <div ng-show="services.select">
         <h4>Select an image of service {{services.select.title}} :</h4>
 
-        <md-select ng-model="services.selectImage" ng-change="changeImage()">
-            <md-select-label>
-                {{ services.selectImage.name ? services.selectImage.name : 'choose an image' }}
-            </md-select-label>
-            <md-option ng-value="image" ng-repeat="image in services.select.images | orderBy:'name'">
-                {{ image.name }}
-            </md-option>
-        </md-select>
+        <select ng-model="services.selectImage" ng-change="changeImage()"
+                ng-options="image.name for image in services.select.images | orderBy:'name'">
+        </select>
     </div>
 
     <div ng-show="services.selectImage">
