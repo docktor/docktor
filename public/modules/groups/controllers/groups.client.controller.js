@@ -138,7 +138,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     }
                 });
 
-                $scope.prepareDaemonsAll(allDaemonsContainer, function (daemon) {
+                var computeDaemon = function (daemon) {
                     $scope.group.containers.forEach(function (container) {
                         if (container.daemonId === daemon._id) {
                             container.daemon = $scope.getDaemon(container.daemonId);
@@ -159,12 +159,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                         });
                                     });
                             }
-
                             $scope.prepareJobs(container);
-                            $scope.inspect(container);
+                            // feat : remove docker call for every container
+                            //$scope.inspect(container);
                         }
                     });
-                });
+                };
+
+                $scope.prepareDaemonsAll(allDaemonsContainer, computeDaemon);
                 $scope.getUsersOnGroup();
                 $scope.computeGroupFavorite();
             });
@@ -219,6 +221,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.prepareDaemonsAll = function (allDaemonsContainer, cb) {
             if (allDaemonsContainer && !_.isEmpty(allDaemonsContainer)) {
                 angular.forEach(allDaemonsContainer, function (value, daemonId) {
+                    console.log("Compute daemon " + daemonId);
                     if (!_.contains($scope.daemons.ids, daemonId)) {
                         $scope.daemons.ids.push(daemonId);
                         Daemons.get({
