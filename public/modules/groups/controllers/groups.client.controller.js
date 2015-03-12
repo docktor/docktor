@@ -124,6 +124,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
+                //Sort the containers
+                $scope.group.containers.sort(function(a,b) {
+                    if (a.name > b.name) return 1;
+                    if (a.name < b.name) return 1;
+                    return 0;
+                });
+
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
                         ($stateParams.containerId && container._id === $stateParams.containerId)) {
