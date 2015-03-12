@@ -32,6 +32,7 @@ exports.create = function (req, res) {
  * Show the current group
  */
 exports.read = function (req, res) {
+    //TODO Compute req.group to retrieve all containers information
     res.jsonp(req.group);
 };
 
