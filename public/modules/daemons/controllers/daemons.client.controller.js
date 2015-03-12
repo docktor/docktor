@@ -79,7 +79,14 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.find = function () {
             Daemons.query(function (daemons) {
+                daemons.sort(function(a,b){
+                    if (a.name > b.name) return 1;
+                    if (a.name < b.name) return -1;
+                    return 0;
+                });
+
                 $scope.daemons = daemons;
+
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                     Daemon.getDetails(daemon);
@@ -90,6 +97,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                         $scope.positions[daemon.site._id].daemons = [];
                     $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
+
                 $scope.daemonsInitialized = true;
                 $scope.initMap();
             });

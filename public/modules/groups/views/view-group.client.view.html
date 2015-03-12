@@ -46,26 +46,32 @@
 
             <div ng-show="showAddRemoveContact" layout="column">
                 <div layout="row">
-                     <div flex="15">Add a contact</div>
-                    <div flex="85">
-                        <select ng-model="contactToAdd"
-                                ng-options="user.displayName for user in users | orderBy:'displayName'">
-                        </select>
-                        <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
-                                   ng-click="addContact()"><i class="fa fa-save"></i> Add
-                        </md-button>
-                    </div>
+                    <md-select ng-model="contactToAdd">
+                        <md-select-label>
+                            {{ contactToAdd.displayName ? contactToAdd.displayName : 'choose a contact to add' }}
+                        </md-select-label>
+
+                        <md-option ng-value="user" ng-repeat="user in users | orderBy:'displayName'">
+                            {{ user.displayName }}
+                        </md-option>
+                    </md-select>
+                    <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
+                               ng-click="addContact()"><i class="fa fa-save"></i> Add
+                    </md-button>
                 </div>
                 <div layout="row">
-                    <div flex="15">Remove a contact</div>
-                    <div flex="85">
-                        <select flex ng-model="contactToRemove"
-                                ng-options="user.displayName for user in group.users | orderBy:'displayName'">
-                        </select>
-                        <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove"
-                                   ng-click="removeContact()">Remove
-                        </md-button>
-                    </div>
+                    <md-select ng-model="contactToRemove">
+                        <md-select-label>
+                            {{ contactToRemove.displayName ? contactToRemove.displayName : 'choose a contact to remove' }}
+                        </md-select-label>
+
+                        <md-option ng-value="user" ng-repeat="user in group.users | orderBy:'displayName'">
+                            {{ user.displayName }}
+                        </md-option>
+                    </md-select>
+                    <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove"
+                               ng-click="removeContact()">Remove
+                    </md-button>
                 </div>
                 <div>
                     <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact"

@@ -33,7 +33,6 @@
     "consolidate": "~0.10.0",
     "swig": "~1.4.1",
     "grunt-env": "~0.4.1",
-    "grunt-node-inspector": "~0.1.3",
     "grunt-contrib-watch": "~0.6.1",
     "load-grunt-tasks": "~2.0.0",
     "grunt-contrib-jshint": "~0.10.0",
