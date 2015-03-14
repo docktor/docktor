@@ -40,7 +40,7 @@ exports.read = function (req, res) {
         daemons.forEach(function(daemon, idxDaemon){
             var lastDaemon = (idxDaemon === daemons.length -1);
             var docker = daemon.getDaemonDocker();
-            console.log("Searching " + service.title + " on daemon " + daemon.name);
+            console.log('Searching ' + service.title + ' on daemon ' + daemon.name);
             var d = {
                 name: daemon.name,
                 id: daemon._id

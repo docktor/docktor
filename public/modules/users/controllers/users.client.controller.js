@@ -35,7 +35,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
                     if (a.username > b.username) return 1;
                     if (a.username < b.username) return -1;
                     return 0;
-                })
+                });
             });
             $scope.users = users;
         };
