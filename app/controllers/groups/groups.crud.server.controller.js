@@ -6,6 +6,8 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
+    Daemon = mongoose.model('Daemon'),
+    Docker = require('dockerode'),
     User = require('../../models/user.server.model'),
     _ = require('lodash');
 
@@ -32,7 +34,62 @@ exports.create = function (req, res) {
  * Show the current group
  */
 exports.read = function (req, res) {
-    res.jsonp(req.group);
+    // Documents returned by Mongoose are not JSON objects directly,
+    var group = req.group.toObject();
+    // you'll need to convert them to an object to add properties to them
+    // http://stackoverflow.com/questions/14768132/add-a-new-attribute-to-existing-json-object-in-node-s
+
+    var listDaemonIds = [];
+    group.containers.forEach(function(container) {
+        if (listDaemonIds.indexOf(container.daemonId) === -1) listDaemonIds.push(container.daemonId);
+    });
+
+    var listRunningContainers = [];
+    var nbDaemonAnalysed = 0;
+    listDaemonIds.forEach(function(daemonId) {
+        //Loading daemon from database
+        Daemon.findById(daemonId).exec(function (err, daemon) {
+            var daemonDocker = daemon.getDaemonDocker();
+            //Call "docker ps"
+            daemonDocker.listContainers(function(err, data){
+                //For every container running ons this daemon
+                if (data) data.forEach(function(c){
+                    //Is it concerned by this group ?
+                    var concernedContainer = _.find(group.containers, function(container){
+                        return container.name === c.Names[0];
+                    });
+                    //If so
+                    if (concernedContainer) {
+                        listRunningContainers.push(c);
+                        concernedContainer.status = c;
+                        //Maybe the container is paused ?
+                        var paused = c.Status.indexOf("Paused") > -1;
+                        //Override inspect data
+                        concernedContainer.inspect = {
+                            State : {
+                                Running : true,
+                                Paused : paused
+                            }
+                        };
+                    } else {
+                        //Override inspect data
+                        concernedContainer.inspect = {
+                            State : {
+                                Running : false,
+                                Paused : false
+                            }
+                        };
+                    }
+                });
+                nbDaemonAnalysed++;
+                //Wait for all every daemon...
+                if (nbDaemonAnalysed === listDaemonIds.length) {
+                    group.runningContainers = listRunningContainers;
+                    res.jsonp(group);
+                }
+            });
+        });
+    });
 };
 
 exports.getUsersOnGroup = function (req, res) {
