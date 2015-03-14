@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Service = mongoose.model('Service'),
     Group = mongoose.model('Group'),
+    Daemon = mongoose.model('Daemon'),
     scheduler = require('../../config/scheduler'),
     _ = require('lodash');
 
@@ -32,7 +33,45 @@ exports.create = function (req, res) {
  * Show the current service
  */
 exports.read = function (req, res) {
-    res.jsonp(req.service);
+    var service = req.service.toObject();
+    service.daemons = [];
+
+    Daemon.find().exec(function(err, daemons){
+        daemons.forEach(function(daemon, idxDaemon){
+            var lastDaemon = (idxDaemon === daemons.length -1);
+            var docker = daemon.getDaemonDocker();
+            console.log("Searching " + service.title + " on daemon " + daemon.name);
+            var d = {
+                name: daemon.name,
+                id: daemon._id
+            };
+            d.images = [];
+            service.images.forEach(function(image, idxImage) {
+                var lastImage = (idxImage === service.images.length -1);
+                var serviceImage = {
+                    name: image.name,
+                    id: image._id,
+                    dockerImage: undefined
+                };
+                docker.listImages(function(err, data) {
+                    data.forEach(function(dockerImage) {
+                        if (dockerImage.RepoTags.indexOf(image.name) > -1) {
+                            serviceImage.dockerImage = dockerImage;
+                        }
+                    });
+                    d.images.push(serviceImage);
+
+                    if (lastImage) {
+                        service.daemons.push(d);
+                    }
+                    if (lastDaemon) {
+                        res.jsonp(service);
+                    }
+                });
+            });
+
+        });
+    });
 };
 
 /**
