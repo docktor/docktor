@@ -21,5 +21,34 @@
             <i class="fa fa-edit"></i> Edit
         </md-button>
     </div>
+
+    <div>
+        <h2>Daemons status</h2>
+        <md-list>
+            <md-item ng-repeat="daemon in service.daemons">
+                <md-item-content>
+                    <div class="md-tile-left">
+                        <h3>
+                            <md-button md-no-ink class="md-primary" href="/#!/admin/daemons/view/{{daemon.id}}">
+                                {{daemon.name}}
+                            </md-button>
+                        </h3>
+                    </div>
+                    <div class="md-tile-content md-padding">
+                        <ul>
+                            <md-list>
+                                <md-item ng-repeat="image in daemon.images">
+                                    <li>
+                                        <span>{{image.name}}</span><span ng-if="image.dockerImage"> - {{image.dockerImage.Created * 1000| date:'yyyy-MM-dd HH:mm:ss Z'}}</span>
+                                    </li>
+                                </md-item>
+                            </md-list>
+                        </ul>
+                    </div>
+                </md-item-content>
+            </md-item>
+        </md-list>
+    </div>
+
     <p class="lead" data-ng-bind="service.content"></p>
 </section>

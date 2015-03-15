@@ -63,7 +63,7 @@ exports.read = function (req, res) {
                         listRunningContainers.push(c);
                         concernedContainer.status = c;
                         //Maybe the container is paused ?
-                        var paused = c.Status.indexOf("Paused") > -1;
+                        var paused = c.Status.indexOf('Paused') > -1;
                         //Override inspect data
                         concernedContainer.inspect = {
                             State : {

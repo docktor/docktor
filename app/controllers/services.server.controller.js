@@ -53,23 +53,27 @@ exports.read = function (req, res) {
                     id: image._id,
                     dockerImage: undefined
                 };
+                d.images.push(serviceImage);
+                if (lastImage) {
+                    service.daemons.push(d);
+                }
                 docker.listImages(function(err, data) {
-                    data.forEach(function(dockerImage) {
-                        if (dockerImage.RepoTags.indexOf(image.name) > -1) {
-                            serviceImage.dockerImage = dockerImage;
-                        }
-                    });
-                    d.images.push(serviceImage);
-
-                    if (lastImage) {
-                        service.daemons.push(d);
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        data.forEach(function (dockerImage) {
+                            if (dockerImage.RepoTags.indexOf(image.name) > -1) {
+                                serviceImage.dockerImage = dockerImage;
+                                //I don't understand why but if this console.dir is not here, dockerImage is not set in th service
+                                console.dir(service);
+                            }
+                        });
                     }
-                    if (lastDaemon) {
+                    if (lastDaemon && lastImage) {
                         res.jsonp(service);
                     }
                 });
             });
-
         });
     });
 };
