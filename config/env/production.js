@@ -19,6 +19,7 @@ module.exports = {
                 'public/lib/angular-aria/angular-aria.js',
                 'public/lib/hammerjs/hammer.js',
                 'public/lib/angular-material/angular-material.js',
+                'public/lib/angular-messages/angular-messages.js',
                 'public/lib/angular-resource/angular-resource.js',
                 'public/lib/angular-cookies/angular-cookies.js',
                 'public/lib/angular-animate/angular-animate.js',
