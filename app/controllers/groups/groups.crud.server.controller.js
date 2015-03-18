@@ -39,10 +39,16 @@ exports.read = function (req, res) {
     // you'll need to convert them to an object to add properties to them
     // http://stackoverflow.com/questions/14768132/add-a-new-attribute-to-existing-json-object-in-node-s
 
+    if (!group.containers || group.containers.length == 0) {
+        res.jsonp(group);
+    }
+
     var listDaemonIds = [];
     group.containers.forEach(function(container) {
         if (listDaemonIds.indexOf(container.daemonId) === -1) listDaemonIds.push(container.daemonId);
     });
+
+
 
     var listRunningContainers = [];
     var nbDaemonAnalysed = 0;
@@ -72,13 +78,14 @@ exports.read = function (req, res) {
                             }
                         };
                     } else {
+                        //TODO it seems to bug...
                         //Override inspect data
-                        concernedContainer.inspect = {
-                            State : {
-                                Running : false,
-                                Paused : false
-                            }
-                        };
+                        //concernedContainer.inspect = {
+                        //    State : {
+                        //        Running : false,
+                        //        Paused : false
+                        //    }
+                        //};
                     }
                 });
                 nbDaemonAnalysed++;
