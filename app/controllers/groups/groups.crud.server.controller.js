@@ -40,7 +40,7 @@ exports.read = function (req, res) {
     // you'll need to convert them to an object to add properties to them
     // http://stackoverflow.com/questions/14768132/add-a-new-attribute-to-existing-json-object-in-node-s
 
-    if (!group.containers || group.containers.length == 0) {
+    if (!group.containers || group.containers.length === 0) {
         res.jsonp(group);
     }
 
@@ -57,21 +57,25 @@ exports.read = function (req, res) {
             var daemonDocker = daemon.getDaemonDocker();
             //Call "docker ps"
             daemonDocker.listContainers(function (err, data) {
+
                 //For every container running ons this daemon
                 if (data && data.length !== 0) {
                     data.forEach(function (c) {
                         //Is it concerned by this group ?
-                        console.log('Searching container : ' + c.Names);
+                        var cName = c.Names[0];
+                        if (cName.indexOf('/') === 0) cName = cName.substring(1);
                         var concernedContainer = _.find(group.containers, function (container) {
                             //TODO improve this search method
-                            return container.name === c.Names[0];
+                            var containerName = container.name;
+                            if (containerName.indexOf('/') === 0) containerName = containerName.substring(1);
+                            return containerName === cName;
                         });
                         //If so
                         if (concernedContainer) {
                             listRunningContainers.push(c);
                             concernedContainer.status = c;
                             //Maybe the container is paused ?
-                            var paused = c.Status.indexOf("Paused") > -1;
+                            var paused = c.Status.indexOf('Paused') > -1;
                             //Override inspect data
                             concernedContainer.inspect = {
                                 State: {
@@ -93,6 +97,13 @@ exports.read = function (req, res) {
                                     res.jsonp(group);
                                 }
                             });
+                        } else {
+                            nbDaemonAnalysed++;
+                            //Wait for all every daemon...
+                            if (nbDaemonAnalysed === listDaemonIds.length) {
+                                group.runningContainers = listRunningContainers;
+                                res.jsonp(group);
+                            }
                         }
                     });
                 } else {
