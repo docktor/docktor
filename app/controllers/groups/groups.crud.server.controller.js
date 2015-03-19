@@ -65,9 +65,10 @@ exports.read = function (req, res) {
                         var cName = c.Names[0];
                         if (cName.indexOf('/') === 0) cName = cName.substring(1);
                         var concernedContainer = _.find(group.containers, function (container) {
-                            //TODO improve this search method
+
                             var containerName = container.name;
                             if (containerName.indexOf('/') === 0) containerName = containerName.substring(1);
+                            console.log("** Checking " + containerName + " with " + cName + " from " + c.Names);
                             return containerName === cName;
                         });
                         //If so
@@ -88,7 +89,6 @@ exports.read = function (req, res) {
                                     var s = service.toObject();
                                     concernedContainer.commands = s.commands;
                                     concernedContainer.urls = s.urls;
-                                    console.dir(concernedContainer);
                                 }
                                 nbDaemonAnalysed++;
                                 //Wait for all every daemon...
