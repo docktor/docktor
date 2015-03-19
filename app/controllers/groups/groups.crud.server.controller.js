@@ -65,10 +65,9 @@ exports.read = function (req, res) {
                         var cName = c.Names[0];
                         if (cName.indexOf('/') === 0) cName = cName.substring(1);
                         var concernedContainer = _.find(group.containers, function (container) {
-
                             var containerName = container.name;
                             if (containerName.indexOf('/') === 0) containerName = containerName.substring(1);
-                            console.log("** Checking " + containerName + " with " + cName + " from " + c.Names);
+                            console.log("** Checking " + containerName + " with " + cName + " from " + c.Names + " :: " +  (containerName === cName));
                             return containerName === cName;
                         });
                         //If so
