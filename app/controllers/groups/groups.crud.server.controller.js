@@ -65,10 +65,11 @@ exports.read = function (req, res) {
                         var cName = c.Names[0];
                         if (cName.indexOf('/') === 0) cName = cName.substring(1);
                         var concernedContainer = _.find(group.containers, function (container) {
+                            console.log(container);
                             var containerName = container.name;
                             if (containerName.indexOf('/') === 0) containerName = containerName.substring(1);
-                            console.log("** Checking " + containerName + " with " + cName + " from " + c.Names + " :: " +  (containerName === cName));
-                            return containerName === cName;
+                            console.log("** Checking " + containerName + " with " + cName + " from " + c.Names + " :: " +  (containerName === cName && container.daemonId === daemon.id));
+                            return containerName === cName && container.daemonId === daemon.id;
                         });
                         //If so
                         if (concernedContainer) {
@@ -96,6 +97,7 @@ exports.read = function (req, res) {
                                     res.jsonp(group);
                                 }
                             });
+
                         } else {
                             nbDaemonAnalysed++;
                             //Wait for all every daemon...
