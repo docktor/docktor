@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
     Daemon = mongoose.model('Daemon'),
+    Service = mongoose.model('Service'),
     Docker = require('dockerode'),
     User = require('../../models/user.server.model'),
     _ = require('lodash');
@@ -44,55 +45,63 @@ exports.read = function (req, res) {
     }
 
     var listDaemonIds = [];
-    group.containers.forEach(function(container) {
+    group.containers.forEach(function (container) {
         if (listDaemonIds.indexOf(container.daemonId) === -1) listDaemonIds.push(container.daemonId);
     });
 
-
-
     var listRunningContainers = [];
     var nbDaemonAnalysed = 0;
-    listDaemonIds.forEach(function(daemonId) {
+    listDaemonIds.forEach(function (daemonId) {
         //Loading daemon from database
         Daemon.findById(daemonId).exec(function (err, daemon) {
             var daemonDocker = daemon.getDaemonDocker();
             //Call "docker ps"
-            daemonDocker.listContainers(function(err, data){
+            daemonDocker.listContainers(function (err, data) {
                 //For every container running ons this daemon
-                if (data) data.forEach(function(c){
-                    //Is it concerned by this group ?
-                    var concernedContainer = _.find(group.containers, function(container){
-                        return container.name === c.Names[0];
+                if (data && data.length !== 0) {
+                    data.forEach(function (c) {
+                        //Is it concerned by this group ?
+                        console.log('Searching container : ' + c.Names);
+                        var concernedContainer = _.find(group.containers, function (container) {
+                            //TODO improve this search method
+                            return container.name === c.Names[0];
+                        });
+                        //If so
+                        if (concernedContainer) {
+                            listRunningContainers.push(c);
+                            concernedContainer.status = c;
+                            //Maybe the container is paused ?
+                            var paused = c.Status.indexOf("Paused") > -1;
+                            //Override inspect data
+                            concernedContainer.inspect = {
+                                State: {
+                                    Running: true,
+                                    Paused: paused
+                                }
+                            };
+                            Service.findById(concernedContainer.serviceId).exec(function (err, service) {
+                                if (!err) {
+                                    var s = service.toObject();
+                                    concernedContainer.commands = s.commands;
+                                    concernedContainer.urls = s.urls;
+                                    console.dir(concernedContainer);
+                                }
+                                nbDaemonAnalysed++;
+                                //Wait for all every daemon...
+                                if (nbDaemonAnalysed === listDaemonIds.length) {
+                                    group.runningContainers = listRunningContainers;
+                                    res.jsonp(group);
+                                }
+                            });
+                        }
                     });
-                    //If so
-                    if (concernedContainer) {
-                        listRunningContainers.push(c);
-                        concernedContainer.status = c;
-                        //Maybe the container is paused ?
-                        var paused = c.Status.indexOf("Paused") > -1;
-                        //Override inspect data
-                        concernedContainer.inspect = {
-                            State : {
-                                Running : true,
-                                Paused : paused
-                            }
-                        };
-                    } else {
-                        //TODO it seems to bug...
-                        //Override inspect data
-                        //concernedContainer.inspect = {
-                        //    State : {
-                        //        Running : false,
-                        //        Paused : false
-                        //    }
-                        //};
+                } else {
+                    nbDaemonAnalysed++;
+                    //Wait for all every daemon...
+                    if (nbDaemonAnalysed === listDaemonIds.length) {
+                        group.runningContainers = listRunningContainers;
+                        res.jsonp(group);
                     }
-                });
-                nbDaemonAnalysed++;
-                //Wait for all every daemon...
-                if (nbDaemonAnalysed === listDaemonIds.length) {
-                    group.runningContainers = listRunningContainers;
-                    res.jsonp(group);
                 }
             });
         });

@@ -149,6 +149,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                             if ((container.serviceId) && (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId))) {
+                                /*
                                 ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
                                     .success(function (data) {
                                         container.commands = data.commands;
@@ -158,6 +159,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                             container.urls.push(urlO);
                                         });
                                     });
+                                    */
+                                angular.forEach(container.urls, function (url, key) {
+                                    var urlO = $scope.computeUrl(container, url);
+                                    container.urls.push(urlO);
+                                });
                             }
                             $scope.prepareJobs(container);
                             // feat : remove docker call for every container
