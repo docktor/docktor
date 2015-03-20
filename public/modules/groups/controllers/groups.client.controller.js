@@ -73,12 +73,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.find = function () {
             var groups = Groups.query();
-            groups.sort(function(a,b){
-                if (a.title > b.title) return 1;
-                if (a.title < b.title) return -1;
-                return 0;
-            });
-            $scope.groups = groups;
+            $scope.groups = _.sortBy(groups, function(d) {return d.title.trim().toUpperCase()});
 
         };
 
@@ -124,12 +119,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
-                //Sort the containers
-                $scope.group.containers.sort(function(a,b) {
-                    if (a.name > b.name) return 1;
-                    if (a.name < b.name) return 1;
-                    return 0;
-                });
+                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase()});
 
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
@@ -149,6 +139,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                             if ((container.serviceId) && (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId))) {
+                                /*
                                 ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
                                     .success(function (data) {
                                         container.commands = data.commands;
@@ -158,6 +149,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                             container.urls.push(urlO);
                                         });
                                     });
+                                    */
+                                angular.forEach(container.urls, function (url, key) {
+                                    var urlO = $scope.computeUrl(container, url);
+                                    container.urls.push(urlO);
+                                });
                             }
                             $scope.prepareJobs(container);
                             // feat : remove docker call for every container

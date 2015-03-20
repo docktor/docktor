@@ -160,6 +160,8 @@ exports.listSimplified = function (req, res) {
 };
 
 exports.getUrlsAndCommands = function (req, res) {
+    console.log(req.service.commands);
+    console.log(req.service.urls);
     res.jsonp({'commands': req.service.commands, 'urls': req.service.urls});
 };
 
