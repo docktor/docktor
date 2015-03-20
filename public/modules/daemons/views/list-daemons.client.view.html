@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div layout="row" data-ng-if="daemons.$resolved && daemons.length">
+    <div layout="row" data-ng-if="daemons.length">
         <div flex="35">
             <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px"
                      width="320px"></leaflet>
