@@ -72,9 +72,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.find = function () {
-            var groups = Groups.query();
-            $scope.groups = _.sortBy(groups, function(d) {return d.title.trim().toUpperCase()});
-
+            Groups.query().$promise.then(function(groups) {
+                console.log(groups);
+                $scope.groups = _.sortBy(groups, function (g) {
+                    return g.title.trim().toUpperCase()
+                });
+            });
         };
 
         $scope.findForCreateOrEditGroup = function () {
