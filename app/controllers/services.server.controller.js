@@ -82,49 +82,6 @@ exports.read = function (req, res) {
     queueImages.drain = function () {
         res.jsonp(service);
     };
-
-    /*
-     Daemon.find().exec(function(err, daemons){
-     daemons.forEach(function(daemon, idxDaemon){
-     var lastDaemon = (idxDaemon === daemons.length -1);
-     var docker = daemon.getDaemonDocker();
-     console.log('Searching ' + service.title + ' on daemon ' + daemon.name);
-     var d = {
-     name: daemon.name,
-     id: daemon._id
-     };
-     d.images = [];
-     service.images.forEach(function(image, idxImage) {
-     var lastImage = (idxImage === service.images.length -1);
-     var serviceImage = {
-     name: image.name,
-     id: image._id,
-     dockerImage: undefined
-     };
-     d.images.push(serviceImage);
-     if (lastImage) {
-     service.daemons.push(d);
-     }
-     docker.listImages(function(err, data) {
-     if (err) {
-     console.log(err);
-     } else {
-     data.forEach(function (dockerImage) {
-     if (dockerImage.RepoTags.indexOf(image.name) > -1) {
-     serviceImage.dockerImage = dockerImage;
-     //I don't understand why but if this console.dir is not here, dockerImage is not set in th service
-     console.dir(service);
-     }
-     });
-     }
-     if (lastDaemon && lastImage) {
-     res.jsonp(service);
-     }
-     });
-     });
-     });
-     });
-     */
 };
 
 /**
