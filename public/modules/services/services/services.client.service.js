@@ -27,6 +27,9 @@ angular.module('services').factory('ServicesServices', ['$http',
             },
             desactivateJob: function (serviceId, job) {
                 return $http.delete('/services/jobs/desactivate/' + serviceId + '/' + job._id);
+            },
+            pullImage: function(serviceId, image, daemon) {
+                return $http.put('/services/' + serviceId + '/images', {imageId: image._id, daemonId: daemon.id});
             }
         };
     }

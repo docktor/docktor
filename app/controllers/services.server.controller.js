@@ -53,8 +53,8 @@ exports.read = function (req, res) {
                 var docker = daemon.getDaemonDocker();
                 docker.listImages(function (err, data) {
                     if (err) {
-                        callback(err)
-                    };
+                        callback(err);
+                    }
                     if (data) {
                         d.online = true;
                         data.forEach(function (dockerImage) {
@@ -185,6 +185,12 @@ exports.desactivateJob = function (req, res) {
     scheduler.desactivateJob(req.params.jobId, function (numRemoved) {
         res.jsonp({msg: 'End Desactivate job (' + numRemoved + ' removed)'});
     });
+};
+
+exports.pullImage = function(req, res) {
+    console.log('Pull ' + req.body.imageId + ' to ' + req.body.daemonId);
+
+    res.status(200);
 };
 
 /**

@@ -249,5 +249,9 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
         };
 
+        $scope.pullImage = function(image, daemon) {
+            ServicesServices.pullImage($scope.service._id, image, daemon);
+        };
+
     }
 ]);

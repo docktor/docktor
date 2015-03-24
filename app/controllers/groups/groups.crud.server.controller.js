@@ -210,7 +210,7 @@ exports.getJobs = function (req, res) {
 };
 
 exports.getFreePortsOnContainer = function (req, res) {
-    var containerId = req.param['idContainer'];
+    var containerId = req.params.idContainer;
     Group.find().where('daemon')
         .equals(containerId)
         .exec(function (err, groups) {
