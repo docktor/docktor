@@ -73,10 +73,13 @@ exports.read = function (req, res) {
 
     Daemon.find().exec(function (exec, data) {
         daemons = data;
-        service.images.forEach(function (image) {
-            queueImages.push(image);
-        });
-
+        if (!service.images || service.images.length === 0) {
+            res.jsonp(service);
+        } else {
+            service.images.forEach(function (image) {
+                queueImages.push(image);
+            });
+        }
     });
 
     queueImages.drain = function () {
@@ -187,10 +190,47 @@ exports.desactivateJob = function (req, res) {
     });
 };
 
-exports.pullImage = function(req, res) {
-    console.log('Pull ' + req.body.imageId + ' to ' + req.body.daemonId);
-
-    res.status(200);
+exports.pullImage = function (req, res) {
+    //Retrieve service with only the requested image
+    Service.findOne({'images._id' : req.body.imageId},{'images.$': 1}, function (err, service) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else if (service) {
+                //Retrieve the daemon
+                Daemon.findById(req.body.daemonId).exec(function (err, daemon) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else if (daemon) {
+                        var daemonDocker = daemon.getDaemonDocker();
+                        //Call the docker pull command
+                        console.log("*** Pulling the image ***");
+                        daemonDocker.pull(service.images[0].name, function (err, stream) {
+                            if (err) {
+                                return res.status(400).send({
+                                    message: errorHandler.getErrorMessage(err)
+                                });
+                            } else {
+                                //Getting buffered events
+                                var string = [];
+                                stream.on('data', function (buffer) {
+                                    var part = buffer;
+                                    string.push(JSON.parse(part.toString()));
+                                });
+                                stream.on('end', function () {
+                                    console.log("*** done ***");
+                                    res.jsonp(string);
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    );
 };
 
 /**
