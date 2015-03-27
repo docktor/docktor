@@ -149,7 +149,7 @@
 
     <div ng-repeat="container in group.containers">
         <md-card class="cards">
-            <md-toolbar>
+            <md-toolbar ng-class="{'md-warn' : !container.inspect.State.Running}">
                 <div class="flexContainer">
                     <md-button class="toolbarTitre" href="#!/groups/{{group._id}}/{{container._id}}">
                         <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
@@ -187,9 +187,10 @@
                         </span>
                         <div ng-switch-when="up">
                             <span class="cardContentTitre">Daemon:</span>
-                                <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
+                                <span ng-show="authentication.isAdmin">{{container.daemon.name}}</span>
+                                <md-button class="md-fab md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
                                                    href="#!/admin/daemons/view/{{container.daemonId}}">
-                                            {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                                            {{container.daemon.dockerStatus}}
                                 </md-button>
                                 <span ng-hide="authentication.isAdmin" class="label label-success">
                                     {{container.daemon.name}} {{container.daemon.dockerStatus}}
@@ -199,7 +200,7 @@
                     </div>  
                 </div>
                 <div class="cardItem">
-                    <span class="cardContentTitre">Group:</span>{{container.name}}
+                    <span class="cardContentTitre">Name:</span>{{container.name}}
                 </div>
                 <div class="cardItem">
                     <span class="cardContentTitre">Image:</span>{{container.image}}
@@ -209,7 +210,7 @@
                 </div>   
                 
                 
-                <div class="cardItem">
+                <div class="cardItem actions">
                 <div ng-switch="container.daemon.dockerStatus">
                     <div ng-switch-when="checking">
                     </div>
@@ -219,35 +220,35 @@
 
                     <div ng-switch-when="up">
 
-                        <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
-                                   ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> create
+                        <md-button ng-hide="container.containerId" class="md-raised md-primary"
+                                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> create
                         </md-button>
 
                         <div ng-show="container.containerId">
-                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-primary"
-                                       ng-click="startContainer(gridItem)">
+                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary"
+                                       ng-click="startContainer(container)">
                                 <i class="fa fa-play"></i> run
                             </md-button>
 
-                            <div ng-show="gridItem.inspect.State.Running">
-                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="stopContainer(gridItem)">
+                            <div ng-show="container.inspect.State.Running">
+                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                                           ng-click="stopContainer(container)">
                                     <i class="fa fa-stop"></i> stop
                                 </md-button>
-                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="pauseContainer(gridItem)">
+                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                                           ng-click="pauseContainer(container)">
                                     <i class="fa fa-pause"></i> pause
                                 </md-button>
-                                <md-button class="md-raised" ng-show="gridItem.inspect.State.Paused"
-                                           ng-click="unpauseContainer(gridItem)">
+                                <md-button class="md-raised" ng-show="container.inspect.State.Paused"
+                                           ng-click="unpauseContainer(container)">
                                     <i class="fa fa-pause"></i> unpause
                                 </md-button>
-                                <md-button class="md-raised" ng-click="killContainer(gridItem)"><i
+                                <md-button class="md-raised" ng-click="killContainer(container)"><i
                                         class="fa fa-crosshairs"></i> kill
                                 </md-button>
                             </div>
-                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
-                                       ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> remove
+                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-warn"
+                                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> remove
                             </md-button>
                         </div>
                     </div>

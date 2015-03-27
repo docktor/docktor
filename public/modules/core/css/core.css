@@ -933,7 +933,7 @@ md-select {
 }
 
 a.toolbarTitre.md-button {
-    color:white;  
+    color:white;
 }
 
 md-toolbar{
@@ -950,12 +950,22 @@ md-toolbar{
 }
 
 .serviceContent{
-    padding: 15px;
+    min-height: 200px;
+    padding: 10px;
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
 }
 .cardItem{
-    padding-bottom: 10px;
+    display: flex;
+    flex: 1;
+}
+.cardItem .actions {
+    align-items: flex-end;
 }
 .cardContentTitre{
-    font-size: 18px;
+    font-size: 12px;
+    font-weight: bold;
     margin-right: 10px;
 }
