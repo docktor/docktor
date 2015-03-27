@@ -262,7 +262,7 @@ exports.listGroups = function (req, res) {
         where = {};
     }
 
-    Group.find(where).sort('title').populate('daemon').exec(function (err, groups) {
+    Group.find(where).sort('title').populate('daemon', '-ca -cert -key').exec(function (err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -289,7 +289,7 @@ exports.listSimplified = function (req, res) {
  * Group middleware
  */
 exports.groupById = function (req, res, next, id) {
-    Group.findById(id).populate('user', 'displayName').populate('daemon').exec(function (err, group) {
+    Group.findById(id).populate('user', 'displayName').populate('daemon', '-ca -cert -key').exec(function (err, group) {
         if (err) return next(err);
         if (!group) return next(new Error('Failed to load group ' + id));
         req.group = group;
