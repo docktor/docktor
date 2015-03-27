@@ -192,7 +192,7 @@ exports.desactivateJob = function (req, res) {
 
 exports.pullImage = function (req, res) {
     //Retrieve service with only the requested image
-    Service.findOne({'images._id' : req.body.imageId},{'images.$': 1}, function (err, service) {
+    Service.findOne({'images._id': req.body.imageId}, {'images.$': 1}, function (err, service) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
@@ -207,7 +207,7 @@ exports.pullImage = function (req, res) {
                     } else if (daemon) {
                         var daemonDocker = daemon.getDaemonDocker();
                         //Call the docker pull command
-                        console.log("*** Pulling the image ***");
+                        console.log('*** Pulling the image ***');
                         daemonDocker.pull(service.images[0].name, function (err, stream) {
                             if (err) {
                                 return res.status(400).send({
@@ -221,8 +221,19 @@ exports.pullImage = function (req, res) {
                                     string.push(JSON.parse(part.toString()));
                                 });
                                 stream.on('end', function () {
-                                    console.log("*** done ***");
-                                    res.jsonp(string);
+                                    console.dir(string);
+                                    console.log('*** done ***');
+                                    err = _.find(string, function (s) {
+                                        return s.error;
+                                    });
+                                    if (err) {
+                                        return res.status(400).send({
+                                            message: errorHandler.getErrorMessage(err.error)
+                                        });
+                                    } else {
+
+                                        res.jsonp(string);
+                                    }
                                 });
                             }
                         });

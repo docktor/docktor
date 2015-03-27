@@ -12,12 +12,14 @@
         </md-toolbar>
         <ul data-ng-repeat="image in service.images">
             <li>
-                {{image.name}}, active : {{image.active}}
+                <strong>{{image.name}}</strong> - active : {{image.active}}
                 <ul data-ng-repeat="daemon in image.daemons">
                     <li>
                         <span ng-switch="daemon.dockerImage ? '_defined_' :  '_undefined_'">
                             <span ng-switch-when="_undefined_"> {{daemon.name}}  - <strong>Image unavailabe</strong>
-                                <md-button class="md-warn" ng-click="pullImage(image, daemon)"><i class="fa fa-download"></i> Pull</md-button>
+                                <md-button class="md-warn" ng-click="pullImage(image, daemon)" ng-disabled="downloadInProgress"><i class="fa fa-download"></i>
+                                    <span ng-if="!downloadInProgress">Pull</span>
+                                    <span ng-if="downloadInProgress">Downloading...</span></md-button>
                             </span>
                             <span ng-switch-when="_defined_"> {{daemon.name}}  - Image <strong>{{daemon.dockerImage.Id | limitTo: 12}}</strong> - <em>created on {{daemon.dockerImage.Created * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</em></span>
                         </span>
