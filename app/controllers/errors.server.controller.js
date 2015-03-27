@@ -34,7 +34,7 @@ exports.getErrorMessage = function (err) {
                 message = getUniqueErrorMessage(err);
                 break;
             case 'ECONNRESET':
-                message  = 'Host unreachable'
+                message  = 'Host unreachable';
                 break;
             case 'ECONNREFUSED':
                 message = 'Connection Refused';

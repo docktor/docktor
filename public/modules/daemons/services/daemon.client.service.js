@@ -3,6 +3,23 @@
 angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
     function (DaemonsDocker, Toasts) {
         return {
+            isUp: function (daemon, callback) {
+                DaemonsDocker.infos(daemon._id).
+                    success(function (infos) {
+                        daemon.dockerInfo = infos.info;
+                        if (infos.info) {
+                            daemon.dockerStatus = 'up';
+                            daemon.dockerStatusUp = true;
+                        } else {
+                            daemon.dockerStatus = 'down';
+                        }
+                        if (callback) callback();
+                    })
+                    .error(function (err) {
+                        daemon.dockerStatus = 'down';
+                        if (callback) callback();
+                    });
+            },
             getcAdvisorUrl: function (daemon) {
                 return daemon.cadvisorApi.substring(0, daemon.cadvisorApi.indexOf('/api'));
             },

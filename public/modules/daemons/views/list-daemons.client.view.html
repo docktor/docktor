@@ -1,4 +1,4 @@
-<section data-ng-controller="DaemonsController" data-ng-init="find()">
+<section data-ng-controller="DaemonsController" data-ng-init="findWithoutDetails()">
     <div layout="row">
         <h2 flex>Admin / Daemons</h2>
 
@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div layout="row" data-ng-if="daemons.$resolved && daemons.length">
+    <div layout="row" data-ng-if="daemons.length">
         <div flex="35">
             <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px"
                      width="320px"></leaflet>

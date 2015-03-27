@@ -6,7 +6,11 @@
 var mongoose = require('mongoose'),
     errorHandler = require('../errors.server.controller'),
     Group = mongoose.model('Group'),
+    Daemon = mongoose.model('Daemon'),
+    Service = mongoose.model('Service'),
+    Docker = require('dockerode'),
     User = require('../../models/user.server.model'),
+    async = require('async'),
     _ = require('lodash');
 
 /**
@@ -32,7 +36,105 @@ exports.create = function (req, res) {
  * Show the current group
  */
 exports.read = function (req, res) {
-    res.jsonp(req.group);
+    // Documents returned by Mongoose are not JSON objects directly,
+    var group = req.group.toObject();
+    // you'll need to convert them to an object to add properties to them
+    // http://stackoverflow.com/questions/14768132/add-a-new-attribute-to-existing-json-object-in-node-s
+
+    //If there is not containers, return
+    if (!group.containers || group.containers.length === 0) {
+        res.jsonp(group);
+    }
+
+    //Helpful function to get the container object on the group from a container name
+    var getConcernedContainer = function (cName) {
+        var concernedContainer = _.find(group.containers, function (container) {
+            return container.name === cName;
+        });
+        return concernedContainer;
+    };
+
+    //Defining queues
+    var queueDaemons, queueContainers;
+
+    // This worker will be called for every daemon pushed to the daemonQueue
+    // For every daemon, call docker ps
+    // For every container running on the container,
+    // push the container to the containerQueue
+    var daemonWorker = function (daemon, callback) {
+        //console.log('Processing daemon ' + daemon.name);
+        var daemonDocker = daemon.getDaemonDocker();
+        //Call "docker ps"
+        daemonDocker.listContainers(function (err, data) {
+            //For every container running ons this daemon
+            if (data && data.length !== 0) {
+                data.forEach(function (c) {
+                    queueContainers.push(c);
+                });
+            }
+            if (err) {
+                callback(err);
+            }
+            callback();
+        });
+    };
+
+    // This worker will be called for every container pushed to the queue
+    // For every running container,
+    // find the container object from the group and find the service
+    var containerWorker = function (container, callback) {
+        var concernedContainer = getConcernedContainer(container.Names[0]);
+        //Retrieve the service
+        if (concernedContainer) {
+            Service.findById(concernedContainer.serviceId).exec(function (err, service) {
+                if (!err) {
+                    var paused = container.Status.indexOf('Paused') > -1;
+                    //Overriding docker inspect
+                    concernedContainer.inspect = {
+                        State: {
+                            Running: true,
+                            Paused: paused
+                        }
+                    };
+                    concernedContainer.commands = service.commands;
+                    concernedContainer.urls = service.urls;
+                    callback();
+                } else {
+                    callback(err);
+                }
+            });
+        } else {
+            callback();
+        }
+    };
+
+    //Defining queues
+    queueDaemons = async.queue(daemonWorker, 2);
+    queueContainers = async.queue(containerWorker, 10);
+
+    //drain function will be called when the last item from the queue has returned from the worker
+    var drainQueues = function () {
+        //Waiting the last of the 2 workers queues to return de response
+        if (queueDaemons.idle() && queueContainers.idle()) {
+            res.jsonp(group);
+        }
+    };
+    queueDaemons.drain = drainQueues;
+    queueContainers.drain = drainQueues;
+
+    //Main part. Getting the list of concerned Daemon, from the list of the container of the group
+    var listDaemonIds = [];
+    group.containers.forEach(function (container) {
+        if (listDaemonIds.indexOf(container.daemonId) === -1) listDaemonIds.push(container.daemonId);
+    });
+    //Main part. For every daemon.
+    listDaemonIds.forEach(function (daemonId) {
+        //Loading daemon from database
+        Daemon.findById(daemonId).exec(function (err, daemon) {
+            //Push the dameon to the queue and start the magic !
+            queueDaemons.push(daemon);
+        });
+    });
 };
 
 exports.getUsersOnGroup = function (req, res) {
@@ -108,7 +210,7 @@ exports.getJobs = function (req, res) {
 };
 
 exports.getFreePortsOnContainer = function (req, res) {
-    var containerId = req.param('idContainer');
+    var containerId = req.param['idContainer'];
     Group.find().where('daemon')
         .equals(containerId)
         .exec(function (err, groups) {

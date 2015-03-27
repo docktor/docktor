@@ -367,7 +367,7 @@ exports.execInContainer = function (req, res) {
  * Group middleware
  */
 exports.containerById = function (req, res, next, id) {
-    var containerId = req.param('containerId');
+    var containerId = req.params['containerId'];
     var container = req.group.containers.id(containerId);
     if (!container) return next(new Error('Failed to load container ' + containerId));
     req.group.containers = [container];

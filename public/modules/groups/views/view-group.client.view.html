@@ -218,36 +218,36 @@
                     </div>
 
                     <div ng-switch-when="up">
-                        <md-button ng-hide="container.containerId" class="md-raised md-primary"
-                                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
+
+                        <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
+                                   ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> create
                         </md-button>
 
                         <div ng-show="container.containerId">
-
-                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary"
-                                       ng-click="startContainer(container)">
-                                <i class="fa fa-play"></i> Docker run
+                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-primary"
+                                       ng-click="startContainer(gridItem)">
+                                <i class="fa fa-play"></i> run
                             </md-button>
 
-                            <div ng-show="container.inspect.State.Running">
-                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                                           ng-click="stopContainer(container)">
-                                    <i class="fa fa-stop"></i> Docker stop
+                            <div ng-show="gridItem.inspect.State.Running">
+                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
+                                           ng-click="stopContainer(gridItem)">
+                                    <i class="fa fa-stop"></i> stop
                                 </md-button>
-                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                                           ng-click="pauseContainer(container)">
-                                    <i class="fa fa-pause"></i> Docker pause
+                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
+                                           ng-click="pauseContainer(gridItem)">
+                                    <i class="fa fa-pause"></i> pause
                                 </md-button>
-                                <md-button class="md-raised" ng-show="container.inspect.State.Paused"
-                                           ng-click="unpauseContainer(container)">
-                                    <i class="fa fa-pause"></i> Docker unpause
+                                <md-button class="md-raised" ng-show="gridItem.inspect.State.Paused"
+                                           ng-click="unpauseContainer(gridItem)">
+                                    <i class="fa fa-pause"></i> unpause
                                 </md-button>
-                                <md-button class="md-raised" ng-click="killContainer(container)"><i
-                                        class="fa fa-crosshairs"></i> Docker kill
+                                <md-button class="md-raised" ng-click="killContainer(gridItem)"><i
+                                        class="fa fa-crosshairs"></i> kill
                                 </md-button>
                             </div>
-                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-warn"
-                                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
+                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
+                                       ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> remove
                             </md-button>
                         </div>
                     </div>

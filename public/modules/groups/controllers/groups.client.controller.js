@@ -72,7 +72,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.find = function () {
-            $scope.groups = Groups.query();
+            Groups.query().$promise.then(function(groups) {
+                console.log(groups);
+                $scope.groups = _.sortBy(groups, function (g) {
+                    return g.title.trim().toUpperCase()
+                });
+            });
         };
 
         $scope.findForCreateOrEditGroup = function () {
@@ -117,6 +122,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
+                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase()});
+
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
                         ($stateParams.containerId && container._id === $stateParams.containerId)) {
@@ -124,7 +131,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     }
                 });
 
-                $scope.prepareDaemonsAll(allDaemonsContainer, function (daemon) {
+                var computeDaemon = function (daemon) {
                     $scope.group.containers.forEach(function (container) {
                         if (container.daemonId === daemon._id) {
                             container.daemon = $scope.getDaemon(container.daemonId);
@@ -135,6 +142,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                             if ((container.serviceId) && (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId))) {
+                                /*
                                 ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
                                     .success(function (data) {
                                         container.commands = data.commands;
@@ -144,13 +152,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                             container.urls.push(urlO);
                                         });
                                     });
+                                    */
+                                angular.forEach(container.urls, function (url, key) {
+                                    var urlO = $scope.computeUrl(container, url);
+                                    container.urls.push(urlO);
+                                });
                             }
-
                             $scope.prepareJobs(container);
-                            $scope.inspect(container);
+                            // feat : remove docker call for every container
+                            //$scope.inspect(container);
                         }
                     });
-                });
+                };
+
+                $scope.prepareDaemonsAll(allDaemonsContainer, computeDaemon);
                 $scope.getUsersOnGroup();
                 $scope.computeGroupFavorite();
             });

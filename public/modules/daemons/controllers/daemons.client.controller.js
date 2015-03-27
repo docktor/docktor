@@ -77,15 +77,29 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             }
         };
 
-        $scope.find = function () {
+        $scope.findWithoutDetails = function() {
             Daemons.query(function (daemons) {
-                daemons.sort(function(a,b){
-                    if (a.name > b.name) return 1;
-                    if (a.name < b.name) return -1;
-                    return 0;
+                $scope.daemons = _.sortBy(daemons, function(d) {return d.name.toUpperCase()});
+
+                angular.forEach($scope.daemons, function (daemon, key) {
+                    daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
+                    Daemon.isUp(daemon);
+                    if (!$scope.positions[daemon.site._id])
+                        $scope.positions[daemon.site._id] = {};
+                    $scope.positions[daemon.site._id].site = daemon.site;
+                    if (!$scope.positions[daemon.site._id].daemons)
+                        $scope.positions[daemon.site._id].daemons = [];
+                    $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
 
-                $scope.daemons = daemons;
+                $scope.daemonsInitialized = true;
+                $scope.initMap();
+            });
+        };
+
+        $scope.find = function () {
+            Daemons.query(function (daemons) {
+                $scope.daemons = _.sortBy(daemons, function(d) {return d.name.toUpperCase()});
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
