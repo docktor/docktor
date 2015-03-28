@@ -175,6 +175,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
             $scope.commandName = '';
             $scope.commandExec = '';
             $scope.commandRole = 'user';
+            $scope.downloadInProgress = false;
         };
 
         $scope.removeCommand = function (command) {
@@ -247,6 +248,27 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.removeUrl = function (url) {
             $scope.service.urls.splice($scope.service.urls.indexOf(url), 1);
+        };
+
+        $scope.pullImage = function(image, daemon) {
+            $scope.downloadInProgress = true;
+            ServicesServices
+                .pullImage($scope.service._id, image, daemon)
+                .success(function (response) {
+                    //Check the "waiting" case
+                    if (response.length ===1 && response[0].status.indexOf('Waiting') > -1) {
+                        Toasts.addToast(response[0].status, 'info');
+                    } else {
+                        Toasts.addToast('Download complete !', 'info');
+                        $scope.findOne();
+                    }
+                    $scope.downloadInProgress = false;
+                }).error(function (err, status, headers, config) {
+                    var title = 'Error - ' + moment().format('hh:mm:ss');
+                    var message = err.message ? err.message : err;
+                    Toasts.addToast(message, 'danger', title);
+                    $scope.downloadInProgress = false;
+                });
         };
 
     }

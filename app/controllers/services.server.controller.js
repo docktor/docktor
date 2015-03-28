@@ -7,7 +7,9 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Service = mongoose.model('Service'),
     Group = mongoose.model('Group'),
+    Daemon = mongoose.model('Daemon'),
     scheduler = require('../../config/scheduler'),
+    async = require('async'),
     _ = require('lodash');
 
 /**
@@ -32,7 +34,57 @@ exports.create = function (req, res) {
  * Show the current service
  */
 exports.read = function (req, res) {
-    res.jsonp(req.service);
+    var service = req.service.toObject();
+    var daemons = [];
+
+    var imageWorker = function (image, callback) {
+        if (!daemons) {
+            callback();
+        } else {
+            image.daemons = [];
+            daemons.forEach(function (daemon) {
+                var d = {
+                    name: daemon.name,
+                    id: daemon._id,
+                    dockerImage: undefined,
+                    online: false
+                };
+                image.daemons.push(d);
+                var docker = daemon.getDaemonDocker();
+                docker.listImages(function (err, data) {
+                    if (err) {
+                        callback(err);
+                    }
+                    if (data) {
+                        d.online = true;
+                        data.forEach(function (dockerImage) {
+                            if (dockerImage.RepoTags.indexOf(image.name) > -1) {
+                                d.dockerImage = dockerImage;
+                            }
+                        });
+                        callback();
+                    }
+                });
+            });
+        }
+    };
+
+    var queueImages = async.queue(imageWorker, 2);
+
+    Daemon.find().exec(function (exec, data) {
+        daemons = data;
+        if (!service.images || service.images.length === 0) {
+            res.jsonp(service);
+        } else {
+            service.images.forEach(function (image) {
+                queueImages.push(image);
+            });
+        }
+    });
+
+    queueImages.drain = function () {
+        res.jsonp(service);
+    };
 };
 
 /**
@@ -136,6 +188,60 @@ exports.desactivateJob = function (req, res) {
     scheduler.desactivateJob(req.params.jobId, function (numRemoved) {
         res.jsonp({msg: 'End Desactivate job (' + numRemoved + ' removed)'});
     });
+};
+
+exports.pullImage = function (req, res) {
+    //Retrieve service with only the requested image
+    Service.findOne({'images._id': req.body.imageId}, {'images.$': 1}, function (err, service) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else if (service) {
+                //Retrieve the daemon
+                Daemon.findById(req.body.daemonId).exec(function (err, daemon) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else if (daemon) {
+                        var daemonDocker = daemon.getDaemonDocker();
+                        //Call the docker pull command
+                        console.log('*** Pulling the image ***');
+                        daemonDocker.pull(service.images[0].name, function (err, stream) {
+                            if (err) {
+                                return res.status(400).send({
+                                    message: errorHandler.getErrorMessage(err)
+                                });
+                            } else {
+                                //Getting buffered events
+                                var string = [];
+                                stream.on('data', function (buffer) {
+                                    var part = buffer;
+                                    string.push(JSON.parse(part.toString()));
+                                });
+                                stream.on('end', function () {
+                                    console.dir(string);
+                                    console.log('*** done ***');
+                                    err = _.find(string, function (s) {
+                                        return s.error;
+                                    });
+                                    if (err) {
+                                        return res.status(400).send({
+                                            message: errorHandler.getErrorMessage(err.error)
+                                        });
+                                    } else {
+
+                                        res.jsonp(string);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    );
 };
 
 /**
