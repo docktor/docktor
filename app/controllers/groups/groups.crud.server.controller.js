@@ -87,7 +87,7 @@ exports.read = function (req, res) {
         //Retrieve the service
         if (concernedContainer) {
             Service.findById(concernedContainer.serviceId).exec(function (err, service) {
-                if (!err) {
+                if (!err && service) {
                     var paused = container.Status.indexOf('Paused') > -1;
                     //Overriding docker inspect
                     concernedContainer.inspect = {
