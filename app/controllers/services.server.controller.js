@@ -37,35 +37,50 @@ exports.read = function (req, res) {
     var service = req.service.toObject();
     var daemons = [];
 
+    var daemonWorker = function (r,callback){
+        var daemon = r.daemon;
+        var image = r.image;
+        var d = {
+            name: daemon.name,
+            id: daemon._id,
+            dockerImage: undefined,
+            online: false
+        };
+        image.daemons.push(d);
+        var docker = daemon.getDaemonDocker();
+        docker.listImages(function (err, data) {
+            if (err) {
+                callback(err);
+            }
+            if (data) {
+                d.online = true;
+                data.forEach(function (dockerImage) {
+                    if (dockerImage.RepoTags.indexOf(image.name) > -1) {
+                        d.dockerImage = dockerImage;
+                    }
+                });
+                callback();
+            }
+        });
+    };
+
     var imageWorker = function (image, callback) {
         if (!daemons) {
             callback();
         } else {
             image.daemons = [];
+            var queueDaemon = async.queue(daemonWorker, 2);
+
             daemons.forEach(function (daemon) {
-                var d = {
-                    name: daemon.name,
-                    id: daemon._id,
-                    dockerImage: undefined,
-                    online: false
+                var r = {
+                    daemon : daemon,
+                    image  : image
                 };
-                image.daemons.push(d);
-                var docker = daemon.getDaemonDocker();
-                docker.listImages(function (err, data) {
-                    if (err) {
-                        callback(err);
-                    }
-                    if (data) {
-                        d.online = true;
-                        data.forEach(function (dockerImage) {
-                            if (dockerImage.RepoTags.indexOf(image.name) > -1) {
-                                d.dockerImage = dockerImage;
-                            }
-                        });
-                        callback();
-                    }
-                });
+                queueDaemon.push(r);
             });
+            queueDaemon.drain = function () {
+                callback();
+            };
         }
     };
 
@@ -73,7 +88,7 @@ exports.read = function (req, res) {
 
     Daemon.find().exec(function (exec, data) {
         daemons = data;
-        if (!service.images || service.images.length === 0) {
+        if (!service.images || service.images.length === 0 || daemons.length ===0) {
             res.jsonp(service);
         } else {
             service.images.forEach(function (image) {
