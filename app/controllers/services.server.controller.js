@@ -37,16 +37,14 @@ exports.read = function (req, res) {
     var service = req.service.toObject();
     var daemons = [];
 
-    var daemonWorker = function (r,callback){
-        var daemon = r.daemon;
-        var image = r.image;
+    var daemonWorker = function (daemon,callback){
         var d = {
             name: daemon.name,
             id: daemon._id,
             dockerImage: undefined,
             online: false
         };
-        image.daemons.push(d);
+
         var docker = daemon.getDaemonDocker();
         docker.listImages(function (err, data) {
             if (err) {
@@ -54,53 +52,42 @@ exports.read = function (req, res) {
             }
             if (data) {
                 d.online = true;
-                data.forEach(function (dockerImage) {
-                    if (dockerImage.RepoTags.indexOf(image.name) > -1) {
-                        d.dockerImage = dockerImage;
-                    }
+
+                service.images.forEach(function(image) {
+
+                    image.daemons.push(d);
+                    data.forEach(function (dockerImage) {
+                        if (dockerImage.RepoTags.indexOf(image.name) > -1) {
+                            d.dockerImage = dockerImage;
+                        }
+                    });
                 });
                 callback();
             }
         });
     };
 
-    var imageWorker = function (image, callback) {
-        if (!daemons) {
-            callback();
-        } else {
-            image.daemons = [];
-            var queueDaemon = async.queue(daemonWorker, 2);
-
-            daemons.forEach(function (daemon) {
-                var r = {
-                    daemon : daemon,
-                    image  : image
-                };
-                queueDaemon.push(r);
-            });
-            queueDaemon.drain = function () {
-                callback();
-            };
-        }
-    };
-
-    var queueImages = async.queue(imageWorker, 2);
+    var queueDaemon = async.queue(daemonWorker, 4);
 
     Daemon.find().exec(function (exec, data) {
         daemons = data;
         if (!service.images || service.images.length === 0 || daemons.length ===0) {
             res.jsonp(service);
         } else {
-            service.images.forEach(function (image) {
-                queueImages.push(image);
+            service.images.forEach(function(image) {
+                image.daemons = [];
+            });
+            daemons.forEach(function (daemon) {
+                queueDaemon.push(daemon);
             });
         }
     });
 
-    queueImages.drain = function () {
+    queueDaemon.drain = function () {
         res.jsonp(service);
     };
 };
+
 
 /**
  * Update a service
