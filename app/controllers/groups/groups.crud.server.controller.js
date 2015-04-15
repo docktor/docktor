@@ -73,9 +73,9 @@ exports.read = function (req, res) {
                 });
             }
             if (err) {
-                callback(err);
+                return callback(err);
             }
-            callback();
+            return callback();
         });
     };
 
