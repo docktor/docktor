@@ -17,6 +17,7 @@ var express = require('express'),
     config = require('./config'),
     consolidate = require('consolidate'),
     path = require('path'),
+    cluster = require('cluster'),
     agendaui = require('agenda-ui'),
     scheduler = require('./scheduler');
 
@@ -120,6 +121,16 @@ module.exports = function (db) {
     app.use('/agenda-ui', agendaui(scheduler, {'pool': 5000}));
 
     scheduler.defineAll();
+
+    // Listen for dying workers
+    cluster.on('exit', function (worker) {
+
+        // Replace the dead worker,
+        // we're not sentimental
+        console.log('Worker ' + worker.id + ' died :(');
+        cluster.fork();
+
+    });
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
