@@ -1,8 +1,11 @@
 <section data-ng-controller="GroupsController" data-ng-init="find()">
+    <md-toolbar class="md-hue-1">
+        <div class="md-toolbar-tools">
+            <h3>My Groups</h3>
+        </div>
+    </md-toolbar>
 
-    <h3>My Groups</h3>
-
-    <table tr-ng-grid="" items="groups" fields="" on-data-required="" class="table" ng-if="groups.length > 0">
+    <table tr-ng-grid="" items="groups" fields="" on-data-required="" class="table md-padding" ng-if="groups.length > 0">
         <thead>
         <th field-name="title" display-name="Title" enable-filtering="true"></th>
         <th field-name="description" display-name="Description" enable-filtering="true"></th>
