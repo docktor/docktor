@@ -22,9 +22,9 @@ angular.module('core').directive('volumesDirective', [
                     };
 
                     if ($scope.displayExternalVolume) {
-                        volume['external'] = '';
+                        volume.external = '';
                     } else {
-                        volume['value'] = '';
+                        volume.value = '';
                     }
                     $scope.volumes.push(volume);
                 };
