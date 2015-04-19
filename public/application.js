@@ -13,8 +13,12 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 angular.module(ApplicationConfiguration.applicationModuleName)
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
-            .primaryPalette('green')
-            .accentPalette('teal');
+            .primaryPalette('blue', {
+                'default': '600', // by default use shade 400 from the pink palette for primary intentions
+                'hue-1': '200', // use shade 100 for the <code>md-hue-1</code> class
+                'hue-2': '600', // use shade 600 for the <code>md-hue-2</code> class
+                'hue-3': 'A100' // use shade A100 for the <code>md-hue-3</code> class
+            });
     });
 
 //Then define the init function for starting up the application

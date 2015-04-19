@@ -1,260 +1,281 @@
 <section data-ng-controller="GroupsController" data-ng-init="findOne()">
+    <md-toolbar class="md-hue-1">
+        <div class="md-toolbar-tools">
+            <h3 flex>
+                <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
+                / {{group.title}}
 
-    <div layout="row" layout-align="center center">
-        <h3 flex>
-            <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
-            / {{group.title}}
+                <md-button ng-hide="isGroupFavorite" aria-label="Add Favorite" ng-click="addFavorite()">
+                    <i class="fa fa-star-o"></i>
+                </md-button>
+                <md-button ng-show="isGroupFavorite" aria-label="Remove Favorite" ng-click="removeFavorite()">
+                    <i class="fa fa-star"></i>
+                </md-button>
+            </h3>
+            <span flex></span>
+            <span flex></span>
 
-            <md-button ng-hide="isGroupFavorite" aria-label="Add Favorite" ng-click="addFavorite()">
-                <i class="fa fa-star-o"></i>
-            </md-button>
-            <md-button ng-show="isGroupFavorite" aria-label="Remove Favorite" ng-click="removeFavorite()">
-                <i class="fa fa-star"></i>
-            </md-button>
-        </h3>
-        <span flex></span>
-
-        <div ng-show="authentication.isAdmin" flex>
-            <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
-                <i class="fa fa-plus"> </i> Deploy a service
-            </md-button>
-            <md-button class="md-raised" href="/#!/admin/groups/{{group._id}}/edit">
-                <i class="fa fa-edit"> </i> Edit this group
-            </md-button>
-        </div>
-    </div>
-
-    <p data-ng-bind="group.description"></p>
-
-    <div class="row">
-        <h4><i class="fa fa-users"></i> Contacts</h4>
-        <span ng-repeat="u in group.users">
-            <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
-                <i class="fa fa-envelope"></i> {{u.displayName}}
-            </md-button>
-        </span>
-
-        <div>
-            <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
-                <i class="fa fa-envelope"></i> Mail All
-            </md-button>
-        </div>
-        <div ng-show="authentication.isAdmin || authentication.user.allowGrant">
-            <md-button aria-label="Add / Remove Contact" ng-hide="showAddRemoveContact" ng-click="prepareAddContact()">
-                <small><i class="fa fa-plus"></i> / <i class="fa fa-minus"></i></small>
-            </md-button>
-
-            <div ng-show="showAddRemoveContact" layout="column">
-                <div layout="row">
-                    <md-select ng-model="contactToAdd">
-                        <md-select-label>
-                            {{ contactToAdd.displayName ? contactToAdd.displayName : 'choose a contact to add' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
-                    <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
-                               ng-click="addContact()"><i class="fa fa-save"></i> Add
-                    </md-button>
-                </div>
-                <div layout="row">
-                    <md-select ng-model="contactToRemove">
-                        <md-select-label>
-                            {{ contactToRemove.displayName ? contactToRemove.displayName : 'choose a contact to remove' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in group.users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
-                    <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove"
-                               ng-click="removeContact()">Remove
-                    </md-button>
-                </div>
-                <div>
-                    <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact"
-                               ng-click="cancelAddRemoveContact()"><i class="fa fa-save"></i> Cancel
-                    </md-button>
-                </div>
+            <div ng-show="authentication.isAdmin" flex>
+                <md-button class="md-raised md-primary" href="/#!/admin/groups/{{group._id}}/deploy/service">
+                    <i class="fa fa-plus"> </i> Deploy
+                </md-button>
+                <md-button class="md-raised" href="/#!/admin/groups/{{group._id}}/edit">
+                    <i class="fa fa-edit"> </i> Edit
+                </md-button>
             </div>
         </div>
-    </div>
+    </md-toolbar>
 
-    <div class="row">
-        <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
+    <md-tabs md-border-bottom class="md-padding">
+        <md-tab md-selected>
+            <md-tab-label>
+                <h4><i class="fa fa-cloud"></i> Services</h4>
+            </md-tab-label>
 
-        <div ng-hide="group.filesystems" class="alert alert-danger">
-            No filesystem attached to this group.
-            <span ng-show="authentication.isAdmin">Try to add one by
-                <md-button class="md-accent md-hue-3" href="#!/admin/groups/{{group._id}}/edit">editing this group
-                </md-button>.
-            </span>
-            <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
-        </div>
+            <div class="row">
 
-        <div ng-repeat="fs in group.filesystems" layout="row" layout-margin>
-            <div flex>
-                <md-progress-linear class="md-warn" md-mode="determinate"
-                                    ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
-            </div>
-
-            <div flex>
-                <div><i class="fa fa-pie-chart"></i>
-                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb /
-                    {{fs.statsCompute.capacityInMB}} Gb
-                    ({{fs.statsCompute.usagePercent}}%)
+                <div ng-show="group.containers.length === 0">
+                    No service deployed for this group.
                 </div>
-                <div><i>{{fs.description}}</i></div>
-            </div>
-        </div>
-        <div class="row">
-            <i class="fa fa-bar-chart"></i>
-            <md-button aria-label="Monitoring All" class="md-accent md-hue-3"
-                       href="{{grafanaUrl}}?groupName={{group.title}}">
-                Monitoring CPU / RAM - All Services
-            </md-button>
-        </div>
-    </div>
-    <div class="row">
-        <h4><i class="fa fa-cloud"></i> Services</h4>
 
-        <div ng-show="group.containers.length === 0">
-            No service deployed for this group.
-        </div>
-
-        <div ng-show="group.containers.length > 0" layout="row">
-            <md-button class="md-raised" ng-click="createContainers()">
-                <i class="fa fa-play"></i> Create All
-            </md-button>
-            <md-button class="md-raised" ng-click="startContainers()">
-                <i class="fa fa-play"></i> Run All
-            </md-button>
-            <md-button class="md-raised" ng-click="stopContainers()">
-                <i class="fa fa-stop"></i> Stop All
-            </md-button>
-            <md-button class="md-raised" ng-click="pauseContainers()">
-                <i class="fa fa-pause"></i> Pause All
-            </md-button>
-            <md-button class="md-raised" ng-click="unpauseContainers()">
-                <i class="fa fa-pause"></i> Unpause All
-            </md-button>
-            <md-button class="md-raised" ng-click="killContainers()">
-                <i class="fa fa-crosshairs"></i> Kill All
-            </md-button>
-        </div>
-
-    </div>
-
-    <div ng-repeat="container in group.containers">
-        <md-card class="cards">
-            <md-toolbar ng-class="{'md-warn' : !container.inspect.State.Running}">
-                <div class="flexContainer">
-                    <md-button class="toolbarTitre" href="#!/groups/{{group._id}}/{{container._id}}">
-                        <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
-                        {{container.serviceTitle}}
+                <div ng-show="group.containers.length > 0" layout="row">
+                    <md-button class="md-raised" ng-click="createContainers()">
+                        <i class="fa fa-play"></i> Create All
                     </md-button>
-                    <md-button class="toolbarIcone floatRight" aria-label="Monitoring Container"
-                            href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
-                        <span class="floatRight"><i class="fa fa-bar-chart"></i></span>
+                    <md-button class="md-raised" ng-click="startContainers()">
+                        <i class="fa fa-play"></i> Run All
+                    </md-button>
+                    <md-button class="md-raised" ng-click="stopContainers()">
+                        <i class="fa fa-stop"></i> Stop All
+                    </md-button>
+                    <md-button class="md-raised" ng-click="pauseContainers()">
+                        <i class="fa fa-pause"></i> Pause All
+                    </md-button>
+                    <md-button class="md-raised" ng-click="unpauseContainers()">
+                        <i class="fa fa-pause"></i> Unpause All
+                    </md-button>
+                    <md-button class="md-raised" ng-click="killContainers()">
+                        <i class="fa fa-crosshairs"></i> Kill All
                     </md-button>
                 </div>
-            </md-toolbar>
-            <div class="serviceContent"> 
-                <div class="cardItem">
-                    <div ng-switch="container.daemon.dockerStatus">
+
+            </div>
+            <div ng-repeat="container in group.containers">
+                <md-card class="cards">
+                    <md-toolbar ng-class="{'md-warn' : !container.inspect.State.Running, 'md-hue-1' : container.inspect.State.Paused}">
+                        <div class="flexContainer">
+                            <md-button class="toolbarTitre" href="#!/groups/{{group._id}}/{{container._id}}">
+                                <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
+                                {{container.serviceTitle}}
+                            </md-button>
+                            <md-button class="toolbarIcone floatRight" aria-label="Monitoring Container"
+                                       href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
+                                <span class="floatRight"><i class="fa fa-bar-chart"></i></span>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <div class="serviceContent">
+                        <div class="cardItem">
+                            <div ng-switch="container.daemon.dockerStatus">
                         <span ng-switch-when="checking" class="label label-default" layout="row"
-                                      layout-align="center center">
+                              layout-align="center center">
                             <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                             </md-progress-circular>
                             <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                               href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
-                               <small>{{container.daemon.name}} <br>checking...</small>
+                                       href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
+                                <small>{{container.daemon.name}} <br>checking...</small>
                             </md-button>
                             <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
                         </span>
                         <span ng-switch-when="down">
                             <span class="cardContentTitre">Daemon:</span>
                             <md-button class="md-raised md-warn md-hue-3 md-accent" ng-show="authentication.isAdmin"
-                                               href="#!/admin/daemons/view/{{container.daemonId}}">
+                                       href="#!/admin/daemons/view/{{container.daemonId}}">
                                 {{container.daemon.name}} {{container.daemon.dockerStatus}}
                             </md-button>
                             <span ng-hide="authentication.isAdmin" class="label label-danger">
                                 {{container.daemon.name}} {{container.daemon.dockerStatus}}
                             </span>
-                            
+
                         </span>
-                        <div ng-switch-when="up">
-                            <span class="cardContentTitre">Daemon:</span>
-                                <span ng-show="authentication.isAdmin">{{container.daemon.name}}</span>
-                                <md-button class="md-fab md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
-                                                   href="#!/admin/daemons/view/{{container.daemonId}}">
-                                            {{container.daemon.dockerStatus}}
-                                </md-button>
+                                <div ng-switch-when="up">
+                                    <span class="cardContentTitre">Daemon:</span>
+                                    <span ng-show="authentication.isAdmin">{{container.daemon.name}}</span>
+                                    <md-button class="md-fab md-accent md-raised md-hue-3"
+                                               ng-show="authentication.isAdmin"
+                                               href="#!/admin/daemons/view/{{container.daemonId}}">
+                                        {{container.daemon.dockerStatus}}
+                                    </md-button>
                                 <span ng-hide="authentication.isAdmin" class="label label-success">
                                     {{container.daemon.name}} {{container.daemon.dockerStatus}}
                                 </span>
-                           
-                        </div>
-                    </div>  
-                </div>
-                <div class="cardItem">
-                    <span class="cardContentTitre">Name:</span>{{container.name}}
-                </div>
-                <div class="cardItem">
-                    <span class="cardContentTitre">Image:</span>{{container.image}}
-                </div>
-                <div class="cardItem">
-                    <span class="cardContentTitre">ContainerId:</span>{{container.containerId | limitTo:12}}
-                </div>   
-                
-                
-                <div class="cardItem actions">
-                <div ng-switch="container.daemon.dockerStatus">
-                    <div ng-switch-when="checking">
-                    </div>
-                    <div ng-switch-when="down">
-                        <span class="cardContentTitre">No Command : Daemon Down</span>
-                    </div>
 
-                    <div ng-switch-when="up">
-
-                        <md-button ng-hide="container.containerId" class="md-raised md-primary"
-                                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> create
-                        </md-button>
-
-                        <div ng-show="container.containerId">
-                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary"
-                                       ng-click="startContainer(container)">
-                                <i class="fa fa-play"></i> run
-                            </md-button>
-
-                            <div ng-show="container.inspect.State.Running">
-                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                                           ng-click="stopContainer(container)">
-                                    <i class="fa fa-stop"></i> stop
-                                </md-button>
-                                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                                           ng-click="pauseContainer(container)">
-                                    <i class="fa fa-pause"></i> pause
-                                </md-button>
-                                <md-button class="md-raised" ng-show="container.inspect.State.Paused"
-                                           ng-click="unpauseContainer(container)">
-                                    <i class="fa fa-pause"></i> unpause
-                                </md-button>
-                                <md-button class="md-raised" ng-click="killContainer(container)"><i
-                                        class="fa fa-crosshairs"></i> kill
-                                </md-button>
+                                </div>
                             </div>
-                            <md-button ng-hide="container.inspect.State.Running" class="md-raised md-warn"
-                                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> remove
+                        </div>
+                        <div class="cardItem">
+                            <span class="cardContentTitre">Name:</span>{{container.name}}
+                        </div>
+                        <div class="cardItem">
+                            <span class="cardContentTitre">Image:</span>{{container.image}}
+                        </div>
+                        <div class="cardItem">
+                            <span class="cardContentTitre">ContainerId:</span>{{container.containerId | limitTo:12}}
+                        </div>
+
+
+                        <div class="cardItem actions">
+                            <div ng-switch="container.daemon.dockerStatus">
+                                <div ng-switch-when="checking">
+                                </div>
+                                <div ng-switch-when="down">
+                                    <span class="cardContentTitre">No Command : Daemon Down</span>
+                                </div>
+
+                                <div ng-switch-when="up">
+
+                                    <md-button ng-hide="container.containerId" class="md-raised md-primary"
+                                               ng-click="createContainer(container)"><i class="fa fa-cogs"></i> create
+                                    </md-button>
+
+                                    <div ng-show="container.containerId">
+                                        <md-button ng-hide="container.inspect.State.Running"
+                                                   class="md-raised md-primary"
+                                                   ng-click="startContainer(container)">
+                                            <i class="fa fa-play"></i> run
+                                        </md-button>
+
+                                        <div ng-show="container.inspect.State.Running">
+                                            <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                                                       ng-click="stopContainer(container)">
+                                                <i class="fa fa-stop"></i> stop
+                                            </md-button>
+                                            <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
+                                                       ng-click="pauseContainer(container)">
+                                                <i class="fa fa-pause"></i> pause
+                                            </md-button>
+                                            <md-button class="md-raised" ng-show="container.inspect.State.Paused"
+                                                       ng-click="unpauseContainer(container)">
+                                                <i class="fa fa-pause"></i> unpause
+                                            </md-button>
+                                            <md-button class="md-raised" ng-click="killContainer(container)"><i
+                                                    class="fa fa-crosshairs"></i> kill
+                                            </md-button>
+                                        </div>
+                                        <md-button ng-hide="container.inspect.State.Running" class="md-raised md-warn"
+                                                   ng-click="removeContainer(container)"><i class="fa fa-trash"></i>
+                                            remove
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </md-tab>
+        <md-tab>
+            <md-tab-label>
+                <h4><i class="fa fa-users"></i> Contacts</h4>
+            </md-tab-label>
+            <div class="row">
+                <span ng-repeat="u in group.users">
+                    <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
+                        <i class="fa fa-envelope"></i> {{u.displayName}}
+                    </md-button>
+                </span>
+
+                <div>
+                    <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
+                        <i class="fa fa-envelope"></i> Mail All
+                    </md-button>
+                </div>
+                <div ng-show="authentication.isAdmin || authentication.user.allowGrant">
+                    <md-button aria-label="Add / Remove Contact" ng-hide="showAddRemoveContact"
+                               ng-click="prepareAddContact()">
+                        <small><i class="fa fa-plus"></i> / <i class="fa fa-minus"></i></small>
+                    </md-button>
+
+                    <div ng-show="showAddRemoveContact" layout="column">
+                        <div layout="row">
+                            <md-select ng-model="contactToAdd">
+                                <md-select-label>
+                                    {{ contactToAdd.displayName ? contactToAdd.displayName : 'choose a contact to add'
+                                    }}
+                                </md-select-label>
+
+                                <md-option ng-value="user" ng-repeat="user in users | orderBy:'displayName'">
+                                    {{ user.displayName }}
+                                </md-option>
+                            </md-select>
+                            <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
+                                       ng-click="addContact()"><i class="fa fa-save"></i> Add
+                            </md-button>
+                        </div>
+                        <div layout="row">
+                            <md-select ng-model="contactToRemove">
+                                <md-select-label>
+                                    {{ contactToRemove.displayName ? contactToRemove.displayName : 'choose a contact to
+                                    remove' }}
+                                </md-select-label>
+
+                                <md-option ng-value="user" ng-repeat="user in group.users | orderBy:'displayName'">
+                                    {{ user.displayName }}
+                                </md-option>
+                            </md-select>
+                            <md-button class="md-raised md-primary" aria-label="Remove Contact"
+                                       ng-show="contactToRemove"
+                                       ng-click="removeContact()">Remove
+                            </md-button>
+                        </div>
+                        <div>
+                            <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact"
+                                       ng-click="cancelAddRemoveContact()"><i class="fa fa-save"></i> Cancel
                             </md-button>
                         </div>
                     </div>
                 </div>
             </div>
+        </md-tab>
+        <md-tab>
+            <md-tab-label>
+                <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
+            </md-tab-label>
+            <div class="row">
+                <div ng-hide="group.filesystems" class="alert alert-danger">
+                    No filesystem attached to this group.
+
+                    <span ng-show="authentication.isAdmin">Try to add one by
+                        <md-button class="md-accent md-hue-3" href="#!/admin/groups/{{group._id}}/edit">editing this group
+                        </md-button>.
+                    </span>
+
+                    <span ng-hide="authentication.isAdmin">Ask the Administrators.</span>
+                </div>
+
+                <div ng-repeat="fs in group.filesystems" layout="row" layout-margin>
+                    <div flex>
+                        <md-progress-linear class="md-warn" md-mode="determinate"
+                                            ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
+                    </div>
+
+                    <div flex>
+                        <div><i class="fa fa-pie-chart"></i>
+                            {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb /
+                            {{fs.statsCompute.capacityInMB}} Gb
+                            ({{fs.statsCompute.usagePercent}}%)
+                        </div>
+                        <div><i>{{fs.description}}</i></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <i class="fa fa-bar-chart"></i>
+                    <md-button aria-label="Monitoring All" class="md-accent md-hue-3"
+                               href="{{grafanaUrl}}?groupName={{group.title}}">
+                        Monitoring CPU / RAM - All Services
+                    </md-button>
+                </div>
             </div>
-        </md-card>
-    </div>
+        </md-tab>
+    </md-tabs>
 </section>

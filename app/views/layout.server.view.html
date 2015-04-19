@@ -29,7 +29,8 @@
 
 </head>
 
-<body layout="row">
+<body layout="column" display="flex">
+
 
 <md-sidenav layout="column"
             class="md-sidenav-left md-whiteframe-z5"
@@ -42,7 +43,7 @@
     <md-toolbar layout="column" layout-align="space-between right" class="md-default-theme"
                 ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
 
-    <md-content md-scroll-y flex class="md-padding md-default-theme">
+    <md-content md-scroll-y flex class="md-default-theme">
         <!--Start Content-->
         <div id="content" layout="column" layout-fill class="layout-content layout-options">
             {% block content %}{% endblock %}
@@ -56,6 +57,8 @@
             class="md-sidenav-right md-whiteframe-z5"
             md-component-id="right"
             ng-include="'/modules/core/views/admin.client.view.html'"></md-sidenav>
+
+
 
 <!--Embedding The User Object-->
 <script type="text/javascript">
@@ -72,4 +75,7 @@
 <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
 {% endif %}
 </body>
+
+
+
 </html>

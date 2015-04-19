@@ -66,16 +66,17 @@ exports.read = function (req, res) {
         var daemonDocker = daemon.getDaemonDocker();
         //Call "docker ps"
         daemonDocker.listContainers(function (err, data) {
-            //For every container running ons this daemon
-            if (data && data.length !== 0) {
-                data.forEach(function (c) {
-                    queueContainers.push(c);
-                });
-            }
             if (err) {
-                callback(err);
+                return callback(err);
+            } else {
+                //For every container running ons this daemon
+                if (data && data.length !== 0) {
+                    data.forEach(function (c) {
+                        queueContainers.push(c);
+                    });
+                }
+                return callback();
             }
-            callback();
         });
     };
 
@@ -100,11 +101,11 @@ exports.read = function (req, res) {
                     concernedContainer.urls = service.urls;
                     callback();
                 } else {
-                    callback(err);
+                    return callback(err);
                 }
             });
         } else {
-            callback();
+            return callback();
         }
     };
 
