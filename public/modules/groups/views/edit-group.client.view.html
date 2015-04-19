@@ -115,7 +115,7 @@
                     <div flex>
                         <md-select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()">
                             <md-select-label>
-                                {{ filesystem.selectDaemon.name ? filesystem.selectDaemon.name : 'choose an daemon' }}
+                                {{ filesystem.selectDaemon.name ? filesystem.selectDaemon.name : 'choose a daemon' }}
                             </md-select-label>
                             <md-option ng-value="daemon" ng-repeat="daemon in daemons.all track by daemon._id">
                                 {{ daemon.name }}
@@ -131,12 +131,12 @@
                 </div>
 
                 <div ng-hide="filesystem.pleaseWait">
-                    <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem > 0">
+                    <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem.length > 0">
                         <div flex="10">FileSystem</div>
                         <md-select ng-model="filesystem.currentFs" style="min-width: 300px;"
                                    ng-change="changeFilesystem()">
                             <md-select-label>
-                                {{ filesystem.currentFs.device ? filesystem.currentFs.device : 'choose an filesystem' }}
+                                {{ filesystem.currentFs.device ? filesystem.currentFs.device : 'choose a filesystem' }}
                             </md-select-label>
                             <md-option ng-value="fs" ng-repeat="fs in filesystem.selectDaemon.statsCompute.filesystem">
                                 {{ fs.device }}
