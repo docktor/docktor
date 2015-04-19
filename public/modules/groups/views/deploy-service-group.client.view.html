@@ -1,106 +1,139 @@
 <section data-ng-controller="ServicesGroupsController" data-ng-init="findOne()">
+    <md-toolbar class="md-hue-1">
+        <div class="md-toolbar-tools">
+            <h3>
+                <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
+                /
+                <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
+                / Deploy a new service
+            </h3>
+        </div>
+    </md-toolbar>
 
-    <h3>
-        <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
-        /
-        <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}">{{group.title}}</md-button>
-        / Deploy a new service
-    </h3>
+    <div class="deploy-service-body">
+        <div class="deploy-service-body-card">
+            <h4>Select a daemon :</h4>
+            <md-select ng-model="daemons.select" ng-change="changeDaemon()">
+                <md-select-label>
+                    {{ daemons.select.name ? daemons.select.name : 'choose a daemon' }}
+                </md-select-label>
 
-    <p class="lead" data-ng-bind="group.description"></p>
+                <md-option ng-value="daemon" ng-repeat="daemon in daemons.all | orderBy:'name'">
+                    {{ daemon.name }}
+                </md-option>
+            </md-select>
+        </div>
 
-    <h4>Select a daemon :</h4>
+        <div ng-show="daemons.select" class="deploy-service-body-card">
+            <h4>Select a service :</h4>
 
-    <md-select ng-model="daemons.select" ng-change="changeDaemon()">
-        <md-select-label>
-            {{ daemons.select.name ? daemons.select.name : 'choose a daemon' }}
-        </md-select-label>
+            <md-select ng-model="services.select" ng-required="true" ng-change="changeService()">
+                <md-select-label>
+                    {{ services.select.title ? services.select.title : 'choose a service' }}
+                </md-select-label>
+                <md-option ng-value="service" ng-repeat="service in services.all | orderBy:'title'">
+                    {{ service.title }}
+                </md-option>
+            </md-select>
+        </div>
 
-        <md-option ng-value="daemon" ng-repeat="daemon in daemons.all | orderBy:'name'">
-            {{ daemon.name }}
-        </md-option>
-    </md-select>
+        <div ng-show="services.select" class="deploy-service-body-card">
+            <h4>Select an image of service {{services.select.title}} :</h4>
 
-    <div ng-show="daemons.select">
-        <h4>Select a service :</h4>
-
-        <md-select ng-model="services.select" ng-required="true" ng-change="changeService()">
-            <md-select-label>
-                {{ services.select.title ? services.select.title : 'choose a service' }}
-            </md-select-label>
-            <md-option ng-value="service" ng-repeat="service in services.all | orderBy:'title'">
-                {{ service.title }}
-            </md-option>
-        </md-select>
+            <md-select ng-model="services.selectImage" ng-change="changeImage()">
+                <md-select-label>
+                    {{ services.selectImage.name ? services.selectImage.name : 'choose an image' }}
+                </md-select-label>
+                <md-option ng-value="image" ng-repeat="image in services.select.images | orderBy:'name'">
+                    {{ image.name }}
+                </md-option>
+            </md-select>
+        </div>
     </div>
 
-    <div ng-show="services.select">
-        <h4>Select an image of service {{services.select.title}} :</h4>
-
-        <md-select ng-model="services.selectImage" ng-change="changeImage()">
-            <md-select-label>
-                {{ services.selectImage.name ? services.selectImage.name : 'choose an image' }}
-            </md-select-label>
-            <md-option ng-value="image" ng-repeat="image in services.select.images | orderBy:'name'">
-                {{ image.name }}
-            </md-option>
-        </md-select>
-    </div>
 
     <div ng-show="services.selectImage">
-        <form name="deployForm" novalidate>
+        <md-card class="md-padding md-shadow-bottom-z-1">
+            <md-card-content>
+                <form name="deployForm" novalidate>
+                    <md-tabs md-border-bottom class="md-padding">
+                        <md-tab md-selected>
+                            <md-tab-label>
+                                Container
+                            </md-tab-label>
+                            <md-input-container class="long">
+                                <label>Name</label>
+                                <input name='containerName' id='containerName' ng-model="container.name"
+                                       ng-pattern="patternName"
+                                       type="text" required md-maxlength="200">
 
-            <h4>Container</h4>
+                                <div ng-messages="deployForm.containerName.$error">
+                                    <div ng-message="required">This is required.</div>
+                                    <div ng-message="md-maxlength">Max length of name : 200</div>
+                                    <div ng-message="pattern">Name have to match this pattern : [a-zA-Z0-9_]{1,200}.
+                                    </div>
+                                </div>
+                            </md-input-container>
+                            <p>It is not recommanded to modify default value from Docktor</p>
 
-            <div class="row">
-                <md-input-container class="long">
-                    <label>Name</label>
-                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName"
-                           type="text" required md-maxlength="200">
+                            <md-input-container class="long">
+                                <label>Hostname</label>
+                                <input name="containerHostname" id="containerHostname" ng-model="container.hostname"
+                                       ng-pattern="patternHostname" type="text" required md-maxlength="200">
 
-                    <div ng-messages="deployForm.containerName.$error">
-                        <div ng-message="required">This is required.</div>
-                        <div ng-message="md-maxlength">Max length of name : 200</div>
-                        <div ng-message="pattern">Name have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
-                    </div>
-                </md-input-container>
-                <p>It is not recommanded to modify default value from Docktor</p>
-            </div>
+                                <div ng-messages="deployForm.containerHostname.$error">
+                                    <div ng-message="required">This is required.</div>
+                                    <div ng-message="md-maxlength">Max length of hostname : 200</div>
+                                    <div ng-message="pattern">Hostname have to match this pattern : [a-zA-Z0-9_]{1,200}.
+                                    </div>
+                                </div>
+                            </md-input-container>
+                            <p>It is not recommanded to modify default value from Docktor</p>
 
-            <div class="row">
-                <md-input-container class="long">
-                    <label>Hostname</label>
-                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname"
-                           ng-pattern="patternHostname" type="text" required md-maxlength="200">
+                            <br>
+                            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
+                                       data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
+                                Deploy Service
+                            </md-button>
 
-                    <div ng-messages="deployForm.containerHostname.$error">
-                        <div ng-message="required">This is required.</div>
-                        <div ng-message="md-maxlength">Max length of hostname : 200</div>
-                        <div ng-message="pattern">Hostname have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
-                    </div>
-                </md-input-container>
-                <p>It is not recommanded to modify default value from Docktor</p>
-            </div>
+                        </md-tab>
+                        <md-tab>
+                            <md-tab-label>
+                                Volumes mapping
+                            </md-tab-label>
+                            <volumes-directive with-title="true" volumes="services.selectImage.volumes"
+                                               display-external-volume="true">
+                            </volumes-directive>
+                        </md-tab>
+                        <md-tab>
+                            <md-tab-label>
+                                Ports mapping
+                            </md-tab-label>
+                            <ports-directive with-title="true" ports="services.selectImage.ports"
+                                             display-external-port="true">
+                            </ports-directive>
+                        </md-tab>
+                        <md-tab>
+                            <md-tab-label>
+                                Environment variables
+                            </md-tab-label>
+                            <variables-directive with-title="true"
+                                                 variables="services.selectImage.variables">
+                            </variables-directive>
+                        </md-tab>
 
-            <parameters-directive with-title="true"
-                                  parameters="services.selectImage.parameters">
-            </parameters-directive>
-            <ports-directive with-title="true" ports="services.selectImage.ports"
-                             display-external-port="true">
-            </ports-directive>
-            <variables-directive with-title="true"
-                                 variables="services.selectImage.variables">
-            </variables-directive>
-            <volumes-directive with-title="true" volumes="services.selectImage.volumes"
-                               display-external-volume="true">
-            </volumes-directive>
+                        <md-tab>
+                            <md-tab-label>
+                                Parameters
+                            </md-tab-label>
+                            <parameters-directive with-title="true"
+                                                  parameters="services.selectImage.parameters">
+                            </parameters-directive>
+                        </md-tab>
 
-            <br>
 
-            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
-                       data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
-                Deploy Service
-            </md-button>
-        </form>
+                </form>
+            </md-card-content>
+        </md-card>
     </div>
 </section>

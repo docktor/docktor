@@ -980,3 +980,14 @@ md-toolbar{
     font-weight: bold;
     margin-right: 10px;
 }
+.deploy-service-body{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.deploy-service-body-card{
+    display: flex;
+    flex: auto;
+}
