@@ -141,20 +141,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                             if ((container.serviceId) && (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId))) {
-                                /*
-                                ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
-                                    .success(function (data) {
-                                        container.commands = data.commands;
-                                        container.urls = [];
-                                        angular.forEach(data.urls, function (url, key) {
-                                            var urlO = $scope.computeUrl(container, url);
-                                            container.urls.push(urlO);
-                                        });
-                                    });
-                                    */
-                                angular.forEach(container.urls, function (url, key) {
-                                    var urlO = $scope.computeUrl(container, url);
-                                    container.urls.push(urlO);
+                                var urls = container.urls;
+                                container.urls = [];
+                                angular.forEach(urls, function (url, key) {
+                                    container.urls.push($scope.computeUrl(container, url));
                                 });
                             }
                             $scope.prepareJobs(container);
