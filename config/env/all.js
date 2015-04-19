@@ -10,6 +10,7 @@ module.exports = {
     templateEngine: 'swig',
     sessionSecret: 'MEAN',
     sessionCollection: 'sessions',
+    cluster : false,
     assets: {
         lib: {
             css: [

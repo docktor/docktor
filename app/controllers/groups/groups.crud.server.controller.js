@@ -66,17 +66,16 @@ exports.read = function (req, res) {
         var daemonDocker = daemon.getDaemonDocker();
         //Call "docker ps"
         daemonDocker.listContainers(function (err, data) {
+            //For every container running ons this daemon
+            if (data && data.length !== 0) {
+                data.forEach(function (c) {
+                    queueContainers.push(c);
+                });
+            }
             if (err) {
                 return callback(err);
-            } else {
-                //For every container running ons this daemon
-                if (data && data.length !== 0) {
-                    data.forEach(function (c) {
-                        queueContainers.push(c);
-                    });
-                }
-                return callback();
             }
+            return callback();
         });
     };
 
@@ -88,7 +87,7 @@ exports.read = function (req, res) {
         //Retrieve the service
         if (concernedContainer) {
             Service.findById(concernedContainer.serviceId).exec(function (err, service) {
-                if (!err) {
+                if (!err && service) {
                     var paused = container.Status.indexOf('Paused') > -1;
                     //Overriding docker inspect
                     concernedContainer.inspect = {
@@ -211,7 +210,7 @@ exports.getJobs = function (req, res) {
 };
 
 exports.getFreePortsOnContainer = function (req, res) {
-    var containerId = req.param['idContainer'];
+    var containerId = req.params.idContainer;
     Group.find().where('daemon')
         .equals(containerId)
         .exec(function (err, groups) {
@@ -263,7 +262,7 @@ exports.listGroups = function (req, res) {
         where = {};
     }
 
-    Group.find(where).sort('title').populate('daemon').exec(function (err, groups) {
+    Group.find(where).sort('title').populate('daemon', '-ca -cert -key').exec(function (err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -290,7 +289,7 @@ exports.listSimplified = function (req, res) {
  * Group middleware
  */
 exports.groupById = function (req, res, next, id) {
-    Group.findById(id).populate('user', 'displayName').populate('daemon').exec(function (err, group) {
+    Group.findById(id).populate('user', 'displayName').populate('daemon', '-ca -cert -key').exec(function (err, group) {
         if (err) return next(err);
         if (!group) return next(new Error('Failed to load group ' + id));
         req.group = group;

@@ -24,6 +24,9 @@ module.exports = function (app) {
     app.route('/services/urlsandcommands/:serviceId/:groupId')
         .get(users.requiresLogin, services.hasAuthorization, services.getUrlsAndCommands);
 
+    app.route('/services/:serviceId/images')
+        .put(users.requiresLogin, services.hasAdminAuthorization, services.pullImage);
+
     app.route('/services/:serviceId')
         .get(users.requiresLogin, services.hasAdminAuthorization, services.read)
         .put(users.requiresLogin, services.hasAdminAuthorization, services.update)

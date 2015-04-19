@@ -31,7 +31,7 @@
             <md-tab-label>
                 <h4><i class="fa fa-cloud"></i> Services</h4>
             </md-tab-label>
-
+<!--
             <div class="row">
 
                 <div ng-show="group.containers.length === 0">
@@ -60,6 +60,7 @@
                 </div>
 
             </div>
+            -->
             <div ng-repeat="container in group.containers">
                 <md-card class="cards">
                     <md-toolbar ng-class="{'md-warn' : !container.inspect.State.Running, 'md-hue-1' : container.inspect.State.Paused}">

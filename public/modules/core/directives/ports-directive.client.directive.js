@@ -19,7 +19,7 @@ angular.module('core').directive('portsDirective', [
                     };
 
                     if ($scope.displayExternalPort) {
-                        newPort['external'] = '';
+                        newPort.external = '';
                     }
                     $scope.ports.push(newPort);
                 };

@@ -5,34 +5,47 @@
 var init = require('./config/init')(),
     config = require('./config/config'),
     mongoose = require('mongoose'),
-    scheduler = require('./config/scheduler');
+    scheduler = require('./config/scheduler'),
+    cluster = require('cluster'),
+    os = require('os');
 
-/**
- * Main application entry file.
- * Please note that the order of loading is important.
- */
 
-// Bootstrap db connection
-var db = mongoose.connect(config.db, function (err) {
-    if (err) {
-        console.error('\x1b[31m', 'Could not connect to MongoDB!');
-        console.log(err);
+// Code to run if we're in the master process
+if (config.cluster && cluster.isMaster) {
+    // Count the machine's CPUs
+    var cpuCount = os.cpus().length;
+
+    // Create a worker for each CPU
+    for (var i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
     }
-});
 
-scheduler.start();
+// Code to run if we're in a worker process
+} else {
 
-// Init the express application
-var app = require('./config/express')(db);
+    // Bootstrap db connection
+    var db = mongoose.connect(config.db, function (err) {
+        if (err) {
+            console.error('\x1b[31m', 'Could not connect to MongoDB!');
+            console.log(err);
+        }
+    });
 
-// Bootstrap passport config
-require('./config/passport')();
+    scheduler.start();
 
-// Start the app by listening on <port>
-app.listen(config.port);
+    // Init the express application
+    var app = require('./config/express')(db);
 
-// Expose app
-exports = module.exports = app;
+    // Bootstrap passport config
+    require('./config/passport')();
 
-// Logging initialization
-console.log('Docktor application started on port ' + config.port);
+    // Start the app by listening on <port>
+    app.listen(config.port);
+
+    // Expose app
+    exports = module.exports = app;
+
+    // Logging initialization
+    console.log('Docktor application started on port ' + config.port);
+}
+

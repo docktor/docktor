@@ -32,7 +32,14 @@ exports.create = function (req, res) {
  * Show the current daemon
  */
 exports.read = function (req, res) {
-    res.jsonp(req.daemon);
+    var daemon = req.daemon;
+    //Security issue : hide certificate and key when the user is not admin
+    if (req.user.role !== 'admin') {
+        daemon.cert = undefined;
+        daemon.ca = undefined;
+        daemon.key = undefined;
+    }
+    res.jsonp(daemon);
 };
 
 /**
@@ -74,7 +81,7 @@ exports.delete = function (req, res) {
  * List of Daemons
  */
 exports.list = function (req, res) {
-    Daemon.find().sort('-created')
+    Daemon.find().sort('name')
         .populate('site')
         .populate('user', 'displayName')
         .exec(function (err, daemons) {
@@ -83,6 +90,11 @@ exports.list = function (req, res) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
+                daemons.forEach(function (daemon){
+                    daemon.cert = undefined;
+                    daemon.ca = undefined;
+                    daemon.key = undefined;
+                });
                 res.jsonp(daemons);
             }
         });

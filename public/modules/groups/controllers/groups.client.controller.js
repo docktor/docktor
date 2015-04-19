@@ -75,7 +75,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             Groups.query().$promise.then(function(groups) {
                 console.log(groups);
                 $scope.groups = _.sortBy(groups, function (g) {
-                    return g.title.trim().toUpperCase()
+                    return g.title.trim().toUpperCase();
                 });
             });
         };
@@ -122,7 +122,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
-                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase()});
+                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase();});
 
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
