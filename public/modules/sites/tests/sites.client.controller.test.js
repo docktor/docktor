@@ -107,8 +107,7 @@
             });
 
             // Fixture mock form input values
-            scope.title = 'An Site about MEAN';
-            scope.content = 'MEAN rocks!';
+            scope.site = sampleSitePostData;
 
             // Set POST response
             $httpBackend.expectPOST('sites', sampleSitePostData).respond(sampleSiteResponse);
@@ -116,10 +115,6 @@
             // Run controller functionality
             scope.create();
             $httpBackend.flush();
-
-            // Test form inputs are reset
-            expect(scope.title).toEqual('');
-            expect(scope.content).toEqual('');
 
             // Test URL redirection after the site was created
             expect($location.path()).toBe('/admin/sites/' + sampleSiteResponse._id);
@@ -147,14 +142,14 @@
             expect($location.path()).toBe('/admin/sites/' + sampleSitePutData._id);
         }));
 
-        it('$scope.remove() should send a DELETE request with a valid siteId and remove the site from the scope', inject(function (Sites) {
+        it('$scope.remove() should send a DELETE request with a valid siteId and redirect to site list', inject(function (Sites) {
             // Create new site object
             var sampleSite = new Sites({
                 _id: '525a8422f6d0f87f0e407a33'
             });
 
             // Create new sites array and include the site
-            scope.sites = [sampleSite];
+            scope.site = sampleSite;
 
             // Set expected DELETE response
             $httpBackend.expectDELETE(/sites\/([0-9a-fA-F]{24})$/).respond(204);
@@ -163,8 +158,8 @@
             scope.remove(sampleSite);
             $httpBackend.flush();
 
-            // Test array after successful delete
-            expect(scope.sites.length).toBe(0);
+            // Test URL location to site list
+            expect($location.path()).toBe('/admin/sites');
         }));
     });
 }());

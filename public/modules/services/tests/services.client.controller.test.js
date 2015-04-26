@@ -107,8 +107,7 @@
             });
 
             // Fixture mock form input values
-            scope.title = 'An Service about MEAN';
-            scope.content = 'MEAN rocks!';
+            scope.service = sampleServicePostData;
 
             // Set POST response
             $httpBackend.expectPOST('services', sampleServicePostData).respond(sampleServiceResponse);
@@ -117,15 +116,11 @@
             scope.create();
             $httpBackend.flush();
 
-            // Test form inputs are reset
-            expect(scope.title).toEqual('');
-            expect(scope.content).toEqual('');
-
             // Test URL redirection after the service was created
             expect($location.path()).toBe('/admin/services/' + sampleServiceResponse._id);
         }));
 
-        it('$scope.update() should update a valid service', inject(function (Services) {
+        it('$scope.update() should update a valid service and redirect to this service', inject(function (Services) {
             // Define a sample service put data
             var sampleServicePutData = new Services({
                 _id: '525cf20451979dea2c000001',
@@ -140,14 +135,14 @@
             $httpBackend.expectPUT(/services\/([0-9a-fA-F]{24})$/).respond();
 
             // Run controller functionality
-            scope.update();
+            scope.update(true);
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/services/' + sampleServicePutData._id);
+            expect($location.path()).toBe('/admin/services/' + sampleServicePutData._id);
         }));
 
-        it('$scope.remove() should send a DELETE request with a valid serviceId and remove the service from the scope', inject(function (Services) {
+        it('$scope.remove() should send a DELETE request with a valid serviceId and redirect to service list', inject(function (Services) {
             // Create new service object
             var sampleService = new Services({
                 _id: '525a8422f6d0f87f0e407a33'
@@ -163,8 +158,8 @@
             scope.remove(sampleService);
             $httpBackend.flush();
 
-            // Test array after successful delete
-            expect(scope.services.length).toBe(0);
+            // Test URL location to service list
+            expect($location.path()).toBe('/admin/services');
         }));
     });
 }());

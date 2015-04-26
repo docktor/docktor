@@ -53,15 +53,26 @@
         it('$scope.find() should create an array with at least one daemon object fetched from XHR', inject(function (Daemons) {
             // Create sample daemon using the Daemons service
             var sampleDaemon = new Daemons({
-                title: 'An Daemon about MEAN',
-                content: 'MEAN rocks!'
+                _id: '525a8422f6d0f87f0e407a33',
+                name: 'An Daemon about MEAN',
+                content: 'MEAN rocks!',
+                site: {},
+                cadvisorApi: '',
+                cadvisorUrl: '',
+                dockerStatus: 'down',
+                dockerInfo: undefined,
+                dockerVersion: undefined,
+                machineInfo: undefined,
+                statsCompute: {}
             });
 
             // Create a sample daemons array that includes the new daemon
             var sampleDaemons = [sampleDaemon];
 
-            // Set GET response
+            // Set GET calls and responses
+            $httpBackend.expectGET('sites').respond();
             $httpBackend.expectGET('daemons').respond(sampleDaemons);
+            $httpBackend.expectGET(/daemons\/docker\/infos\/([0-9a-fA-F]{24})$/).respond({});
 
             // Run controller functionality
             scope.find();
@@ -74,15 +85,27 @@
         it('$scope.findOne() should create an array with one daemon object fetched from XHR using a daemonId URL parameter', inject(function (Daemons) {
             // Define a sample daemon object
             var sampleDaemon = new Daemons({
-                title: 'An Daemon about MEAN',
-                content: 'MEAN rocks!'
+                _id: '525a8422f6d0f87f0e407a33',
+                name: 'An Daemon about MEAN',
+                content: 'MEAN rocks!',
+                site: {},
+                cadvisorApi: '',
+                cadvisorUrl: '',
+                dockerStatus: 'down',
+                dockerInfo: undefined,
+                dockerVersion: undefined,
+                machineInfo: undefined,
+                statsCompute: {},
+                selectSite: {}
             });
 
             // Set the URL parameter
             $stateParams.daemonId = '525a8422f6d0f87f0e407a33';
 
-            // Set GET response
+            // Set GET calls and responses
+            $httpBackend.expectGET('sites').respond();
             $httpBackend.expectGET(/daemons\/([0-9a-fA-F]{24})$/).respond(sampleDaemon);
+            $httpBackend.expectGET(/daemons\/docker\/infos\/([0-9a-fA-F]{24})$/).respond({});
 
             // Run controller functionality
             scope.findOne();
@@ -95,21 +118,22 @@
         it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function (Daemons) {
             // Create a sample daemon object
             var sampleDaemonPostData = new Daemons({
-                title: 'An Daemon about MEAN',
-                content: 'MEAN rocks!'
+                name: 'An Daemon about MEAN',
+                content: 'MEAN rocks!',
+                selectSite: {}
             });
 
             // Create a sample daemon response
             var sampleDaemonResponse = new Daemons({
                 _id: '525cf20451979dea2c000001',
-                title: 'An Daemon about MEAN',
+                namw: 'An Daemon about MEAN',
                 content: 'MEAN rocks!'
             });
 
-            // Fixture mock form input values
-            scope.title = 'An Daemon about MEAN';
-            scope.content = 'MEAN rocks!';
+            scope.daemon = sampleDaemonPostData;
 
+            // Set GET call to /sites
+            $httpBackend.expectGET('sites').respond();
             // Set POST response
             $httpBackend.expectPOST('daemons', sampleDaemonPostData).respond(sampleDaemonResponse);
 
@@ -117,37 +141,38 @@
             scope.create();
             $httpBackend.flush();
 
-            // Test form inputs are reset
-            expect(scope.title).toEqual('');
-            expect(scope.content).toEqual('');
-
             // Test URL redirection after the daemon was created
-            expect($location.path()).toBe('/admin/daemons/' + sampleDaemonResponse._id);
+            expect($location.path()).toBe('/admin/daemons/edit/' + sampleDaemonResponse._id);
         }));
 
         it('$scope.update() should update a valid daemon', inject(function (Daemons) {
             // Define a sample daemon put data
             var sampleDaemonPutData = new Daemons({
                 _id: '525cf20451979dea2c000001',
-                title: 'An Daemon about MEAN',
-                content: 'MEAN Rocks!'
+                name: 'An Daemon about MEAN',
+                content: 'MEAN Rocks!',
+                selectSite: {
+                  _id: '525a8422f6d0f87f0e407a33'
+                }
             });
 
             // Mock daemon in scope
             scope.daemon = sampleDaemonPutData;
 
+            // Set GET call to /sites
+            $httpBackend.expectGET('sites').respond();
             // Set PUT response
             $httpBackend.expectPUT(/daemons\/([0-9a-fA-F]{24})$/).respond();
 
             // Run controller functionality
-            scope.update();
+            scope.update(true);
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/admin/daemons/' + sampleDaemonPutData._id);
+            expect($location.path()).toBe('/admin/daemons/view/' + sampleDaemonPutData._id);
         }));
 
-        it('$scope.remove() should send a DELETE request with a valid daemonId and remove the daemon from the scope', inject(function (Daemons) {
+        it('$scope.remove() should send a DELETE request with a valid daemonId and redirect to daemon list', inject(function (Daemons) {
             // Create new daemon object
             var sampleDaemon = new Daemons({
                 _id: '525a8422f6d0f87f0e407a33'
@@ -156,6 +181,8 @@
             // Create new daemons array and include the daemon
             scope.daemons = [sampleDaemon];
 
+            // Set GET call to /sites
+            $httpBackend.expectGET('sites').respond();
             // Set expected DELETE response
             $httpBackend.expectDELETE(/daemons\/([0-9a-fA-F]{24})$/).respond(204);
 
@@ -163,8 +190,8 @@
             scope.remove(sampleDaemon);
             $httpBackend.flush();
 
-            // Test array after successful delete
-            expect(scope.daemons.length).toBe(0);
+            // Test URL location to daemon list
+            expect($location.path()).toBe('/admin/daemons');
         }));
     });
 }());

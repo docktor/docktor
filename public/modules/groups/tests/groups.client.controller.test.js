@@ -74,15 +74,20 @@
         it('$scope.findOne() should create an array with one group object fetched from XHR using a groupId URL parameter', inject(function (Groups) {
             // Define a sample group object
             var sampleGroup = new Groups({
-                title: 'An Group about MEAN',
-                content: 'MEAN rocks!'
+              _id: '525a8422f6d0f87f0e407a33',
+              title: 'An Group about MEAN',
+              content: 'MEAN rocks!',
+              containers: [],
+              users: [],
+              mailAllUsers: ''
             });
 
             // Set the URL parameter
             $stateParams.groupId = '525a8422f6d0f87f0e407a33';
 
-            // Set GET response
+            // Set GET responses
             $httpBackend.expectGET(/groups\/([0-9a-fA-F]{24})$/).respond(sampleGroup);
+            $httpBackend.expectGET(/groups\/users\/([0-9a-fA-F]{24})$/).respond([]);
 
             // Run controller functionality
             scope.findOne();
@@ -96,7 +101,8 @@
             // Create a sample group object
             var sampleGroupPostData = new Groups({
                 title: 'An Group about MEAN',
-                content: 'MEAN rocks!'
+                content: 'MEAN rocks!',
+                selectDaemon: {}
             });
 
             // Create a sample group response
@@ -107,8 +113,7 @@
             });
 
             // Fixture mock form input values
-            scope.title = 'An Group about MEAN';
-            scope.content = 'MEAN rocks!';
+            scope.group = sampleGroupPostData;
 
             // Set POST response
             $httpBackend.expectPOST('groups', sampleGroupPostData).respond(sampleGroupResponse);
@@ -117,12 +122,8 @@
             scope.create();
             $httpBackend.flush();
 
-            // Test form inputs are reset
-            expect(scope.title).toEqual('');
-            expect(scope.content).toEqual('');
-
             // Test URL redirection after the group was created
-            expect($location.path()).toBe('/admin/groups/' + sampleGroupResponse._id);
+            expect($location.path()).toBe('/groups/' + sampleGroupResponse._id);
         }));
 
         it('$scope.update() should update a valid group', inject(function (Groups) {
@@ -130,7 +131,10 @@
             var sampleGroupPutData = new Groups({
                 _id: '525cf20451979dea2c000001',
                 title: 'An Group about MEAN',
-                content: 'MEAN Rocks!'
+                content: 'MEAN Rocks!',
+                selectDaemon: {
+                  _id: '5738478e9edc61b39d646075'
+                }
             });
 
             // Mock group in scope
@@ -144,10 +148,10 @@
             $httpBackend.flush();
 
             // Test URL location to new object
-            expect($location.path()).toBe('/admin/groups/' + sampleGroupPutData._id);
+            expect($location.path()).toBe('/groups/' + sampleGroupPutData._id);
         }));
 
-        it('$scope.remove() should send a DELETE request with a valid groupId and remove the group from the scope', inject(function (Groups) {
+        it('$scope.remove(group) should send a DELETE request with a valid groupId and remove the group from the scope', inject(function (Groups) {
             // Create new group object
             var sampleGroup = new Groups({
                 _id: '525a8422f6d0f87f0e407a33'
@@ -165,6 +169,27 @@
 
             // Test array after successful delete
             expect(scope.groups.length).toBe(0);
+        }));
+
+        it('$scope.remove() should send a DELETE request with a valid groupId and redirect to list', inject(function (Groups) {
+            // Create new group object
+            var sampleGroup = new Groups({
+                _id: '525a8422f6d0f87f0e407a33'
+            });
+
+            // Create new groups array and include the group
+            scope.groups = [sampleGroup];
+            scope.group = sampleGroup;
+
+            // Set expected DELETE response
+            $httpBackend.expectDELETE(/groups\/([0-9a-fA-F]{24})$/).respond(204);
+
+            // Run controller functionality
+            scope.remove();
+            $httpBackend.flush();
+
+            // Test URL location to daemon list
+            expect($location.path()).toBe('/groups');
         }));
     });
 }());
