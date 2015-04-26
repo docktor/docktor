@@ -6,6 +6,11 @@
         var scope,
             HeaderController;
 
+        // Define favorites for user global variable
+        window.user = {
+            favorites: []
+        };
+
         // Load the main application module
         beforeEach(module(ApplicationConfiguration.applicationModuleName));
 

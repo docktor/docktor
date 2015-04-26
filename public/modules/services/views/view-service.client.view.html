@@ -16,7 +16,7 @@
                 <ul data-ng-repeat="daemon in image.daemons">
                     <li>
                         <span ng-switch="daemon.dockerImage ? '_defined_' :  '_undefined_'">
-                            <span ng-switch-when="_undefined_"> {{daemon.name}}  - <strong>Image unavailabe</strong>
+                            <span ng-switch-when="_undefined_"> {{daemon.name}}  - <strong>Image unavailable</strong>
                                 <md-button class="md-warn" ng-click="pullImage(image, daemon)" ng-disabled="downloadInProgress"><i class="fa fa-download"></i>
                                     <span ng-if="!downloadInProgress">Pull</span>
                                     <span ng-if="downloadInProgress">Downloading...</span></md-button>
