@@ -1,0 +1,40 @@
+<div id="page-login" class="ui three column grid" ng-controller="AuthenticationController">
+    <div class="ui centered column">
+        <div class="ui card fluid">
+            <div class="content">
+                <form ng-submit="signin()" class="ui form">
+                    <h4 class="ui dividing header">Docktor Login</h4>
+
+                    <div class="required field">
+                        <label>Username</label>
+
+                        <div class="ui icon input">
+                            <input type="text" ng-model="credentials.username">
+                            <i class="user icon"></i>
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <label>Password</label>
+
+                        <div class="ui icon input">
+                            <input type="password" ng-model="credentials.password">
+                            <i class="lock icon"></i>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="positive ui button" value="Login"/>
+                    <!--
+                    <md-subheader class="row md-warn" ng-show="error">
+                        <strong ng-bind="error"></strong>
+                    </md-subheader>
+                    -->
+                </form>
+            </div>
+            <div class="extra content">
+                <a href="/#!/signup">Need an account?</a>
+                |
+                <a href="/#!/password/forgot">Forgot your password?</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@ angular.module('groups').config(['$stateProvider',
         $stateProvider.
             state('listGroups', {
                 url: '/groups',
-                templateUrl: 'modules/groups/views/list-groups.client.view.html'
+                templateUrl: 'modules/groups/views/list-groups.client.ui.html'
             }).
             state('deployServiceGroup', {
                 url: '/admin/groups/:groupId/deploy/service',
@@ -19,7 +19,7 @@ angular.module('groups').config(['$stateProvider',
             }).
             state('viewGroup', {
                 url: '/groups/:groupId',
-                templateUrl: 'modules/groups/views/view-group.client.view.html'
+                templateUrl: 'modules/groups/views/view-group.client.ui.html'
             }).
             state('editGroup', {
                 url: '/admin/groups/:groupId/edit',

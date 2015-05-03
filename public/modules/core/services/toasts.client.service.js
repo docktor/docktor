@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 angular.module('core').service('Toasts', ['$mdToast', '$timeout',
 
     function ($mdToast, $timeout) {
@@ -68,3 +68,4 @@ angular.module('core').service('Toasts', ['$mdToast', '$timeout',
         return service;
     }
 ]);
+*/

@@ -1,0 +1,59 @@
+<div data-ng-controller="GroupsController" data-ng-init="find()">
+    <div class="ui purple menu">
+        <div class="item active">
+            <a href="#!/groups"><i class="cubes icon"></i> All Groups</a>
+        </div>
+        <div class="item">
+            <div class="ui transparent left icon input">
+                <input type="text" placeholder="Search..." ng-model="search.title">
+                <i class="search icon"></i>
+            </div>
+        </div>
+        <div class="right item">
+            <div class="ui primary button">Add Group</div>
+        </div>
+    </div>
+
+    <div class="ui link cards" ng-show="ready">
+        <div ng-repeat="group in groups | filter:search" class="ui card">
+
+            <div class="content">
+
+                <div ng-if="group.runningDaemons.length == group.daemons.length && group.runningContainers.length == group.containers.length" class="ui bottom left attached green label">UP</div>
+                <div ng-if="group.runningDaemons.length < group.daemons.length || group.runningContainers.length < group.containers.length" class="ui bottom left attached orange label">WARN</div>
+                <div ng-if="group.runningDaemons.length == 0 || group.runningContainers.length == 0" class="ui bottom left attached red label">DOWN</div>
+
+                <div class="header"><a href="#!/groups/{{group._id}}">{{group.title}}</a></div>
+                <div class="meta">
+                    <a>{{group.description}}</a>
+                </div>
+                <div class="description">
+                    <blockquote>
+                        <dl class="dl-horizontal">
+                            <dt>Created</dt>
+                            <dd>{{group.created | date}}</dd>
+                            <dt>Machines</dt>
+                            <dd>{{group.runningDaemons.length}} / {{group.daemons.length}} running</dd>
+                            <dt>Containers</dt>
+                            <dd>{{group.runningContainers.length}} / {{group.containers.length}} running</dd>
+                        </dl>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="extra content">
+              <span class="right floated">
+                <a href="#!/groups/{{group._id}}"><i class="fa fa-navicon"></i> View </a>
+                <a><i class="fa fa-edit"></i> Edit </a>
+              </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui segment" ng-hide="ready">
+        <br/><br/><br/><br/><br/><br/><br/>
+        <div class="ui active inverted dimmer">
+            <div class="ui large text loader">Loading</div>
+        </div>
+    </div>
+
+</div>

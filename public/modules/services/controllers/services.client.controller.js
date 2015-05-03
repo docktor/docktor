@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services', 'Toasts', 'ServicesServices',
+angular.module('services').controller('ServicesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Services', 'ServicesServices',
     function ($scope, $stateParams, $location, Authentication, Services, Toasts, ServicesServices) {
         $scope.authentication = Authentication;
 

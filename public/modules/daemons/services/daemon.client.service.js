@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
-    function (DaemonsDocker, Toasts) {
+angular.module('daemons').factory('Daemon', ['DaemonsDocker',
+    function (DaemonsDocker) {
         return {
             isUp: function (daemon, callback) {
                 DaemonsDocker.infos(daemon._id).
@@ -60,14 +60,14 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                                 error(function (data, status, headers, config) {
                                     console.log('Error:');
                                     console.log(data);
-                                    Toasts.addToast(data, 'danger', 'Error retrieving info on cAdvisor for daemon ' + daemon.name);
+                                    //Toasts.addToast(data, 'danger', 'Error retrieving info on cAdvisor for daemon ' + daemon.name);
                                     if (callback) callback();
                                 });
                         } else {
                             // display error only if there is a cAdvisorApi attached to this daemon.
                             if (daemon.cadvisorApi) {
                                 console.log('noMachineInfo for daemon ' + daemon._id);
-                                Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
+                                //Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
                             }
                             if (callback) callback();
                         }
@@ -76,7 +76,7 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                         daemon.dockerStatus = 'down';
                         console.log('Error with Daemon.getInfoOnly on :' + daemon._id + ':');
                         console.log(data);
-                        Toasts.addToast(data, 'danger', 'Error getting info with daemon ' + daemon.name);
+                        //Toasts.addToast(data, 'danger', 'Error getting info with daemon ' + daemon.name);
                         if (callback) callback();
                     });
             }

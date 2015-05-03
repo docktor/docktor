@@ -1,0 +1,42 @@
+<nav class="ui purple inverted fixed menu" ng-controller="HeaderController">
+    <a href="#!/" class="brand item">Docktor</a>
+
+    <div ng-repeat="item in menu.items | orderBy: 'position'" class="ui simple dropdown item"
+         ng-if="item.shouldRender(authentication.user);">
+        <i class="{{item.icon}} icon"></i> {{item.title}} <i class="dropdown icon"></i>
+
+        <div class="menu">
+            <a class="item" ng-repeat="subitem in item.items | orderBy: 'position'"
+               ng-if="subitem.shouldRender(authentication.user);"
+               ui-route="{{subitem.uiRoute}}"
+               ng-class="{active: $uiRoute}"
+               href="/#!/{{subitem.link}}"
+               ng-click="close('left')">
+                <i ng-show="subitem.isFavorite" class="star icon"></i> {{subitem.title}}
+            </a>
+        </div>
+    </div>
+
+    <div class="right menu">
+        <div ng-hide="authentication.user">
+            <a href="#!/signup" ui-route="/signup" ng-class="{active: $uiRoute}" class="item">
+                Register
+            </a>
+            <a href="#!/signin" ui-route="/signin" ng-class="{active: $uiRoute}" class="item">
+                Login
+            </a>
+        </div>
+        <div ng-show="menu.shouldRender(authentication.user);">
+            {{ authentication.user.displayName}}
+        </div>
+        <div class="ui simple dropdown item"
+                   ng-if="menu.shouldRender(authentication.user);">
+            <i class="user icon"></i> {{authentication.user.username}} <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item" href="/#!/settings/profile"> <i class="settings icon"></i> Profile</a>
+                <a class="item" href="/#!/settings/password"> <i class="privacy icon"></i> Change Password</a>
+                <a class="item" href="/auth/signout">  <i class="sign out icon"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>

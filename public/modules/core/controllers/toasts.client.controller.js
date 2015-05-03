@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 angular.module('core').controller('ToastsController', ['$scope', '$mdToast', 'Toasts',
     function ($scope, $mdToast, Toasts) {
 
@@ -9,4 +9,4 @@ angular.module('core').controller('ToastsController', ['$scope', '$mdToast', 'To
 
         $scope.toasts = Toasts.getToasts();
     }
-]);
+]);*/

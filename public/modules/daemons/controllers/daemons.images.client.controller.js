@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Images', 'Toasts',
-    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images, Toasts) {
+angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Images',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Images) {
 
         $scope.viewRawJson = false;
 
@@ -37,17 +37,17 @@ angular.module('daemons').controller('DaemonsImagesController', ['$scope', '$sta
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
-            Toasts.closeToast(index);
-            Toasts.addToast(msg, 'danger', title);
+            //Toasts.closeToast(index);
+            //Toasts.addToast(msg, 'danger', title);
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            Toasts.closeToast(index);
+            //Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
 
         $scope.removeImage = function (image) {
-            var index = Toasts.addToast('Removing ' + image.Id);
+            //var index = Toasts.addToast('Removing ' + image.Id);
             Images.removeImage($scope.daemon._id, image, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 

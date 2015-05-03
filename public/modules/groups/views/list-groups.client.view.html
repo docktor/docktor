@@ -1,49 +1,78 @@
 <section data-ng-controller="GroupsController" data-ng-init="find()">
     <md-toolbar class="md-hue-1">
-        <div class="md-toolbar-tools">
-            <h3>My Groups</h3>
+        <div class="md-toolbar-tools" layout="column" layout-align="space-between center">
+            <h3><i class="fa fa-users"> </i> All Groups</h3>
+            <md-input-container md-no-float>
+                <input ng-model="search" type="text" placeholder="Search group">
+            </md-input-container>
         </div>
     </md-toolbar>
 
-    <table tr-ng-grid="" items="groups" fields="" on-data-required="" class="table md-padding" ng-if="groups.length > 0">
-        <thead>
-        <th field-name="title" display-name="Title" enable-filtering="true"></th>
-        <th field-name="description" display-name="Description" enable-filtering="true"></th>
-        <th field-name="daemon.name" display-name="Default Daemon" enable-filtering="true"></th>
-        <th>
-            <div class="tr-ng-title">
-                Ports
-            </div>
-        </th>
-        <th>
-            <div class="tr-ng-title">
-                Services
-            </div>
-        </th>
-        </thead>
-        <tbody>
-        <tr>
-            <td field-name="title">
-                <md-button class="md-accent md-hue-3" href="#!/groups/{{gridItem._id}}">{{gridItem.title}}</md-button>
-            </td>
-            <td>
-                <div>
-                    {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
-                </div>
-            </td>
-            <td>
-                <div>{{gridItem.containers.length}}</div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <md-list layout="row" layout-align="start">
+            <md-card ng-repeat="group in groups">
+                <md-card-content>
+                    <h4><i class="fa fa-users"></i> {{group.title}}</h4>
+                    <blockquote>
+                        <p ng-if="group.description">{{group.description}}</p>
+                        <dl class="dl-horizontal">
+                            <dt>Containers</dt>
+                            <dd>{{group.containers.length}}</dd>
+                            <dt>Ports</dt>
+                            <dd>{{group.portminrange}} - {{group.portmaxrange}}</dd>
+                        </dl>
+                    </blockquote>
 
-    <md-toolbar class="md-accent md-hue-3" layout-align="center center" data-ng-if="groups.$resolved && !groups.length">
-        <span ng-show="authentication.isAdmin">
-            No group yet, why don't you <md-button href="/#!/admin/groups/create">create one ?</md-button>
-        </span>
-        <span ng-hide="authentication.isAdmin">
-            No group yet for you, ask the Administrators.
-        </span>
-    </md-toolbar>
+                </md-card-content>
+                <md-action-bar layout="row" layout-align="end center">
+                    <md-button><i class="fa fa-navicon"></i> View</md-button>
+                    <md-button><i class="fa fa-edit"></i> Edit</md-button>
+                </md-action-bar>
+            </md-card>
+    </md-list>
+
+    <!--
+        <table tr-ng-grid="" items="groups" fields="" on-data-required="" class="table md-padding" ng-if="groups.length > 0">
+            <thead>
+            <th field-name="title" display-name="Title" enable-filtering="true"></th>
+            <th field-name="description" display-name="Description" enable-filtering="true"></th>
+            <th field-name="daemon.name" display-name="Default Daemon" enable-filtering="true"></th>
+            <th>
+                <div class="tr-ng-title">
+                    Ports
+                </div>
+            </th>
+            <th>
+                <div class="tr-ng-title">
+                    Services
+                </div>
+            </th>
+            </thead>
+            <tbody>
+            <tr>
+                <td field-name="title">
+                    <md-button class="md-accent md-hue-3" href="#!/groups/{{gridItem._id}}">{{gridItem.title}}</md-button>
+                </td>
+                <td>
+                    <div>
+                        {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
+                    </div>
+                </td>
+                <td>
+                    <div>{{gridItem.containers.length}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <md-toolbar class="md-accent md-hue-3" layout-align="center center" data-ng-if="groups.$resolved && !groups.length">
+            <span ng-show="authentication.isAdmin">
+                No group yet, why don't you <md-button href="/#!/admin/groups/create">create one ?</md-button>
+            </span>
+            <span ng-hide="authentication.isAdmin">
+                No group yet for you, ask the Administrators.
+            </span>
+        </md-toolbar>
+        -->
+
+
 </section>

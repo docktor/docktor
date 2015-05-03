@@ -4,8 +4,8 @@
 var ApplicationConfiguration = (function () {
     // Init module configuration options
     var applicationModuleName = 'docktor';
-    var applicationModuleVendorDependencies = ['ngResource', 'ngCookies', 'ngMessages', 'ngAnimate', 'ngTouch', 'ngSanitize',
-        'ui.router', 'ui.utils', 'trNgGrid', 'ngMaterial', 'leaflet-directive'];
+    var applicationModuleVendorDependencies = ['ngResource', 'ngCookies', 'ngMessages', 'ngSanitize',
+        'ui.router', 'ui.utils', 'leaflet-directive'];
 
     // Add a new vertical module
     var registerModule = function (moduleName, dependencies) {

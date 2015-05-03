@@ -14,29 +14,22 @@ module.exports = {
     assets: {
         lib: {
             css: [
-                'public/lib/angular-material/default-theme.css',
-                'public/lib/angular-material/themes/green-theme.css',
-                'public/lib/angular-material/themes/grey-theme.css',
-                'public/lib/angular-material/angular-material.css',
+                'public/lib/semantic-ui/dist/semantic.min.css',
                 'public/lib/fontawesome/css/font-awesome.css',
-                'public/lib/trNgGrid/release/trNgGrid.min.css',
                 'public/lib/leaflet/dist/leaflet.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
+                'public/lib/semantic-ui/dist/semantic.min.js',
                 'public/lib/angular/angular.js',
+                'public/lib/angular-ui-router/release/angular-ui-router.js',
                 'public/lib/angular-aria/angular-aria.js',
                 'public/lib/hammerjs/hammer.js',
-                'public/lib/angular-material/angular-material.js',
                 'public/lib/angular-resource/angular-resource.js',
                 'public/lib/angular-cookies/angular-cookies.js',
-                'public/lib/angular-animate/angular-animate.js',
                 'public/lib/angular-messages/angular-messages.js',
-                'public/lib/angular-touch/angular-touch.js',
                 'public/lib/angular-sanitize/angular-sanitize.js',
-                'public/lib/angular-ui-router/release/angular-ui-router.js',
                 'public/lib/angular-ui-utils/ui-utils.js',
-                'public/lib/trNgGrid/release/trNgGrid.min.js',
                 'public/lib/lodash/dist/lodash.underscore.min.js',
                 'public/lib/moment/min/moment.min.js',
                 'public/lib/leaflet/dist/leaflet.js',

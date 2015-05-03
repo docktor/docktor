@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
     Docker = require('dockerode'),
     User = require('../../models/user.server.model'),
     async = require('async'),
+    Docktor = require('../../services/docktor.server.service'),
     _ = require('lodash');
 
 /**
@@ -73,9 +74,11 @@ exports.read = function (req, res) {
                 });
             }
             if (err) {
-                return callback(err);
+                console.error(err);
+                return callback();
+            } else {
+                return callback();
             }
-            return callback();
         });
     };
 
@@ -261,6 +264,38 @@ exports.listGroups = function (req, res) {
     if (req.user.role === 'admin') {
         where = {};
     }
+    var groupsResponse = [];
+
+    var checkDaemonIsUpWorker = function (data, callback) {
+        Docktor.isDockerDaemonUp(data.container.daemonId, function (status) {
+            if (status) {
+                data.groupResponse.runningDaemons.push(data.container.daemonId);
+            }
+            return callback();
+        });
+    };
+
+    var checkContainerIsUpWorker = function (data, callback) {
+        Docktor.isContainerRunning(data.container.daemonId, data.container.containerId, function(status){
+            console.log(status);
+            if (status) {
+                data.groupResponse.runningContainers.push(data.container.containerId);
+            }
+            return callback();
+        });
+    };
+
+    var qDaemons = async.queue(checkDaemonIsUpWorker, 10);
+    var qContainers = async.queue(checkContainerIsUpWorker, 10);
+
+    var drainFunction = function () {
+        if (qDaemons.idle() && qContainers.idle()) {
+            console.log('All items have been processed');
+            res.jsonp(groupsResponse);
+        }
+    };
+    qDaemons.drain = drainFunction;
+    qContainers.drain = drainFunction;
 
     Group.find(where).sort('title').populate('daemon', '-ca -cert -key').exec(function (err, groups) {
         if (err) {
@@ -268,7 +303,37 @@ exports.listGroups = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(groups);
+            groups.forEach(function (group) {
+                var groupResponse = {
+                    _id: group._id,
+                    title: group.title,
+                    description: group.description,
+                    created: group.created,
+                    daemons: [],
+                    runningDaemons: [],
+                    containers: [],
+                    runningContainers: []
+                };
+
+                group.containers.forEach(function (container) {
+                    var responseContainer = {
+                        name: container.name,
+                        image: container.image,
+                        id: container.containerId
+                    };
+                    groupResponse.containers.push(responseContainer);
+                    //Add to queue to check container status
+                    qContainers.push({groupResponse: groupResponse, container: container});
+
+                    if (groupResponse.daemons.indexOf(container.daemonId) === -1) {
+                        groupResponse.daemons.push(container.daemonId);
+                        //Add to queue to check daemon status
+                        qDaemons.push({groupResponse: groupResponse, container: container});
+                    }
+                });
+
+                groupsResponse.push(groupResponse);
+            });
         }
     });
 };

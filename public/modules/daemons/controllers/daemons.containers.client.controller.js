@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Containers', 'Toasts', '$mdDialog',
-    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Containers, Toasts, $mdDialog) {
+angular.module('daemons').controller('DaemonsContainersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Daemons', 'DaemonsDocker', 'Containers', '$mdDialog',
+    function ($scope, $stateParams, $location, Authentication, Daemons, DaemonsDocker, Containers, $mdDialog) {
 
         $scope.viewRawJson = false;
 
@@ -39,47 +39,47 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
-            Toasts.addToast(msg, 'danger', title);
-            Toasts.closeToast(index);
+            //Toasts.addToast(msg, 'danger', title);
+            //Toasts.closeToast(index);
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            Toasts.closeToast(index);
+            //Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
 
         $scope.createContainer = function (container) {
-            var index = Toasts.addToast('Create ' + container.inspect.Name);
+            //var index = Toasts.addToast('Create ' + container.inspect.Name);
             Containers.actionContainer('create', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 
         $scope.startContainer = function (container) {
-            var index = Toasts.addToast('Starting ' + container.inspect.Name);
+            //var index = Toasts.addToast('Starting ' + container.inspect.Name);
             Containers.actionContainer('start', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.stopContainer = function (container) {
-            var index = Toasts.addToast('Stopping ' + container.inspect.Name);
+            //var index = Toasts.addToast('Stopping ' + container.inspect.Name);
             Containers.actionContainer('stop', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.pauseContainer = function (container) {
-            var index = Toasts.addToast('Pausing ' + container.inspect.Name);
+            //var index = Toasts.addToast('Pausing ' + container.inspect.Name);
             Containers.actionContainer('pause', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.unpauseContainer = function (container) {
-            var index = Toasts.addToast('Unpausing ' + container.inspect.Name);
+            //var index = Toasts.addToast('Unpausing ' + container.inspect.Name);
             Containers.actionContainer('unpause', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.removeContainer = function (container) {
-            var index = Toasts.addToast('Removing ' + container.inspect.Name);
+            //var index = Toasts.addToast('Removing ' + container.inspect.Name);
             Containers.actionContainer('remove', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
         };
 
         $scope.killContainer = function (container) {
-            var index = Toasts.addToast('Killing ' + container.inspect.Name);
+            //var index = Toasts.addToast('Killing ' + container.inspect.Name);
             Containers.actionContainer('kill', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
@@ -92,7 +92,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                     msg.push(value);
                 });
 
-                Toasts.addToast(msg, 'success', title);
+                //Toasts.addToast(msg, 'success', title);
             }, $scope.callbackError);
         };
 
@@ -107,7 +107,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
                         msg.push(s);
                     }
                 }
-                Toasts.addToast(msg, 'success', title);
+                //Toasts.addToast(msg, 'success', title);
             }, $scope.callbackError);
         };
 

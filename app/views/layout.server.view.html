@@ -26,56 +26,34 @@
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
 </head>
 
-<body layout="column" display="flex">
+<body>
+    <div id="header" ng-include="'/modules/core/views/header.client.ui.html'"></div>
 
-
-<md-sidenav layout="column"
-            class="md-sidenav-left md-whiteframe-z5"
-            md-component-id="left"
-            ng-include="'/modules/core/views/menu.client.view.html'">
-</md-sidenav>
-
-<!--Start Header-->
-<div layout="column" layout-fill tabindex="-1" role="main">
-    <md-toolbar layout="column" layout-align="space-between right" class="md-default-theme"
-                ng-include="'/modules/core/views/header.client.view.html'"></md-toolbar>
-
-    <md-content md-scroll-y flex class="md-default-theme">
-        <!--Start Content-->
-        <div id="content" layout="column" layout-fill class="layout-content layout-options">
+    <div class="pusher">
+        <div class="full height container">
+            <div id="main">
             {% block content %}{% endblock %}
-            <div class="custom-footer" flex ng-include="'/modules/core/views/footer.client.view.html'"></div>
+            </div>
         </div>
-        <!--End Content-->
-    </md-content>
-</div>
+        <div id="footer" ng-include="'/modules/core/views/footer.client.ui.html'"></div>
+    </div>
 
-<md-sidenav layout="column"
-            class="md-sidenav-right md-whiteframe-z5"
-            md-component-id="right"
-            ng-include="'/modules/core/views/admin.client.view.html'"></md-sidenav>
+    <!--Embedding The User Object-->
+    <script type="text/javascript">
+        var user = {{user | json | safe}} ;
+    </script>
 
+    <!--Application JavaScript Files-->
+    {% for jsFile in jsFiles %}
+        <script type="text/javascript" src="{{jsFile}}"></script>
+    {% endfor %}
 
-
-<!--Embedding The User Object-->
-<script type="text/javascript">
-    var user = {{user | json | safe}} ;
-</script>
-
-<!--Application JavaScript Files-->
-{% for jsFile in jsFiles %}
-<script type="text/javascript" src="{{jsFile}}"></script>
-{% endfor %}
-
-{% if process.env.NODE_ENV === 'developmentWithLiveReload' %}
-<!--Livereload script rendered -->
-<script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
-{% endif %}
+    {% if process.env.NODE_ENV === 'developmentWithLiveReload' %}
+    <!--Livereload script rendered -->
+        <script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
 </body>
-
-
 
 </html>
