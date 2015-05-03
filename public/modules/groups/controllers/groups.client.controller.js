@@ -252,8 +252,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 GroupsServices.inspect($scope.group._id, container._id).
                     success(function (data, status, headers, config) {
                         container.inspect = data;
+                        container.loading = false;
                     }).
                     error(function (err, status, headers, config) {
+                        container.loading = false;
                         $scope.callbackError(container, err);
                     });
             }
@@ -268,6 +270,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackError = function (container, err, index) {
+            container.loading = false;
             var msg = [];
             msg.push(err.message);
             var title = 'Error - ' + moment().format('hh:mm:ss');
@@ -286,7 +289,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.callbackSuccess = function (container, data, index, cbSuccessEnd) {
-            //Toasts.closeToast(index);
             cbSuccessEnd(container, data);
         };
 
@@ -296,12 +298,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeServiceFromGroup = function (container) {
             //var index = Toasts.addToast('Removing service ' + container.serviceTitle + ' from group');
-            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, index, $scope.gotoList, $scope.callbackErrorInspect);
+            GroupsServices.action('removeServiceFromGroup', $scope.group._id, container, $scope.callbackSuccess, null, $scope.gotoList, $scope.callbackErrorInspect);
         };
 
         $scope.createContainer = function (container) {
             //var index = Toasts.addToast('Create service ' + container.serviceTitle);
-            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            container.loading = true;
+            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
         $scope.createContainers = function () {
@@ -319,7 +322,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.startContainer = function (container) {
             //var index = Toasts.addToast('Starting service ' + container.serviceTitle + '...');
-            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspectAfterStart, $scope.callbackErrorInspect);
+            container.loading = true;
+            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspectAfterStart, $scope.callbackErrorInspect);
         };
 
         $scope.startContainers = function () {
@@ -337,7 +341,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.stopContainer = function (container) {
             //var index = Toasts.addToast('Stopping service ' + container.serviceTitle + '...');
-            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            container.loading = true;
+            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
         $scope.stopContainers = function () {
@@ -355,6 +360,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.pauseContainer = function (container) {
             //var index = Toasts.addToast('Pausing service ' + container.serviceTitle + '...');
+            container.loading = true;
             GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
@@ -373,6 +379,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.unpauseContainer = function (container) {
             //var index = Toasts.addToast('Unpausing service ' + container.serviceTitle + '...');
+            container.loading = true;
             GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
@@ -391,7 +398,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.removeContainer = function (container) {
             //var index = Toasts.addToast('Removing service ' + container.serviceTitle + '...');
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackErrorInspect);
+            container.loading = true;
+            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
         $scope.removeContainers = function () {
@@ -410,7 +418,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.killContainer = function (container) {
             //var index = Toasts.addToast('Killing service ' + container.serviceTitle + '...');
-            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            container.loading = true;
+            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, null, $scope.inspect, $scope.callbackErrorInspect);
         };
 
         $scope.killContainers = function () {

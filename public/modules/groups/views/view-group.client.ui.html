@@ -88,65 +88,75 @@
                         </div>
                     </div>
                     <div class="extra content">
-                            <div class="left floated" ng-switch="container.daemon.dockerStatus">
-                                <div ng-switch-when="checking">
+                        <div class="left floated" ng-switch="container.loading">
+                            <div ng-switch-default>
+                                <div class="ui active dimmer">
+                                    <div class="ui text loader">Please wait</div>
                                 </div>
-                                <div ng-switch-when="down">
-                                    No Command : Daemon Down
-                                </div>
+                            </div>
+                            <div ng-switch-when="false">
+                                <div class="left floated" ng-switch="container.daemon.dockerStatus">
+                                    <div ng-switch-when="checking">
+                                        <div class="ui active dimmer">
+                                            <div class="ui text loader">Please wait</div>
+                                        </div>
+                                    </div>
+                                    <div ng-switch-when="down">
+                                        No Command : Daemon Down
+                                    </div>
 
-                                <div ng-switch-when="up">
-
-                                    <a ng-hide="container.containerId" class=""
-                                       ng-click="createContainer(container)">
-                                        <i class="fa fa-cogs"></i> Create
-                                    </a>
-
-                                    <div ng-show="container.containerId">
-                                        <a ng-hide="container.inspect.State.Running"
-                                                   class=""
-                                                   ng-click="startContainer(container)">
-                                            <i class="fa fa-play"></i> Run
+                                    <div ng-switch-when="up">
+                                        <a ng-hide="container.containerId" class=""
+                                           ng-click="createContainer(container)">
+                                            <i class="fa fa-cogs"></i> Create
                                         </a>
 
-                                        <div ng-show="container.inspect.State.Running">
-                                            <a class="" ng-hide="container.inspect.State.Paused"
-                                                       ng-click="stopContainer(container)">
-                                                <i class="fa fa-stop"></i> Stop
+                                        <div ng-show="container.containerId">
+                                            <a ng-hide="container.inspect.State.Running"
+                                               class=""
+                                               ng-click="startContainer(container)">
+                                                <i class="fa fa-play"></i> Run
                                             </a>
-                                            <a class="" ng-hide="container.inspect.State.Paused"
-                                                       ng-click="pauseContainer(container)">
-                                                <i class="fa fa-pause"></i> Pause
-                                            </a>
-                                            <a class="" ng-show="container.inspect.State.Paused"
-                                                       ng-click="unpauseContainer(container)">
-                                                <i class="fa fa-pause"></i> Unpause
-                                            </a>
-                                            <a class="" ng-click="killContainer(container)">
-                                                <i class="fa fa-crosshairs"></i> Kill
-                                            </a>
+
+                                            <div ng-show="container.inspect.State.Running">
+                                                <a class="" ng-hide="container.inspect.State.Paused"
+                                                   ng-click="stopContainer(container)">
+                                                    <i class="fa fa-stop"></i> Stop
+                                                </a>
+                                                <a class="" ng-hide="container.inspect.State.Paused"
+                                                   ng-click="pauseContainer(container)">
+                                                    <i class="fa fa-pause"></i> Pause
+                                                </a>
+                                                <a class="" ng-show="container.inspect.State.Paused"
+                                                   ng-click="unpauseContainer(container)">
+                                                    <i class="fa fa-pause"></i> Unpause
+                                                </a>
+                                                <a class="" ng-click="killContainer(container)">
+                                                    <i class="fa fa-crosshairs"></i> Kill
+                                                </a>
+                                            </div>
+                                            <md-button ng-hide="container.inspect.State.Running" class=""
+                                                       ng-click="removeContainer(container)">
+                                                <i class="fa fa-trash"></i> Remove
+                                            </md-button>
                                         </div>
-                                        <md-button ng-hide="container.inspect.State.Running" class=""
-                                                   ng-click="removeContainer(container)">
-                                            <i class="fa fa-trash"></i> Remove
-                                        </md-button>
                                     </div>
                                 </div>
+                            </div>
                         </div>
-
-
-                      <span class="right floated">
-                          <div ng-show="authentication.isAdmin">
-                              <a href="#!/groups/{{group._id}}/{{container._id}}"><i class="fa fa-navicon"></i> View </a>
-                              <a href="/#!/admin/groups/{{group._id}}/edit"><i class="fa fa-edit"></i> Edit </a>
-                          </div>
-                      </span>
+                        <span class="right floated">
+                            <div ng-show="authentication.isAdmin">
+                                <a href="#!/groups/{{group._id}}/{{container._id}}"><i class="fa fa-navicon"></i> View</a>
+                                <a href="/#!/admin/groups/{{group._id}}/edit"><i class="fa fa-edit"></i> Edit </a>
+                              </div>
+                          </span>
                     </div>
                 </div>
             </div>
 
             <div class="ui segment" ng-hide="ready">
                 <br/><br/><br/><br/><br/><br/><br/>
+
                 <div class="ui active inverted dimmer">
                     <div class="ui large text loader">Loading</div>
                 </div>

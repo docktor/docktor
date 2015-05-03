@@ -68,15 +68,15 @@ exports.read = function (req, res) {
         //Call "docker ps"
         daemonDocker.listContainers(function (err, data) {
             //For every container running ons this daemon
-            if (data && data.length !== 0) {
-                data.forEach(function (c) {
-                    queueContainers.push(c);
-                });
-            }
             if (err) {
                 console.error(err);
                 return callback();
             } else {
+                if (data && data.length !== 0) {
+                    data.forEach(function (c) {
+                        queueContainers.push(c);
+                    });
+                }
                 return callback();
             }
         });
@@ -128,6 +128,7 @@ exports.read = function (req, res) {
     //Main part. Getting the list of concerned Daemon, from the list of the container of the group
     var listDaemonIds = [];
     group.containers.forEach(function (container) {
+        container.loading = false;
         if (listDaemonIds.indexOf(container.daemonId) === -1) listDaemonIds.push(container.daemonId);
     });
     //Main part. For every daemon.
