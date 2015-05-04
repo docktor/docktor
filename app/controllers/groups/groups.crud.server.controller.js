@@ -70,7 +70,11 @@ exports.read = function (req, res) {
             //For every container running ons this daemon
             if (err) {
                 console.error(err);
-                return callback();
+                try {
+                    return callback();
+                } catch (error) {
+                    //
+                }
             } else {
                 if (data && data.length !== 0) {
                     data.forEach(function (c) {

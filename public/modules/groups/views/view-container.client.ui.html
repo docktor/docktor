@@ -1,0 +1,147 @@
+<div data-ng-controller="GroupsController" data-ng-init="findOne()">
+
+
+    <div class="ui segment" ng-hide="ready">
+        <br/><br/><br/><br/><br/><br/><br/>
+
+        <div class="ui active inverted dimmer">
+            <div class="ui large text loader">Loading</div>
+        </div>
+    </div>
+
+    <div ng-show="ready">
+        <div class="ui purple menu">
+            <div class="item">
+                <a href="#!/groups"><i class="cubes icon"></i> My Groups</a>
+            </div>
+            <div class="item">
+                <a href="#!/groups/{{group._id}}"><i class="cube icon"></i> {{group.title}}</a>
+            </div>
+            <div class="item active">
+                <a><i class="cloud icon"></i> Service {{container.serviceTitle}}</a>
+            </div>
+
+        </div>
+        <div class="ui column grid">
+            <div class="ui two wide column">
+                <div class="ui vertical labeled icon menu">
+
+                    <a class="red item" ui-sref="viewContainer" ui-sref-active="active">
+                        <i class="cloud icon"></i>
+                        Service
+                    </a>
+                    <a class="blue item" ui-sref="viewContainer.monitoring" ui-sref-active="active">
+                        <i class="dashboard icon"></i>
+                        Monitoring
+                    </a>
+                    <a class="green item" >
+                        <i class="file text outline icon"></i>
+                        Logs
+                    </a>
+                    <a class="teal item" >
+                        <i class="terminal icon"></i>
+                        Terminal
+                    </a>
+                    <a ng-show="authentication.isAdmin" class="purple item">
+                        <i class="edit icon"></i>
+                        Edit
+                    </a>
+                </div>
+
+            </div>
+            <div class="ui fourteen wide column">
+                <div class="ui card fluid">
+                    <div ng-if="container.inspect.State.Running" class="ui top right attached green label"><i class="big smile icon"></i> Running</div>
+                    <div ng-if="container.inspect.State.Paused" class="ui top right attached yellow label"><i class="big meh icon"></i> Paused </div>
+                    <div ng-if="!container.inspect.State.Running" class="ui top right attached red label"><i class="big frown icon"></i> Not Running</div>
+
+                    <div class="content">
+                        <img class="ui small left floated rounded image" src="http://placehold.it/80x80" ng-hide="container.serviceImage">
+                        <img class="ui small left floated rounded image" src="" ng-show="container.serviceImage"/>
+
+                        <div class="header"><a href="#!/groups/{{group._id}}/{{container._id}}">{{container.serviceTitle}}</a>
+                        </div>
+
+                        <div class="meta">
+                            <a>{{container.image}}</a>
+                        </div>
+                        <div class="description">
+                            <div ng-show="container.daemon.dockerStatusUp">
+
+                                <a class="ui button primary" ng-hide="container.containerId"
+                                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Create
+                                </a>
+
+                                <a class="ui button"
+                                   ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
+                                   ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
+                                    Remove service from Group
+                                </a>
+                                <a class="ui button red" ng-click="askDeleteService=false"
+                                   ng-show="askDeleteService">
+                                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                                </a>
+                                <a class="ui button red" data-ng-click="removeServiceFromGroup(container);"
+                                   ng-show="askDeleteService">
+                                    Yes, I want to delete this service from this group <i
+                                        class="fa fa-exclamation-triangle"></i>
+                                </a>
+
+                                <div ng-show="container.containerId">
+
+                                    <a class="ui button primary" ng-hide="container.inspect.State.Running"
+                                       ng-click="startContainer(container)"><i class="fa fa-play"></i> Run
+                                    </a>
+
+                                    <div ng-show="container.inspect.State.Running">
+                                        <a class="ui button" ng-hide="container.inspect.State.Paused"
+                                           ng-click="stopContainer(container)">
+                                            <i class="fa fa-stop"></i> stop
+                                        </a>
+                                        <a class="ui button" ng-hide="container.inspect.State.Paused"
+                                           ng-click="pauseContainer(container)">
+                                            <i class="fa fa-pause"></i> pause
+                                        </a>
+                                        <a class="ui button" ng-show="container.inspect.State.Paused"
+                                           ng-click="unpauseContainer(container)">
+                                            <i class="fa fa-pause"></i> unpause
+                                        </a>
+                                        <a class="ui button" ng-click="killContainer(container)">
+                                            <i class="fa fa-crosshairs"></i> kill
+                                        </a>
+
+                                        <span ng-repeat="command in container.commands | filter:{role:'user'}">
+                                            <a class="ui button" ng-click="doExec(container, command)">
+                                                {{command.name}}
+                                            </a>
+                                        </span>
+                                        <span ng-if="authentication.isAdmin"
+                                              ng-repeat="command in container.commands | filter:{role:'admin'}">
+                                            <a class="ui button" ng-click="doExec(container, command)">
+                                                {{command.name}}
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <a class="ui button red"
+                                       ng-hide="!container.containerId || container.inspect.State.Running"
+                                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker
+                                        remove
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div ui-view>
+                    inspect
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>

@@ -27,8 +27,11 @@ angular.module('groups').config(['$stateProvider',
             }).
             state('viewContainer', {
                 url: '/groups/:groupId/:containerId',
-                templateUrl: 'modules/groups/views/view-container.client.view.html'
+                templateUrl: 'modules/groups/views/view-container.client.ui.html'
+            }).
+            state('viewContainer.monitoring', {
+                url: '/monitoring',
+                templateUrl: 'modules/groups/views/view-container.monitoring.client.ui.html'
             });
-
     }
 ]);
