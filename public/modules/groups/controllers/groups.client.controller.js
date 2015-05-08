@@ -73,7 +73,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.find = function () {
             $scope.ready = false;
-            Groups.query().$promise.then(function(groups) {
+            Groups.query().$promise.then(function (groups) {
                 $scope.groups = _.sortBy(groups, function (g) {
                     return g.title.trim().toUpperCase();
                 });
@@ -124,7 +124,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
-                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase();});
+                $scope.group.containers = _.sortBy($scope.group.containers, function (c) {
+                    return c.name.toLocaleUpperCase();
+                });
 
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
@@ -144,25 +146,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
                             if ((container.serviceId) && (!$stateParams.containerId ||
                                 ($stateParams.containerId && container._id === $stateParams.containerId))) {
-                                /*
-                                ServicesServices.getUrlsAndCommands(container.serviceId, $scope.group._id)
-                                    .success(function (data) {
-                                        container.commands = data.commands;
-                                        container.urls = [];
-                                        angular.forEach(data.urls, function (url, key) {
-                                            var urlO = $scope.computeUrl(container, url);
-                                            container.urls.push(urlO);
-                                        });
-                                    });
-                                    */
+
                                 angular.forEach(container.urls, function (url, key) {
                                     var urlO = $scope.computeUrl(container, url);
                                     container.urls.push(urlO);
                                 });
                             }
                             $scope.prepareJobs(container);
-                            // feat : remove docker call for every container
-                            //$scope.inspect(container);
                         }
                     });
                 };
@@ -173,6 +163,23 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.ready = true;
             });
         };
+
+        $scope.inspectContainer = function () {
+            Groups.get({
+                groupId: $stateParams.groupId,
+                containerId: $stateParams.containerId
+            }, function (group) {
+                $scope.group = group;
+                $scope.group.containers.forEach(function (container) {
+                    container.daemon = $scope.getDaemon(container.daemonId);
+                    if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                        $scope.container = container;
+                        $scope.inspect(container);
+                    }
+                });
+            });
+        };
+
 
         $scope.prepareJobs = function (container) {
             // reverse to keep last execution
@@ -445,10 +452,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 });
 
                 /*$mdDialog.show({
-                    controller: 'ContainerCmdDialogController',
-                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
-                });*/
+                 controller: 'ContainerCmdDialogController',
+                 templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
+                 locals: {title: title, results: results}
+                 });*/
 
             }, $scope.callbackErrorInspect);
         };
@@ -466,10 +473,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 }
 
                 /*$mdDialog.show({
-                    controller: 'ContainerCmdDialogController',
-                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
-                });*/
+                 controller: 'ContainerCmdDialogController',
+                 templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
+                 locals: {title: title, results: results}
+                 });*/
 
             }, $scope.callbackErrorInspect);
         };
@@ -651,10 +658,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.showJob = function (info, job) {
             /*$mdDialog.show({
-                controller: 'JobDialogController',
-                templateUrl: 'modules/jobs/views/job.dialog.template.html',
-                locals: {currentJob: job, info: info}
-            });*/
+             controller: 'JobDialogController',
+             templateUrl: 'modules/jobs/views/job.dialog.template.html',
+             locals: {currentJob: job, info: info}
+             });*/
         };
 
         $scope.getDisplayJob = function (lastExecution) {
@@ -665,4 +672,5 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
     }
-]);
+])
+;

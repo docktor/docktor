@@ -29,6 +29,10 @@ angular.module('groups').config(['$stateProvider',
                 url: '/groups/:groupId/:containerId',
                 templateUrl: 'modules/groups/views/view-container.client.ui.html'
             }).
+            state('viewContainer.inspect', {
+                url: '/inspect',
+                templateUrl: 'modules/groups/views/view-container.inspect.client.ui.html'
+            }).
             state('viewContainer.monitoring', {
                 url: '/monitoring',
                 templateUrl: 'modules/groups/views/view-container.monitoring.client.ui.html'

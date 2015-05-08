@@ -39,3 +39,11 @@ blockquote {
 .dl-horizontal dd {
     margin-left: 90px;
 }
+
+.dl-large dt {
+    width: 150px;
+}
+
+.dl-large dd {
+    margin-left: 180px;
+}

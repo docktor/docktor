@@ -1,0 +1,43 @@
+<div class="ui segment" data-ng-init="inspectContainer()">
+    <h2>Container</h2>
+    <blockquote>
+        <dl class="dl-horizontal dl-large">
+            <span ng-bind-html="container.inspect.Id | limitTo: 12 | definition : 'Id'"></span>
+            <span ng-bind-html="container.inspect.Name | definition : 'Name'"></span>
+            <span ng-bind-html="container.inspect.Config.Hostname | definition :'Hostname'"></span>
+            <span ng-bind-html="container.inspect.Created | date: 'medium' | definition : 'Created'"></span>
+            <span ng-bind-html="container.inspect.Config.Cmd | definition : 'Cmd'"></span>
+            <span ng-bind-html="container.inspect.Args | definition : 'Args'"></span>
+            <span ng-bind-html="container.inspect.Config.Entrypoint | definition : 'Entry Point'"></span>
+            <span ng-bind-html="container.inspect.Config.Env | definition : 'Env' : ','"></span>
+            <span ng-bind-html="container.inspect.Config.User | definition : 'User'"></span>
+            <span ng-bind-html="container.inspect.Config.WorkingDir | definition : 'Working Dir'"></span>
+            <span ng-bind-html="container.inspect.Config.CpuShares | definition : 'CPU Shares'"></span>
+            <span ng-bind-html="container.inspect.Config.Cpuset | definition : 'CPU Set'"></span>
+            <span ng-bind-html="container.inspect.Config.Memory | definition : 'Memory'"></span>
+            <span ng-bind-html="container.inspect.Config.MemorySwap | definition : 'Swap'"></span>
+        </dl>
+    </blockquote>
+
+    <h2>Volumes</h2>
+    <blockquote>
+        <dl class="dl-horizontal dl-large">
+            <span ng-bind-html="container.inspect.Volumes | volumes : container.inspect.VolumesRW"></span>
+             <span ng-bind-html="container.inspect.Config.HostConfig.VolumesFrom | definition : 'Volumes From'"></span>
+        </dl>
+    </blockquote>
+
+    <h2>Network</h2>
+    <blockquote>
+        <dl class="dl-horizontal dl-large">
+            <span ng-bind-html="container.inspect.HostConfig.PortBindings | portBindings"></span>
+            <span ng-bind-html="container.inspect.HostConfig.Links | definition : 'Links'"></span>
+            <span ng-bind-html="container.inspect.HostConfig.NetworkMode | definition : 'Network Mode'"></span>
+            <span ng-bind-html="container.inspect.HostConfig.Privileged | definition : 'Privileged'"></span>
+            <span ng-bind-html="container.inspect.HostConfig.PublishAllPorts | definition : 'PublishAllPorts'"></span>
+            <span ng-bind-html="container.inspect.HostConfig.Dns | definition : 'DNS'"></span>
+            <span ng-bind-html="container.inspect.HostConfig.DnsSearch | definition : 'DNS Search'"></span>
+        </dl>
+    </blockquote>
+
+</div>
