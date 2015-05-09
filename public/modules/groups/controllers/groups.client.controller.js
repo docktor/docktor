@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', '$timeout', 'UsersService', 'RoleService', 'Menus',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, $timeout, UsersService, RoleService, Menus) {
+angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', '$timeout', 'UsersService', 'RoleService', 'Menus','Socket',
+    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, $timeout, UsersService, RoleService, Menus, Socket) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -180,6 +180,29 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
+
+        $scope.statsContainer = function () {
+            Groups.get({
+                groupId: $stateParams.groupId,
+                containerId: $stateParams.containerId
+            }, function (group) {
+                $scope.group = group;
+                $scope.group.containers.forEach(function (container) {
+                    container.daemon = $scope.getDaemon(container.daemonId);
+                    if ($stateParams.containerId && container._id === $stateParams.containerId) {
+                        $scope.container = container;
+                        //Call docker stats
+                        Containers.statsContainer(container.daemonId, container.containerId).
+                            success(function (data, status, headers, config) {
+                                console.log(data);
+                            }).
+                            error(function (err, status, headers, config) {
+                                console.log(err);
+                            });
+                    }
+                });
+            });
+        };
 
         $scope.prepareJobs = function (container) {
             // reverse to keep last execution
@@ -671,6 +694,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 return '.';
             }
         };
+
+        Socket.on('container.stat', function(stat) {
+            console.log(stat);
+        });
     }
-])
-;
+]);

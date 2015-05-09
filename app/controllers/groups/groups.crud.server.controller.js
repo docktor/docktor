@@ -273,8 +273,12 @@ exports.listGroups = function (req, res) {
 
     var checkDaemonIsUpWorker = function (data, callback) {
         Docktor.isDockerDaemonUp(data.container.daemonId, function (status) {
-            if (status) {
+            if (status.status) {
                 data.groupResponse.runningDaemons.push(data.container.daemonId);
+            } else if (status.messages) {
+                status.messages.forEach(function(message) {
+                    errorHandler.emitMessage(req, message);
+                })
             }
             return callback();
         });
@@ -282,7 +286,6 @@ exports.listGroups = function (req, res) {
 
     var checkContainerIsUpWorker = function (data, callback) {
         Docktor.isContainerRunning(data.container.daemonId, data.container.containerId, function(status){
-            console.log(status);
             if (status) {
                 data.groupResponse.runningContainers.push(data.container.containerId);
             }
@@ -295,7 +298,6 @@ exports.listGroups = function (req, res) {
 
     var drainFunction = function () {
         if (qDaemons.idle() && qContainers.idle()) {
-            console.log('All items have been processed');
             res.jsonp(groupsResponse);
         }
     };

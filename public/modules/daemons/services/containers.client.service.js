@@ -16,6 +16,9 @@ angular.module('daemons').factory('Containers', ['$http', 'DaemonsDocker',
                         container.loading = false;
                         cbError(container, data, index);
                     });
+            },
+            statsContainer: function (daemonId, containerId) {
+                return $http.get('/daemons/docker/container/stats/' + daemonId + '/' + containerId);
             }
         };
     }

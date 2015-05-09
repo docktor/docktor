@@ -33,7 +33,9 @@ module.exports = {
                 'public/lib/lodash/dist/lodash.underscore.min.js',
                 'public/lib/moment/min/moment.min.js',
                 'public/lib/leaflet/dist/leaflet.js',
-                'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js'
+                'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
+                'public/lib/socket.io-client/socket.io.js',
+                'public/lib/angular-socket-io/socket.min.js'
             ]
         },
         css: [

@@ -14,21 +14,32 @@ var mongoose = require('mongoose'),
  * Return a boolean value representing if the docker daemon is up or not
  * @param daemonId
  */
-exports.isDockerDaemonUp = function (daemonId, callback) {
+var isDockerDaemonUp = function (daemonId, callback) {
     //Prepare the status
     var status;
+    var messages = [];
+
 
     //Prepare the async worker
-    var pingWorker = function(pingData, callback) {
+    var pingWorker = function (pingData, callback) {
         if (pingData.err) {
             console.log('ERR: Cannot ping docker daemon ' + daemonId);
-            console.error(pingData.err);
+            messages.push({
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot ping docker daemon ' + daemonId
+            });
             status = false;
             return callback();
         } else if (pingData.data) {
             status = true;
             return callback();
         } else {
+            messages.push({
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot ping docker daemon ' + daemonId
+            });
             status = false;
             return callback();
         }
@@ -37,36 +48,53 @@ exports.isDockerDaemonUp = function (daemonId, callback) {
     //Prepare the async queue
     var q = Async.queue(pingWorker, 1);
 
-    q.drain = function() {
-        callback(status);
+    q.drain = function () {
+        callback({
+            status : status,
+            messages : messages
+        });
     };
 
 
     //Load the daemon
     Daemon.findById(daemonId).exec(function (err, daemon) {
         if (err) {
-            throw err;
+            messages.push({
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot load docker daemon ' + daemonId
+            });
         } else if (!daemon) {
-            throw new Error('Failed to load daemon ' + daemonId);
+            messages.push({
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot load docker daemon ' + daemonId
+            });
+        } else {
+            //Get the docker wrapper
+            var daemonDocker = daemon.getDaemonDocker();
+
+            //Prepare the ping callback which will feed the queue
+            var pingCallback = function (err, data) {
+                q.push({err: err, data: data});
+            };
+
+            //Call the ping
+            daemonDocker.ping(pingCallback);
         }
-
-        //Get the docker wrapper
-        var daemonDocker = daemon.getDaemonDocker();
-
-        //Prepare the ping callback which will feed the queue
-        var pingCallback = function(err, data) {
-            q.push({err: err, data: data});
-        };
-
-        //Call the ping
-        daemonDocker.ping(pingCallback);
     });
 
 };
 
-exports.isContainerRunning = function(daemonId, containerId, callback) {
+/**
+ *
+ * @param daemonId
+ * @param containerId
+ * @param callback
+ */
+var isContainerRunning = function (daemonId, containerId, callback) {
     //Load the daemon
-    Daemon.findById(daemonId).exec( function (err, daemon) {
+    Daemon.findById(daemonId).exec(function (err, daemon) {
         if (err) {
             console.err(err);
             return callback(false);
@@ -79,16 +107,11 @@ exports.isContainerRunning = function(daemonId, containerId, callback) {
 
             //Prepare the ping callback which will feed the queue
             var inspectCallback = function (err, data) {
-                console.log("** inspectCallback **");
-                console.log(err);
-                console.log(data);
                 if (err) {
                     return callback(false);
                 } else if (!data) {
                     return callback(false);
                 } else {
-                    console.log("###########");
-                    console.log(data);
                     if (data.State.Running) {
                         return callback(true);
                     } else {
@@ -103,3 +126,8 @@ exports.isContainerRunning = function(daemonId, containerId, callback) {
     });
 
 }
+
+module.exports = {
+    isDockerDaemonUp: isDockerDaemonUp,
+    isContainerRunning: isContainerRunning
+};

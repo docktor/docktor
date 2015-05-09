@@ -61,3 +61,9 @@ exports.getErrorMessage = function (err) {
 
     return message;
 };
+
+exports.emitMessage = function(req, message) {
+    var socketio = req.app.get('socketio');
+    console.log('Sending message through sockets : ' + message);
+    socketio.sockets.emit(message);
+};

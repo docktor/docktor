@@ -26,6 +26,9 @@ module.exports = function (app) {
     app.route('/daemons/docker/container/inspect/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.inspectContainer);
 
+    app.route('/daemons/docker/container/stats/:daemonId/:containerDockerId')
+        .get(users.requiresLogin, daemons.hasAuthorization, daemons.statsContainer);
+
     app.route('/daemons/docker/container/start/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.startContainer);
 

@@ -40,10 +40,7 @@ if (config.cluster && cluster.isMaster) {
     require('./config/passport')();
 
     // Start the app by listening on <port>
-    app.listen(config.port);
-
-    // Expose app
-    exports = module.exports = app;
+    app.get('server').listen(config.port);
 
     // Logging initialization
     console.log('Docktor application started on port ' + config.port);

@@ -71,6 +71,34 @@ exports.inspectContainer = function (req, res) {
     });
 };
 
+
+exports.statsContainer = function (req, res) {
+    var socketio = req.app.get('socketio');
+    socketio.sockets.emit({message : 'nouveau message'});
+    /*
+        req.containerDocker.stats(function (err, stream) {
+
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var string = [];
+            stream.on('data', function (buffer) {
+                var part = buffer;
+                console.log('***');
+                console.log(JSON.parse(part.toString()))
+                string.push(JSON.parse(part.toString()));
+            });
+            stream.on('end', function () {
+                res.jsonp(string);
+            });
+        }
+    });
+    */
+    res.status(200).send();
+};
+
 exports.startContainer = function (req, res) {
     req.containerDocker.start({}, function (err, containerStarted) {
         if (err) {
