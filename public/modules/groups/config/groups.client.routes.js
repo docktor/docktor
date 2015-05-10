@@ -15,7 +15,7 @@ angular.module('groups').config(['$stateProvider',
             }).
             state('createGroup', {
                 url: '/admin/groups/create',
-                templateUrl: 'modules/groups/views/edit-group.client.view.html'
+                templateUrl: 'modules/groups/views/edit-group.client.ui.html'
             }).
             state('viewGroup', {
                 url: '/groups/:groupId',

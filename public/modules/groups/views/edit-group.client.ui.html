@@ -1,0 +1,248 @@
+<div data-ng-controller="GroupsController" data-ng-init="findForCreateOrEditGroup()">
+
+    <div class="ui purple menu">
+        <div class="item">
+            <a href="#!/groups"><i class="cubes icon"></i> All Groups</a>
+        </div>
+
+        <div class="item active" ng-hide="group._id">
+            <a><i class="plus icon"></i> Create Group</a>
+        </div>
+        <div class="item active" ng-show="group._id">
+            <a href="#!/groups/{{group._id}}"><i class="edit icon"></i> Edit {{group.title}}</a>
+        </div>
+    </div>
+
+    <div class="ui segment">
+
+
+        <form class="ui form" name="groupForm" data-ng-submit="submitForm()" novalidate>
+            <h4 class="ui dividing header">Group Information</h4>
+
+            <div class="two fields">
+                <div class="field">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Title</label>
+                            <input name="title" ng-model="group.title" type="text" ng-pattern="patternTitle"
+                                   ng-required="true"
+                                   md-maxlength="200"/>
+
+                            <div ng-messages="groupForm.title.$error">
+                                <div ng-message="required">Required</div>
+                                <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}</div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <input ng-model="group.description" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Prefered Machine</label>
+
+                    <div id="chooseDaemon" class="ui selection dropdown">
+                        <div class="default text">Choose a Docker Machine</div>
+                        <i class="dropdown icon"></i>
+
+                        <div class="menu">
+                            <div class="item" ng-value="daemon"
+                                 ng-repeat="daemon in daemons.all track by daemon._id"
+                                 data-value="{{ daemon._id }}"
+                                 ng-click="showFreePortRangeOnContainer(daemon._id)">
+                                {{ daemon.name }} - {{ daemon.host }}:{{ daemon.port }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <h4 class="ui dividing header" ng-show="group.selectDaemon">Networking options
+                ({{group.selectDaemon.name}})</h4>
+
+            <div class="two fields" ng-show="group.selectDaemon">
+                <div class="field">
+                    <label>Port Range</label>
+
+                    <div class="two fields">
+                        <div class="field">
+                            <input name="portminrange" ng-model="group.portminrange" type="number">
+
+                            <div ng-messages="groupForm.portminrange.$error">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="number">Number is invalid.</div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <input name="portmaxrange" ng-model="group.portmaxrange" type="number">
+
+                            <div ng-messages="groupForm.portmaxrange.$error">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="number">Number is invalid.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div ng-show="freePortRange">
+                        <label>Ports already used :</label>
+                        <span ng-show="freePortRange.length === 0">None</span>
+                        <li ng-repeat="port in freePortRange track by $index">
+                            {{port}}
+                        </li>
+                    </div>
+                </div>
+            </div>
+            <script language="JavaScript">
+                $(function () {
+                    $('#chooseDaemon').dropdown();
+                });
+            </script>
+        </form>
+
+        <h4 class="ui dividing header" ng-show="group.selectDaemon">Filesystem options
+            ({{group.selectDaemon.name}})</h4>
+
+        <div class="two fields" ng-show="group.selectDaemon">
+
+            <md-button aria-label="Add a filesystem to monitor" class="md-raised" ng-hide="displayFormFilesystem"
+                       ng-click="displayFormFilesystem=!displayFormFilesystem">
+                <i class="fa fa-plus-square"></i>
+            </md-button>
+
+            <div class="controls">
+                <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured
+                    on
+                    Docktor.</p>
+
+                <ul data-ng-repeat="filesystem in group.filesystems">
+                    <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
+                        <small><i>{{filesystem.description}}</i></small>
+                        <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
+                            <i class="fa fa-trash-o" tooltip="Delete Filesystem"
+                               tooltip-popup-delay='750'></i>
+                        </a>
+                        <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
+                                   class="md-raised md-accent md-hue-3">
+                            No, I don't want to delete this. <i class="fa fa-reply"></i>
+                        </md-button>
+                        <md-button data-ng-click="removeFilesystem(filesystem);"
+                                   ng-show="askDeleteFilesystem"
+                                   class="md-raised md-warn">
+                            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                        </md-button>
+                    </li>
+                </ul>
+
+                <form aria-label="Form Filesystem" ng-show="displayFormFilesystem" name="filesystemForm"
+                      id="filesystemForm" novalidate
+                      autocomplete="off">
+
+                    <div class="row">
+                        <div flex="10">Daemon</div>
+                        <div flex>
+                            <md-select ng-model="filesystem.selectDaemon" ng-change="changeDaemonFilesystem()">
+                                <md-select-label>
+                                    {{ filesystem.selectDaemon.name ? filesystem.selectDaemon.name : 'choose an daemon'
+                                    }}
+                                </md-select-label>
+                                <md-option ng-value="daemon" ng-repeat="daemon in daemons.all track by daemon._id">
+                                    {{ daemon.name }}
+                                </md-option>
+                            </md-select>
+                        </div>
+                    </div>
+
+                    <div ng-show="filesystem.pleaseWait">
+                        <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
+                        </md-progress-circular>
+                        Please Wait... Checking in progress...
+                    </div>
+
+                    <div ng-hide="filesystem.pleaseWait">
+                        <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem > 0">
+                            <div flex="10">FileSystem</div>
+                            <md-select ng-model="filesystem.currentFs" style="min-width: 300px;"
+                                       ng-change="changeFilesystem()">
+                                <md-select-label>
+                                    {{ filesystem.currentFs.device ? filesystem.currentFs.device : 'choose an
+                                    filesystem' }}
+                                </md-select-label>
+                                <md-option ng-value="fs"
+                                           ng-repeat="fs in filesystem.selectDaemon.statsCompute.filesystem">
+                                    {{ fs.device }}
+                                </md-option>
+                            </md-select>
+                        </div>
+
+                        <div class="row" ng-if="filesystem.selectDaemon">
+                            <div ng-if="!filesystem.selectDaemon.statsCompute.filesystem">No filesystem found on
+                                {{filesystem.selectDaemon.name}}. Please check cAdvisor on it.
+                            </div>
+                        </div>
+
+                        <div ng-show="filesystem.currentFs" class="row">
+                            <div flex>
+                                <md-progress-linear class="md-warn" md-mode="determinate"
+                                                    ng-value="filesystem.currentFs.usagePercent"></md-progress-linear>
+                            </div>
+
+                            <div ng-show="filesystem.currentFs" flex>
+                                <span>{{filesystem.currentFs.device}} : {{filesystem.currentFs.usageInMB}} Gb / {{filesystem.currentFs.capacityInMB}} Gb ({{filesystem.currentFs.usagePercent}}%)</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <md-input-container>
+                                <label>Description</label>
+                                <input id="partitionDescriptio" ng-model="filesystem.description" type="text">
+                            </md-input-container>
+                        </div>
+                        <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
+                                   data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                            <i class="fa fa-plus"></i> Insert Filesystem
+                        </md-button>
+                        <md-button class="md-raised" data-ng-click="displayFormFilesystem=false">
+                            <i class="fa fa-plus"></i> Cancel
+                        </md-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <a class="ui primary button" ng-click="submitForm()" ng-show="group.selectDaemon">
+                <i class="fa fa-save"></i>
+                <span ng-hide="group._id">Create Group</span>
+                <span ng-show="group._id">Update Group</span>
+            </a>
+        </div>
+        <md-subheader class="row md-warn" ng-show="error">
+            <strong data-ng-bind="error"></strong>
+        </md-subheader>
+
+        <br>
+
+        <div ng-show="group._id" class="row">
+            <md-button class="md-raised md-warn" ng-click="askDeleteGroup=true" ng-hide="askDeleteGroup">
+                <i class="fa fa-trash-o"> </i> Delete Group
+            </md-button>
+            <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-accent md-hue-3">
+                No, I don't want to delete this. <i class="fa fa-reply"></i>
+            </md-button>
+            <md-button data-ng-click="remove();" ng-show="askDeleteGroup"
+                       class="md-raised md-warn">
+                Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+            </md-button>
+        </div>
+
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            <strong>{{alert.title}}</strong><br>
+
+            <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
+        </alert>
+    </div>
+</div>
