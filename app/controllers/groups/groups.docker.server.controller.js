@@ -251,7 +251,11 @@ exports.inspectContainer = function (req, res) {
             if (err.statusCode) {
                 Group.resetContainerId(group._id, container._id);
             }
-
+            errorHandler.emitMessage(req, {
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot inspect container ' + container._id + 'on daemon ' + req.daemon.name
+            });
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });

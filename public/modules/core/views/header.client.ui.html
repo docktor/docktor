@@ -16,6 +16,9 @@
             </a>
         </div>
     </div>
+    <a class="item">
+        <i class="inbox icon"> </i> Messages <span id="messageCounter" class="ui label" ng-show="nbMessages > 0">{{nbMessages}}</span>
+    </a>
 
     <div class="right menu">
         <div ng-hide="authentication.user">

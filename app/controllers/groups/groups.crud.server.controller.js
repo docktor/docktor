@@ -69,6 +69,11 @@ exports.read = function (req, res) {
         daemonDocker.listContainers(function (err, data) {
             //For every container running ons this daemon
             if (err) {
+                errorHandler.emitMessage(req, {
+                    title: 'Error',
+                    type : 'WARNING',
+                    message: 'ERR: Cannot list container on docker daemon ' + daemon.name
+                });
                 console.error(err);
                 try {
                     return callback();
@@ -107,6 +112,11 @@ exports.read = function (req, res) {
                     concernedContainer.urls = service.urls;
                     callback();
                 } else {
+                    errorHandler.emitMessage(req, {
+                        title: 'Error',
+                        type : 'WARNING',
+                        message: 'ERR: Cannot find service ' + err
+                    });
                     return callback(err);
                 }
             });
@@ -272,6 +282,7 @@ exports.listGroups = function (req, res) {
     var groupsResponse = [];
 
     var checkDaemonIsUpWorker = function (data, callback) {
+        var callbackOver = false;
         Docktor.isDockerDaemonUp(data.container.daemonId, function (status) {
             if (status.status) {
                 data.groupResponse.runningDaemons.push(data.container.daemonId);
@@ -280,16 +291,27 @@ exports.listGroups = function (req, res) {
                     errorHandler.emitMessage(req, message);
                 })
             }
-            return callback();
+            if (!callbackOver){
+                callbackOver = true;
+                return callback();
+            } else {
+                return;
+            }
         });
     };
 
     var checkContainerIsUpWorker = function (data, callback) {
+        var callbackOver = false;
         Docktor.isContainerRunning(data.container.daemonId, data.container.containerId, function(status){
             if (status) {
                 data.groupResponse.runningContainers.push(data.container.containerId);
             }
-            return callback();
+            if (!callbackOver){
+                callbackOver = true;
+                return callback();
+            } else {
+                return;
+            }
         });
     };
 
@@ -306,6 +328,11 @@ exports.listGroups = function (req, res) {
 
     Group.find(where).sort('title').populate('daemon', '-ca -cert -key').exec(function (err, groups) {
         if (err) {
+            errorHandler.emitMessage(req, {
+                title: 'Error',
+                type : 'WARNING',
+                message: 'ERR: Cannot find Groups '
+            });
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });

@@ -14,14 +14,14 @@ var mongoose = require('mongoose'),
  * Return a boolean value representing if the docker daemon is up or not
  * @param daemonId
  */
-var isDockerDaemonUp = function (daemonId, callback) {
+var isDockerDaemonUp = function (daemonId, callbackEnd) {
     //Prepare the status
     var status;
     var messages = [];
 
 
     //Prepare the async worker
-    var pingWorker = function (pingData, callback) {
+    var pingWorker = function (pingData, workerCallback) {
         if (pingData.err) {
             console.log('ERR: Cannot ping docker daemon ' + daemonId);
             messages.push({
@@ -30,10 +30,10 @@ var isDockerDaemonUp = function (daemonId, callback) {
                 message: 'ERR: Cannot ping docker daemon ' + daemonId
             });
             status = false;
-            return callback();
+            return workerCallback();
         } else if (pingData.data) {
             status = true;
-            return callback();
+            return workerCallback();
         } else {
             messages.push({
                 title: 'Error',
@@ -41,7 +41,7 @@ var isDockerDaemonUp = function (daemonId, callback) {
                 message: 'ERR: Cannot ping docker daemon ' + daemonId
             });
             status = false;
-            return callback();
+            return workerCallback();
         }
     };
 
@@ -49,7 +49,7 @@ var isDockerDaemonUp = function (daemonId, callback) {
     var q = Async.queue(pingWorker, 1);
 
     q.drain = function () {
-        callback({
+        callbackEnd({
             status : status,
             messages : messages
         });
@@ -92,30 +92,29 @@ var isDockerDaemonUp = function (daemonId, callback) {
  * @param containerId
  * @param callback
  */
-var isContainerRunning = function (daemonId, containerId, callback) {
+var isContainerRunning = function (daemonId, containerId, fCallback) {
     //Load the daemon
     Daemon.findById(daemonId).exec(function (err, daemon) {
         if (err) {
             console.err(err);
-            return callback(false);
+            return fCallback(false);
         } else if (!daemon) {
             console.err('Failed to load daemon ' + daemonId);
-            return callback(false);
+            return fCallback(false);
         } else {
             //Get the docker wrapper
             var daemonDocker = daemon.getDaemonDocker();
 
-            //Prepare the ping callback which will feed the queue
             var inspectCallback = function (err, data) {
                 if (err) {
-                    return callback(false);
+                    return fCallback(false);
                 } else if (!data) {
-                    return callback(false);
+                    return fCallback(false);
                 } else {
                     if (data.State.Running) {
-                        return callback(true);
+                        return fCallback(true);
                     } else {
-                        return callback(false);
+                        return fCallback(false);
                     }
                 }
             };

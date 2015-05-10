@@ -695,8 +695,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        Socket.on('container.stat', function(stat) {
-            console.log(stat);
+        Socket.on('stats', function(message) {
+            console.log(message);
         });
     }
 ]);

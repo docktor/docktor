@@ -15,7 +15,11 @@ exports.infos = function (req, res) {
     var daemonInfos = {};
     req.daemonDocker.info(function (err, dataInfo) {
         if (err) {
-            res.status(500);
+            errorHandler.emitMessage(req, {
+                title: 'Error',
+                type: 'WARNING',
+                message: 'ERR: Cannot connect docker daemon ' + req.daemon.name
+            });
             res.send(errorHandler.getErrorMessage(err));
         } else {
             daemonInfos.info = dataInfo;
@@ -74,9 +78,8 @@ exports.inspectContainer = function (req, res) {
 
 exports.statsContainer = function (req, res) {
     var socketio = req.app.get('socketio');
-    socketio.sockets.emit({message : 'nouveau message'});
-    /*
-        req.containerDocker.stats(function (err, stream) {
+
+    req.containerDocker.stats(function (err, stream) {
 
         if (err) {
             return res.status(400).send({
@@ -88,14 +91,14 @@ exports.statsContainer = function (req, res) {
                 var part = buffer;
                 console.log('***');
                 console.log(JSON.parse(part.toString()))
-                string.push(JSON.parse(part.toString()));
+                socketio.sockets.emit('stats', {stat : JSON.parse(part.toString())});
             });
             stream.on('end', function () {
                 res.jsonp(string);
             });
         }
     });
-    */
+
     res.status(200).send();
 };
 
