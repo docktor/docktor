@@ -7,6 +7,10 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.nbMessages = 0;
         $scope.messages = [];
 
+        Socket.on('who are you', function (user) {
+            Socket.emit('check in', {user: Authentication.user});
+        });
+
         Socket.on('error', function(message) {
             $scope.nbMessages++;
             $scope.messages.push(message);

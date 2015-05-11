@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('groups').controller('GroupsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', '$timeout', 'UsersService', 'RoleService', 'Menus','Socket',
-    function ($scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, $timeout, UsersService, RoleService, Menus, Socket) {
+angular.module('groups').controller('GroupsController', ['$rootScope', '$scope', '$stateParams', '$location', 'Authentication', 'Groups', 'GroupsServices', 'Daemon', 'Containers', 'DaemonsDocker', 'Daemons', 'ServicesServices', '$timeout', 'UsersService', 'RoleService', 'Menus', 'Socket',
+    function ($rootScope, $scope, $stateParams, $location, Authentication, Groups, GroupsServices, Daemon, Containers, DaemonsDocker, Daemons, ServicesServices, $timeout, UsersService, RoleService, Menus, Socket) {
         $scope.authentication = Authentication;
 
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
@@ -518,7 +518,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.showFreePortRangeOnContainer = function (daemon_id) {
-            $scope.group.selectDaemon =  $scope.getDaemon(daemon_id);
+            $scope.group.selectDaemon = $scope.getDaemon(daemon_id);
             GroupsServices.getFreePortRangeOnContainer(daemon_id)
                 .success(function (data, status, headers, config) {
                     console.log(data);
@@ -697,8 +697,25 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        Socket.on('stats', function(message) {
+        //Socket management
+
+        Socket.on('stats', function (message) {
             console.log(message);
+        });
+
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            console.log('$stateChangeStart:event:');
+            console.log(event);
+            console.log('$stateChangeStart:fromState:');
+            console.log(fromState);
+            console.log('$stateChangeStart:toState:');
+            console.log(toState);
+            console.log('****');
+
+            // If leaving monitoring page, stop
+            if (fromState.name === 'viewContainer.monitoring') {
+
+            }
         });
     }
 ]);

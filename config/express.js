@@ -5,7 +5,6 @@
  */
 var express = require('express'),
     http = require('http'),
-    socketio = require('socket.io'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
@@ -17,6 +16,7 @@ var express = require('express'),
     mongoStore = require('connect-mongo')(session),
     flash = require('connect-flash'),
     config = require('./config'),
+    io = require('./socket'),
     consolidate = require('consolidate'),
     path = require('path'),
     cluster = require('cluster'),
@@ -115,6 +115,9 @@ module.exports = function (db) {
     // Setting the app router and static folder
     app.use(express.static(path.resolve('./public')));
 
+    // Attach Socket.io
+    io(app)
+
     // Globbing routing files
     config.getGlobbedFiles('./app/routes/**/*.js').forEach(function (routePath) {
         require(path.resolve(routePath))(app);
@@ -155,12 +158,6 @@ module.exports = function (db) {
             error: 'Not Found'
         });
     });
-
-    // Attach Socket.io
-    var server = http.createServer(app);
-    var io = socketio.listen(server);
-    app.set('socketio', io);
-    app.set('server', server);
 
     return app;
 };

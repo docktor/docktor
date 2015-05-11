@@ -80,7 +80,6 @@ exports.statsContainer = function (req, res) {
     var socketio = req.app.get('socketio');
 
     req.containerDocker.stats(function (err, stream) {
-
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -89,9 +88,10 @@ exports.statsContainer = function (req, res) {
             var string = [];
             stream.on('data', function (buffer) {
                 var part = buffer;
-                console.log('***');
-                console.log(JSON.parse(part.toString()))
-                socketio.sockets.emit('stats', {stat : JSON.parse(part.toString())});
+                console.log(req.user);
+                console.log(req.users);
+                //console.log(JSON.parse(part.toString()))
+                socketio.sockets.connected(socket.id).emit('stats', {stat : JSON.parse(part.toString())});
             });
             stream.on('end', function () {
                 res.jsonp(string);
