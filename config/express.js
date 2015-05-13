@@ -16,7 +16,6 @@ var express = require('express'),
     mongoStore = require('connect-mongo')(session),
     flash = require('connect-flash'),
     config = require('./config'),
-    io = require('./socket'),
     consolidate = require('consolidate'),
     path = require('path'),
     cluster = require('cluster'),
@@ -116,12 +115,15 @@ module.exports = function (db) {
     app.use(express.static(path.resolve('./public')));
 
     // Attach Socket.io
-    io(app)
+    var socketio = require('./socket')(app);
 
     // Globbing routing files
     config.getGlobbedFiles('./app/routes/**/*.js').forEach(function (routePath) {
         require(path.resolve(routePath))(app);
     });
+
+    // Loading socket route
+    require('../app/sockets/socket.server.routes.js')(socketio);
 
     app.use('/agenda-ui', agendaui(scheduler, {'pool': 5000}));
 

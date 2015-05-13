@@ -8,6 +8,8 @@ angular.module('groups').controller('GroupsController', ['$rootScope', '$scope',
         $scope.showAddRemoveContact = false;
         $scope.freePortRange = [];
 
+
+
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
         $scope.grafanaUrl = 'http://' + $location.host() + ':8090/#/dashboard/script/docktor.js';
@@ -191,14 +193,10 @@ angular.module('groups').controller('GroupsController', ['$rootScope', '$scope',
                     container.daemon = $scope.getDaemon(container.daemonId);
                     if ($stateParams.containerId && container._id === $stateParams.containerId) {
                         $scope.container = container;
-                        //Call docker stats
-                        Containers.statsContainer(container.daemonId, container.containerId).
-                            success(function (data, status, headers, config) {
-                                console.log(data);
-                            }).
-                            error(function (err, status, headers, config) {
-                                console.log(err);
-                            });
+                        Socket.emit('container.stat.start', {
+                            daemonId : container.daemonId,
+                            containerId : container.containerId
+                        });
                     }
                 });
             });
@@ -698,23 +696,10 @@ angular.module('groups').controller('GroupsController', ['$rootScope', '$scope',
         };
 
         //Socket management
-
-        Socket.on('stats', function (message) {
-            console.log(message);
-        });
-
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            console.log('$stateChangeStart:event:');
-            console.log(event);
-            console.log('$stateChangeStart:fromState:');
-            console.log(fromState);
-            console.log('$stateChangeStart:toState:');
-            console.log(toState);
-            console.log('****');
-
             // If leaving monitoring page, stop
             if (fromState.name === 'viewContainer.monitoring') {
-
+                Socket.emit('container.stat.stop');
             }
         });
     }

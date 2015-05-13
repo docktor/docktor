@@ -60,6 +60,7 @@
     "request": "~2.53",
     "sleep": "^2.0.0",
     "socket.io": "^1.3.5",
+    "sticky-session": "^0.1.0",
     "swig": "~1.4.1"
   },
   "devDependencies": {

@@ -289,7 +289,7 @@ exports.listGroups = function (req, res) {
             } else if (status.messages) {
                 status.messages.forEach(function(message) {
                     errorHandler.emitMessage(req, message);
-                })
+                });
             }
             if (!callbackOver){
                 callbackOver = true;

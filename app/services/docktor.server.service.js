@@ -124,7 +124,7 @@ var isContainerRunning = function (daemonId, containerId, fCallback) {
         }
     });
 
-}
+};
 
 module.exports = {
     isDockerDaemonUp: isDockerDaemonUp,

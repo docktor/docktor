@@ -1,6 +1,11 @@
 <div class="ui segment" data-ng-init="statsContainer()">
     <h2>Container</h2>
 
+    <div ng-controller="GroupsMonitoringController">
+        <canvas id="line" class="chart chart-line" data="data"
+                labels="labels" series="series">
+        </canvas>
+    </div>
 </div>
 
 

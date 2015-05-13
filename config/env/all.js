@@ -16,7 +16,8 @@ module.exports = {
             css: [
                 'public/lib/semantic-ui/dist/semantic.min.css',
                 'public/lib/fontawesome/css/font-awesome.css',
-                'public/lib/leaflet/dist/leaflet.css'
+                'public/lib/leaflet/dist/leaflet.css',
+                'public/lib/angular-chart.js/dist/angular-chart.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
@@ -35,7 +36,10 @@ module.exports = {
                 'public/lib/leaflet/dist/leaflet.js',
                 'public/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
                 'public/lib/socket.io-client/socket.io.js',
-                'public/lib/angular-socket-io/socket.min.js'
+                'public/lib/angular-socket-io/socket.min.js',
+                'public/lib/Chart.js/Chart.min.js',
+                'public/lib/angular-chart.js/dist/angular-chart.min.js'
+
             ]
         },
         css: [
