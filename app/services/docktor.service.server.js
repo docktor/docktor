@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Docker = require('dockerode'),
     Request = require('request'),
     Async = require('async'),
+    Stream = require('stream'),
     _ = require('lodash');
 
 /**
@@ -126,7 +127,66 @@ var isContainerRunning = function (daemonId, containerId, fCallback) {
 
 };
 
+var execInContainer = function(daemonId, containerId, cmd, callback) {
+    //Load the daemon
+    Daemon.findById(daemonId).exec(function (err, daemon) {
+        if (err) {
+            console.err(err);
+            return callback(err, undefined);
+        } else if (!daemon) {
+            console.err('Failed to load daemon ' + daemonId);
+            return callback(err, undefined);
+        } else {
+            //Get the docker wrapper
+            var daemonDocker = daemon.getDaemonDocker();
+
+            var outputStream = {
+                output : '',
+                getStream : function() {
+                    //Implement a new stream
+                    var output = new Stream;
+                    output.writable = true;
+                    output.write = function (buff) {
+                        outputStream.output += new String(buff);
+                        return;
+                    };
+                    output.end = function(buff) {
+                        if (buff)
+                            outputStream.output += new String(buff);
+                        output.writable = false;
+                        return callback(undefined, outputStream.output);
+                    };
+                    output.destroy = output.end;
+                    return output;
+                }
+            };
+
+            //Exec the command
+            runExec(daemonDocker.getContainer(containerId), cmd, outputStream.getStream());
+
+        }
+    });
+};
+
+function runExec(container, cmd, outputStream) {
+    var options = {
+        'AttachStdout': true,
+        'AttachStderr': true,
+        'Tty': false,
+        Cmd: cmd.split(' ')
+    };
+    container.exec(options, function(err, exec) {
+        if (err) return;
+
+        exec.start(function(err, stream) {
+            if (err) return;
+            stream.pipe(outputStream);
+        });
+    });
+}
+
 module.exports = {
     isDockerDaemonUp: isDockerDaemonUp,
-    isContainerRunning: isContainerRunning
+    isContainerRunning: isContainerRunning,
+    execInContainer : execInContainer
 };

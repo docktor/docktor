@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
     Docker = require('dockerode'),
     User = require('../../models/user.server.model'),
     async = require('async'),
-    Docktor = require('../../services/docktor.server.service'),
+    Docktor = require('../../services/docktor.service.server.js'),
     _ = require('lodash');
 
 /**

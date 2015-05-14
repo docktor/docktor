@@ -11,7 +11,6 @@ var mongoose = require('mongoose'),
     _ = require('lodash');
 
 exports.infos = function (req, res) {
-
     var daemonInfos = {};
     req.daemonDocker.info(function (err, dataInfo) {
         if (err) {
@@ -75,64 +74,6 @@ exports.inspectContainer = function (req, res) {
     });
 };
 
-
-exports.statsContainer = function(socket) {
-    var listener = {
-        currentStream : {},
-        start : function (input) {
-            Daemon.findById(input.daemonId).exec(function (err, daemon) {
-                if (err) {
-                    socket.emit('container.stat.error', err);
-                    return err;
-                }
-                if (!daemon) {
-                    err = new Error('Failed to load daemon ' + input.daemonId);
-                    socket.emit('container.stat.error', err);
-                    return err;
-                }
-                //Confirm start on the socket
-                socket.emit('container.stat.start');
-                var daemonDocker = daemon.getDaemonDocker();
-                var dockerContainer = daemonDocker.getContainer(input.containerId);
-                //Call docker stats remote API
-                dockerContainer.stats(function (err, stream) {
-                    //Save reference to the stream to ensure, we will able to close it later
-                    listener.currentStream = stream;
-                    //Close the stream after 5 minutes
-                    setTimeout(function(){
-                        socket.emit('container.stat.timeout');
-                        listener.stop();
-                    }, 5*60*1000);
-                    if (err) {
-                        var error = new Error('Failed to load daemon ' + input.daemonId);
-                        socket.emit('container.stat.error', error);
-                        return error;
-                    } else {
-                        //On each data got form the remote api, push it to the socket
-                        stream.on('data', function (buffer) {
-                            var part = buffer;
-                            console.log(JSON.parse(part.toString()));
-                            socket.emit('container.stat.data', JSON.parse(part.toString()));
-                        });
-                        stream.on('end', function () {
-                            listener.currentStream = undefined;
-                            socket.emit('container.stat.stop');
-                        });
-                    }
-                });
-            });
-        },
-        stop : function () {
-            console.log('Stop Stats Container from socket ' + socket.id);
-            //Destroy the stream to stop long-polling on the socket
-            if (listener.currentStream){
-                listener.currentStream.destroy();
-                listener.currentStream = undefined;
-            }
-        }
-    };
-    return listener;
-};
 
 exports.startContainer = function (req, res) {
     req.containerDocker.start({}, function (err, containerStarted) {

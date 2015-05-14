@@ -10,5 +10,6 @@ var _ = require('lodash');
  */
 module.exports = _.extend(
     require('./daemons/daemons.crud.server.controller'),
-    require('./daemons/daemons.docker.server.controller')
+    require('./daemons/daemons.docker.server.controller'),
+    require('./daemons/daemons.socket.server.controller')
 );

@@ -1,15 +1,24 @@
 <div class="ui segment" data-ng-init="statsContainer()">
-    <h2>Container</h2>
+    <h2>Container Monitoring</h2>
 
-    <div ng-controller="GroupsMonitoringController">
-        <canvas id="line" class="chart chart-line" data="data"
-                labels="labels" series="series">
-        </canvas>
+    <div ng-controller="GroupsMonitoringController" class="ui three column grid">
+        <div class="column">
+            <h3>CPU</h3>
+            <canvas id="cpuPercent" class="chart chart-line" data="cpu.data"
+                    labels="cpu.labels" series="cpu.series" options="cpu.options">
+            </canvas>
+        </div>
+        <div class="column">
+            <h3>Memory</h3>
+            <canvas id="memory" class="chart chart-line column" data="memory.data"
+                    labels="memory.labels" series="memory.series" options="memory.options">
+            </canvas>
+        </div>
+        <div class="column">
+            <h3>Network IO</h3>
+            <canvas id="network" class="chart chart-line column" data="network.data"
+                    labels="network.labels" series="network.series" options="network.options">
+            </canvas>
+        </div>
     </div>
 </div>
-
-
-<pre>
-    CONTAINER           CPU %               MEM USAGE/LIMIT       MEM %               NET I/O
-    myGroup-jenkins     1.53%               379.5 MiB/1.961 GiB   18.89%              1.266 KiB/1.822 KiB
-</pre>

@@ -197,6 +197,10 @@ angular.module('groups').controller('GroupsController', ['$rootScope', '$scope',
                             daemonId : container.daemonId,
                             containerId : container.containerId
                         });
+                        Socket.emit('container.stat.diskusage', {
+                            daemonId : container.daemonId,
+                            containerId : container.containerId
+                        });
                     }
                 });
             });

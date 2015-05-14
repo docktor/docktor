@@ -38,8 +38,9 @@ module.exports = {
                 'public/lib/socket.io-client/socket.io.js',
                 'public/lib/angular-socket-io/socket.min.js',
                 'public/lib/Chart.js/Chart.min.js',
-                'public/lib/angular-chart.js/dist/angular-chart.min.js'
-
+                'public/lib/angular-chart.js/dist/angular-chart.min.js',
+                'public/lib/moment/moment.js',
+                'public/lib/angular-moment/angular-moment.js'
             ]
         },
         css: [
