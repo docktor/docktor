@@ -9,7 +9,7 @@ angular.module('groups').controller('GroupsMonitoringController', ['$rootScope',
         var tb = 1024 * gb;
 
         $scope.stats = [];
-        $scope.volumesDiskUsage = {};
+        $scope.volumesDiskUsage = [];
 
         $scope.cpu = {};
         $scope.cpu.labels = [];
@@ -97,23 +97,38 @@ angular.module('groups').controller('GroupsMonitoringController', ['$rootScope',
             var myStat = $scope.stats[$scope.stats.length - 1];
             var memused = myStat.memory_stats.usage;
             return memused / mb;
-        }
+        };
 
         $scope.networkUsage = function () {
             var myStat = $scope.stats[$scope.stats.length - 1];
             var rx_bytes = myStat.network.rx_bytes;
             var tx_bytes = myStat.network.tx_bytes;
             return {rx_bytes : rx_bytes / kb, tx_bytes : tx_bytes / kb};
-        }
+        };
 
-        $scope.volumesDiskUsage = function () {
-            
-        }
+        $scope.computeVolumesDiskUsage = function (volumesDiskUsage) {
+            $scope.volumesDiskUsage = [];
+            volumesDiskUsage.forEach(function (volumeUsage) {
+                var volume = {};
+                volume.name = volumeUsage.volume;
+                volume.data = [];
+                volume.labels = [];
+                volumeUsage.stat.forEach(function(stat) {
+                    if (stat.volume !== volumeUsage.volume) {
+                        if (stat.volume) {
+                            volume.data.push(stat.diskusage);
+                            volume.labels.push(stat.volume);
+                        }
+                    } else {
+                        volume.total = stat.diskusage;
+                    }
+                });
+                $scope.volumesDiskUsage.push(volume);
+            });
+        };
 
         Socket.on('container.stat.volumesDiskUsage', function(volumesDiskUsage) {
-            $scope.volumesDiskUsage = volumesDiskUsage;
-            $scope.volumesDiskUsage();
-            console.log(volumesDiskUsage);
+            $scope.computeVolumesDiskUsage(volumesDiskUsage);
         });
 
     }

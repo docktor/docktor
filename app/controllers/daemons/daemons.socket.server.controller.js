@@ -31,7 +31,7 @@ exports.diskUsageContainer = function(socket) {
                     Docktor.execInContainer(
                         input.daemonId,
                         input.containerId,
-                        '/usr/bin/du ' + vol + ' --max-depth=1',
+                        '/usr/bin/du -k ' + vol + ' --max-depth=1',
                         function (err, data) {
                             if (err) {
                                 callback(err, undefined);

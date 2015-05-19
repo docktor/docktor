@@ -20,5 +20,13 @@
                     labels="network.labels" series="network.series" options="network.options">
             </canvas>
         </div>
+        <div class="three column row" ng-repeat="volume in volumesDiskUsage">
+            <div class="column">
+                <h4>Volume {{volume.name}} {{volume.total}} KB</h4>
+                <canvas class="chart chart-pie" data="volume.data"
+                        labels="volume.labels">
+                </canvas>
+            </div>
+        </div>
     </div>
 </div>
