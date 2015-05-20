@@ -7,7 +7,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
 
         var self = this;
-
+        $scope.ready = false;
         $scope.displayFormImage = false;
         $scope.parameter = {};
         $scope.displayFormParameter = false;
@@ -73,7 +73,11 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         };
 
         $scope.find = function () {
-            $scope.services = Services.query();
+            $scope.ready = false;
+            $scope.services = Services.query({}, function() {
+                $scope.ready = true;
+            });
+
         };
 
         $scope.findOne = function () {

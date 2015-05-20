@@ -1,0 +1,51 @@
+<div data-ng-controller="ServicesController" data-ng-init="find()">
+
+    <div class="ui purple menu">
+        <div class="item">
+            <a><i class="protect icon"></i> Admin</a>
+        </div>
+        <div class="item active">
+            <a><i class="tags icon"></i> Services</a>
+        </div>
+        <div class="item">
+            <div class="ui transparent left icon input">
+                <input type="text" placeholder="Search..." ng-model="search.title">
+                <i class="search icon"></i>
+            </div>
+        </div>
+        <div class="right item">
+            <a class="ui primary button" href="#!/admin/services/create"><i class="plus icon"></i> Create Service</a>
+        </div>
+    </div>
+
+
+    <div class="ui link cards" ng-show="ready">
+        <div ng-repeat="service in services | filter:search" class="ui card">
+            <div class="content">
+                <img class="ui small left floated rounded image" src="http://placehold.it/80x80" ng-hide="service.serviceImage">
+                <img class="ui small left floated rounded image" src="" ng-show="service.serviceImage"/>
+
+                <div class="header"><a href="#!/admin/services/{{service._id}}">{{service.title}}</a></div>
+                <div class="meta">
+                    <span am-time-ago="service.created"></span>
+                </div>
+
+            </div>
+            <div class="extra content">
+              <span class="right floated">
+                  <a href="#!/admin/services/{{service._id}}"><i class="cloud icon"></i>Images </a>
+                  <a href="#!/admin/services/{{service._id}}/edit"><i class="edit icon"></i>Edit</a>
+              </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui segment" ng-hide="ready">
+        <br/><br/><br/><br/><br/><br/><br/>
+
+        <div class="ui active inverted dimmer">
+            <div class="ui large text loader">Loading</div>
+        </div>
+    </div>
+
+</div>
