@@ -19,8 +19,9 @@
     <div class="ui segment">
 
         <form name="serviceForm" class="ui form" novalidate>
-            <div class="row">
-                <md-input-container class="long long">
+            <div class="two fields">
+                <div class="field">
+
                     <label>Title</label>
                     <input name="title" ng-model="service.title" ng-pattern="patternTitle" ng-required="true"
                            type="text"
@@ -31,76 +32,76 @@
                         <div ng-message="md-maxlength">Max length of title : 200</div>
                         <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
-                </md-input-container>
-
-                <div>
-                    <div class="row" ng-hide="service._id">
-                        <md-button type="submit" class="md-raised md-primary" ng-click="submitForm()">
-                            Create
-                        </md-button>
-                    </div>
-
-                    <div class="column" ng-show="service._id">
-                        <md-button ng-click="submitForm()" class="md-raised md-primary" ng-hide="askDeleteService">
-                            <i class="fa fa-save"></i> Save Service
-                        </md-button>
-                        <md-button class="md-raised md-warn" ng-click="askDeleteService=true"
-                                   ng-hide="askDeleteService">
-                            <i class="fa fa-trash-o"></i> Delete Service
-                        </md-button>
-                        <md-button ng-click="askDeleteService=false" ng-show="askDeleteService"
-                                   class="md-raised md-accent md-hue-3">
-                            No, I don't want to delete this. <i class="fa fa-reply"></i>
-                        </md-button>
-                        <md-button data-ng-click="remove(service);" ng-show="askDeleteService"
-                                   class="md-raised md-warn">
-                            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
-                        </md-button>
-                    </div>
                 </div>
             </div>
-            <md-subheader class="row md-warn" ng-show="error">
-                <strong data-ng-bind="error"></strong>
-            </md-subheader>
-        </form>
 
-        <div ng-if="service._id">
-            <md-tabs class="md-primary" md-selected="tabs.selectedIndex">
-                <md-tab id="tabImages" aria-controls="tabImages-content">
-                    Images
-                </md-tab>
-                <md-tab id="tabCommands" aria-controls="tabCommands-content">
-                    Commands
-                </md-tab>
-                <md-tab id="tabUrls" aria-controls="tabUrls-content">
-                    Urls
-                </md-tab>
-                <md-tab id="tabJobs" aria-controls="tabJobs-content">
-                    Jobs
-                </md-tab>
-            </md-tabs>
-            <ng-switch on="tabs.selectedIndex">
-                <div role="tabpanel" id="tabImages-content" aria-labelledby="tabImages" ng-switch-when="0">
-                    <div class="md-whiteframe-z5"
-                         ng-include="'/modules/services/views/images/list-images.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabCommands-content" aria-labelledby="tabCommands" ng-switch-when="1">
-                    <div class="md-whiteframe-z5"
-                         ng-include="'/modules/services/views/list-commands.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabUrls-content" aria-labelledby="tabUrls" ng-switch-when="2">
-                    <div class="md-whiteframe-z5"
-                         ng-include="'/modules/services/views/list-urls.client.view.html'"></div>
-                </div>
-                <div role="tabpanel" id="tabJobs-content" aria-labelledby="tabJobs" ng-switch-when="3">
-                    <div class="md-whiteframe-z5"
-                         ng-include="'/modules/services/views/list-jobs.client.view.html'"></div>
-                </div>
-            </ng-switch>
-            <div class="md-whiteframe-z5">
-                <md-button ng-click="submitForm()" class="md-raised md-primary" ng-hide="askDeleteService">
+            <div class="field" ng-hide="service._id">
+                <button class="ui primary button" ng-click="submitForm()">
+                    Create
+                </button>
+            </div>
+
+            <div class="field" ng-show="service._id">
+                <button ng-click="submitForm()" class="ui primary button" ng-hide="askDeleteService">
                     <i class="fa fa-save"></i> Save Service
-                </md-button>
+                </button>
+                <button class="ui red button" ng-click="askDeleteService=true"
+                        ng-hide="askDeleteService">
+                    <i class="fa fa-trash-o"></i> Delete Service
+                </button>
+                <button ng-click="askDeleteService=false" ng-show="askDeleteService"
+                        class="ui red button">
+                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                </button>
+                <button data-ng-click="remove(service);" ng-show="askDeleteService"
+                        class="ui red button">
+                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                </button>
             </div>
+        </form>
+    </div>
+    <md-subheader class="row md-warn" ng-show="error">
+        <strong data-ng-bind="error"></strong>
+    </md-subheader>
+    </form>
+
+    <div ng-if="service._id">
+        <md-tabs class="md-primary" md-selected="tabs.selectedIndex">
+            <md-tab id="tabImages" aria-controls="tabImages-content">
+                Images
+            </md-tab>
+            <md-tab id="tabCommands" aria-controls="tabCommands-content">
+                Commands
+            </md-tab>
+            <md-tab id="tabUrls" aria-controls="tabUrls-content">
+                Urls
+            </md-tab>
+            <md-tab id="tabJobs" aria-controls="tabJobs-content">
+                Jobs
+            </md-tab>
+        </md-tabs>
+        <ng-switch on="tabs.selectedIndex">
+            <div role="tabpanel" id="tabImages-content" aria-labelledby="tabImages" ng-switch-when="0">
+                <div class="md-whiteframe-z5"
+                     ng-include="'/modules/services/views/images/list-images.client.view.html'"></div>
+            </div>
+            <div role="tabpanel" id="tabCommands-content" aria-labelledby="tabCommands" ng-switch-when="1">
+                <div class="md-whiteframe-z5"
+                     ng-include="'/modules/services/views/list-commands.client.view.html'"></div>
+            </div>
+            <div role="tabpanel" id="tabUrls-content" aria-labelledby="tabUrls" ng-switch-when="2">
+                <div class="md-whiteframe-z5"
+                     ng-include="'/modules/services/views/list-urls.client.view.html'"></div>
+            </div>
+            <div role="tabpanel" id="tabJobs-content" aria-labelledby="tabJobs" ng-switch-when="3">
+                <div class="md-whiteframe-z5"
+                     ng-include="'/modules/services/views/list-jobs.client.view.html'"></div>
+            </div>
+        </ng-switch>
+        <div class="md-whiteframe-z5">
+            <md-button ng-click="submitForm()" class="md-raised md-primary" ng-hide="askDeleteService">
+                <i class="fa fa-save"></i> Save Service
+            </md-button>
         </div>
     </div>
+</div>

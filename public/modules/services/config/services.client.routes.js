@@ -15,7 +15,7 @@ angular.module('services').config(['$stateProvider',
             }).
             state('viewService', {
                 url: '/admin/services/:serviceId',
-                templateUrl: 'modules/services/views/view-service.client.view.html'
+                templateUrl: 'modules/services/views/view-service.client.ui.html'
             }).
             state('editService', {
                 url: '/admin/services/:serviceId/edit',
