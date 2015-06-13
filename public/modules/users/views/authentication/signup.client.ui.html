@@ -1,0 +1,68 @@
+<form id="page-signup" ng-submit="signup()" class="ui form" ng-controller="AuthenticationController">
+    <div class="ui grid">
+        <div class="ui sixteen wide mobile ten wide tablet seven wide computer centered column">
+            <div class="ui card fluid">
+                <div class="content">
+
+                    <h4 class="ui dividing header">Docktor Register</h4>
+                    <br/>
+                    <div class="ui error message">
+                        <div class="header">Unable to register</div>
+                        <p>Please recheck your details.</p>
+                    </div>
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>First Name</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="credentials.firstName">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="required field">
+                            <label>Last Name</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="credentials.lastName">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Username</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="credentials.username">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="required field">
+                            <label>Password</label>
+
+                            <div class="ui icon input">
+                                <input type="password" ng-model="credentials.password">
+                                <i class="lock icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <label>Email</label>
+
+                        <div class="ui icon input">
+                            <input type="email" ng-model="credentials.email">
+                            <i class="at icon"></i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="extra content">
+                    <input type="submit" class="positive ui button" value="Sign up"/>
+                    <span class="right floated">
+                        <a class="ui button" href="/#!/signin">Already have an account?</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

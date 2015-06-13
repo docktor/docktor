@@ -1,0 +1,58 @@
+<form id="page-profile" ng-submit="updateUserProfile(userForm.$valid)" class="ui form" ng-controller="SettingsController">
+    <div class="ui grid">
+        <div class="ui sixteen wide mobile ten wide tablet seven wide computer centered column">
+            <div class="ui card fluid">
+                <div class="content">
+
+                    <h4 class="ui dividing header">Edit your profile</h4>
+                    <br/>
+                    <div ng-show="error" class="ui error message">
+                        <strong>{{error}}</strong>
+                    </div>
+                    <div ng-show="success" class="ui success message">
+                        <strong>Profile Saved Successfully</strong>
+                    </div>
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>First Name</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="user.firstName">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="required field">
+                            <label>Last Name</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="user.lastName">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Username</label>
+
+                            <div class="ui icon input">
+                                <input type="text" ng-model="user.username">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="required field">
+                            <label>Email</label>
+
+                            <div class="ui icon input">
+                                <input type="email" ng-model="user.email">
+                                <i class="at icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <input type="submit" class="positive ui button" value="Save Profile"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
