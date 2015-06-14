@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <table tr-ng-grid="" on-data-required="" items="sites" fields="['title','created', 'latitude', 'longitude']">
+    <table tr-ng-grid="" on-data-required="" items="sites" fields="['title','created', 'latitude', 'longitude']" ng-if="sites.$resolved && sites.length">
         <thead>
         <tr>
             <th field-name="title" display-name="Title" enable-filtering="true"></th>

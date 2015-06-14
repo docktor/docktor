@@ -17,14 +17,28 @@ angular.module(ApplicationConfiguration.applicationModuleName)
             .accentPalette('teal');
     });
 
-//Then define the init function for starting up the application
+// Then define the init function for starting up the application
 angular.element(document).ready(function () {
-    //Fixing facebook bug with redirect
-    if (window.location.hash === '#_=_') window.location.hash = '#!';
+    // Fixing facebook bug with redirect
+    if (window.location.hash === '#_=_') {
+        window.location.hash = '#!';
+    }
 
-    //Then init the app
+    // Then init the app
     angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
-    TrNgGrid.tableCssClass = "tr-ng-grid table";
+    TrNgGrid.tableCssClass = 'tr-ng-grid table';
+
+    // Define 'array.sortByProperty'
+    Array.prototype.sortByProperty = function (property) {
+        // Use native sort, instead of _.sortBy, to keep '$resolved' and '$promise' in '$resource.query()' result.
+        this.sort(function (a, b) {
+            var ta = a[property].trim().toUpperCase();
+            var tb = b[property].trim().toUpperCase();
+            if (ta > tb) { return 1; }
+            if (ta < tb) { return -1; }
+            return 0;
+        });
+    };
 });
 
 angular.module(ApplicationConfiguration.applicationModuleName).run([

@@ -73,7 +73,9 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         };
 
         $scope.find = function () {
-            $scope.services = Services.query();
+            $scope.services = Services.query(function () {
+                $scope.services.sortByProperty('title');
+            });
         };
 
         $scope.findOne = function () {
@@ -217,8 +219,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.activateJob = function (job) {
             ServicesServices.activateJob($scope.service._id, job)
                 .success(function (response) {
-                    console.log('Success activation job');
-                    Toasts.addToast('Success activation job', 'info');
+                    Toasts.addToast('Job activated', 'info');
                     $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');
@@ -228,8 +229,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
         $scope.desactivateJob = function (job) {
             ServicesServices.desactivateJob($scope.service._id, job)
                 .success(function (response) {
-                    console.log('Success desactivation job');
-                    Toasts.addToast('Success desactivation job', 'info');
+                    Toasts.addToast('Job deactivated', 'info');
                     $scope.update(false);
                 }).error(function (err, status, headers, config) {
                     var title = 'Error - ' + moment().format('hh:mm:ss');

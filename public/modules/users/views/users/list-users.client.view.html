@@ -6,7 +6,7 @@
 
     <table tr-ng-grid="" items="users" on-data-required=""
            fields="['username', 'displayName', 'role', 'groups']"
-           class="table">
+           class="table" ng-if="users.$resolved && users.length">
         <thead>
         <th field-name="username" display-name="Username" enable-filtering="true"></th>
         <th field-name="displayName" display-name="Name" enable-filtering="true"></th>
