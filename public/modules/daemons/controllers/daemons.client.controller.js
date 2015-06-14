@@ -78,17 +78,19 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.findWithoutDetails = function() {
-            Daemons.query(function (daemons) {
-                $scope.daemons = _.sortBy(daemons, function(d) {return d.name.toUpperCase();});
+            $scope.daemons = Daemons.query(function () {
+                $scope.daemons.sortByTitle();
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                     Daemon.isUp(daemon);
-                    if (!$scope.positions[daemon.site._id])
+                    if (!$scope.positions[daemon.site._id]) {
                         $scope.positions[daemon.site._id] = {};
+                    }
                     $scope.positions[daemon.site._id].site = daemon.site;
-                    if (!$scope.positions[daemon.site._id].daemons)
+                    if (!$scope.positions[daemon.site._id].daemons) {
                         $scope.positions[daemon.site._id].daemons = [];
+                    }
                     $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
 
@@ -98,17 +100,19 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.find = function () {
-            Daemons.query(function (daemons) {
-                $scope.daemons = _.sortBy(daemons, function(d) {return d.name.toUpperCase();});
+            $scope.daemons = Daemons.query(function (daemons) {
+                $scope.daemons.sortByTitle();
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
                     Daemon.getDetails(daemon);
-                    if (!$scope.positions[daemon.site._id])
+                    if (!$scope.positions[daemon.site._id]) {
                         $scope.positions[daemon.site._id] = {};
+                    }
                     $scope.positions[daemon.site._id].site = daemon.site;
-                    if (!$scope.positions[daemon.site._id].daemons)
+                    if (!$scope.positions[daemon.site._id].daemons) {
                         $scope.positions[daemon.site._id].daemons = [];
+                    }
                     $scope.positions[daemon.site._id].daemons.push(daemon);
                 });
 

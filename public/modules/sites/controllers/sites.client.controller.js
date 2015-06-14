@@ -38,15 +38,9 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
         };
 
         $scope.find = function () {
-            var sites = Sites.query();
-            sites.$promise.then(function(values){
-                values.sort(function(a,b){
-                    if (a.title > b.title) return 1;
-                    if (a.title < b.title) return -1;
-                    return 0;
-                });
+            $scope.sites = Sites.query(function () {
+                $scope.sites.sortByTitle();
             });
-            $scope.sites = sites;
         };
 
         $scope.findOne = function () {
