@@ -39,7 +39,7 @@ angular.module('sites').controller('SitesController', ['$scope', '$stateParams',
 
         $scope.find = function () {
             $scope.sites = Sites.query(function () {
-                $scope.sites.sortByTitle();
+                $scope.sites.sortByProperty('title');
             });
         };
 

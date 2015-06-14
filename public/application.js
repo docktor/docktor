@@ -28,12 +28,12 @@ angular.element(document).ready(function () {
     angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
     TrNgGrid.tableCssClass = 'tr-ng-grid table';
 
-    // Define 'array.sortByTitle'
-    Array.prototype.sortByTitle = function () {
+    // Define 'array.sortByProperty'
+    Array.prototype.sortByProperty = function (property) {
         // Use native sort, instead of _.sortBy, to keep '$resolved' and '$promise' in '$resource.query()' result.
         this.sort(function (a, b) {
-            var ta = a.title.trim().toUpperCase();
-            var tb = b.title.trim().toUpperCase();
+            var ta = a[property].trim().toUpperCase();
+            var tb = b[property].trim().toUpperCase();
             if (ta > tb) { return 1; }
             if (ta < tb) { return -1; }
             return 0;

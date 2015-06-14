@@ -73,7 +73,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.find = function () {
             $scope.groups = Groups.query(function () {
-                $scope.groups.sortByTitle();
+                $scope.groups.sortByProperty('title');
             });
         };
 

@@ -74,7 +74,7 @@ angular.module('services').controller('ServicesController', ['$scope', '$statePa
 
         $scope.find = function () {
             $scope.services = Services.query(function () {
-                $scope.services.sortByTitle();
+                $scope.services.sortByProperty('title');
             });
         };
 

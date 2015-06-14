@@ -77,9 +77,9 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
             }
         };
 
-        $scope.findWithoutDetails = function() {
+        $scope.findWithoutDetails = function () {
             $scope.daemons = Daemons.query(function () {
-                $scope.daemons.sortByTitle();
+                $scope.daemons.sortByProperty('name');
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
@@ -100,8 +100,8 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         };
 
         $scope.find = function () {
-            $scope.daemons = Daemons.query(function (daemons) {
-                $scope.daemons.sortByTitle();
+            $scope.daemons = Daemons.query(function () {
+                $scope.daemons.sortByProperty('name');
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
