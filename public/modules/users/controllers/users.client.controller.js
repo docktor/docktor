@@ -30,7 +30,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
         $scope.find = function () {
             $scope.users = Users.query(function () {
-                $scope.users.sortByProperty('title');
+                $scope.users.sortByProperty('username');
             });
         };
 
