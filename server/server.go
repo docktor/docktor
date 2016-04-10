@@ -8,7 +8,7 @@ import (
 )
 
 //New instane of the server
-func New() {
+func New(version string) {
 	router := gin.Default()
 
 	sc := controllers.SitesController{}

@@ -1,0 +1,11 @@
+package: github.com/soprasteria/docktor
+import:
+- package: github.com/gin-gonic/gin
+- package: github.com/soprasteria/godocktor-api
+  subpackages:
+  - types
+- package: github.com/spf13/cobra
+- package: github.com/spf13/viper
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson

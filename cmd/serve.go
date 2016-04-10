@@ -20,13 +20,16 @@ import (
 	"github.com/spf13/viper"
 )
 
+// VERSION of Docktor
+const VERSION = "0.1"
+
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Launch Docktor server",
 	Long:  `Docktor server will listen on 0.0.0.0:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server.New()
+		server.New(VERSION)
 	},
 }
 
@@ -34,7 +37,6 @@ func init() {
 
 	serveCmd.Flags().StringP("mongo_url", "m", "localhost:27017", "URL to access MongoDB")
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo_url"))
-
 	RootCmd.AddCommand(serveCmd)
 
 	// Here you will define your flags and configuration settings.
