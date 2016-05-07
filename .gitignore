@@ -4,3 +4,5 @@ dist
 .bower-*/
 .idea/
 docktor
+client/src/bower_components/
+.vscode

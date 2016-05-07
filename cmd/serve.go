@@ -36,7 +36,9 @@ var serveCmd = &cobra.Command{
 func init() {
 
 	serveCmd.Flags().StringP("mongo_url", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("env", "e", "prod", "dev or prod")
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo_url"))
+	viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 
 	// Here you will define your flags and configuration settings.
@@ -48,5 +50,4 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 }

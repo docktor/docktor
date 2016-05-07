@@ -1,107 +1,100 @@
-'use strict';
-
 var gulp = require('gulp'),
     gulpgo = require('gulp-go'),
-    exec = require('child_process').exec,
-    tap = require('gulp-tap'),
+    clean = require('gulp-clean'),
+    webpack = require('webpack'),
     concat = require('gulp-concat'),
-    vulcanize = require('vulcanize'),
-    inject = require('gulp-inject'),
-    env = require('gulp-env'),
-    tar = require('gulp-tar'),
-    gzip = require('gulp-gzip'),
-    artifactory = require('gulp-artifactory-upload'),
-    fs = require('fs'),
-    mkdirp = require('mkdirp'),
-    del = require('del'),
-    dirname = require('path').dirname;
+    inject = require('gulp-inject-string'),
+    WebpackDevServer = require('webpack-dev-server');
 
+var devConfigWebpack = require('./config.webpack.js').dev,
+    prodConfigWebpack = require('./config.webpack.js').prod;
 
-/************************* Server tasks *************************/
-
-var serverPaths = {
-    ALL_GO: ['*.go','./server/**/*.go','./cmd/**/*.go'],
-    DEST_BIN : './dist'
+var watchFiles = {
+    server: ['./main.go', './server/**/*.go', './client/src/*.tmpl']
 };
 
-var go;
+var dependenciesPath = {
+    templates : [
+        './client/src/index.tmpl'
+    ],
+    fonts: [
+        './node_modules/semantic-ui-icon/assets/fonts/*'
+    ],
+    images: [
+        './node_modules/leaflet/dist/images/*'
+    ]
+}
+var injectedPath = {
+    dev: 'http://localhost:8081/js/bundle.js',
+    prod: '/js/bundle.js'
+}
 
-/** GO tasks **/
+/*===================== DEV =====================*/
 
-gulp.task('dist-server', ['go-fmt','go-build']);
-
-gulp.task('set-env', function () {
-    env({
-        vars: {
-            GO15VENDOREXPERIMENT: 1
-        }
-    })
+/*====== Client ======*/
+gulp.task('clean-js', function() {
+    return gulp.src('./client/dist/js/*', {
+        read: false
+    }).pipe(clean());
 });
 
-gulp.task('go-build', ["set-env"], function() {
-    exec('go build', function (err, stdout, stderr) {
-        if (!err) {
-            console.log('Docktor Build successfull');
-            gulp.src('./docktor')
-                .pipe(gulp.dest(serverPaths.DEST_BIN));
-        } else {
-            console.log(err);
+gulp.task('bundle-html-dev', function() {
+    return gulp.src(dependenciesPath.templates).pipe(inject.replace("REACT_APP", injectedPath.dev)).pipe(gulp.dest('./client/dist/'));
+});
+
+
+gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images' ], function(callback) {
+    var compiler = webpack(devConfigWebpack);
+    new WebpackDevServer(compiler, {
+        publicPath: '/js/',
+        hot: true,
+        quiet: true,
+        noInfo: true,
+        stats: {
+            colors: true
         }
+    }).listen(8081, 'localhost');
+});
+
+/*====== Server ======*/
+gulp.task('go-run', function() {
+    go = gulpgo.run('main.go', ['serve', '-e', 'dev'], {
+        cwd: __dirname,
+        stdio: 'inherit'
     });
 });
 
-gulp.task('go-fmt', function() {
-    return gulp.src(serverPaths.ALL_GO)
-        .pipe(tap(function(file, t) {
-            console.log(file.path);
-            exec('go fmt ' + file.path, function (err, stdout, stderr) {
-                if (err) {
-                    throw err
-                }
-            });
-        }));
-});
-
-gulp.task('server-dev', ['server-watch']);
-
-gulp.task('go-run', function() {
-    go = gulpgo.run('main.go',[ 'serve',
-        '--mongo_url', 'localhost:27017',
-    ], {stdio: 'inherit'});
-});
-
-gulp.task('server-watch', ['go-run'], function() {
-    gulp.watch(serverPaths.ALL_GO).on('change', function() {
+gulp.task('watch-server', ['go-run'], function() {
+    gulp.watch(watchFiles.server).on('change', function() {
+        gulp.run('bundle-html-dev')
         go.restart();
     });
 });
 
+/*===================== PROD =====================*/
 
-
-/************************* Package tasks ************************/
-
-gulp.task('clean', function () {
-    return del(['dist']);
-});
-gulp.task('dist', ['dist-server']);
-
-gulp.task('archive', function() {
-    return gulp.src("./dist/**")
-        .pipe(tar('docktor.tar'))
-        .pipe(gzip())
-        .pipe(gulp.dest(serverPaths.DEST_BIN));
+/*====== Client ======*/
+gulp.task('bundle-html', function() {
+    return gulp.src(dependenciesPath.templates).pipe(inject.replace("REACT_APP", injectedPath.prod)).pipe(gulp.dest('./client/dist/'));
 });
 
-gulp.task( 'upload', function() {
-    return gulp.src( './dist/mom.tar.gz' )
-        .pipe( artifactory( {
-            url: process.env.REPOSITORY_URL,
-            username: process.env.REPOSITORY_USER,
-            password: process.env.REPOSITORY_PASSWORD
-        } ) )
-        .on('error', console.log);
-} );
+gulp.task('bundle-fonts', function() {
+    return gulp.src(dependenciesPath.fonts).pipe(gulp.dest('./client/dist/fonts/'));
+});
 
-/************************* Default tasks ************************/
+gulp.task('bundle-images', function() {
+    return gulp.src(dependenciesPath.images).pipe(gulp.dest('./client/dist/images/'));
+});
 
-gulp.task('default', ['server-dev']);
+gulp.task("bundle-client", function(doneCallBack) {
+    webpack(prodConfigWebpack, function(err, stats) {
+        doneCallBack();
+    });
+});
+
+/*===================== TASKS =====================*/
+
+gulp.task('start-dev', ['webpack-dev-server', 'watch-server', 'go-run']);
+gulp.task('bundle', ['clean-js', 'bundle-html', 'bundle-fonts', 'bundle-images', 'bundle-client']);
+
+gulp.task('default', ['start-dev']);
