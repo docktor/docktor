@@ -12,6 +12,7 @@ import { routeLocationDidUpdate } from './actions/router.actions.js'
 
 // Reducers
 import sites from './reducers/sites.reducer.js'
+import toasts from './reducers/toasts.reducer.js'
 
 //Components
 import App from './components/app/app.js'
@@ -24,6 +25,7 @@ const store = createStore(
   combineReducers(
     {
       sites,
+      toasts,
       routing: routerReducer
     }
   ),

@@ -1,5 +1,5 @@
 import {
-    REQUEST_SITES, INVALID_REQUEST_SITES,
+    REQUEST_ALL_SITES, INVALID_REQUEST_SITES,
     RECEIVE_SITES
 } from '../actions/sites.actions.js'
 
@@ -12,10 +12,8 @@ const initialState = {
 const sitesReducer = (state = initialState, action) => {
     switch (action.type) {
         case INVALID_REQUEST_SITES:
-            return Object.assign({}, state, {
-                didInvalidate: true
-            })
-        case REQUEST_SITES:
+            return Object.assign({}, initialState)
+        case REQUEST_ALL_SITES:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false

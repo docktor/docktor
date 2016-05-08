@@ -1,14 +1,19 @@
+// Imports for fetch API
 import 'babel-polyfill'
 import fetch from 'isomorphic-fetch'
 
-export const REQUEST_SITES = 'REQUEST_SITES'
 
-export function requestSites() {
+// Request all sites
+export const REQUEST_ALL_SITES = 'REQUEST_ALL_SITES'
+
+export function requestAllSites() {
   return {
-    type: REQUEST_SITES
+    type: REQUEST_ALL_SITES
   }
 }
 
+
+// Sites are received
 export const RECEIVE_SITES = 'RECEIVE_SITES'
 
 export function receiveSites(sites) {
@@ -19,6 +24,8 @@ export function receiveSites(sites) {
   }
 }
 
+
+// Request site deletion
 export const REQUEST_DELETE_SITE = 'REQUEST_DELETE_SITE'
 
 export function requestDeleteSite(id) {
@@ -28,6 +35,8 @@ export function requestDeleteSite(id) {
   }
 }
 
+
+// Site is deleted
 export const RECEIVE_SITE_DELETED = 'RECEIVE_SITE_DELETED'
 
 export function receiveSiteDeleted(message) {
@@ -38,6 +47,7 @@ export function receiveSiteDeleted(message) {
   }
 }
 
+// Site API returns an Error
 export const INVALID_REQUEST_SITES = 'INVALID_REQUEST_SITES'
 
 export function invalidRequestSites(error) {
@@ -47,41 +57,33 @@ export function invalidRequestSites(error) {
   }
 }
 
+
+// Thunk to fetch sites
 export function fetchSites() {
   return function (dispatch) {
-    
-    dispatch(requestSites())
+
+    dispatch(requestAllSites())
 
     return fetch(`/api/sites`)
-      .then(response => response.json())
-      .then(json => 
+      .then(response => {
+        if (!response.ok) {
+          return response.text()
+        }
+        return response.json()
+      })
+      .then(json => {
+        if (typeof (json) === "string") {
+          throw Error(json)
+        }
         dispatch(receiveSites(json))
-      )
-      .catch(error => 
-        dispatch(invalidRequestSites(error))
-      )
+      })
+      .catch(error => {
+        dispatch(invalidRequestSites(error.message))
+      })
   }
 }
 
-export function deleteSites(id) {
-  return function (dispatch) {
-    
-    dispatch(requestDeleteSite(id))
-    
-    let request = new Request('/api/sites/'+id, {
-      method: 'DELETE'
-    });    
-    return fetch(request)
-      .then(response => response.json())
-      .then(json => 
-        dispatch(receiveSiteDeleted(json))
-      )
-      .catch(error => 
-        dispatch(invalidRequestSites(error))
-      )
-  }
-}
-
+// Check that if sites should be fetched
 function shouldFetchSites(state) {
   const sites = state.sites
   if (!sites) {
@@ -93,6 +95,7 @@ function shouldFetchSites(state) {
   }
 }
 
+// Thunk to fech sites only if needed
 export function fetchSitesIfNeeded() {
 
   return (dispatch, getState) => {
@@ -101,5 +104,25 @@ export function fetchSitesIfNeeded() {
     } else {
       return Promise.resolve()
     }
+  }
+}
+
+// Thunk to delete a site
+export function deleteSites(id) {
+  return function (dispatch) {
+
+    dispatch(requestDeleteSite(id))
+
+    let request = new Request('/api/sites/' + id, {
+      method: 'DELETE'
+    });
+    return fetch(request)
+      .then(response => response.json())
+      .then(json =>
+        dispatch(receiveSiteDeleted(json))
+      )
+      .catch(error =>
+        dispatch(invalidRequestSites(error))
+      )
   }
 }

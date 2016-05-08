@@ -1,12 +1,13 @@
+// React
 import React from 'react'
 import { IndexLink, Link } from 'react-router';
 
+// Style
 import 'semantic-ui-menu/menu.min.css'
 import 'semantic-ui-icon/icon.min.css'
 import './navBar.scss'
 
-
-
+// NavBar Component
 const NavBar = () => (
     <div className="ui inverted fluid menu navbar">
       <IndexLink to="/" className="item">

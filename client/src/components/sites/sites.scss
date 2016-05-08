@@ -1,6 +1,10 @@
 .map {
-    width: 80%;
+    width: 90%;
     height: 80vh;
     margin-left: auto;
     margin-right: auto;
+}
+
+.ui.active.dimmer {
+    z-index: 2000;
 }

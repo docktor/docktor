@@ -58,11 +58,14 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^2.2.3",
     "leaflet": "^0.7.7",
+    "react-if": "^2.0.5",
     "react-leaflet": "^0.11.4",
     "react-notification-system": "^0.2.7",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
+    "semantic-ui-dimmer": "^2.1.7",
     "semantic-ui-icon": "^2.1.7",
+    "semantic-ui-loader": "^2.1.7",
     "semantic-ui-menu": "^2.1.7"
   }
 }

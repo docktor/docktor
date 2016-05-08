@@ -1,6 +1,8 @@
 body,html {
     .main {
         width: 100%;
+        overflow: auto;
+        margin: 2em 0;
     }
     height: 100%;
     width:100%;
