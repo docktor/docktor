@@ -8,7 +8,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 // Actions
-import { routeLocationDidUpdate } from './actions/router.actions.js'
+import { routeLocationDidUpdate } from './actions/thunks/router.thunks.js'
 
 // Reducers
 import sites from './reducers/sites.reducer.js'
