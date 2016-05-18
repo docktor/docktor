@@ -1,5 +1,7 @@
 body,html {
     .main {
+        display: flex;
+        flex: 1;
         width: 100%;
         overflow: auto;
         margin: 2em 0;

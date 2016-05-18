@@ -1,0 +1,33 @@
+.ui.modal {
+    position: absolute;
+    transform: translateY(-50%);
+    z-index: 1100 !important;
+    .content {
+        max-height: 60vh;
+        width: initial !important;
+        overflow-y: auto;
+        .form, .field input {
+            width: initial !important;
+        }
+    }
+    .close {
+        top: 0.5rem !important;
+        right: 0.5rem !important;
+        color: rgba(0,0,0,.87) !important;
+    }
+}
+
+.rodal-dialog {
+    width: 0 !important;
+    height: 0 !important;
+    top:50%;
+    left:50%;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 1100 !important;
+    background-color: transparent !important;
+}
+
+.rodal-mask {
+    z-index: 1000 !important;
+}

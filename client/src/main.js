@@ -13,10 +13,11 @@ import { routeLocationDidUpdate } from './actions/router.actions.js'
 // Reducers
 import sites from './reducers/sites.reducer.js'
 import toasts from './reducers/toasts.reducer.js'
+import modal from './reducers/modal.reducer.js'
 
 //Components
-import App from './components/app/app.js'
-import SiteMap from './components/sites/sites.js'
+import App from './pages/app/app.js'
+import SitePage from './pages/sites/sites.js'
 
 const loggerMiddleware = createLogger()
 
@@ -26,6 +27,7 @@ const store = createStore(
     {
       sites,
       toasts,
+      modal,
       routing: routerReducer
     }
   ),
@@ -41,7 +43,7 @@ ReactDOM.render(
     { /* Tell the Router to use our enhanced history */ }
     <Router history={history}>
       <Route path="/" component={App}>
-        <Route path="/sites" component={SiteMap} />
+        <Route path="/sites" component={SitePage} />
       </Route>
     </Router>
   </Provider>,

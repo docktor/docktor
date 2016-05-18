@@ -48,6 +48,11 @@ var devConfig = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
         new webpack.HotModuleReplacementPlugin()
     ]
 };
@@ -89,6 +94,11 @@ var prodConfig = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
         new ExtractTextPlugin('../css/style.css', {
             allChunks: true
         }),

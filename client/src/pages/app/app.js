@@ -2,9 +2,10 @@
 import React from 'react'
 
 // Components
-import NavBar from '../navBar/navBar.js'
-import Footer from '../footer/footer.js'
-import Toasts from '../toasts/toasts.js'
+import NavBar from '../../components/navBar/navBar.js'
+import Footer from '../../components/footer/footer.js'
+import Toasts from '../../components/toasts/toasts.js'
+import Modal from '../../components/modal/modal.js'
 
 // Style
 import './app.scss'
@@ -20,6 +21,7 @@ class App extends React.Component {
           <Toasts />
           {this.props.children}
         </div>
+        <Modal />
         <Footer />
       </div>
     )

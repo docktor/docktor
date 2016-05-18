@@ -1,15 +1,8 @@
-// Entities Actions
-import { fetchSitesIfNeeded } from './sites.actions.js'
+// Location changed
+export const LOCATION_CHANGED = 'LOCATION_CHANGED'
 
-// Thunk which fetch entities on location changes
-export function routeLocationDidUpdate(location) {
-  return function (dispatch) {
-    switch (location.pathname) {
-        case "/sites":
-            dispatch(fetchSitesIfNeeded())
-            break;
-    }
+export function locationChanged() {
+  return {
+    type: LOCATION_CHANGED
   }
 }
-
-export default routeLocationDidUpdate

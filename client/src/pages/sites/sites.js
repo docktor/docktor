@@ -5,7 +5,9 @@ import { connect } from 'react-redux'
 import { If, Then } from 'react-if'
 
 // Actions for redux container
-import { deleteSites } from '../../actions/sites.actions.js'
+import { deleteSite, saveSite } from '../../actions/thunks/sites.thunks.js'
+import { confirmDeletion } from '../../actions/toasts.actions.js'
+import { openNewSiteModal, openEditSiteModal } from '../../actions/modal.actions.js'
 
 // Style
 import 'semantic-ui-icon/icon.min.css'
@@ -18,27 +20,33 @@ import './sites.scss'
 class Sites extends React.Component {
   constructor() {
     super()
-    this.initPosition = {
-      lat: 45,
-      lng: 0,
-      zoom: 5,
+    this.initPosition = { lat: 45, lng: 0, zoom: 5 }
+  }
+
+  openModalNewSite(onCreate) {
+    return e => {
+      onCreate(e.latlng)
     }
   }
 
-  handleClick(e) {
-    console.dir(e)
+  openModalEditSite(onEdit, site) {
+    return () => {
+      onEdit(site)
+    }
   }
 
   render() {
     const initPosition = [this.initPosition.lat, this.initPosition.lng]
-    const sites = this.props.sites.items
+    const sites = Object.values(this.props.sites.items)
     const fetching = this.props.sites.isFetching
     const onDelete = this.props.onDelete
+    const onCreate = this.props.onCreate
+    const onEdit = this.props.onEdit
     return (
-      <Map className="map" center={initPosition} zoom={this.initPosition.zoom} onClick={this.handleClick}>
+      <Map className="map" center={initPosition} zoom={this.initPosition.zoom} onClick={this.openModalNewSite(onCreate)}>
         <If condition={fetching}>
           <Then>
-            <div className="ui active dimmer">
+            <div className="ui active inverted dimmer">
               <div className="ui text loader">Fetching</div>
             </div>
           </Then>
@@ -52,7 +60,10 @@ class Sites extends React.Component {
           return (
             <Marker key={site.ID} position={sitePosition}>
               <Popup>
-                <span>{site.Title} <i className="red trash icon"></i></span>
+                <span>{site.Title}{' '}
+                  <a onClick={this.openModalEditSite(onEdit, site)}><i className="red edit icon"></i></a>
+                  <a onClick={() => onDelete(site)}><i className="red trash icon"></i></a>
+                </span>
               </Popup>
             </Marker>
           )
@@ -69,13 +80,26 @@ const mapStateToSitesProps = (state) => {
 
 // Function to map dispatch to container props
 const mapDispatchToSitesProps = (dispatch) => {
-  return { onDelete: id => dispatch(deleteSites(id)) }
+  return {
+    onDelete: site => {
+      const callback = () => dispatch(deleteSite(site.ID))
+      dispatch(confirmDeletion(site.Title, callback))
+    },
+    onCreate: position => {
+      const callback = (siteForm) => dispatch(saveSite(siteForm))
+      dispatch(openNewSiteModal(position, callback))
+    },
+    onEdit: site => {
+      const callback = (siteForm) => dispatch(saveSite(siteForm))
+      dispatch(openEditSiteModal(site, callback))
+    }
+  }
 }
 
 // Redux container to Sites component
-const SiteMap = connect(
+const SitePage = connect(
   mapStateToSitesProps,
   mapDispatchToSitesProps
 )(Sites)
 
-export default SiteMap;
+export default SitePage;

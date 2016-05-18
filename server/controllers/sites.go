@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/godocktor-api"
@@ -21,8 +20,6 @@ func (sc *SitesController) GetAllSites(c echo.Context) error {
 	if err != nil {
 		return c.String(500, "Error while retreiving all sites")
 	}
-	// TODO remove this (used for ui tests)
-	time.Sleep(2 * time.Second)
 	return c.JSON(200, sites)
 }
 
@@ -51,5 +48,5 @@ func (sc *SitesController) DeleteSite(c echo.Context) error {
 	if err != nil {
 		return c.String(500, fmt.Sprintf("Error while remove site: %v", err))
 	}
-	return c.JSON(200, res)
+	return c.String(200, res.Hex())
 }
