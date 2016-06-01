@@ -2,7 +2,6 @@
 import React from 'react'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import { connect } from 'react-redux'
-import { If, Then } from 'react-if'
 
 // Actions for redux container
 import { deleteSite, saveSite } from '../../actions/thunks/sites.thunks.js'
@@ -13,14 +12,22 @@ import { openNewSiteModal, openEditSiteModal } from '../../actions/modal.actions
 import 'semantic-ui-icon/icon.min.css'
 import 'semantic-ui-loader/loader.min.css'
 import 'semantic-ui-dimmer/dimmer.min.css'
+import 'semantic-ui-segment/segment.min.css'
 import 'leaflet/dist/leaflet.css'
+import '../../flex.scss'
 import './sites.scss'
 
 //Site Component using react-leaflet
-class Sites extends React.Component {
+class SitesComponent extends React.Component {
   constructor() {
     super()
-    this.initPosition = { lat: 45, lng: 0, zoom: 5 }
+    this.initPosition = { lat: 45, lng: 5, zoom: 4 }
+  }
+  
+  componentDidUpdate(){
+    setTimeout(() => {
+      this.refs.map1.getLeafletElement().invalidateSize(false);
+    }, 300); // Adjust timeout to tab transition
   }
 
   openModalNewSite(onCreate) {
@@ -43,32 +50,36 @@ class Sites extends React.Component {
     const onCreate = this.props.onCreate
     const onEdit = this.props.onEdit
     return (
-      <Map className="map" center={initPosition} zoom={this.initPosition.zoom} onClick={this.openModalNewSite(onCreate)}>
-        <If condition={fetching}>
-          <Then>
-            <div className="ui active inverted dimmer">
-              <div className="ui text loader">Fetching</div>
-            </div>
-          </Then>
-        </If>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-          />
-        {sites.map(site => {
-          const sitePosition = [site.Latitude, site.Longitude]
-          return (
-            <Marker key={site.ID} position={sitePosition}>
-              <Popup>
-                <span>{site.Title}{' '}
-                  <a onClick={this.openModalEditSite(onEdit, site)}><i className="red edit icon"></i></a>
-                  <a onClick={() => onDelete(site)}><i className="red trash icon"></i></a>
-                </span>
-              </Popup>
-            </Marker>
-          )
-        }) }
-      </Map>
+      <div className='flex-2 self-stretch map-container layout horizontal center-center'>
+        <Map ref="map1" className='flex self-stretch map' center={initPosition} zoom={this.initPosition.zoom} onClick={this.openModalNewSite(onCreate) }>
+          {(fetching => {
+            if (fetching) {
+              return (
+                <div className='ui active dimmer'>
+                  <div className='ui text loader'>Fetching</div>
+                </div>
+              )
+            }
+          })(fetching) }
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+            />
+          {sites.map(site => {
+            const sitePosition = [site.Latitude, site.Longitude]
+            return (
+              <Marker key={site.ID} position={sitePosition}>
+                <Popup>
+                  <div>{site.Title}{' '}
+                    <i onClick={this.openModalEditSite(onEdit, site) } className='blue write link icon'></i>
+                    <i onClick={() => onDelete(site) } className='red trash link icon'></i>
+                  </div>
+                </Popup>
+              </Marker>
+            )
+          }) }
+        </Map>
+      </div>
     )
   }
 }
@@ -97,9 +108,9 @@ const mapDispatchToSitesProps = (dispatch) => {
 }
 
 // Redux container to Sites component
-const SitePage = connect(
+const Sites = connect(
   mapStateToSitesProps,
   mapDispatchToSitesProps
-)(Sites)
+)(SitesComponent)
 
-export default SitePage;
+export default Sites;

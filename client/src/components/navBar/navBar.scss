@@ -10,12 +10,17 @@
 
 .brand {
 	padding: .5em .5em !important;
+	background-color: #00948D !important;
+    font-variant: small-caps;
+    font-size: 18px;
+    padding-bottom: 10px !important;
+	border-radius: 0 !important;
 }
 
 .navbar {
 	border-radius: 0 !important;
 	margin: 0 !important;
-    min-height: 40px !important;
-    max-height: 40px !important;
-	background-color: #015051 !important
+    min-height: 35px !important;
+    max-height: 35px !important;
+	background-color: #3A6191 !important
 }

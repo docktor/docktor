@@ -1,0 +1,27 @@
+
+.map-container {
+    position: relative !important;
+    .map {
+    border-radius: .28rem;
+        position: relative;
+        border: 1px lightgrey solid;
+        a:hover {
+            cursor: pointer;
+            i {
+                opacity: 1;
+            }
+        }
+        a {
+            i {
+                opacity: 0.5;
+            }
+        }
+    }
+}
+.ui.active.dimmer {
+    z-index: 2000;
+}
+
+.leaflet-top.leaflet-left, .leaflet-control-attribution.leaflet-control {
+    z-index: 1;
+}

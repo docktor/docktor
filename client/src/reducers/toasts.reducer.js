@@ -4,7 +4,8 @@ import MD5 from 'md5'
 
 //Actions
 import { LOCATION_CHANGED } from '../actions/router.actions.js'
-import { INVALID_REQUEST_SITES, requestDeleteSite } from '../actions/sites.actions.js'
+import { INVALID_REQUEST_SITES } from '../actions/sites.actions.js'
+import { INVALID_REQUEST_DAEMONS } from '../actions/daemons.actions.js'
 import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from '../actions/toasts.actions.js'
 
 const initialState = {}
@@ -17,6 +18,10 @@ const toastsReducer = (state = initialState, action) => {
         case INVALID_REQUEST_SITES:
             const invalidReqSitesToast= createInvalidReqSitesToast(state, action)
             return Object.assign({}, {...state}, invalidReqSitesToast)
+            
+        case INVALID_REQUEST_DAEMONS:
+            const invalidReqDaemonsToast= createInvalidReqDaemonsToast(state, action)
+            return Object.assign({}, {...state}, invalidReqDaemonsToast)
 
         case COMFIRM_DELETION:
             const confirmDelToast = createConfirmDelToast(state, action)
@@ -36,10 +41,23 @@ const createInvalidReqSitesToast = (state, action) => {
     let res = {}
     const uuid = UUID.create(4)
     res[uuid] = {
-        title: "Error on Sites API",
+        title: 'Error on Sites API',
         message: action.error,
-        level: "error",
-        position: "br",
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    }
+    return res
+}
+
+const createInvalidReqDaemonsToast = (state, action) => {
+    let res = {}
+    const uuid = UUID.create(4)
+    res[uuid] = {
+        title: 'Error on Daemons API',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
         uid: uuid
     }
     return res
@@ -49,11 +67,11 @@ const createConfirmDelToast = (state, action) => {
     let res = {}
     const id = MD5(action.title)
     res[id] = {
-        title: "Confirm Suppression",
-        message: "Remove "+action.title+" ?",
+        title: 'Confirm Suppression',
+        message: 'Remove '+action.title+' ?',
         autoDismiss: 0,
-        level: "error",
-        position: "br",
+        level: 'error',
+        position: 'bl',
         uid: id,
         action: {
             label: 'Remove',

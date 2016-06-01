@@ -15,14 +15,13 @@ import '../../flex.scss'
 class App extends React.Component {
   render() {
     return (
-      <div className="layout vertical center-center justified fill">
+      <div className="layout vertical start-justified fill">
         <NavBar />
-        <div className="main">
-          <Toasts />
+        <div className="flex main layout vertical center-center">
           {this.props.children}
         </div>
+         <Toasts />
         <Modal />
-        <Footer />
       </div>
     )
   }

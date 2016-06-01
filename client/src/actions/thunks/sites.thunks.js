@@ -1,3 +1,7 @@
+// Imports for fetch API
+import 'babel-polyfill'
+import fetch from 'isomorphic-fetch'
+
 // Site Actions
 import { 
   requestAllSites, 
@@ -71,8 +75,8 @@ export function deleteSite(id) {
 export function saveSite(form) {
 
   let site = Object.assign({}, form)
-  site.Latitude = parseFloat(site.Latitude.replace(",", "."))
-  site.Longitude = parseFloat(site.Longitude.replace(",", "."))
+  site.Latitude = parseFloat(site.Latitude.replace(',', '.'))
+  site.Longitude = parseFloat(site.Longitude.replace(',', '.'))
   site.Created = site.Created ? site.Created : new Date()
 
   const id = site.ID ? site.ID : -1

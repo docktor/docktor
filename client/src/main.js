@@ -12,12 +12,13 @@ import { routeLocationDidUpdate } from './actions/thunks/router.thunks.js'
 
 // Reducers
 import sites from './reducers/sites.reducer.js'
+import daemons from './reducers/daemons.reducer.js'
 import toasts from './reducers/toasts.reducer.js'
 import modal from './reducers/modal.reducer.js'
 
 //Components
 import App from './pages/app/app.js'
-import SitePage from './pages/sites/sites.js'
+import DaemonsPage from './pages/daemons/daemons.js'
 
 const loggerMiddleware = createLogger()
 
@@ -26,6 +27,7 @@ const store = createStore(
   combineReducers(
     {
       sites,
+      daemons,
       toasts,
       modal,
       routing: routerReducer
@@ -42,8 +44,8 @@ ReactDOM.render(
   <Provider store={store}>
     { /* Tell the Router to use our enhanced history */ }
     <Router history={history}>
-      <Route path="/" component={App}>
-        <Route path="/sites" component={SitePage} />
+      <Route path='/' component={App}>
+        <Route path='/daemons' component={DaemonsPage} />
       </Route>
     </Router>
   </Provider>,

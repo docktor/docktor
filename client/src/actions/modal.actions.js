@@ -12,14 +12,14 @@ export const OPEN_MODAL = 'OPEN_MODAL'
 
 export function openNewSiteModal(position, callback) {
   let form = { lines: [], hidden: [] }
-  let line = { class: "three", fields: [] }
-  line.fields.push({ name: "Title", desc: "Site Title", type: "text", required: true })
-  line.fields.push({ name: "Latitude", desc: "Site Latitude", value: Math.round(position.lat * 100) / 100, type: "number", required: true })
-  line.fields.push({ name: "Longitude", desc: "Site Longitude", value: Math.round(position.lng * 100) / 100, type: "number", required: true })
+  let line = { class: 'three', fields: [] }
+  line.fields.push({ name: 'Title', desc: 'Site Title', type: 'text', required: true })
+  line.fields.push({ name: 'Latitude', desc: 'Site Latitude', value: Math.round(position.lat * 100) / 100, type: 'number', required: true })
+  line.fields.push({ name: 'Longitude', desc: 'Site Longitude', value: Math.round(position.lng * 100) / 100, type: 'number', required: true })
   form.lines.push(line)
   return {
     type: OPEN_MODAL,
-    title: "New Site",
+    title: 'New Site',
     form,
     callback
   }
@@ -27,17 +27,17 @@ export function openNewSiteModal(position, callback) {
 
 export function openEditSiteModal(site, callback) {
  let form = { lines: [], hidden: [] }
-  let line = { class: "three", fields: [] }
-  line.fields.push({ name: "Title", desc: "Site Title", value: site.Title, type: "text", required: true })
-  line.fields.push({ name: "Latitude", desc: "Site Latitude", value: site.Latitude, type: "number", required: true })
-  line.fields.push({ name: "Longitude", desc: "Site Longitude", value: site.Longitude, type: "number", required: true })
+  let line = { class: 'three', fields: [] }
+  line.fields.push({ name: 'Title', desc: 'Site Title', value: site.Title, type: 'text', required: true })
+  line.fields.push({ name: 'Latitude', desc: 'Site Latitude', value: site.Latitude, type: 'number', required: true })
+  line.fields.push({ name: 'Longitude', desc: 'Site Longitude', value: site.Longitude, type: 'number', required: true })
   form.lines.push(line)
 
-  form.hidden.push({ name: "ID", value: site.ID })
-  form.hidden.push({ name: "Created", value: site.Created })
+  form.hidden.push({ name: 'ID', value: site.ID })
+  form.hidden.push({ name: 'Created', value: site.Created })
   return {
     type: OPEN_MODAL,
-    title: "Edit Site",
+    title: 'Edit Site',
     form,
     callback
   }

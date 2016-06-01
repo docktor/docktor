@@ -40,7 +40,7 @@ class Modal extends React.Component {
                     }
                 })
             })
-            $("#modal-form").form(settings)
+            $('#modal-form').form(settings)
             $('#modal-form').form('validate form')
         }
     }
@@ -53,20 +53,20 @@ class Modal extends React.Component {
                 onClose={onClose}
                 showCloseButton={false}
                 animation={modal.animation}>
-                <div className="ui active modal">
-                    <i className="close icon" onClick={onClose}></i>
-                    <div className="header">{modal.title}</div>
-                    <div className="content">
-                        <div id="modal-form" className="ui form" ref="form">
+                <div className='ui active modal'>
+                    <i className='close icon' onClick={onClose}></i>
+                    <div className='header'>{modal.title}</div>
+                    <div className='content'>
+                        <div id='modal-form' className='ui form' ref='form'>
                             {modal.form.hidden.map( input => (
-                                <input key={input.name} type="hidden" name={input.name} defaultValue={input.value}/>
+                                <input key={input.name} type='hidden' name={input.name} defaultValue={input.value}/>
                             ))}
                             {modal.form.lines.map( (line, index) => (
-                                <div key={index} className={line.class + " fields"}>
+                                <div key={index} className={line.class + ' fields'}>
                                 {line.fields.map(field => (
-                                    <div className={(field.required ? "required" : "") + " field"} key={field.name}>
+                                    <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
                                         <label>{field.name}</label>
-                                        <div className="ui fluid input">
+                                        <div className='ui fluid input'>
                                             <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value}/>
                                         </div>
                                     </div>
@@ -75,13 +75,13 @@ class Modal extends React.Component {
                             ))}
                         </div>
                     </div>
-                    <div className="actions">
-                        <div className="ui black deny button" onClick={onClose}>
+                    <div className='actions'>
+                        <div className='ui black deny button' onClick={onClose}>
                             Cancel
                         </div>
-                        <div className="ui positive right labeled icon button" onClick={this.validate(modal, onClose)}>
+                        <div className='ui teal right labeled icon button' onClick={this.validate(modal, onClose)}>
                             Validate
-                            <i className="checkmark icon"></i>
+                            <i className='checkmark icon'></i>
                         </div>
                     </div>
                 </div>

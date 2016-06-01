@@ -49,7 +49,7 @@ class Toasts extends React.Component {
             }
         };
         return (
-            <NotificationSystem ref="notificationSystem" style={style} />
+            <NotificationSystem ref='notificationSystem' style={style} />
         )
     }
 }
