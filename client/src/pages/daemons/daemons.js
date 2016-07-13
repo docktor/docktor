@@ -3,17 +3,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 // Components
-import Daemon from '../../components/daemon/daemon.js'
+import DaemonCard from '../../components/daemon-card/daemon-card.js'
 import Sites from '../../components/sites/sites.js'
 
 // Style
-import 'semantic-ui-icon/icon.min.css'
-import 'semantic-ui-loader/loader.min.css'
-import 'semantic-ui-dimmer/dimmer.min.css'
-import 'semantic-ui-button/button.min.css'
-import 'semantic-ui-input/input.min.css'
 import './daemons.scss'
-import '../../flex.scss'
 
 //Site Component using react-leaflet
 class Daemons extends React.Component {
@@ -43,17 +37,17 @@ class Daemons extends React.Component {
             {(fetching => {
               if (fetching) {
                 return (
-                  <div className='ui dimmable dimmed fill'>
-                  <div className='ui active dimmer'>
-                    <div className='ui text loader'>Fetching</div>
-                  </div>
+                  <div className='ui dimmable dimmed'>
+                    <div className='ui active inverted dimmer'>
+                      <div className='ui text loader'>Fetching</div>
+                    </div>
                   </div>
                 )
               }
             })(fetching) }
             {daemons.map(daemon => {
               return (
-                <Daemon daemon={daemon} site={sites[daemon.Site]} key={daemon.ID} />
+                <DaemonCard daemon={daemon} site={sites[daemon.Site]} key={daemon.ID} />
               )
             }) }
           </div>

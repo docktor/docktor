@@ -9,12 +9,7 @@ import { confirmDeletion } from '../../actions/toasts.actions.js'
 import { openNewSiteModal, openEditSiteModal } from '../../actions/modal.actions.js'
 
 // Style
-import 'semantic-ui-icon/icon.min.css'
-import 'semantic-ui-loader/loader.min.css'
-import 'semantic-ui-dimmer/dimmer.min.css'
-import 'semantic-ui-segment/segment.min.css'
 import 'leaflet/dist/leaflet.css'
-import '../../flex.scss'
 import './sites.scss'
 
 //Site Component using react-leaflet
@@ -23,7 +18,7 @@ class SitesComponent extends React.Component {
     super()
     this.initPosition = { lat: 45, lng: 5, zoom: 4 }
   }
-  
+
   componentDidUpdate(){
     setTimeout(() => {
       this.refs.map1.getLeafletElement().invalidateSize(false);
@@ -55,7 +50,7 @@ class SitesComponent extends React.Component {
           {(fetching => {
             if (fetching) {
               return (
-                <div className='ui active dimmer'>
+                <div className='ui active inverted dimmer'>
                   <div className='ui text loader'>Fetching</div>
                 </div>
               )

@@ -20,8 +20,9 @@
 }
 .ui.active.dimmer {
     z-index: 2000;
+    background-color: white;
 }
 
-.leaflet-top.leaflet-left, .leaflet-control-attribution.leaflet-control {
-    z-index: 1;
+leaflet-control-zoom, .leaflet-bottom.leaflet-right{
+    z-index: 1 !important;
 }

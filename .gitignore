@@ -1,8 +1,7 @@
 npm-debug.log
 node_modules/
 dist
-.bower-*/
 .idea/
 docktor
-client/src/bower_components/
+bower_components/
 .vscode

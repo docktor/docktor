@@ -2,7 +2,6 @@
 import React from 'react'
 
 // Style
-import 'semantic-ui-icon/icon.min.css'
 import './footer.scss'
 
 // Footer Component

@@ -3,8 +3,6 @@ import React from 'react'
 import { IndexLink, Link } from 'react-router';
 
 // Style
-import 'semantic-ui-menu/menu.min.css'
-import 'semantic-ui-icon/icon.min.css'
 import './navBar.scss'
 
 // NavBar Component

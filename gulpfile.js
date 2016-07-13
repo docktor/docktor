@@ -6,8 +6,8 @@ var gulp = require('gulp'),
     inject = require('gulp-inject-string'),
     WebpackDevServer = require('webpack-dev-server');
 
-var devConfigWebpack = require('./config.webpack.js').dev,
-    prodConfigWebpack = require('./config.webpack.js').prod;
+var devConfigWebpack = require('./dev.config.webpack.js'),
+    prodConfigWebpack = require('./prod.config.webpack.js');
 
 var watchFiles = {
     server: ['./main.go', './server/**/*.go', './client/src/*.tmpl']
@@ -18,10 +18,11 @@ var dependenciesPath = {
         './client/src/index.tmpl'
     ],
     fonts: [
-        './node_modules/semantic-ui-icon/assets/fonts/*'
+        './bower_components/semantic/dist/themes/default/assets/fonts/*'
     ],
     images: [
-        './node_modules/leaflet/dist/images/*'
+        './node_modules/leaflet/dist/images/*',
+        './bower_components/semantic/dist/themes/default/assets/images/*'
     ]
 }
 var injectedPath = {

@@ -8,22 +8,12 @@ import { closeModal } from '../../actions/modal.actions.js'
 // Components
 import Rodal from 'rodal'
 
-// JS dependancies
-import 'jquery'
-import form from 'semantic-ui-form/form.min.js'
-$.form = form
-
 // Style
-import 'semantic-ui-modal/modal.min.css'
-import 'semantic-ui-button/button.min.css'
-import 'semantic-ui-icon/icon.min.css'
-import 'semantic-ui-form/form.min.css'
-import 'semantic-ui-input/input.min.css'
 import './modal.scss'
 
 // Modal Component
 class Modal extends React.Component {
-    
+
     validate(modal, onClose) {
         return () => {
             let  settings = {
@@ -53,7 +43,7 @@ class Modal extends React.Component {
                 onClose={onClose}
                 showCloseButton={false}
                 animation={modal.animation}>
-                <div className='ui active modal'>
+                <div className='ui active small modal'>
                     <i className='close icon' onClick={onClose}></i>
                     <div className='header'>{modal.title}</div>
                     <div className='content'>
@@ -76,7 +66,7 @@ class Modal extends React.Component {
                         </div>
                     </div>
                     <div className='actions'>
-                        <div className='ui black deny button' onClick={onClose}>
+                        <div className='ui black button' onClick={onClose}>
                             Cancel
                         </div>
                         <div className='ui teal right labeled icon button' onClick={this.validate(modal, onClose)}>

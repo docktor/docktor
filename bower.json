@@ -1,0 +1,22 @@
+{
+  "name": "docktor",
+  "description": "Docker Monitoring",
+  "authors": [
+    "Yvonnick Esnault - yesnault",
+    "François Samin - fsamin",
+    "Gwendal Leclerc - gwleclerc"
+  ],
+  "license": "GPL 3",
+  "homepage": "https://github.com/soprasteria/docktor",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic": "semantic-ui#^2.2.2",
+    "jquery": "^3.1.0"
+  }
+}
