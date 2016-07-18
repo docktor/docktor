@@ -1,26 +1,25 @@
 .ui.vertical.menu {
-	margin-top: -15px !important;
-	width: 100%;
-	display: none;
+  display: none;
+  margin-top: -15px !important;
+  width: 100%;
 }
 
 .ui.menu .item {
-    padding: .5em 1em;
+  padding: .5em 1em;
 }
 
 .brand {
-	padding: .5em .5em !important;
-	background-color: #00948D !important;
-    font-variant: small-caps;
-    font-size: 18px;
-    padding-bottom: 10px !important;
-	border-radius: 0 !important;
+  background-color: #00948d !important;
+  border-radius: 0 !important;
+  font-size: 18px;
+  font-variant: small-caps;
+  padding: .5em !important;
+  padding-bottom: 10px !important;
 }
-
 .navbar {
-	border-radius: 0 !important;
-	margin: 0 !important;
-    min-height: 35px !important;
-    max-height: 35px !important;
-	background-color: #3A6191 !important
+  background-color: #3a6191 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  max-height: 35px !important;
+  min-height: 35px !important;
 }

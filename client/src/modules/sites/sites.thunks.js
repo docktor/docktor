@@ -1,17 +1,17 @@
 // Imports for fetch API
-import 'babel-polyfill'
-import fetch from 'isomorphic-fetch'
+import 'babel-polyfill';
+import fetch from 'isomorphic-fetch';
 
 // Site Actions
-import { 
-  requestAllSites, 
-  receiveSites, 
-  invalidRequestSites, 
+import {
+  requestAllSites,
+  receiveSites,
+  invalidRequestSites,
   requestDeleteSite,
   receiveSiteDeleted,
   requestSaveSite,
   receiveSiteSaved
-} from '../sites.actions.js'
+} from './sites.actions.js';
 
 /********** Thunk Functions **********/
 
@@ -19,71 +19,71 @@ import {
 export function fetchSites() {
   return function (dispatch) {
 
-    dispatch(requestAllSites())
-    let error = false
+    dispatch(requestAllSites());
+    let error = false;
 
-    return fetch(`/api/sites`)
+    return fetch('/api/sites')
       .then(response => {
         if (!response.ok) {
-          error = true
-          return response.text()
+          error = true;
+          return response.text();
         }
-        return response.json()
+        return response.json();
       })
       .then(json => {
         if (error) {
-          throw Error(json)
+          throw Error(json);
         }
-        dispatch(receiveSites(json))
+        dispatch(receiveSites(json));
       })
       .catch(error => {
-        dispatch(invalidRequestSites(error.message))
-      })
-  }
+        dispatch(invalidRequestSites(error.message));
+      });
+  };
 }
 
 // Thunk to delete a site
 export function deleteSite(id) {
   return function (dispatch) {
 
-    dispatch(requestDeleteSite(id))
+    dispatch(requestDeleteSite(id));
 
     let request = new Request('/api/sites/' + id, {
       method: 'DELETE'
     });
-    let error = false
+    let error = false;
     return fetch(request)
       .then(response => {
         if (!response.ok) {
-          error = true
+          error = true;
         }
-        return response.text()
+        return response.text();
       })
       .then(res => {
         if (error) {
-          throw Error(res)
+          throw Error(res);
         }
-        dispatch(receiveSiteDeleted(res))
+        dispatch(receiveSiteDeleted(res));
       })
       .catch(error =>
         dispatch(invalidRequestSites(error))
-      )
-  }
+      );
+  };
 }
 
 // Thunk to save a site
 export function saveSite(form) {
 
-  let site = Object.assign({}, form)
-  site.Latitude = parseFloat(site.Latitude.replace(',', '.'))
-  site.Longitude = parseFloat(site.Longitude.replace(',', '.'))
-  site.Created = site.Created ? site.Created : new Date()
+  let site = Object.assign({}, form);
+  site.Latitude = parseFloat(site.Latitude.replace(',', '.'));
+  site.Longitude = parseFloat(site.Longitude.replace(',', '.'));
+  site.Created = site.Created ? site.Created : new Date();
 
-  const id = site.ID ? site.ID : -1
+  const id = site.ID ? site.ID : -1;
 
   return function (dispatch) {
 
-    dispatch(requestSaveSite(site))
+    dispatch(requestSaveSite(site));
 
     let request = new Request('/api/sites/' + id, {
       method: 'PUT',
@@ -92,26 +92,26 @@ export function saveSite(form) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(site)
-    })
-    let error = false
+    });
+    let error = false;
     return fetch(request)
       .then(response => {
         if (!response.ok) {
-          error = true
-          return response.text()
+          error = true;
+          return response.text();
         }
-        return response.json()
+        return response.json();
       })
       .then(res => {
         if (error) {
-          throw Error(res)
+          throw Error(res);
         }
-        dispatch(receiveSiteSaved(res))
+        dispatch(receiveSiteSaved(res));
       })
       .catch(error =>
         dispatch(invalidRequestSites(error))
-      )
-  }
+      );
+  };
 }
 
 
@@ -120,13 +120,13 @@ export function saveSite(form) {
 
 // Check that if sites should be fetched
 function shouldFetchSites(state) {
-  const sites = state.sites
+  const sites = state.sites;
   if (!sites || sites.didInvalidate) {
-    return true
+    return true;
   } else if (sites.isFetching) {
-    return false
+    return false;
   } else {
-    return true
+    return true;
   }
 }
 
@@ -135,9 +135,9 @@ export function fetchSitesIfNeeded() {
 
   return (dispatch, getState) => {
     if (shouldFetchSites(getState())) {
-      return dispatch(fetchSites())
+      return dispatch(fetchSites());
     } else {
-      return Promise.resolve()
+      return Promise.resolve();
     }
-  }
+  };
 }

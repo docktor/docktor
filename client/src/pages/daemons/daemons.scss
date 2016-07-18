@@ -1,50 +1,57 @@
-.daemons-bar {
-    padding: 0.5em;
-    min-height: 3em;
-    background-color: #2c3e50;
-    
-    div:first-child {
-        margin-left: 1em !important;
-    }
+$daemons-bar-background-color: #2c3e50 !default;
+$inverted-dimmer-background-color: white !default;
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
 
-    div:last-child {
-        margin-right: 1em !important;
-    }
-    
-    .ui.teal.button {
-        background-color: #00948D !important;
-        
-    } 
-    .ui.teal.button:hover {
-        background-color: #008C85 !important;
-    } 
-    
-    .ui.teal.button:active {
-        background-color: #00827c !important;
-    } 
-    
+
+.daemons-bar {
+  background-color: $daemons-bar-background-color;
+  min-height: 3em;
+  padding: .5em;
+
+  div:first-child {
+    margin-left: 1em !important;
+  }
+
+  div:last-child {
+    margin-right: 1em !important;
+  }
+
+  .ui.teal.button {
+    background-color: $teal-button-color !important;
+
+  }
+  .ui.teal.button:hover {
+    background-color: $teal-button-color-hover !important;
+  }
+
+  .ui.teal.button:active {
+    background-color: $teal-button-color-active !important;
+  }
+
 }
 
 .sites {
-    padding: 2em 1em;    
-    padding-right: 0;
+  padding: 2em 1em;
+  padding-right: 0;
 }
 
 .daemons-list {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    overflow-y: auto;
-    position: relative;
-    
-    .dimmable {
-        position: absolute;
-        height: calc(100% - 4em);
-        width: calc(100% - 2em);
-        top: 0;
-        left: 0;
-        margin: 2em 1em !important;
-        .ui.inverted.dimmer {
-            background-color: white;
-        }
+  overflow-y: auto;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  position: relative;
+
+  .dimmable {
+    height: calc(100% - 4em);
+    left: 0;
+    margin: 2em 1em !important;
+    position: absolute;
+    top: 0;
+    width: calc(100% - 2em);
+    .ui.inverted.dimmer {
+      background-color: $inverted-dimmer-background-color;
     }
+  }
 }

@@ -1,28 +1,27 @@
-
 .map-container {
-    position: relative !important;
-    .map {
+  position: relative !important;
+  .map {
+    border: 1px lightgrey solid;
     border-radius: .28rem;
-        position: relative;
-        border: 1px lightgrey solid;
-        a:hover {
-            cursor: pointer;
-            i {
-                opacity: 1;
-            }
-        }
-        a {
-            i {
-                opacity: 0.5;
-            }
-        }
+    position: relative;
+    a:hover {
+      cursor: pointer;
+      i {
+        opacity: 1;
+      }
     }
+    a {
+      i {
+        opacity: .5;
+      }
+    }
+  }
 }
 .ui.active.dimmer {
-    z-index: 2000;
-    background-color: white;
+  background-color: white;
+  z-index: 2000;
 }
-
-leaflet-control-zoom, .leaflet-bottom.leaflet-right{
-    z-index: 1 !important;
+.leaflet-bottom.leaflet-right,
+leaflet-control-zoom {
+  z-index: 1 !important;
 }

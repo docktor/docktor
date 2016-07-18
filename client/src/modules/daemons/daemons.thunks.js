@@ -1,13 +1,13 @@
 // Imports for fetch API
-import 'babel-polyfill'
-import fetch from 'isomorphic-fetch'
+import 'babel-polyfill';
+import fetch from 'isomorphic-fetch';
 
 // Daemon Actions
-import { 
-  requestAllDaemons, 
-  receiveDaemons, 
+import {
+  requestAllDaemons,
+  receiveDaemons,
   invalidRequestDaemons
-} from '../daemons.actions.js'
+} from './daemons.actions.js';
 
 /********** Thunk Functions **********/
 
@@ -15,27 +15,27 @@ import {
 export function fetchDaemons() {
   return function (dispatch) {
 
-    dispatch(requestAllDaemons())
-    let error = false
+    dispatch(requestAllDaemons());
+    let error = false;
 
-    return fetch(`/api/daemons`)
+    return fetch('/api/daemons')
       .then(response => {
         if (!response.ok) {
-          error = true
-          return response.text()
+          error = true;
+          return response.text();
         }
-        return response.json()
+        return response.json();
       })
       .then(json => {
         if (error) {
-          throw Error(json)
+          throw Error(json);
         }
-        dispatch(receiveDaemons(json))
+        dispatch(receiveDaemons(json));
       })
       .catch(error => {
-        dispatch(invalidRequestDaemons(error.message))
-      })
-  }
+        dispatch(invalidRequestDaemons(error.message));
+      });
+  };
 }
 
 
@@ -43,13 +43,13 @@ export function fetchDaemons() {
 
 // Check that if daemons should be fetched
 function shouldFetchDaemons(state) {
-  const daemons = state.daemons
+  const daemons = state.daemons;
   if (!daemons || daemons.didInvalidate) {
-    return true
+    return true;
   } else if (daemons.isFetching) {
-    return false
+    return false;
   } else {
-    return true
+    return true;
   }
 }
 
@@ -58,9 +58,9 @@ export function fetchDaemonsIfNeeded() {
 
   return (dispatch, getState) => {
     if (shouldFetchDaemons(getState())) {
-      return dispatch(fetchDaemons())
+      return dispatch(fetchDaemons());
     } else {
-      return Promise.resolve()
+      return Promise.resolve();
     }
-  }
+  };
 }

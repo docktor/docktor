@@ -73,8 +73,8 @@ rules:
   nesting-depth:
     - 1
     - max-depth: 3
-  no-color-keywords: 1
-  no-color-literals: 1
+  no-color-keywords: 0
+  no-color-literals: 0
   no-css-comments: 1
   no-debug: 1
   no-duplicate-properties: 1

@@ -1,15 +1,15 @@
 // React
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 
 // Actions for redux container
-import { closeModal } from '../../actions/modal.actions.js'
+import { closeModal } from '../../modules/modal/modal.actions.js';
 
 // Components
-import Rodal from 'rodal'
+import Rodal from 'rodal';
 
 // Style
-import './modal.scss'
+import './modal.scss';
 
 // Modal Component
 class Modal extends React.Component {
@@ -18,26 +18,26 @@ class Modal extends React.Component {
         return () => {
             let  settings = {
                 onSuccess: () => {
-                    modal.callback($('#modal-form').form('get values'))
-                    onClose()
+                    modal.callback($('#modal-form').form('get values'));
+                    onClose();
                 }
-            }
-            settings.fields = {}
+            };
+            settings.fields = {};
             modal.form.lines.forEach( line => {
                 line.fields.forEach( field => {
                     if(field.required) {
-                        settings.fields[field.name] = 'empty'
+                        settings.fields[field.name] = 'empty';
                     }
-                })
-            })
-            $('#modal-form').form(settings)
-            $('#modal-form').form('validate form')
-        }
+                });
+            });
+            $('#modal-form').form(settings);
+            $('#modal-form').form('validate form');
+        };
     }
 
     render() {
-        const modal = this.props.modal
-        const onClose = this.props.onClose
+        const modal = this.props.modal;
+        const onClose = this.props.onClose;
         return (
             <Rodal visible={modal.isVisible}
                 onClose={onClose}
@@ -76,24 +76,25 @@ class Modal extends React.Component {
                     </div>
                 </div>
             </Rodal>
-        )
+        );
     }
 }
+Modal.propTypes = { modal: React.PropTypes.object, onClose:React.PropTypes.func };
 
 // Function to map state to container props
 const mapStateToModalProps = (state) => {
-    return { modal: state.modal }
-}
+    return { modal: state.modal };
+};
 
 // Function to map dispatch to container props
 const mapDispatchToModalProps = (dispatch) => {
-    return { onClose: () => dispatch(closeModal()) }
-}
+    return { onClose: () => dispatch(closeModal()) };
+};
 
 // Redux container to Sites component
 const ModalContainer = connect(
     mapStateToModalProps,
     mapDispatchToModalProps
-)(Modal)
+)(Modal);
 
-export default ModalContainer
+export default ModalContainer;

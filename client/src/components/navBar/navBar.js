@@ -1,9 +1,9 @@
 // React
-import React from 'react'
+import React from 'react';
 import { IndexLink, Link } from 'react-router';
 
 // Style
-import './navBar.scss'
+import './navBar.scss';
 
 // NavBar Component
 const NavBar = () => (
@@ -18,6 +18,6 @@ const NavBar = () => (
         <a href='#' className='item'><i className='inverted large user icon'></i>{' '} Admin</a>
       </div>
     </div>
-  )
+  );
 
-export default NavBar
+export default NavBar;

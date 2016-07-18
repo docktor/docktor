@@ -1,10 +1,10 @@
 var webpack = require('webpack'),
   path = require('path'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
-  OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin'),
-  BowerWebpackPlugin = require('bower-webpack-plugin');
+  OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 
 var nodeModules = path.resolve(__dirname, 'node_modules'),
+  bowerComponents = path.resolve(__dirname, 'bower_components'),
   build = path.resolve(__dirname, './client/dist/js'),
   src = path.resolve(__dirname, './client/src/main.js');
 
@@ -23,7 +23,7 @@ var prodConfig = {
       query: {
         presets: ['react', 'es2015']
       },
-      exclude: nodeModules
+      exclude: [nodeModules, bowerComponents]
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('css!sass')
@@ -38,14 +38,13 @@ var prodConfig = {
       loader: 'file-loader?name=../images/[name].[ext]'
     }]
   },
+  resolve: {
+      alias: {
+        jquery: bowerComponents + '/jquery/dist/jquery.js'
+      },
+      modulesDirectories: ['node_modules', 'bower_components']
+  },
   plugins: [
-    new BowerWebpackPlugin({
-      modulesDirectories: ['bower_components'],
-      manifestFiles: 'bower.json',
-      includes: /.*/,
-      excludes: [],
-      searchResolveModulesDirectories: true
-    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',

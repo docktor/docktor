@@ -42,9 +42,9 @@ var devConfig = {
   },
   resolve: {
       alias: {
-        jquery: bowerComponents+"/jquery/dist/jquery.js"
+        jquery: bowerComponents + '/jquery/dist/jquery.js'
       },
-      modulesDirectories: ["node_modules", "bower_components"]
+      modulesDirectories: ['node_modules', 'bower_components']
   },
   plugins: [
     new webpack.ProvidePlugin({
