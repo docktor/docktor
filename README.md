@@ -8,7 +8,7 @@ npm install
 
 2. Get go dependancies  
 ```bash
-go get
+glide install
 ```
 
 3. Launch Docktor  
