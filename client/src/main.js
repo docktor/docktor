@@ -21,6 +21,7 @@ import modal from './modules/modal/modal.reducer.js';
 import App from './pages/app/app.js';
 import DaemonsPage from './pages/daemons/daemons.js';
 import UsersPage from './pages/users/users.js';
+import LoginPage from './pages/login/login.js';
 
 const loggerMiddleware = createLogger();
 
@@ -50,6 +51,7 @@ ReactDOM.render(
       <Route path='/' component={App}>
         <Route path='/daemons' component={DaemonsPage} />
         <Route path='/users' component={UsersPage} />
+        <Route path='/login' component={LoginPage} />
       </Route>
     </Router>
   </Provider>,
