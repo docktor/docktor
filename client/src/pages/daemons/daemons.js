@@ -31,9 +31,8 @@ class Daemons extends React.Component {
         <div className='flex layout horizontal around-justified'>
           <div className='flex layout vertical start-justified sites'>
             <Sites/>
-            <div className='flex'/>
           </div>
-          <div className='flex-2 layout horizontal center-center wrap daemons-list'>
+          <div className='flex-2 layout horizontal around-justified wrap daemons-list'>
             {(fetching => {
               if (fetching) {
                 return (
