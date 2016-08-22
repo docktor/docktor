@@ -4,7 +4,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 
@@ -21,6 +21,7 @@ import auth from './modules/auth/auth.reducer.js';
 
 //Components
 import App from './pages/app/app.js';
+import Home from './pages/home/home.js';
 import DaemonsPage from './pages/daemons/daemons.js';
 import UsersPage from './pages/users/users.js';
 import AuthPage from './pages/auth/auth.js';
@@ -47,13 +48,14 @@ const store = createStore(
 
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);
-history.listen(location => store.dispatch(routeLocationDidUpdate(location)));
+//history.listen(location => store.dispatch(routeLocationDidUpdate(location)));
 
 ReactDOM.render(
   <Provider store={store}>
     {/* Tell the Router to use our enhanced history */}
     <Router history={history}>
       <Route path='/' component={App}>
+        <IndexRoute component={Home} />
         <Route path='/daemons' component={requireAuthentication(DaemonsPage)}/>
         <Route path='/users' component={requireAuthentication(UsersPage)} />
         <Route path='/auth' component={AuthPage} />

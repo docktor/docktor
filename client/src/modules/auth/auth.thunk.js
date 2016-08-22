@@ -5,7 +5,9 @@ import 'babel-polyfill';
 import {
   requestLogin,
   loginError,
-  receiveLogin
+  receiveLogin,
+  requestLogout,
+  receiveLogout
 } from './auth.actions.js';
 
 // Calls the API to get a token and

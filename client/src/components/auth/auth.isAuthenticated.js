@@ -4,29 +4,45 @@ import { push } from 'react-router-redux';
 
 // Wrapper rendering the child component only when authenticated
 export function requireAuthentication(Component) {
-
+    console.log('requireAuthentication');
     class AuthenticatedComponent extends React.Component {
 
         componentWillMount () {
+          console.log('componentWillMount');
+            this.checkAuth(this.props.isAuthenticated);
+        }
+
+        componentWillUpdate () {
+          console.log('componentWillUpdate');
             this.checkAuth(this.props.isAuthenticated);
         }
 
         componentWillReceiveProps (nextProps) {
+          console.log('componentWillReceiveProps');
             this.checkAuth(nextProps.isAuthenticated);
         }
 
+        componentDidMount() {
+          console.log('componentDidMount');
+            this.checkAuth(this.props.isAuthenticated);
+        }
+
         checkAuth (isAuthenticated) {
+          console.log('checkAuth');
             if (!isAuthenticated) {
                 this.props.redirect('/auth');
             }
         }
 
         render () {
-            if (this.props.isAuthenticated) {
-              return (<Component {...this.props}/>);
-            } else {
-              return (<div></div>);
-            }
+          return (
+              <div>
+                  {this.props.isAuthenticated === true
+                      ? <Component {...this.props}/>
+                      : null
+                  }
+              </div>
+          );
         }
     }
     AuthenticatedComponent.propTypes = {

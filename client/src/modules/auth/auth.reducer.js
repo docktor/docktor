@@ -33,7 +33,7 @@ const loginReducer = (state = initialState, action) => {
       });
     case LOGOUT_SUCCESS:
       return Object.assign({}, state, {
-        isFetching: true,
+        isFetching: false,
         isAuthenticated: false
       });
     default:
