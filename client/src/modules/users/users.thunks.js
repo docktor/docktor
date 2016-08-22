@@ -2,6 +2,8 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 
+import { withAuth } from '../auth/auth.wrappers.js';
+
 // User Actions
 import {
   requestAllUsers,
@@ -16,7 +18,7 @@ export function fetchUsers() {
     dispatch(requestAllUsers());
     let error = false;
 
-    return fetch('/api/users')
+    return fetch('/api/users', withAuth({ method:'GET' }))
       .then(response => {
         if (!response.ok) {
           error = true;

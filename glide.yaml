@@ -2,9 +2,6 @@ package: github.com/soprasteria/docktor
 import:
 - package: github.com/golang/glog
 - package: github.com/labstack/echo
-  subpackages:
-  - engine/standard
-  - middleware
 - package: github.com/soprasteria/godocktor-api
   subpackages:
   - types
@@ -13,3 +10,8 @@ import:
 - package: gopkg.in/mgo.v2
   subpackages:
   - bson
+- package: github.com/dgrijalva/jwt-go
+  version: ^3.0.0
+- package: github.com/labstack/gommon
+  version: ^0.0.3
+- package: github.com/auth0/go-jwt-middleware

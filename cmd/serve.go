@@ -36,8 +36,10 @@ var serveCmd = &cobra.Command{
 func init() {
 
 	serveCmd.Flags().StringP("mongo_url", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("jwt_secret", "j", "dev-docktor-secret", "Secret key used for JWT token authentication. Change it in your instance")
 	serveCmd.Flags().StringP("env", "e", "prod", "dev or prod")
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo_url"))
+	viper.BindPFlag("jwt.secret", serveCmd.Flags().Lookup("jwt_secret"))
 	viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 

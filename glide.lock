@@ -1,10 +1,12 @@
-hash: 9fd6488829c9d133f3a82311dc5fb4ca1a9b52f5409a845e45d29bfbd1aacfc5
-updated: 2016-05-04T11:59:54.375905381+02:00
+hash: d4dde3170b562f8af66ab64a6e4a365b17ee0b642c7d4ec7807cbe8c332ea044
+updated: 2016-08-18T14:36:11.843544013+02:00
 imports:
+- name: github.com/auth0/go-jwt-middleware
+  version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
 - name: github.com/BurntSushi/toml
   version: f0aeabca5a127c4078abb8c8d64298b147264b55
 - name: github.com/dgrijalva/jwt-go
-  version: a2c85815a77d0f951e33ba4db5ae93629a1530af
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/fsnotify/fsnotify
   version: 30411dbcefb7a1da7e84f75530ad3abe4011b4f8
 - name: github.com/golang/glog
@@ -27,21 +29,21 @@ imports:
 - name: github.com/kr/text
   version: bb797dc4fb8320488f47bf11de07a733d7233e1f
 - name: github.com/labstack/echo
-  version: 682a5580b7a1009eeea5cdc57db005b85ea7a560
+  version: 98061d3ce335f8e42f6e4092582663fbc46442a5
   subpackages:
   - engine/standard
   - middleware
   - engine
+  - log
 - name: github.com/labstack/gommon
-  version: 2e62be24dbb1ceb226554aaccfe5a89ec71043b3
+  version: 445cf40e6de4cbef35daf3285ff5212c91e78262
   subpackages:
   - log
   - bytes
   - color
+  - random
 - name: github.com/magiconair/properties
   version: c265cfa48dda6474e208715ca93e987829f572f8
-- name: github.com/mattn/go-colorable
-  version: 45ce6a6f60010487dd0dbab368b5fbbed1c14ef0
 - name: github.com/mattn/go-isatty
   version: 56b76bdf51f7708750eac80fa38b952bb9f32639
 - name: github.com/mitchellh/mapstructure

@@ -1,6 +1,7 @@
 // Imports for fetch API
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
+import { withAuth } from '../auth/auth.wrappers.js';
 
 // Site Actions
 import {
@@ -22,7 +23,7 @@ export function fetchSites() {
     dispatch(requestAllSites());
     let error = false;
 
-    return fetch('/api/sites')
+    return fetch('/api/sites', withAuth({ method:'GET' }))
       .then(response => {
         if (!response.ok) {
           error = true;
@@ -48,9 +49,9 @@ export function deleteSite(id) {
 
     dispatch(requestDeleteSite(id));
 
-    let request = new Request('/api/sites/' + id, {
+    let request = new Request('/api/sites/' + id, withAuth({
       method: 'DELETE'
-    });
+    }));
     let error = false;
     return fetch(request)
       .then(response => {
@@ -85,14 +86,14 @@ export function saveSite(form) {
 
     dispatch(requestSaveSite(site));
 
-    let request = new Request('/api/sites/' + id, {
+    let request = new Request('/api/sites/' + id, withAuth({
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(site)
-    });
+    }));
     let error = false;
     return fetch(request)
       .then(response => {

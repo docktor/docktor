@@ -1,6 +1,7 @@
 // Imports for fetch API
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
+import { withAuth } from '../auth/auth.wrappers.js';
 
 // Daemon Actions
 import {
@@ -18,7 +19,7 @@ export function fetchDaemons() {
     dispatch(requestAllDaemons());
     let error = false;
 
-    return fetch('/api/daemons')
+    return fetch('/api/daemons', withAuth({ method:'GET' }))
       .then(response => {
         if (!response.ok) {
           error = true;
