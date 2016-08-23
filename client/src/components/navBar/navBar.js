@@ -4,12 +4,17 @@ import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import { logoutUser } from '../../modules/auth/auth.thunk.js';
+import { isRoleAuthorized } from '../../modules/auth/auth.wrappers.js';
 
 // Style
 import './navBar.scss';
 
 // NavBar Component
 class NavBarComponent extends React.Component {
+
+  isAuthorized(Roles) {
+    return this.props.isAuthenticated && isRoleAuthorized(Roles, this.props.role);
+  }
 
   componentDidMount() {
     $('.navbar .ui.dropdown').dropdown();
@@ -20,16 +25,16 @@ class NavBarComponent extends React.Component {
   }
 
   render() {
-    const { isAuthenticated, logout } = this.props;
+    const { logout } = this.props;
     return (
       <div className='ui inverted fluid menu navbar'>
         <IndexLink to='/' className='item brand'>
           <i className='large fitted doctor icon'></i>{' '}Docktor
         </IndexLink>
-        {isAuthenticated && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
-        {isAuthenticated && <Link to='/groups' activeClassName='active' className='item'>Groups</Link>}
-        {isAuthenticated && <Link to='/users' activeClassName='active' className='item'>Users</Link>}
-        {isAuthenticated &&
+        {this.isAuthorized(['admin']) && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
+        {this.isAuthorized() && <Link to='/groups' activeClassName='active' className='item'>Groups</Link>}
+        {this.isAuthorized() && <Link to='/users' activeClassName='active' className='item'>Users</Link>}
+        {this.isAuthorized() &&
         <div className='right menu'>
           <div className='ui dropdown item'>
             <i className='inverted large user icon'></i>{' '} Admin
@@ -45,13 +50,15 @@ class NavBarComponent extends React.Component {
 }
 NavBarComponent.propTypes = {
   isAuthenticated: React.PropTypes.bool.isRequired,
+  role: React.PropTypes.string,
   logout: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    role: state.auth.user.role
   };
 };
 

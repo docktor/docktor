@@ -6,7 +6,8 @@ import {
 
 const initialState = {
   isFetching: false,
-  isAuthenticated: localStorage.getItem('id_token') ? true : false
+  isAuthenticated: localStorage.getItem('id_token') ? true : false,
+  user : {}
 };
 
 // The auth reducer. The starting state sets authentication
@@ -18,23 +19,27 @@ const loginReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetching: true,
         isAuthenticated: false,
+        user : {}
       });
     case LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
-        errorMessage: ''
+        errorMessage: '',
+        user : action.user
       });
     case LOGIN_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
-        errorMessage: action.message
+        errorMessage: action.message,
+        user : {}
       });
     case LOGOUT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        user : {}
       });
     default:
       return state;

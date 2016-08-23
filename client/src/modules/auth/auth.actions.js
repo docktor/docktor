@@ -34,7 +34,8 @@ export function receiveLogin(user) {
     type: LOGIN_SUCCESS,
     isFetching: false,
     isAuthenticated: true,
-    id_token: user.id_token
+    id_token: user.id_token,
+    user: user.user
   };
 }
 

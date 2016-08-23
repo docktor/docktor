@@ -15,15 +15,21 @@ type LoginController struct {
 
 // MyCustomClaims test
 type MyCustomClaims struct {
+	PublicUser
+	jwt.StandardClaims
+}
+
+// PublicUser is user data stored on client.
+type PublicUser struct {
 	Username string `json:"username"`
 	Role     string `json:"role"`
-	jwt.StandardClaims
 }
 
 // Token is a JWT Token
 type Token struct {
-	ID      string `json:"id_token,omitempty"`
-	Message string `json:"message,omitempty"`
+	ID      string     `json:"id_token,omitempty"`
+	Message string     `json:"message,omitempty"`
+	User    PublicUser `json:"user,omitempty"`
 }
 
 //Login handles the login of a user
@@ -36,9 +42,12 @@ func (dc *LoginController) Login(c echo.Context) error {
 	if username == "admin" && password == "admin" {
 		expireToken := time.Now().Add(time.Hour * 24 * 7).Unix()
 
-		claims := MyCustomClaims{
+		user := PublicUser{
 			username,
 			"admin",
+		}
+		claims := MyCustomClaims{
+			user,
 			jwt.StandardClaims{
 				ExpiresAt: expireToken,
 				Issuer:    "docktor",
@@ -49,13 +58,16 @@ func (dc *LoginController) Login(c echo.Context) error {
 
 		signedToken, _ := token.SignedString([]byte(viper.GetString("jwt.secret")))
 
-		return c.JSON(http.StatusOK, Token{ID: signedToken})
+		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
 	} else if username == "user" && password == "user" {
 		expireToken := time.Now().Add(time.Hour * 24 * 7).Unix()
 
-		claims := MyCustomClaims{
+		user := PublicUser{
 			username,
 			"user",
+		}
+		claims := MyCustomClaims{
+			user,
 			jwt.StandardClaims{
 				ExpiresAt: expireToken,
 				Issuer:    "docktor",
@@ -66,7 +78,7 @@ func (dc *LoginController) Login(c echo.Context) error {
 
 		signedToken, _ := token.SignedString([]byte(viper.GetString("jwt.secret")))
 
-		return c.JSON(http.StatusOK, Token{ID: signedToken})
+		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
 	}
 
 	return c.JSON(http.StatusForbidden, Token{Message: "Username or password is wrong"})
