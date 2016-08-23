@@ -2,6 +2,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+// API Fetching
+import { fetchUsersIfNeeded } from '../../modules/users/users.thunks.js';
+
 // Components
 import UserCard from '../../components/user-card/user-card.js';
 
@@ -10,6 +13,10 @@ import './users.scss';
 
 //Site Component using react-leaflet
 class Users extends React.Component {
+
+  componentWillMount() {
+    this.props.fetchUsers();
+  }
 
   render() {
     const users = Object.values(this.props.users.items);
@@ -43,7 +50,10 @@ class Users extends React.Component {
     );
   }
 }
-Users.propTypes = { users: React.PropTypes.object };
+Users.propTypes = {
+  users: React.PropTypes.object,
+  fetchUsers: React.PropTypes.func.isRequired,
+};
 
 // Function to map state to container props
 const mapStateToUsersProps = (state) => {
@@ -52,7 +62,11 @@ const mapStateToUsersProps = (state) => {
 
 // Function to map dispatch to container props
 const mapDispatchToUsersProps = (dispatch) => {
-  return {};
+  return {
+    fetchUsers : () => {
+      dispatch(fetchUsersIfNeeded());
+    }
+  };
 };
 
 // Redux container to Sites component

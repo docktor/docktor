@@ -4,54 +4,49 @@ import { push } from 'react-router-redux';
 
 // Wrapper rendering the child component only when authenticated
 export function requireAuthentication(Component) {
-    console.log('requireAuthentication');
+
     class AuthenticatedComponent extends React.Component {
 
         componentWillMount () {
-          console.log('componentWillMount');
             this.checkAuth(this.props.isAuthenticated);
         }
 
         componentWillUpdate () {
-          console.log('componentWillUpdate');
             this.checkAuth(this.props.isAuthenticated);
         }
 
         componentWillReceiveProps (nextProps) {
-          console.log('componentWillReceiveProps');
             this.checkAuth(nextProps.isAuthenticated);
         }
 
         componentDidMount() {
-          console.log('componentDidMount');
             this.checkAuth(this.props.isAuthenticated);
         }
 
         checkAuth (isAuthenticated) {
-          console.log('checkAuth');
             if (!isAuthenticated) {
-                this.props.redirect('/auth');
+                let redirectAfterLogin = this.props.loc.pathname;
+                this.props.redirect('/auth?next=' + redirectAfterLogin);
             }
         }
 
         render () {
-          return (
-              <div>
-                  {this.props.isAuthenticated === true
-                      ? <Component {...this.props}/>
-                      : null
-                  }
-              </div>
-          );
+          if (this.props.isAuthenticated) {
+            return <Component {...this.props}/>;
+          } else {
+            return <div></div>;
+          }
         }
     }
     AuthenticatedComponent.propTypes = {
       isAuthenticated: React.PropTypes.bool.isRequired,
-      redirect: React.PropTypes.func.isRequired
+      redirect: React.PropTypes.func.isRequired,
+      loc: React.PropTypes.object
     };
 
     const mapStateToProps = (state) => ({
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        loc: state.routing.locationBeforeTransitions
     });
 
     // Function to map dispatch to container props

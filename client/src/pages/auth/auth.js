@@ -10,15 +10,16 @@ import Register from '../../components/auth/auth.register.js';
 import { loginUser } from '../../modules/auth/auth.thunk.js';
 
 class LoginP extends React.Component {
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.isAuthenticated && !nextProps.errorMessage) {
-      this.props.redirect('/');
+      this.props.redirect(this.props.redirectTo);
     }
   }
 
   componentWillMount() {
     if(this.props.isAuthenticated && !this.props.errorMessage) {
-      this.props.redirect('/');
+      this.props.redirect(this.props.redirectTo);
     }
   }
   render() {
@@ -35,17 +36,19 @@ LoginP.propTypes = {
   isAuthenticated: React.PropTypes.bool.isRequired,
   logUser: React.PropTypes.func.isRequired,
   redirect: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string
+  errorMessage: React.PropTypes.string,
+  redirectTo : React.PropTypes.string
 };
 
 // Function to map state to container props
 const mapStateToLoginPageProps = (state) => {
   const { auth } = state;
   const { isAuthenticated, errorMessage } = auth;
-
+  const redirectTo = state.routing.locationBeforeTransitions.query.next || '/';
   return {
     isAuthenticated,
-    errorMessage
+    errorMessage,
+    redirectTo
   };
 };
 

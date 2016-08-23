@@ -2,6 +2,7 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
+import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
 
 // Daemon Actions
 import {
@@ -17,24 +18,17 @@ export function fetchDaemons() {
   return function (dispatch) {
 
     dispatch(requestAllDaemons());
-    let error = false;
 
     return fetch('/api/daemons', withAuth({ method:'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
       .then(response => {
-        if (!response.ok) {
-          error = true;
-          return response.text();
-        }
-        return response.json();
-      })
-      .then(json => {
-        if (error) {
-          throw Error(json);
-        }
-        dispatch(receiveDaemons(json));
+        dispatch(receiveDaemons(response));
       })
       .catch(error => {
-        dispatch(invalidRequestDaemons(error.message));
+        error.response.text().then(text => {
+          dispatchError(error, invalidRequestDaemons(text), dispatch);
+        });
       });
   };
 }

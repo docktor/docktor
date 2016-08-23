@@ -2,6 +2,7 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
+import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
 
 // Site Actions
 import {
@@ -24,21 +25,13 @@ export function fetchSites() {
     let error = false;
 
     return fetch('/api/sites', withAuth({ method:'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
       .then(response => {
-        if (!response.ok) {
-          error = true;
-          return response.text();
-        }
-        return response.json();
-      })
-      .then(json => {
-        if (error) {
-          throw Error(json);
-        }
-        dispatch(receiveSites(json));
+          dispatch(receiveSites(response));
       })
       .catch(error => {
-        dispatch(invalidRequestSites(error.message));
+        dispatchError(error, invalidRequestSites(error.message), dispatch);
       });
   };
 }
@@ -52,23 +45,15 @@ export function deleteSite(id) {
     let request = new Request('/api/sites/' + id, withAuth({
       method: 'DELETE'
     }));
-    let error = false;
     return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
       .then(response => {
-        if (!response.ok) {
-          error = true;
-        }
-        return response.text();
+          dispatch(receiveSiteDeleted(response));
       })
-      .then(res => {
-        if (error) {
-          throw Error(res);
-        }
-        dispatch(receiveSiteDeleted(res));
-      })
-      .catch(error =>
-        dispatch(invalidRequestSites(error))
-      );
+      .catch(error => {
+        dispatchError(error, invalidRequestSites(error.message), dispatch);
+      });
   };
 }
 
@@ -96,25 +81,16 @@ export function saveSite(form) {
     }));
     let error = false;
     return fetch(request)
-      .then(response => {
-        if (!response.ok) {
-          error = true;
-          return response.text();
-        }
-        return response.json();
-      })
-      .then(res => {
-        if (error) {
-          throw Error(res);
-        }
-        dispatch(receiveSiteSaved(res));
-      })
-      .catch(error =>
-        dispatch(invalidRequestSites(error))
-      );
+    .then(checkHttpStatus)
+    .then(parseJSON)
+    .then(response => {
+        dispatch(receiveSiteSaved(response));
+    })
+    .catch(error => {
+      dispatchError(error, invalidRequestSites(error.message), dispatch);
+    });
   };
 }
-
 
 
 /********** Helper Functions **********/

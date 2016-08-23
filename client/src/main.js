@@ -8,9 +8,6 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 
-// Actions
-import { routeLocationDidUpdate } from './modules/router/router.thunks.js';
-
 // Reducers
 import sites from './modules/sites/sites.reducer.js';
 import daemons from './modules/daemons/daemons.reducer.js';
@@ -48,7 +45,6 @@ const store = createStore(
 
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);
-//history.listen(location => store.dispatch(routeLocationDidUpdate(location)));
 
 ReactDOM.render(
   <Provider store={store}>

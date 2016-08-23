@@ -5,12 +5,19 @@ import { connect } from 'react-redux';
 // Components
 import DaemonCard from '../../components/daemon-card/daemon-card.js';
 import Sites from '../../components/sites/sites.js';
+import { fetchSitesIfNeeded } from '../../modules/sites/sites.thunks.js';
+import { fetchDaemonsIfNeeded } from '../../modules/daemons/daemons.thunks.js';
 
 // Style
 import './daemons.scss';
 
 //Site Component using react-leaflet
 class Daemons extends React.Component {
+
+  componentWillMount() {
+    this.props.fetchSite();
+    this.props.fetchDaemons();
+  }
 
   render() {
     const sites = this.props.sites.items;
@@ -55,7 +62,12 @@ class Daemons extends React.Component {
     );
   }
 }
-Daemons.propTypes = { sites: React.PropTypes.object, daemons: React.PropTypes.object };
+Daemons.propTypes = {
+  sites: React.PropTypes.object,
+  daemons: React.PropTypes.object,
+  fetchSite: React.PropTypes.func.isRequired,
+  fetchDaemons: React.PropTypes.func.isRequired,
+};
 
 // Function to map state to container props
 const mapStateToDaemonsProps = (state) => {
@@ -64,7 +76,10 @@ const mapStateToDaemonsProps = (state) => {
 
 // Function to map dispatch to container props
 const mapDispatchToDaemonsProps = (dispatch) => {
-  return {};
+  return {
+    fetchSite : () =>{dispatch(fetchSitesIfNeeded());},
+    fetchDaemons : () => {dispatch(fetchDaemonsIfNeeded());}
+  };
 };
 
 // Redux container to Sites component
