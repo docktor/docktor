@@ -37,6 +37,7 @@ func New(version string) {
 	gc := controllers.GroupsController{}
 	uc := controllers.UsersController{}
 	lc := controllers.LoginController{}
+	p := controllers.ProfileController{}
 
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
@@ -61,6 +62,11 @@ func New(version string) {
 			SigningKey: []byte(viper.GetString("jwt.secret")),
 		}
 		api.Use(middleware.JWTWithConfig(config)) // Enrich echo context with JWT
+
+		profile := api.Group("/profile")
+		{
+			profile.GET("*", p.Profile)
+		}
 
 		sites := api.Group("/sites")
 		{

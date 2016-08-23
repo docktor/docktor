@@ -10,33 +10,34 @@ export function requireAuthorization(Component, Roles) {
     class AuthenticatedComponent extends React.Component {
 
         componentWillMount () {
-            this.checkAuth(this.props.isAuthenticated, this.props.role);
+            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
         }
 
         componentWillUpdate () {
-            this.checkAuth(this.props.isAuthenticated, this.props.role);
+            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
         }
 
         componentWillReceiveProps (nextProps) {
-            this.checkAuth(nextProps.isAuthenticated, this.props.role);
+            this.checkAuth(nextProps.auth.isAuthenticated, nextProps.auth.user.role);
         }
 
         componentDidMount() {
-            this.checkAuth(this.props.isAuthenticated, this.props.role);
+            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
         }
 
         checkAuth (isAuthenticated, userRole) {
             if (!isAuthenticated) {
                 let redirectAfterLogin = this.props.loc.pathname;
                 this.props.redirect('/auth?next=' + redirectAfterLogin);
-            }
-            if (!isRoleAuthorized(Roles, userRole)) {
-              this.props.redirect('/');
+            } else if (!isRoleAuthorized(Roles, userRole) && !this.props.auth.isFetching) {
+                this.props.redirect('/');
             }
         }
 
         render () {
-          if (this.props.isAuthenticated && isRoleAuthorized(Roles, this.props.role)) {
+          const isAuthenticated = this.props.auth.isAuthenticated;
+          const role = this.props.auth.user.role;
+          if (isAuthenticated && isRoleAuthorized(Roles, role)) {
             return <Component {...this.props}/>;
           }
 
@@ -44,15 +45,13 @@ export function requireAuthorization(Component, Roles) {
         }
     }
     AuthenticatedComponent.propTypes = {
-      isAuthenticated: React.PropTypes.bool.isRequired,
       redirect: React.PropTypes.func.isRequired,
-      role: React.PropTypes.string,
+      auth: React.PropTypes.object,
       loc: React.PropTypes.object
     };
 
     const mapStateToProps = (state) => ({
-        isAuthenticated: state.auth.isAuthenticated,
-        role : state.auth.user.role,
+        auth: state.auth,
         loc: state.routing.locationBeforeTransitions
     });
 

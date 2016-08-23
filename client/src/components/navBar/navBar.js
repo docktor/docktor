@@ -13,7 +13,7 @@ import './navBar.scss';
 class NavBarComponent extends React.Component {
 
   isAuthorized(Roles) {
-    return this.props.isAuthenticated && isRoleAuthorized(Roles, this.props.role);
+    return this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
   }
 
   componentDidMount() {
@@ -37,7 +37,7 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() &&
         <div className='right menu'>
           <div className='ui dropdown item'>
-            <i className='inverted large user icon'></i>{' '} Admin
+            <i className='inverted large user icon'></i>{' ' + this.props.auth.user.username}
             <div className='menu'>
               <a className='item'>Settings</a>
               <a className='item' onClick={logout} >Logout</a>
@@ -49,16 +49,14 @@ class NavBarComponent extends React.Component {
   }
 }
 NavBarComponent.propTypes = {
-  isAuthenticated: React.PropTypes.bool.isRequired,
-  role: React.PropTypes.string,
-  logout: React.PropTypes.func.isRequired
+  logout: React.PropTypes.func.isRequired,
+  auth: React.PropTypes.object.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.isAuthenticated,
-    role: state.auth.user.role
+    auth: state.auth
   };
 };
 

@@ -1,5 +1,7 @@
 // Imports for fetch API
 import 'babel-polyfill';
+import { withAuth } from '../auth/auth.wrappers.js';
+import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
 
 // Daemon Actions
 import {
@@ -7,7 +9,10 @@ import {
   loginError,
   receiveLogin,
   requestLogout,
-  receiveLogout
+  receiveLogout,
+  requestProfile,
+  receiveProfile,
+  profileError
 } from './auth.actions.js';
 
 // Calls the API to get a token and
@@ -51,5 +56,23 @@ export function logoutUser() {
     dispatch(requestLogout());
     localStorage.removeItem('id_token');
     dispatch(receiveLogout());
+  };
+}
+
+export function profile() {
+  return dispatch => {
+    dispatch(requestProfile());
+
+    return fetch('/api/profile', withAuth({ method:'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(receiveProfile(response));
+      })
+      .catch(error => {
+        error.response.text().then(text => {
+          dispatchError(error, profileError(text), dispatch);
+        });
+      });
   };
 }

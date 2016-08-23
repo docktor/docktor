@@ -24,32 +24,13 @@ import UsersPage from './pages/users/users.js';
 import AuthPage from './pages/auth/auth.js';
 import { requireAuthorization } from './components/auth/auth.isAuthorized.js';
 
+// thunks
+import { profile } from './modules/auth/auth.thunk.js';
+
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);
 
-const loadState = () => {
-  try {
-    const serializedState = localStorage.getItem('state');
-    if (serializedState === null) {
-      return undefined;
-    }
-    return JSON.parse(serializedState);
-  } catch(err) {
-    return undefined;
-  }
-};
-
-const saveState = (state) => {
-  try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
-  } catch(err) {
-    console.error("Can't save redux state in local storage");
-  }
-};
-
 // Add the reducer to your store on the `routing` key
-const persistedState = loadState();
 const store = createStore(
   combineReducers(
     {
@@ -62,13 +43,13 @@ const store = createStore(
       routing: routerReducer,
     }
   ),
-  persistedState,
   applyMiddleware(thunkMiddleware, loggerMiddleware, rMiddleware)
 );
 
-store.subscribe(() => {
-  saveState(store.getState());
-});
+const authToken = localStorage.getItem('id_token');
+if (authToken) {
+  store.dispatch(profile());
+}
 
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);

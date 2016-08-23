@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import {
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS, PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAILURE
 } from './auth.actions.js';
 
 
@@ -39,6 +39,24 @@ const loginReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
+        user : {}
+      });
+    case PROFILE_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      });
+    case PROFILE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: true,
+        errorMessage: '',
+        user : action.user
+      });
+    case PROFILE_FAILURE:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        errorMessage: action.message,
         user : {}
       });
     default:
