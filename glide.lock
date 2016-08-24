@@ -1,5 +1,5 @@
-hash: d4dde3170b562f8af66ab64a6e4a365b17ee0b642c7d4ec7807cbe8c332ea044
-updated: 2016-08-18T14:36:11.843544013+02:00
+hash: 6aaf90663dd0b96e89b1530ba96df906b177f7adddeb744a44c624d7e24768e4
+updated: 2016-08-24T09:44:59.904462883+02:00
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
@@ -33,10 +33,11 @@ imports:
   subpackages:
   - engine/standard
   - middleware
+  - context
   - engine
   - log
 - name: github.com/labstack/gommon
-  version: 445cf40e6de4cbef35daf3285ff5212c91e78262
+  version: 431777a5117c8de4352a400dad1e2a55f484b189
   subpackages:
   - log
   - bytes
@@ -77,6 +78,8 @@ imports:
   version: b776ec39b3e54652e09028aaaaac9757f4f8211a
   subpackages:
   - unix
+- name: gopkg.in/ldap.v2
+  version: d0a5ced67b4dc310b9158d63a2c6f9c5ec13f105
 - name: gopkg.in/mgo.v2
   version: b6e2fa371e64216a45e61072a96d4e3859f169da
   subpackages:

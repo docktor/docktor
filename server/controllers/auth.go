@@ -56,7 +56,7 @@ func (dc *LoginController) Login(c echo.Context) error {
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-		signedToken, _ := token.SignedString([]byte(viper.GetString("jwt.secret")))
+		signedToken, _ := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
 
 		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
 	} else if username == "user" && password == "user" {
@@ -76,7 +76,7 @@ func (dc *LoginController) Login(c echo.Context) error {
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-		signedToken, _ := token.SignedString([]byte(viper.GetString("jwt.secret")))
+		signedToken, _ := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
 
 		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
 	}

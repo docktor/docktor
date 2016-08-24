@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -32,10 +33,13 @@ var RootCmd = &cobra.Command{
 With it, you can manage several daemons, services and group.
 Each service can be deployed on a daemon for a group.
 	`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
 }
+
+const (
+	configPath            = "$HOME"
+	configFile            = ".docktor"
+	prefixForEnvVariables = "docktor"
+)
 
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -49,14 +53,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.docktor.yaml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -65,12 +62,18 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".docktor") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")    // adding home directory as first search path
-	viper.AutomaticEnv()            // read in environment variables that match
+	viper.SetEnvPrefix(prefixForEnvVariables)                        // Prefix for every env variables
+	viper.SetConfigName(configFile)                                  // name of config file (without extension)
+	viper.AddConfigPath(configPath)                                  // adding home directory as first search path
+	viper.AutomaticEnv()                                             // read in environment variables that match
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_")) // Replace "." and "-" by "_" for env variable lookup
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	err := viper.ReadInConfig()
+	if err == nil {
+		fmt.Println("Using config file:" + viper.ConfigFileUsed())
+	} else {
+		fmt.Println("Cant read config file:" + viper.ConfigFileUsed())
 	}
+
 }

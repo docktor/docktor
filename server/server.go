@@ -59,7 +59,7 @@ func New(version string) {
 		api.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
 		config := middleware.JWTConfig{
 			Claims:     &controllers.MyCustomClaims{},
-			SigningKey: []byte(viper.GetString("jwt.secret")),
+			SigningKey: []byte(viper.GetString("auth.jwt-secret")),
 		}
 		api.Use(middleware.JWTWithConfig(config)) // Enrich echo context with JWT
 
