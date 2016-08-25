@@ -12,7 +12,7 @@ class SigninPane extends React.Component {
     return (
       <div id='login'>
         <h1>{this.props.title}</h1>
-        <form className='ui form'>
+        <form className='ui form' onSubmit={(event) => this.handleClick(event)}>
           <div className='field'>
             <label>
               Username<span className='req'>*</span>
@@ -26,7 +26,7 @@ class SigninPane extends React.Component {
               <input type='password' ref='password' required autoComplete='off' placeholder='Password' />
           </div>
           <p className='forgot'><a href='#'>Forgot Password?</a></p>
-          <button type='button' onClick={(event) => this.handleClick(event)} className='button button-block'>{this.props.submit}</button>
+          <button type='submit' className='button button-block'>{this.props.submit}</button>
           {errorMessage &&
               <p>{errorMessage}</p>
           }
@@ -36,6 +36,7 @@ class SigninPane extends React.Component {
   }
 
   handleClick(event) {
+      event.preventDefault();
       const username = this.refs.username;
       const password = this.refs.password;
       const creds = { username: username.value.trim(), password: password.value.trim() };
