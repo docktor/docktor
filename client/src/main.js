@@ -17,15 +17,18 @@ import modal from './modules/modal/modal.reducer.js';
 import auth from './modules/auth/auth.reducer.js';
 
 //Components
-import App from './pages/app/app.js';
-import Home from './pages/home/home.js';
-import DaemonsPage from './pages/daemons/daemons.js';
-import UsersPage from './pages/users/users.js';
-import AuthPage from './pages/auth/auth.js';
-import { requireAuthorization } from './components/auth/auth.isAuthorized.js';
+import App from './modules/app/app.layout.js';
+import Home from './modules/app/home.page.js';
+import DaemonsPage from './modules/daemons/daemons.page.js';
+import UsersPage from './modules/users/users.page.js';
+import AuthPage from './modules/auth/auth.page.js';
+import { requireAuthorization } from './modules/auth/auth.isAuthorized.js';
 
 // thunks
 import { profile } from './modules/auth/auth.thunk.js';
+
+// Constants
+import { AUTH_ADMIN_ROLE } from './modules/auth/auth.constants.js';
 
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);
@@ -60,7 +63,7 @@ ReactDOM.render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
-        <Route path='/daemons' component={requireAuthorization(DaemonsPage, ['admin'])}/>
+        <Route path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
         <Route path='/users' component={requireAuthorization(UsersPage)} />
         <Route path='/auth' component={AuthPage} />
       </Route>
@@ -68,3 +71,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
+
+String.prototype.trunc = String.prototype.trunc || ((n) => {(this.length > n) ? this.substr(0, n - 1) + '...' : this;});

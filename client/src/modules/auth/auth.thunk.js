@@ -71,7 +71,7 @@ export function profile() {
       })
       .catch(error => {
         error.response.text().then(text => {
-          dispatchError(error, profileError(text), dispatch);
+          dispatchError(error.response.status, text, profileError(text), dispatch);
         });
       });
   };

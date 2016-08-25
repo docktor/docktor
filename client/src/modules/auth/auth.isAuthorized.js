@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { isRoleAuthorized } from '../../modules/auth/auth.wrappers.js';
+import { isRoleAuthorized } from './auth.wrappers.js';
 
 // Wrapper rendering the child component only when authenticated
 export function requireAuthorization(Component, Roles) {

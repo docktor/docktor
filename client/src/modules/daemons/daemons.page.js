@@ -3,13 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Components
-import DaemonCard from '../../components/daemon-card/daemon-card.js';
-import Sites from '../../components/sites/sites.js';
-import { fetchSitesIfNeeded } from '../../modules/sites/sites.thunks.js';
-import { fetchDaemonsIfNeeded } from '../../modules/daemons/daemons.thunks.js';
+import DaemonCard from './daemon.card.component.js';
+import Sites from '../sites/sites.component.js';
+import { fetchSitesIfNeeded } from '../sites/sites.thunks.js';
+import { fetchDaemonsIfNeeded } from '../daemons/daemons.thunks.js';
 
 // Style
-import './daemons.scss';
+import './daemons.page.scss';
 
 //Site Component using react-leaflet
 class Daemons extends React.Component {

@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import './auth.scss';
+import './auth.component.scss';
 
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {

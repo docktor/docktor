@@ -24,7 +24,9 @@ export function fetchUsers() {
           dispatch(receiveUsers(response));
       })
       .catch(error => {
-        dispatchError(error, invalidRequestUsers(error.message), dispatch);
+        error.response.text().then(text => {
+          dispatchError(error.response.status, text, invalidRequestUsers(text), dispatch);
+        });
       });
   };
 }

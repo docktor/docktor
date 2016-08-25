@@ -2,15 +2,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Auth from '../../components/auth/auth.js';
-import Signin from '../../components/auth/auth.login.js';
-import Register from '../../components/auth/auth.register.js';
-import { loginUser } from '../../modules/auth/auth.thunk.js';
+import Auth from '../auth/auth.component.js';
+import Signin from '../auth/auth.login.component.js';
+import Register from '../auth/auth.register.component.js';
+import { loginUser } from '../auth/auth.thunk.js';
 
 // HomeComponent
 class HomeComponent extends React.Component {
   render() {
-    const { logUser, children, isAuthenticated, errorMessage } = this.props;
+    const { logUser, isAuthenticated, errorMessage } = this.props;
     var content;
     if (isAuthenticated) {
       content = (<div></div>);
@@ -29,7 +29,6 @@ class HomeComponent extends React.Component {
 }
 HomeComponent.propTypes = {
   isAuthenticated : React.PropTypes.bool.isRequired,
-  children: React.PropTypes.object,
   logUser: React.PropTypes.func.isRequired,
   errorMessage: React.PropTypes.string
 };

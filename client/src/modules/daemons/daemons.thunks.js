@@ -27,7 +27,7 @@ export function fetchDaemons() {
       })
       .catch(error => {
         error.response.text().then(text => {
-          dispatchError(error, invalidRequestDaemons(text), dispatch);
+        dispatchError(error.response.status, text, invalidRequestDaemons(text), dispatch);
         });
       });
   };

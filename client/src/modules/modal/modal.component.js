@@ -3,13 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { closeModal } from '../../modules/modal/modal.actions.js';
+import { closeModal } from './modal.actions.js';
 
 // Components
 import Rodal from 'rodal';
 
 // Style
-import './modal.scss';
+import './modal.component.scss';
 
 // Modal Component
 class Modal extends React.Component {

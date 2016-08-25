@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
 
-import Auth from '../../components/auth/auth.js';
-import Signin from '../../components/auth/auth.login.js';
-import Register from '../../components/auth/auth.register.js';
-import { loginUser } from '../../modules/auth/auth.thunk.js';
+import Auth from './auth.component.js';
+import Signin from './auth.login.component.js';
+import Register from './auth.register.component.js';
+import { loginUser } from './auth.thunk.js';
 
 class LoginP extends React.Component {
 

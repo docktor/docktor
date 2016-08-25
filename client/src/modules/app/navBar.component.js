@@ -3,11 +3,11 @@ import React from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { logoutUser } from '../../modules/auth/auth.thunk.js';
-import { isRoleAuthorized } from '../../modules/auth/auth.wrappers.js';
+import { logoutUser } from '../auth/auth.thunk.js';
+import { isRoleAuthorized } from '../auth/auth.wrappers.js';
 
 // Style
-import './navBar.scss';
+import './navBar.component.scss';
 
 // NavBar Component
 class NavBarComponent extends React.Component {

@@ -3,13 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // API Fetching
-import { fetchUsersIfNeeded } from '../../modules/users/users.thunks.js';
+import { fetchUsersIfNeeded } from './users.thunks.js';
 
 // Components
-import UserCard from '../../components/user-card/user-card.js';
+import UserCard from './user.card.component.js';
 
 // Style
-import './users.scss';
+import './users.page.scss';
 
 //Site Component using react-leaflet
 class Users extends React.Component {

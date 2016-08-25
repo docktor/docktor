@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Style
-import './footer.scss';
+import './footer.component.scss';
 
 // Footer Component
 const Footer = () => (

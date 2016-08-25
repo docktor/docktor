@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Style
-import './daemon-card.scss';
+import './daemon.card.component.scss';
 
 // DaemonCard Component
 class DaemonCard extends React.Component {

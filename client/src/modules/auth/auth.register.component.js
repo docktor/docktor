@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import './auth.scss';
+import './auth.component.scss';
 
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {

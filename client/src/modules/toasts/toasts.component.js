@@ -4,10 +4,10 @@ import NotificationSystem from 'react-notification-system';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { closeNotification } from '../../modules/toasts/toasts.actions.js';
+import { closeNotification } from './toasts.actions.js';
 
 // Style
-import './toasts.scss';
+import './toasts.component.scss';
 
 // Notifications Component
 class Toasts extends React.Component {
