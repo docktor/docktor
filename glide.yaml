@@ -17,3 +17,4 @@ import:
 - package: github.com/auth0/go-jwt-middleware
 - package: gopkg.in/ldap.v2
   version: ~2.4.1
+- package: gopkg.in/asn1-ber.v1

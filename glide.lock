@@ -50,7 +50,7 @@ imports:
 - name: github.com/mitchellh/mapstructure
   version: d2dd0262208475919e1a362f675cfc0e7c10e905
 - name: github.com/soprasteria/godocktor-api
-  version: 22849307a2140be371488f94bd821de113c82670
+  version: 7e6bd4ad435e9133b98f3ca0cdb64d8634ecbc5f
   subpackages:
   - types
   - daemons
@@ -80,6 +80,8 @@ imports:
   - unix
 - name: gopkg.in/ldap.v2
   version: d0a5ced67b4dc310b9158d63a2c6f9c5ec13f105
+- name: gopkg.in/asn1-ber.v1
+  version: 4e86f4367175e39f69d9358a5f17b4dda270378d
 - name: gopkg.in/mgo.v2
   version: b6e2fa371e64216a45e61072a96d4e3859f169da
   subpackages:

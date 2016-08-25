@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
+	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/godocktor-api"
 	"github.com/spf13/viper"
@@ -51,6 +52,7 @@ func New(version string) {
 	login := engine.Group("/create-token")
 	{
 		login.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
+		login.Use(openLDAP)
 		login.POST("*", lc.Login)
 	}
 
@@ -141,6 +143,52 @@ func docktorAPI(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		dock.Close()
 		return nil
+	}
+}
+
+func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		address := viper.GetString("ldap.address")
+		baseDN := viper.GetString("ldap.baseDN")
+		bindDN := viper.GetString("ldap.bindDN")
+		bindPassword := viper.GetString("ldap.bindPassword")
+		searchFilter := viper.GetString("ldap.searchFilter")
+		usernameAttribute := viper.GetString("ldap.attr.username")
+		firstnameAttribute := viper.GetString("ldap.attr.firstname")
+		lastnameAttribute := viper.GetString("ldap.attr.lastname")
+		realNameAttribute := viper.GetString("ldap.attr.realname")
+		emailAttribute := viper.GetString("ldap.attr.email")
+
+		if address == "" {
+			// Don't use LDAP, no problem
+			fmt.Println("Init route without LDAP connection")
+			c.Logger().Info("Init route without LDAP connection")
+			return next(c)
+		}
+
+		// Enrich the echo context with LDAP configuration
+		fmt.Println("Init route with LDAP connection")
+		c.Logger().Info("Init route with LDAP connection")
+
+		ldap := auth.NewLDAP(&auth.LDAPConf{
+			LdapServer:   address,
+			BaseDN:       baseDN,
+			BindDN:       bindDN,
+			BindPassword: bindPassword,
+			SearchFilter: searchFilter,
+			Attr: auth.Attributes{
+				Username:  usernameAttribute,
+				Firstname: firstnameAttribute,
+				Lastname:  lastnameAttribute,
+				Realname:  realNameAttribute,
+				Email:     emailAttribute,
+			},
+		})
+
+		c.Set("ldap", ldap)
+
+		return next(c)
+
 	}
 }
 

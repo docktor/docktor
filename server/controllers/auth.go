@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
+	"github.com/soprasteria/docktor/server/auth"
+	api "github.com/soprasteria/godocktor-api"
 	"github.com/spf13/viper"
 )
 
@@ -35,52 +38,65 @@ type Token struct {
 //Login handles the login of a user
 func (dc *LoginController) Login(c echo.Context) error {
 
+	// Get input parameters
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
-	// TODO : real user search
-	if username == "admin" && password == "admin" {
-		expireToken := time.Now().Add(time.Hour * 24 * 7).Unix()
-
-		user := PublicUser{
-			username,
-			"admin",
-		}
-		claims := MyCustomClaims{
-			user,
-			jwt.StandardClaims{
-				ExpiresAt: expireToken,
-				Issuer:    "docktor",
-			},
-		}
-
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-		signedToken, _ := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
-
-		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
-	} else if username == "user" && password == "user" {
-		expireToken := time.Now().Add(time.Hour * 24 * 7).Unix()
-
-		user := PublicUser{
-			username,
-			"user",
-		}
-		claims := MyCustomClaims{
-			user,
-			jwt.StandardClaims{
-				ExpiresAt: expireToken,
-				Issuer:    "docktor",
-			},
-		}
-
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-		signedToken, _ := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
-
-		return c.JSON(http.StatusOK, Token{ID: signedToken, User: user})
+	// Handle APIs from Echo context
+	docktorAPI := c.Get("api").(*api.Docktor)
+	ldapAPI := c.Get("ldap")
+	var ldap *auth.LDAP
+	if ldapAPI != nil {
+		ldap = ldapAPI.(*auth.LDAP)
+	}
+	login := auth.Authentication{
+		Docktor: docktorAPI,
+		LDAP:    ldap,
 	}
 
-	return c.JSON(http.StatusForbidden, Token{Message: "Username or password is wrong"})
+	// Log in the application
+	err := login.AuthenticateUser(&auth.LoginUserQuery{
+		Username: username,
+		Password: password,
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		if err == auth.ErrInvalidCredentials {
+			return c.JSON(http.StatusForbidden, Token{Message: "Username or password is wrong"})
+		}
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while retreiving user %s", username))
+	}
 
+	// Create Token
+	user := PublicUser{
+		username,
+		"admin",
+	}
+
+	token, err := createToken(user)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while authenticating user %s", username))
+	}
+
+	return c.JSON(http.StatusOK, token)
+}
+
+func createToken(user PublicUser) (Token, error) {
+	claims := MyCustomClaims{
+		user,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
+			Issuer:    "docktor",
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
+
+	if err != nil {
+		return Token{}, err
+	}
+
+	return Token{ID: signedToken, User: user}, nil
 }

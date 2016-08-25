@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/soprasteria/docktor/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,17 +15,6 @@ var serveCmd = &cobra.Command{
 	Short: "Launch Docktor server",
 	Long:  `Docktor server will listen on 0.0.0.0:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(viper.GetString("server.mongo"))
-		fmt.Println(viper.GetString("auth.jwt-secret"))
-		fmt.Println(viper.GetString("ldap.address"))
-		fmt.Println(viper.GetString("ldap.baseDN"))
-		fmt.Println(viper.GetString("ldap.domain"))
-		fmt.Println(viper.GetString("ldap.bindDN"))
-		fmt.Println(viper.GetString("ldap.bindPassword"))
-		fmt.Println(viper.GetString("ldap.request"))
-		fmt.Println(viper.GetString("ldap.realNameAttribute"))
-		fmt.Println(viper.GetString("ldap.emailAttribute"))
-		fmt.Println(viper.GetString("env"))
 		server.New(VERSION)
 	},
 }
@@ -43,9 +30,12 @@ func init() {
 	serveCmd.Flags().String("ldap-domain", "", "Domain of the user. Optional")
 	serveCmd.Flags().String("ldap-bindDN", "", "DN of system account. Optional")
 	serveCmd.Flags().String("ldap-bindPassword", "", "Password of system account. Optional")
-	serveCmd.Flags().String("ldap-request", "", "LDAP request to find users. Optional")
-	serveCmd.Flags().String("ldap-realNameAttribute", "cn", "LDAP attribute for real name of users.")
-	serveCmd.Flags().String("ldap-emailAttribute", "email", "LDAP attribute for email of users.")
+	serveCmd.Flags().String("ldap-searchFilter", "", "LDAP request to find users. Optional")
+	serveCmd.Flags().String("ldap-attr-username", "cn", "LDAP attribute for username of users.")
+	serveCmd.Flags().String("ldap-attr-firstname", "givenName", "LDAP attribute for firstname of users.")
+	serveCmd.Flags().String("ldap-attr-lastname", "sn", "LDAP attribute for lastname of users.")
+	serveCmd.Flags().String("ldap-attr-realname", "cn", "LDAP attribute for real name of users.")
+	serveCmd.Flags().String("ldap-attr-email", "mail", "LDAP attribute for email of users.")
 
 	// Bind env variables.
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
@@ -55,9 +45,12 @@ func init() {
 	viper.BindPFlag("ldap.domain", serveCmd.Flags().Lookup("ldap-domain"))
 	viper.BindPFlag("ldap.bindDN", serveCmd.Flags().Lookup("ldap-bindDN"))
 	viper.BindPFlag("ldap.bindPassword", serveCmd.Flags().Lookup("ldap-bindPassword"))
-	viper.BindPFlag("ldap.request", serveCmd.Flags().Lookup("ldap-request"))
-	viper.BindPFlag("ldap.realNameAttribute", serveCmd.Flags().Lookup("ldap-realNameAttribute"))
-	viper.BindPFlag("ldap.emailAttribute", serveCmd.Flags().Lookup("ldap-emailAttribute"))
+	viper.BindPFlag("ldap.searchFilter", serveCmd.Flags().Lookup("ldap-searchFilter"))
+	viper.BindPFlag("ldap.attr.username", serveCmd.Flags().Lookup("ldap-attr-username"))
+	viper.BindPFlag("ldap.attr.firstname", serveCmd.Flags().Lookup("ldap-attr-firstname"))
+	viper.BindPFlag("ldap.attr.lastname", serveCmd.Flags().Lookup("ldap-attr-lastname"))
+	viper.BindPFlag("ldap.attr.realName", serveCmd.Flags().Lookup("ldap-attr-realname"))
+	viper.BindPFlag("ldap.attr.email", serveCmd.Flags().Lookup("ldap-attr-email"))
 	viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 
