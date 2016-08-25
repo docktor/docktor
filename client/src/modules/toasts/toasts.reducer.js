@@ -3,7 +3,7 @@ import UUID from 'uuid-js';
 import MD5 from 'md5';
 
 //Actions
-import { LOCATION_CHANGED } from '../router/router.actions.js';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { INVALID_REQUEST_SITES } from '../sites/sites.actions.js';
 import { INVALID_REQUEST_DAEMONS } from '../daemons/daemons.actions.js';
 import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from './toasts.actions.js';
@@ -12,8 +12,8 @@ const initialState = {};
 
 const toastsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case LOCATION_CHANGED:
-            return Object.assign({}, initialState);
+        case LOCATION_CHANGE:
+             return Object.assign({}, initialState);
 
         case INVALID_REQUEST_SITES:
             const invalidReqSitesToast = createInvalidReqSitesToast(state, action);

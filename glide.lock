@@ -1,10 +1,12 @@
-hash: 9fd6488829c9d133f3a82311dc5fb4ca1a9b52f5409a845e45d29bfbd1aacfc5
-updated: 2016-05-04T11:59:54.375905381+02:00
+hash: 6aaf90663dd0b96e89b1530ba96df906b177f7adddeb744a44c624d7e24768e4
+updated: 2016-08-24T09:44:59.904462883+02:00
 imports:
+- name: github.com/auth0/go-jwt-middleware
+  version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
 - name: github.com/BurntSushi/toml
   version: f0aeabca5a127c4078abb8c8d64298b147264b55
 - name: github.com/dgrijalva/jwt-go
-  version: a2c85815a77d0f951e33ba4db5ae93629a1530af
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/fsnotify/fsnotify
   version: 30411dbcefb7a1da7e84f75530ad3abe4011b4f8
 - name: github.com/golang/glog
@@ -27,27 +29,28 @@ imports:
 - name: github.com/kr/text
   version: bb797dc4fb8320488f47bf11de07a733d7233e1f
 - name: github.com/labstack/echo
-  version: 682a5580b7a1009eeea5cdc57db005b85ea7a560
+  version: 98061d3ce335f8e42f6e4092582663fbc46442a5
   subpackages:
   - engine/standard
   - middleware
+  - context
   - engine
+  - log
 - name: github.com/labstack/gommon
-  version: 2e62be24dbb1ceb226554aaccfe5a89ec71043b3
+  version: 431777a5117c8de4352a400dad1e2a55f484b189
   subpackages:
   - log
   - bytes
   - color
+  - random
 - name: github.com/magiconair/properties
   version: c265cfa48dda6474e208715ca93e987829f572f8
-- name: github.com/mattn/go-colorable
-  version: 45ce6a6f60010487dd0dbab368b5fbbed1c14ef0
 - name: github.com/mattn/go-isatty
   version: 56b76bdf51f7708750eac80fa38b952bb9f32639
 - name: github.com/mitchellh/mapstructure
   version: d2dd0262208475919e1a362f675cfc0e7c10e905
 - name: github.com/soprasteria/godocktor-api
-  version: 22849307a2140be371488f94bd821de113c82670
+  version: 7e6bd4ad435e9133b98f3ca0cdb64d8634ecbc5f
   subpackages:
   - types
   - daemons
@@ -75,6 +78,10 @@ imports:
   version: b776ec39b3e54652e09028aaaaac9757f4f8211a
   subpackages:
   - unix
+- name: gopkg.in/ldap.v2
+  version: d0a5ced67b4dc310b9158d63a2c6f9c5ec13f105
+- name: gopkg.in/asn1-ber.v1
+  version: 4e86f4367175e39f69d9358a5f17b4dda270378d
 - name: gopkg.in/mgo.v2
   version: b6e2fa371e64216a45e61072a96d4e3859f169da
   subpackages:

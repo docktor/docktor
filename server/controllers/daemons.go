@@ -19,7 +19,6 @@ func (dc *DaemonsController) GetAllDaemons(c echo.Context) error {
 	daemons, err := docktorAPI.Daemons().FindAll()
 	if err != nil {
 		return c.String(500, "Error while retreiving all daemons")
-
 	}
 	return c.JSON(200, daemons)
 }

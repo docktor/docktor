@@ -1,13 +1,16 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
+	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/godocktor-api"
 	"github.com/spf13/viper"
@@ -34,43 +37,64 @@ func New(version string) {
 	sec := controllers.ServicesController{}
 	gc := controllers.GroupsController{}
 	uc := controllers.UsersController{}
+	lc := controllers.LoginController{}
+	p := controllers.ProfileController{}
 
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
+	engine.Use(middleware.Gzip())
 
 	t := &Template{Templates: template.Must(template.ParseFiles("./client/dist/index.tmpl"))}
 	engine.SetRenderer(t)
 
 	engine.GET("/ping", pong)
+
+	login := engine.Group("/create-token")
+	{
+		login.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
+		login.Use(openLDAP)
+		login.POST("*", lc.Login)
+	}
+
 	api := engine.Group("/api")
 	{
-		api.Use(docktorAPI)
+		api.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
+		config := middleware.JWTConfig{
+			Claims:     &controllers.MyCustomClaims{},
+			SigningKey: []byte(viper.GetString("auth.jwt-secret")),
+		}
+		api.Use(middleware.JWTWithConfig(config)) // Enrich echo context with JWT
+
+		profile := api.Group("/profile")
+		{
+			profile.GET("*", p.Profile)
+		}
 
 		sites := api.Group("/sites")
 		{
-			sites.DELETE("/:id", sc.DeleteSite)
-			sites.PUT("/:id", sc.SaveSite)
+			sites.DELETE("/:id", sc.DeleteSite, isAdmin)
+			sites.PUT("/:id", sc.SaveSite, isAdmin)
 			sites.GET("*", sc.GetAllSites)
 		}
 
 		daemons := api.Group("/daemons")
 		{
-			daemons.DELETE("/:id", dc.DeleteDaemon)
-			daemons.PUT("/:id", dc.SaveDaemon)
+			daemons.DELETE("/:id", dc.DeleteDaemon, isAdmin)
+			daemons.PUT("/:id", dc.SaveDaemon, isAdmin)
 			daemons.GET("*", dc.GetAllDaemons)
 		}
 
 		services := api.Group("/services")
 		{
-			services.DELETE("/:id", sec.DeleteService)
-			services.PUT("/:id", sec.SaveService)
+			services.DELETE("/:id", sec.DeleteService, isAdmin)
+			services.PUT("/:id", sec.SaveService, isAdmin)
 			services.GET("*", sec.GetAllServices)
 		}
 
 		groups := api.Group("/groups")
 		{
-			groups.DELETE(":id", gc.DeleteGroup)
-			groups.PUT(":id", gc.SaveGroup)
+			groups.DELETE(":id", gc.DeleteGroup, isAdmin)
+			groups.PUT(":id", gc.SaveGroup, isAdmin)
 			groups.GET("*", gc.GetAllGroups)
 		}
 
@@ -87,7 +111,7 @@ func New(version string) {
 	engine.Static("/images", "client/dist/images")
 	engine.Static("/fonts", "client/dist/fonts")
 
-	engine.Any("/*", GetIndex(version))
+	engine.GET("/*", GetIndex(version))
 	engine.Run(standard.New(":8080")) // listen and server on 0.0.0.0:8080
 }
 
@@ -119,5 +143,66 @@ func docktorAPI(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		dock.Close()
 		return nil
+	}
+}
+
+func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		address := viper.GetString("ldap.address")
+		baseDN := viper.GetString("ldap.baseDN")
+		bindDN := viper.GetString("ldap.bindDN")
+		bindPassword := viper.GetString("ldap.bindPassword")
+		searchFilter := viper.GetString("ldap.searchFilter")
+		usernameAttribute := viper.GetString("ldap.attr.username")
+		firstnameAttribute := viper.GetString("ldap.attr.firstname")
+		lastnameAttribute := viper.GetString("ldap.attr.lastname")
+		realNameAttribute := viper.GetString("ldap.attr.realname")
+		emailAttribute := viper.GetString("ldap.attr.email")
+
+		if address == "" {
+			// Don't use LDAP, no problem
+			fmt.Println("Init route without LDAP connection")
+			c.Logger().Info("Init route without LDAP connection")
+			return next(c)
+		}
+
+		// Enrich the echo context with LDAP configuration
+		fmt.Println("Init route with LDAP connection")
+		c.Logger().Info("Init route with LDAP connection")
+
+		ldap := auth.NewLDAP(&auth.LDAPConf{
+			LdapServer:   address,
+			BaseDN:       baseDN,
+			BindDN:       bindDN,
+			BindPassword: bindPassword,
+			SearchFilter: searchFilter,
+			Attr: auth.Attributes{
+				Username:  usernameAttribute,
+				Firstname: firstnameAttribute,
+				Lastname:  lastnameAttribute,
+				Realname:  realNameAttribute,
+				Email:     emailAttribute,
+			},
+		})
+
+		c.Set("ldap", ldap)
+
+		return next(c)
+
+	}
+}
+
+func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(*controllers.MyCustomClaims)
+		role := claims.Role
+
+		if role == "admin" {
+			return next(c)
+		}
+
+		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
+
 	}
 }

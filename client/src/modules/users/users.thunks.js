@@ -2,6 +2,9 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 
+import { withAuth } from '../auth/auth.wrappers.js';
+import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
+
 // User Actions
 import {
   requestAllUsers,
@@ -14,24 +17,14 @@ export function fetchUsers() {
   return function (dispatch) {
 
     dispatch(requestAllUsers());
-    let error = false;
-
-    return fetch('/api/users')
+    return fetch('/api/users', withAuth({ method:'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
       .then(response => {
-        if (!response.ok) {
-          error = true;
-          return response.text();
-        }
-        return response.json();
-      })
-      .then(json => {
-        if (error) {
-          throw Error(json);
-        }
-        dispatch(receiveUsers(json));
+          dispatch(receiveUsers(response));
       })
       .catch(error => {
-        dispatch(invalidRequestUsers(error.message));
+        dispatchError(error, invalidRequestUsers(error.message), dispatch);
       });
   };
 }

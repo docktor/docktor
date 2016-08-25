@@ -1,17 +1,3 @@
-// Copyright © 2016 NAME HERE <EMAIL ADDRESS>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package cmd
 
 import (
@@ -35,19 +21,37 @@ var serveCmd = &cobra.Command{
 
 func init() {
 
-	serveCmd.Flags().StringP("mongo_url", "m", "localhost:27017", "URL to access MongoDB")
+	// Get configuration from command line flags
+	serveCmd.Flags().StringP("mongo-url", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("jwt-secret", "j", "dev-docktor-secret", "Secret key used for JWT token authentication. Change it in your instance")
 	serveCmd.Flags().StringP("env", "e", "prod", "dev or prod")
-	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo_url"))
+	serveCmd.Flags().String("ldap-address", "", "LDAP full address like : ldap.server:389. Optional")
+	serveCmd.Flags().String("ldap-baseDN", "", "BaseDN. Optional")
+	serveCmd.Flags().String("ldap-domain", "", "Domain of the user. Optional")
+	serveCmd.Flags().String("ldap-bindDN", "", "DN of system account. Optional")
+	serveCmd.Flags().String("ldap-bindPassword", "", "Password of system account. Optional")
+	serveCmd.Flags().String("ldap-searchFilter", "", "LDAP request to find users. Optional")
+	serveCmd.Flags().String("ldap-attr-username", "cn", "LDAP attribute for username of users.")
+	serveCmd.Flags().String("ldap-attr-firstname", "givenName", "LDAP attribute for firstname of users.")
+	serveCmd.Flags().String("ldap-attr-lastname", "sn", "LDAP attribute for lastname of users.")
+	serveCmd.Flags().String("ldap-attr-realname", "cn", "LDAP attribute for real name of users.")
+	serveCmd.Flags().String("ldap-attr-email", "mail", "LDAP attribute for email of users.")
+
+	// Bind env variables.
+	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
+	viper.BindPFlag("auth.jwt-secret", serveCmd.Flags().Lookup("jwt-secret"))
+	viper.BindPFlag("ldap.address", serveCmd.Flags().Lookup("ldap-address"))
+	viper.BindPFlag("ldap.baseDN", serveCmd.Flags().Lookup("ldap-baseDN"))
+	viper.BindPFlag("ldap.domain", serveCmd.Flags().Lookup("ldap-domain"))
+	viper.BindPFlag("ldap.bindDN", serveCmd.Flags().Lookup("ldap-bindDN"))
+	viper.BindPFlag("ldap.bindPassword", serveCmd.Flags().Lookup("ldap-bindPassword"))
+	viper.BindPFlag("ldap.searchFilter", serveCmd.Flags().Lookup("ldap-searchFilter"))
+	viper.BindPFlag("ldap.attr.username", serveCmd.Flags().Lookup("ldap-attr-username"))
+	viper.BindPFlag("ldap.attr.firstname", serveCmd.Flags().Lookup("ldap-attr-firstname"))
+	viper.BindPFlag("ldap.attr.lastname", serveCmd.Flags().Lookup("ldap-attr-lastname"))
+	viper.BindPFlag("ldap.attr.realName", serveCmd.Flags().Lookup("ldap-attr-realname"))
+	viper.BindPFlag("ldap.attr.email", serveCmd.Flags().Lookup("ldap-attr-email"))
 	viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serveCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
