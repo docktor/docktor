@@ -37,7 +37,7 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() &&
         <div className='right menu'>
           <div className='ui dropdown item'>
-            <i className='inverted large user icon'></i>{' ' + this.props.auth.user.username}
+            <i className='inverted large user icon'></i>{' ' + this.props.auth.user.displayName}
             <div className='menu'>
               <a className='item'>Settings</a>
               <a className='item' onClick={logout} >Logout</a>

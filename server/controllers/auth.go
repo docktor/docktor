@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
+	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/spf13/viper"
 )
@@ -18,21 +19,15 @@ type LoginController struct {
 
 // MyCustomClaims test
 type MyCustomClaims struct {
-	PublicUser
-	jwt.StandardClaims
-}
-
-// PublicUser is user data stored on client.
-type PublicUser struct {
 	Username string `json:"username"`
-	Role     string `json:"role"`
+	jwt.StandardClaims
 }
 
 // Token is a JWT Token
 type Token struct {
-	ID      string     `json:"id_token,omitempty"`
-	Message string     `json:"message,omitempty"`
-	User    PublicUser `json:"user,omitempty"`
+	ID      string         `json:"id_token,omitempty"`
+	Message string         `json:"message,omitempty"`
+	User    users.UserRest `json:"user,omitempty"`
 }
 
 //Login handles the login of a user
@@ -41,6 +36,13 @@ func (dc *LoginController) Login(c echo.Context) error {
 	// Get input parameters
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	if username == "" {
+		return c.String(http.StatusInternalServerError, "Username should not be empty")
+	}
+
+	if password == "" {
+		return c.String(http.StatusInternalServerError, "Password should not be empty")
+	}
 
 	// Handle APIs from Echo context
 	docktorAPI := c.Get("api").(*api.Docktor)
@@ -62,29 +64,32 @@ func (dc *LoginController) Login(c echo.Context) error {
 	if err != nil {
 		fmt.Println(err.Error())
 		if err == auth.ErrInvalidCredentials {
-			return c.JSON(http.StatusForbidden, Token{Message: "Username or password is wrong"})
+			return c.JSON(http.StatusForbidden, Token{Message: auth.ErrInvalidCredentials.Error()})
 		}
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while retreiving user %s", username))
 	}
 
-	// Create Token
-	user := PublicUser{
-		username,
-		"admin",
-	}
-
-	token, err := createToken(user)
+	// Generates a valid token
+	token, err := createToken(username)
 	if err != nil {
 		fmt.Println(err)
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while authenticating user %s", username))
 	}
 
-	return c.JSON(http.StatusOK, token)
+	// Get the user from database
+	webservice := users.Rest{Docktor: docktorAPI}
+	user, err := webservice.GetUserRest(username)
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while authenticating user %s", username))
+	}
+
+	return c.JSON(http.StatusOK, Token{ID: token, User: user})
 }
 
-func createToken(user PublicUser) (Token, error) {
+func createToken(username string) (string, error) {
 	claims := MyCustomClaims{
-		user,
+		username,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
 			Issuer:    "docktor",
@@ -95,8 +100,8 @@ func createToken(user PublicUser) (Token, error) {
 	signedToken, err := token.SignedString([]byte(viper.GetString("auth.jwt-secret")))
 
 	if err != nil {
-		return Token{}, err
+		return "", err
 	}
 
-	return Token{ID: signedToken, User: user}, nil
+	return signedToken, nil
 }

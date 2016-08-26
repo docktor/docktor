@@ -10,26 +10,30 @@ export function requireAuthorization(Component, Roles) {
     class AuthenticatedComponent extends React.Component {
 
         componentWillMount () {
-            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
+          const { isAuthenticated, user, isFetching } = this.props.auth;
+          this.checkAuth(isAuthenticated, user.role, isFetching);
         }
 
         componentWillUpdate () {
-            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
+          const { isAuthenticated, user, isFetching } = this.props.auth;
+          this.checkAuth(isAuthenticated, user.role, isFetching);
         }
 
         componentWillReceiveProps (nextProps) {
-            this.checkAuth(nextProps.auth.isAuthenticated, nextProps.auth.user.role);
+          const { isAuthenticated, user, isFetching } = nextProps.auth;
+          this.checkAuth(isAuthenticated, user.role, isFetching);
         }
 
         componentDidMount() {
-            this.checkAuth(this.props.auth.isAuthenticated, this.props.auth.user.role);
+          const { isAuthenticated, user, isFetching } = this.props.auth;
+          this.checkAuth(isAuthenticated, user.role, isFetching);
         }
 
-        checkAuth (isAuthenticated, userRole) {
+        checkAuth (isAuthenticated, userRole, isFetching) {
             if (!isAuthenticated) {
                 let redirectAfterLogin = this.props.loc.pathname;
                 this.props.redirect('/auth?next=' + redirectAfterLogin);
-            } else if (!isRoleAuthorized(Roles, userRole) && !this.props.auth.isFetching) {
+            } else if (!isRoleAuthorized(Roles, userRole) && !isFetching) {
                 this.props.redirect('/');
             }
         }

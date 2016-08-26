@@ -23,7 +23,7 @@ var dependenciesPath = {
         './bower_components/semantic/dist/themes/default/assets/fonts/*'
     ],
     images: [
-        './client/src/images/*',
+        './client/src/**/images/*',
         './node_modules/leaflet/dist/images/*',
         './bower_components/semantic/dist/themes/default/assets/images/*'
     ]
