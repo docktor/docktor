@@ -6,6 +6,7 @@ import MD5 from 'md5';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { INVALID_REQUEST_SITES } from '../sites/sites.actions.js';
 import { INVALID_REQUEST_DAEMONS } from '../daemons/daemons.actions.js';
+import { INVALID_REQUEST_USERS } from '../users/users.actions.js';
 import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from './toasts.actions.js';
 
 const initialState = {};
@@ -22,6 +23,10 @@ const toastsReducer = (state = initialState, action) => {
         case INVALID_REQUEST_DAEMONS:
             const invalidReqDaemonsToast = createInvalidReqDaemonsToast(state, action);
             return Object.assign({}, { ...state }, invalidReqDaemonsToast);
+
+        case INVALID_REQUEST_USERS:
+            const invalidReqUsersToast = createInvalidReqUsersToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqUsersToast);
 
         case COMFIRM_DELETION:
             const confirmDelToast = createConfirmDelToast(state, action);
@@ -55,6 +60,19 @@ const createInvalidReqDaemonsToast = (state, action) => {
     const uuid = UUID.create(4);
     res[uuid] = {
         title: 'Error on Daemons API',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createInvalidReqUsersToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Error on Users API',
         message: action.error,
         level: 'error',
         position: 'bl',

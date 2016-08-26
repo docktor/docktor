@@ -26,9 +26,7 @@ export function fetchDaemons() {
         dispatch(receiveDaemons(response));
       })
       .catch(error => {
-        error.response.text().then(text => {
-        dispatchError(error.response.status, text, invalidRequestDaemons(text), dispatch);
-        });
+        handleError(error, invalidRequestSites, dispatch);
       });
   };
 }

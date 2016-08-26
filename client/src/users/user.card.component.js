@@ -13,15 +13,16 @@ class UserCard extends React.Component {
           <div className='ui card user'>
             <div className='content'>
               <div className='right floated meta'>{user.Role}</div>
-              <img className='ui avatar image' src='/images/avatar.jpg'/>{user.DisplayName}
+              <img className='ui avatar image' src='./images/avatar.jpg'/>{user.DisplayName}
             </div>
             <div className='extra content'>
               <span className='right floated'>
                 <i className='travel icon'></i>
                 {user.Groups.length + ' group(s)'}
               </span>
-              <i className='mail icon'></i>
-              {user.Email.trunc(25)}
+              <div className='email' title={user.Email}>
+              <i className='mail icon'></i>{user.Email}
+              </div>
             </div>
           </div>
         );

@@ -70,9 +70,7 @@ export function profile() {
         dispatch(receiveProfile(response));
       })
       .catch(error => {
-        error.response.text().then(text => {
-          dispatchError(error.response.status, text, profileError(text), dispatch);
-        });
+        handleError(error, invalidRequestSites, dispatch);
       });
   };
 }

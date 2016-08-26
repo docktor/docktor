@@ -25,3 +25,13 @@ export const dispatchError = (status, message, action, dispatchFunc) => {
     dispatchFunc(action);
   }
 };
+
+export const handleError = (error, action, dispatch) => {
+  if (error.response) {
+    error.response.text().then(text => {
+      dispatchError(error.response.status, text, action(text), dispatch);
+    });
+  } else {
+    dispatch(action(error.message));
+  }
+};

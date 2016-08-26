@@ -9,26 +9,26 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 import { reducer as formReducer } from 'redux-form';
 
 // Reducers
-import sites from './modules/sites/sites.reducer.js';
-import daemons from './modules/daemons/daemons.reducer.js';
-import users from './modules/users/users.reducer.js';
-import toasts from './modules/toasts/toasts.reducer.js';
-import modal from './modules/modal/modal.reducer.js';
-import auth from './modules/auth/auth.reducer.js';
+import sites from './sites/sites.reducer.js';
+import daemons from './daemons/daemons.reducer.js';
+import users from './users/users.reducer.js';
+import toasts from './toasts/toasts.reducer.js';
+import modal from './modal/modal.reducer.js';
+import auth from './auth/auth.reducer.js';
 
 //Components
-import App from './modules/app/app.layout.js';
-import Home from './modules/app/home.page.js';
-import DaemonsPage from './modules/daemons/daemons.page.js';
-import UsersPage from './modules/users/users.page.js';
-import AuthPage from './modules/auth/auth.page.js';
-import { requireAuthorization } from './modules/auth/auth.isAuthorized.js';
+import App from './app/app.layout.js';
+import Home from './app/home.page.js';
+import DaemonsPage from './daemons/daemons.page.js';
+import UsersPage from './users/users.page.js';
+import AuthPage from './auth/auth.page.js';
+import { requireAuthorization } from './auth/auth.isAuthorized.js';
 
 // thunks
-import { profile } from './modules/auth/auth.thunk.js';
+import { profile } from './auth/auth.thunk.js';
 
 // Constants
-import { AUTH_ADMIN_ROLE } from './modules/auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE } from './auth/auth.constants.js';
 
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);
@@ -71,5 +71,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
-
-String.prototype.trunc = String.prototype.trunc || ((n) => {(this.length > n) ? this.substr(0, n - 1) + '...' : this;});

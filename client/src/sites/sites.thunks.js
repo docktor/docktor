@@ -31,9 +31,7 @@ export function fetchSites() {
           dispatch(receiveSites(response));
       })
       .catch(error => {
-        error.response.text().then(text => {
-          dispatchError(error.response.status, text, invalidRequestSites(text), dispatch);
-        });
+        handleError(error, invalidRequestSites, dispatch);
       });
   };
 }
@@ -54,9 +52,7 @@ export function deleteSite(id) {
           dispatch(receiveSiteDeleted(response));
       })
       .catch(error => {
-        error.response.text().then(text => {
-          dispatchError(error.response.status, text, invalidRequestSites(text), dispatch);
-        });
+          handleError(error, invalidRequestSites, dispatch);
       });
   };
 }
@@ -91,9 +87,7 @@ export function saveSite(form) {
         dispatch(receiveSiteSaved(response));
     })
     .catch(error => {
-      error.response.text().then(text => {
-        dispatchError(error.response.status, text, invalidRequestSites(text), dispatch);
-      });
+        handleError(error, invalidRequestSites, dispatch);
     });
   };
 }
