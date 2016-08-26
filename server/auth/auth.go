@@ -44,6 +44,7 @@ func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query
 		if a.LDAP != nil {
 			ldapUser, err := a.LDAP.Login(query)
 			if err != nil {
+				fmt.Println(err.Error())
 				return ErrInvalidCredentials
 			}
 
@@ -56,6 +57,7 @@ func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query
 
 			_, err = a.Docktor.Users().Save(docktorUser)
 			if err != nil {
+				fmt.Println(err.Error())
 				return err
 			}
 

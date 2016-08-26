@@ -7,29 +7,48 @@ import './auth.component.scss';
 
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {
+
+  componentDidMount() {
+    $('.ui.form')
+      .form({
+        fields: {
+          username : 'empty',
+          password : 'empty',
+        },
+        onSuccess: (event, fields) => {
+          this.handleClick(event);
+        },
+        onFailure: (event, fields) => {
+          return false;
+        }
+      })
+    ;
+  }
+
   render() {
     const { errorMessage } = this.props;
     return (
       <div id='login'>
         <h1>{this.props.title}</h1>
-        <form className='ui form' onSubmit={(event) => this.handleClick(event)}>
+        <form className='ui form'>
           <div className='field'>
             <label>
               Username<span className='req'>*</span>
             </label>
-            <input type='text' ref='username' required autoComplete='off' placeholder='Registered/LDAP username' />
+            <input type='text' ref='username' name='username' autoComplete='off' placeholder='Registered/LDAP username' />
           </div>
           <div className='field'>
               <label>
               Password<span className='req'>*</span>
               </label>
-              <input type='password' ref='password' required autoComplete='off' placeholder='Password' />
+              <input type='password' ref='password' name='password' autoComplete='off' placeholder='Password' />
           </div>
+          {errorMessage &&
+              <p className='error'>{errorMessage}</p>
+          }
+          <div className='ui error message'></div>
           <p className='forgot'><a href='#'>Forgot Password?</a></p>
           <button type='submit' className='button button-block'>{this.props.submit}</button>
-          {errorMessage &&
-              <p>{errorMessage}</p>
-          }
         </form>
       </div>
     );

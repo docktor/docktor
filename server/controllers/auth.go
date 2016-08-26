@@ -36,6 +36,13 @@ func (dc *LoginController) Login(c echo.Context) error {
 	// Get input parameters
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	if username == "" {
+		return c.String(http.StatusInternalServerError, "Username should not be empty")
+	}
+
+	if password == "" {
+		return c.String(http.StatusInternalServerError, "Password should not be empty")
+	}
 
 	// Handle APIs from Echo context
 	docktorAPI := c.Get("api").(*api.Docktor)

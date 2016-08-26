@@ -52,19 +52,21 @@ func NewLDAP(server *LDAPConf) *LDAP {
 func (a *LDAP) Login(query *LoginUserQuery) (*LDAPUserInfo, error) {
 	// Reach the ldap server
 	if err := a.dial(); err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	defer a.conn.Close()
 
 	// perform initial authentication
 	if err := a.initialBind(); err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 
 	// find user entry & attributes
 	ldapUser, err := a.searchForUser(query.Username)
 	if err != nil {
-		fmt.Printf("%+v\n", ldapUser)
+		fmt.Println(err.Error())
 		return nil, err
 	}
 
@@ -78,6 +80,7 @@ func (a *LDAP) dial() error {
 	var err error
 	a.conn, err = ldap.Dial("tcp", a.server.LdapServer)
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -92,6 +95,7 @@ func (a *LDAP) initialBind() error {
 
 	// LDAP Bind
 	if err := a.conn.Bind(a.server.BindDN, a.server.BindPassword); err != nil {
+		fmt.Println("First bind" + err.Error())
 		if ldapErr, ok := err.(*ldap.Error); ok {
 			if ldapErr.ResultCode == 49 {
 				return ErrInvalidCredentials
@@ -106,6 +110,7 @@ func (a *LDAP) initialBind() error {
 // secondBind authenticate the user
 func (a *LDAP) secondBind(ldapUser *LDAPUserInfo, userPassword string) error {
 	if err := a.conn.Bind(ldapUser.DN, userPassword); err != nil {
+		fmt.Println(err.Error())
 		if ldapErr, ok := err.(*ldap.Error); ok {
 			if ldapErr.ResultCode == 49 {
 				return ErrInvalidCredentials
@@ -139,10 +144,12 @@ func (a *LDAP) searchForUser(username string) (*LDAPUserInfo, error) {
 
 	searchResult, err = a.conn.Search(&searchReq)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 
 	if len(searchResult.Entries) == 0 {
+		fmt.Println("User not exists on LDAP")
 		return nil, ErrInvalidCredentials
 	}
 

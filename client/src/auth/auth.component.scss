@@ -7,6 +7,7 @@ $main-dark: darken($main, 5%);
 
 $gray-light: #a0b3b0;
 $gray: #ddd;
+$red: #da5959;
 
 $thin: 300;
 $normal: 400;
@@ -141,6 +142,10 @@ $br: 4px;
   .forgot {
     margin-top: -20px;
     text-align: right;
+  }
+
+  .error {
+    color: $red;
   }
 
 }
