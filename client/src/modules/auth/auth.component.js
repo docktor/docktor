@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import './auth.scss';
+import './auth.component.scss';
 
 // Auth tab containing signin and register panes
 class Auth extends React.Component {

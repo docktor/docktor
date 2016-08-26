@@ -3,10 +3,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Style
-import './user-card.scss';
-
-// JS dependencies
-import './utils.js';
+import './user.card.component.scss';
 
 // UserCard Component
 class UserCard extends React.Component {

@@ -10,58 +10,46 @@ export const PROFILE_FAILURE = 'PROFILE_FAILURE';
 
 export function requestLogout() {
   return {
-    type: LOGOUT_REQUEST,
-    isFetching: true,
-    isAuthenticated: true
+    type: LOGOUT_REQUEST
   };
 }
 
 export function receiveLogout() {
   return {
-    type: LOGOUT_SUCCESS,
-    isFetching: false,
-    isAuthenticated: false
+    type: LOGOUT_SUCCESS
   };
 }
 
 export function requestLogin() {
   return {
-    type: LOGIN_REQUEST,
-    isFetching: true,
-    isAuthenticated: false
+    type: LOGIN_REQUEST
   };
 }
 
-export function receiveLogin(user) {
+export function receiveLogin(login) {
   return {
     type: LOGIN_SUCCESS,
-    isFetching: false,
-    isAuthenticated: true,
-    id_token: user.id_token,
-    user: user.user
+    id_token: login.id_token,
+    user: login.user
   };
 }
 
 export function loginError(message) {
   return {
     type: LOGIN_FAILURE,
-    isFetching: false,
-    isAuthenticated: false,
     message
   };
 }
 
 export function requestProfile() {
   return {
-    type: PROFILE_REQUEST,
-    isFetching: true,
+    type: PROFILE_REQUEST
   };
 }
 
 export function receiveProfile(user) {
   return {
     type: PROFILE_SUCCESS,
-    isFetching: false,
     user
   };
 }
@@ -69,7 +57,6 @@ export function receiveProfile(user) {
 export function profileError(message) {
   return {
     type: PROFILE_FAILURE,
-    isFetching: false,
     message
   };
 }

@@ -2,10 +2,10 @@
 import React from 'react';
 
 // Components
-import NavBar from '../../components/navBar/navBar.js';
-import Footer from '../../components/footer/footer.js';
-import Toasts from '../../components/toasts/toasts.js';
-import Modal from '../../components/modal/modal.js';
+import NavBar from './navBar.component.js';
+import Footer from './footer.component.js';
+import Toasts from '../toasts/toasts.component.js';
+import Modal from '../modal/modal.component.js';
 
 // JS dependancies
 import 'jquery';
@@ -14,7 +14,7 @@ $.form = form;
 
 // Style
 import 'semantic/dist/semantic.css';
-import './app.scss';
+import './app.layout.scss';
 import './flex.scss';
 
 // App Component

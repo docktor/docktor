@@ -16,10 +16,10 @@ export const parseJSON = response => {
      return response.json();
 };
 
-export const dispatchError = (error, action, dispatchFunc) => {
-  if(error.response.status === 401) {
+export const dispatchError = (status, message, action, dispatchFunc) => {
+  if(status === 401) {
     // When JWT Token expired or is invalid, redirect to auth
-    dispatchFunc(loginError(error.message));
+    dispatchFunc(loginError(message));
     dispatchFunc(push('/auth'));
   } else {
     dispatchFunc(action);

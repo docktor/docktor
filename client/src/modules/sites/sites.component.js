@@ -4,13 +4,13 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { deleteSite, saveSite } from '../../modules/sites/sites.thunks.js';
-import { confirmDeletion } from '../../modules/toasts/toasts.actions.js';
-import { openNewSiteModal, openEditSiteModal } from '../../modules/modal/modal.actions.js';
+import { deleteSite, saveSite } from './sites.thunks.js';
+import { confirmDeletion } from '../toasts/toasts.actions.js';
+import { openNewSiteModal, openEditSiteModal } from '../modal/modal.actions.js';
 
 // Style
 import 'leaflet/dist/leaflet.css';
-import './sites.scss';
+import './sites.component.scss';
 
 //Site Component using react-leaflet
 class SitesComponent extends React.Component {
