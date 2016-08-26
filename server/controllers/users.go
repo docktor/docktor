@@ -2,8 +2,12 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
+	"github.com/soprasteria/docktor/server/auth"
+	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
@@ -48,4 +52,20 @@ func (uc *UsersController) DeleteUser(c echo.Context) error {
 		return c.String(500, fmt.Sprintf("Error while remove user: %v", err))
 	}
 	return c.JSON(200, res)
+}
+
+// Profile returns the profile of the connecter user
+func (uc *UsersController) Profile(c echo.Context) error {
+	docktorAPI := c.Get("api").(*api.Docktor)
+	userToken := c.Get("user").(*jwt.Token)
+
+	claims := userToken.Claims.(*MyCustomClaims)
+
+	webservice := users.Rest{Docktor: docktorAPI}
+	user, err := webservice.GetUserRest(claims.Username)
+	if err != nil {
+		return c.String(http.StatusForbidden, auth.ErrInvalidCredentials.Error())
+	}
+
+	return c.JSON(http.StatusOK, user)
 }

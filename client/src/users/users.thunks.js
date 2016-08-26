@@ -19,10 +19,6 @@ export function fetchUsers() {
     dispatch(requestAllUsers());
     return fetch('/api/users', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
-      .then(response => {
-        var error = new Error('Oulala');
-        throw error;
-      })
       .then(parseJSON)
       .then(response => {
           dispatch(receiveUsers(response));
