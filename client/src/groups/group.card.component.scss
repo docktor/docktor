@@ -1,0 +1,20 @@
+.ui.card.group {
+  margin: 1em 0 !important;
+  max-height: 200px;
+  max-width: 300px;
+  .header {
+    max-width: 270px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .extra.content {
+    font-size: .9em;
+  }
+  .description {
+    max-width: 270px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
