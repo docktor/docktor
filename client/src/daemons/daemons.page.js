@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 // Components
 import DaemonCard from './daemon.card.component.js';
@@ -39,24 +40,24 @@ class Daemons extends React.Component {
           <div className='flex layout vertical start-justified sites'>
             <Sites/>
           </div>
-          <div className='flex-2 layout horizontal around-justified wrap daemons-list'>
+          <Scrollbars className='flex-2 ui dimmable'>
             {(fetching => {
               if (fetching) {
                 return (
-                  <div className='ui dimmable dimmed'>
                     <div className='ui active inverted dimmer'>
                       <div className='ui text loader'>Fetching</div>
                     </div>
-                  </div>
                 );
               }
             })(fetching)}
-            {daemons.map(daemon => {
-              return (
-                <DaemonCard daemon={daemon} site={sites[daemon.Site]} key={daemon.ID} />
-              );
-            })}
-          </div>
+              <div className='flex layout horizontal around-justified wrap daemons-list'>
+                {daemons.map(daemon => {
+                  return (
+                    <DaemonCard daemon={daemon} site={sites[daemon.Site]} key={daemon.ID} />
+                  );
+                })}
+              </div>
+          </Scrollbars>
         </div>
       </div>
     );

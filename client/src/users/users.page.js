@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
 import { fetchUsersIfNeeded } from './users.thunks.js';
@@ -30,22 +31,24 @@ class Users extends React.Component {
           </div>
           <div className='flex'></div>
         </div>
-        <div className='flex layout horizontal around-justified wrap user-list ui dimmable'>
-            {(fetching => {
-              if (fetching) {
+        <Scrollbars className='flex ui dimmable'>
+          <div className='flex layout horizontal around-justified wrap user-list'>
+              {(fetching => {
+                if (fetching) {
+                  return (
+                      <div className='ui active inverted dimmer'>
+                        <div className='ui text loader'>Fetching</div>
+                      </div>
+                  );
+                }
+              })(fetching)}
+              {users.map(user => {
                 return (
-                    <div className='ui active inverted dimmer'>
-                      <div className='ui text loader'>Fetching</div>
-                    </div>
+                  <UserCard user={user} key={user.ID} />
                 );
-              }
-            })(fetching)}
-            {users.map(user => {
-              return (
-                <UserCard user={user} key={user.ID} />
-              );
-            })}
-        </div>
+              })}
+          </div>
+        </Scrollbars>
       </div>
     );
   }

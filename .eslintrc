@@ -41,7 +41,7 @@
     ],
     "rules": {
       "strict": [2, "never"],
-      "quotes": [2, "single", { "avoidEscape": true }],
+      "quotes": [1, "single", { "avoidEscape": true }],
       "semi": 1,
       "curly": [1, "all"],
       "object-curly-spacing": [1, "always"],
