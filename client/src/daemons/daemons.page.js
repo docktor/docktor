@@ -12,7 +12,7 @@ import { fetchDaemonsIfNeeded } from '../daemons/daemons.thunks.js';
 // Style
 import './daemons.page.scss';
 
-//Site Component using react-leaflet
+// Daemons Component
 class Daemons extends React.Component {
 
   componentWillMount() {

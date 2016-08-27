@@ -34,9 +34,10 @@ class NavBarComponent extends React.Component {
         <IndexLink to='/' className='item brand'>
           <i className='large fitted doctor icon'></i>{' '}Docktor
         </IndexLink>
-        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
-        {this.isAuthorized() && <Link to='/groups' activeClassName='active' className='item'>Groups</Link>}
-        {this.isAuthorized() && <Link to='/users' activeClassName='active' className='item'>Users</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='daemons' activeClassName='active' className='item'>Daemons</Link>}
+        {this.isAuthorized() && <Link to='services' activeClassName='active' className='item'>Services</Link>}
+        {this.isAuthorized() && <Link to='groups' activeClassName='active' className='item'>Groups</Link>}
+        {this.isAuthorized() && <Link to='users' activeClassName='active' className='item'>Users</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
           <div className='ui dropdown item'>

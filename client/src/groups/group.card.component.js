@@ -17,7 +17,7 @@ class GroupCard extends React.Component {
         return (
           <div className='ui card group'>
             <div className='content'>
-              <Link className='header' to={'/group/' + group.ID} title={group.Title}>{group.Title}</Link>
+              <Link className='header' to={'/group/' + group.ID} title={group.Title}><i className='travel icon'></i>{group.Title}</Link>
               <div className='right floated meta'>{moment(group.Created).fromNow()}</div>
               <div className='description' title={group.Description}>{group.Description}</div>
             </div>

@@ -4,27 +4,27 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
-import { fetchGroupsIfNeeded } from './groups.thunks.js';
+import { fetchServicesIfNeeded } from './services.thunks.js';
 
 // Components
-import GroupCard from './group.card.component.js';
+import ServiceCard from './service.card.component.js';
 
 // Style
-import './groups.page.scss';
+import './services.page.scss';
 
-// Groups Component
-class Groups extends React.Component {
+// Services Component
+class Services extends React.Component {
 
   componentWillMount() {
-    this.props.fetchGroups();
+    this.props.fetchServices();
   }
 
   render() {
-    const groups = Object.values(this.props.groups.items);
-    const fetching = this.props.groups.isFetching;
+    const services = Object.values(this.props.services.items);
+    const fetching = this.props.services.isFetching;
     return (
       <div className='flex layout vertical start-justified'>
-        <div className='layout horizontal center-center groups-bar'>
+        <div className='layout horizontal center-center services-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
             <input type='text' placeholder='Search...'/>
@@ -32,7 +32,7 @@ class Groups extends React.Component {
           <div className='flex'></div>
         </div>
         <Scrollbars className='flex ui dimmable'>
-          <div className='flex layout horizontal around-justified groups-list wrap'>
+          <div className='flex layout horizontal around-justified services-list wrap'>
               {(fetching => {
                 if (fetching) {
                   return (
@@ -42,9 +42,9 @@ class Groups extends React.Component {
                   );
                 }
               })(fetching)}
-                {groups.map(group => {
+                {services.map(service => {
                   return (
-                    <GroupCard group={group} key={group.ID} />
+                    <ServiceCard service={service} key={service.ID} />
                   );
                 })}
           </div>
@@ -53,29 +53,29 @@ class Groups extends React.Component {
     );
   }
 }
-Groups.propTypes = {
-  groups: React.PropTypes.object,
-  fetchGroups: React.PropTypes.func.isRequired,
+Services.propTypes = {
+  services: React.PropTypes.object,
+  fetchServices: React.PropTypes.func.isRequired,
 };
 
 // Function to map state to container props
-const mapStateToGroupsProps = (state) => {
-  return { groups: state.groups };
+const mapStateToServicesProps = (state) => {
+  return { services: state.services };
 };
 
 // Function to map dispatch to container props
-const mapDispatchToGroupsProps = (dispatch) => {
+const mapDispatchToServicesProps = (dispatch) => {
   return {
-    fetchGroups : () => {
-      dispatch(fetchGroupsIfNeeded());
+    fetchServices : () => {
+      dispatch(fetchServicesIfNeeded());
     }
   };
 };
 
 // Redux container to Sites component
-const GroupsPage = connect(
-  mapStateToGroupsProps,
-  mapDispatchToGroupsProps
-)(Groups);
+const ServicesPage = connect(
+  mapStateToServicesProps,
+  mapDispatchToServicesProps
+)(Services);
 
-export default GroupsPage;
+export default ServicesPage;
