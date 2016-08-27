@@ -11,6 +11,7 @@ import { reducer as formReducer } from 'redux-form';
 // Reducers
 import sites from './sites/sites.reducer.js';
 import daemons from './daemons/daemons.reducer.js';
+import groups from './groups/groups.reducer.js';
 import users from './users/users.reducer.js';
 import toasts from './toasts/toasts.reducer.js';
 import modal from './modal/modal.reducer.js';
@@ -20,6 +21,7 @@ import auth from './auth/auth.reducer.js';
 import App from './app/app.layout.js';
 import Home from './app/home.page.js';
 import DaemonsPage from './daemons/daemons.page.js';
+import GroupsPage from './groups/groups.page.js';
 import UsersPage from './users/users.page.js';
 import AuthPage from './auth/auth.page.js';
 import { requireAuthorization } from './auth/auth.isAuthorized.js';
@@ -39,6 +41,7 @@ const store = createStore(
     {
       sites,
       daemons,
+      groups,
       users,
       toasts,
       modal,
@@ -63,9 +66,10 @@ ReactDOM.render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
-        <Route path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
-        <Route path='/users' component={requireAuthorization(UsersPage)} />
-        <Route path='/auth' component={AuthPage} />
+        <Route path='daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+        <Route path='groups' component={requireAuthorization(GroupsPage)}/>
+        <Route path='users' component={requireAuthorization(UsersPage)} />
+        <Route path='auth' component={AuthPage} />
       </Route>
     </Router>
   </Provider>,

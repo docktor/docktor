@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../auth/auth.thunk.js';
 import { isRoleAuthorized } from '../auth/auth.wrappers.js';
 
+// Constants
+import { AUTH_ADMIN_ROLE } from '../auth/auth.constants.js';
+
 // Style
 import './navBar.component.scss';
 
@@ -31,7 +34,7 @@ class NavBarComponent extends React.Component {
         <IndexLink to='/' className='item brand'>
           <i className='large fitted doctor icon'></i>{' '}Docktor
         </IndexLink>
-        {this.isAuthorized(['admin']) && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
         {this.isAuthorized() && <Link to='/groups' activeClassName='active' className='item'>Groups</Link>}
         {this.isAuthorized() && <Link to='/users' activeClassName='active' className='item'>Users</Link>}
         {this.isAuthorized() &&

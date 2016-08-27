@@ -4,27 +4,27 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
-import { fetchUsersIfNeeded } from './users.thunks.js';
+import { fetchGroupsIfNeeded } from './groups.thunks.js';
 
 // Components
-import UserCard from './user.card.component.js';
+import GroupCard from './group.card.component.js';
 
 // Style
-import './users.page.scss';
+import './groups.page.scss';
 
 //Site Component using react-leaflet
-class Users extends React.Component {
+class Groups extends React.Component {
 
   componentWillMount() {
-    this.props.fetchUsers();
+    this.props.fetchGroups();
   }
 
   render() {
-    const users = Object.values(this.props.users.items);
-    const fetching = this.props.users.isFetching;
+    const groups = Object.values(this.props.groups.items);
+    const fetching = this.props.groups.isFetching;
     return (
       <div className='flex layout vertical start-justified'>
-        <div className='layout horizontal center-center users-bar'>
+        <div className='layout horizontal center-center groups-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
             <input type='text' placeholder='Search...'/>
@@ -32,7 +32,7 @@ class Users extends React.Component {
           <div className='flex'></div>
         </div>
         <Scrollbars className='flex ui dimmable'>
-          <div className='flex layout horizontal around-justified wrap user-list'>
+          <div className='flex layout horizontal around-justified groups-list wrap'>
               {(fetching => {
                 if (fetching) {
                   return (
@@ -42,40 +42,40 @@ class Users extends React.Component {
                   );
                 }
               })(fetching)}
-              {users.map(user => {
-                return (
-                  <UserCard user={user} key={user.ID} />
-                );
-              })}
+                {groups.map(group => {
+                  return (
+                    <GroupCard group={group} key={group.ID} />
+                  );
+                })}
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
-Users.propTypes = {
-  users: React.PropTypes.object,
-  fetchUsers: React.PropTypes.func.isRequired,
+Groups.propTypes = {
+  groups: React.PropTypes.object,
+  fetchGroups: React.PropTypes.func.isRequired,
 };
 
 // Function to map state to container props
-const mapStateToUsersProps = (state) => {
-  return { users: state.users };
+const mapStateToGroupsProps = (state) => {
+  return { groups: state.groups };
 };
 
 // Function to map dispatch to container props
-const mapDispatchToUsersProps = (dispatch) => {
+const mapDispatchToGroupsProps = (dispatch) => {
   return {
-    fetchUsers : () => {
-      dispatch(fetchUsersIfNeeded());
+    fetchGroups : () => {
+      dispatch(fetchGroupsIfNeeded());
     }
   };
 };
 
 // Redux container to Sites component
-const UsersPage = connect(
-  mapStateToUsersProps,
-  mapDispatchToUsersProps
-)(Users);
+const GroupsPage = connect(
+  mapStateToGroupsProps,
+  mapDispatchToGroupsProps
+)(Groups);
 
-export default UsersPage;
+export default GroupsPage;

@@ -21,7 +21,7 @@ class SitesComponent extends React.Component {
 
   componentDidUpdate() {
     setTimeout(() => {
-      this.refs.map1.getLeafletElement().invalidateSize(false);
+      this.refs.map1.leafletElement.invalidateSize(false);
     }, 300); // Adjust timeout to tab transition
   }
 

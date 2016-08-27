@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 
-	"github.com/golang/glog"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
@@ -18,7 +17,6 @@ type GroupsController struct {
 func (gc *GroupsController) GetAllGroups(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	groups, err := docktorAPI.Groups().FindAll()
-	glog.Info("test")
 	if err != nil {
 		return c.String(500, "Error while retreiving all groups")
 	}
