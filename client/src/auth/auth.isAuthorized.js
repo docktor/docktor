@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { isRoleAuthorized } from './auth.wrappers.js';
 
-// Wrapper rendering the child component only when authenticated
+// Wrapper rendering the child component only when authenticated and authorized
 export function requireAuthorization(Component, Roles) {
 
     class AuthenticatedComponent extends React.Component {
@@ -32,7 +32,7 @@ export function requireAuthorization(Component, Roles) {
         checkAuth (isAuthenticated, userRole, isFetching) {
             if (!isAuthenticated) {
                 let redirectAfterLogin = this.props.loc.pathname;
-                this.props.redirect('/auth?next=' + redirectAfterLogin);
+                this.props.redirect('/login?next=' + redirectAfterLogin);
             } else if (!isRoleAuthorized(Roles, userRole) && !isFetching) {
                 this.props.redirect('/');
             }

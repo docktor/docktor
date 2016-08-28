@@ -6,7 +6,6 @@ import createLogger from 'redux-logger';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import { reducer as formReducer } from 'redux-form';
 
 // Reducers
 import sites from './sites/sites.reducer.js';
@@ -73,7 +72,7 @@ ReactDOM.render(
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
         <Route path='users' component={requireAuthorization(UsersPage)} />
-        <Route path='auth' component={AuthPage} />
+        <Route path='login' component={AuthPage} />
       </Route>
     </Router>
   </Provider>,

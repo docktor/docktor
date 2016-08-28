@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import Auth from './auth.component.js';
 import Signin from './auth.login.component.js';
 import Register from './auth.register.component.js';
-import { loginUser } from './auth.thunk.js';
+import { loginUser, registerUser, switchForm } from './auth.thunk.js';
 
 class LoginP extends React.Component {
 
@@ -23,11 +23,11 @@ class LoginP extends React.Component {
     }
   }
   render() {
-    const { logUser, errorMessage, isAuthenticated } = this.props;
+    const { logUser, regUser, onSwitch, errorMessage, isAuthenticated } = this.props;
     return (
-        <Auth selected={0}>
+        <Auth selected={0} onSwitch={onSwitch}>
           <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser}/>
-          <Register label='Register' title='Create an account' submit='Get started' />
+          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} />
         </Auth>
     );
   }
@@ -35,6 +35,8 @@ class LoginP extends React.Component {
 LoginP.propTypes = {
   isAuthenticated: React.PropTypes.bool.isRequired,
   logUser: React.PropTypes.func.isRequired,
+  regUser : React.PropTypes.func.isRequired,
+  onSwitch: React.PropTypes.func.isRequired,
   redirect: React.PropTypes.func.isRequired,
   errorMessage: React.PropTypes.string,
   redirectTo : React.PropTypes.string
@@ -55,11 +57,17 @@ const mapStateToLoginPageProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToLoginPageProps = (dispatch) => {
   return {
-    logUser : (creds) => {
+    logUser: (creds) => {
       dispatch(loginUser(creds));
     },
-    redirect : (path) => {
+    redirect: (path) => {
       dispatch(push(path));
+    },
+    regUser: (account) => {
+      dispatch(registerUser(account));
+    },
+    onSwitch: () => {
+      dispatch(switchForm());
     }
   };
 };

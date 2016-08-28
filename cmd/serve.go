@@ -24,6 +24,7 @@ func init() {
 	// Get configuration from command line flags
 	serveCmd.Flags().StringP("mongo-url", "m", "localhost:27017", "URL to access MongoDB")
 	serveCmd.Flags().StringP("jwt-secret", "j", "dev-docktor-secret", "Secret key used for JWT token authentication. Change it in your instance")
+	serveCmd.Flags().StringP("bcrypt-pepper", "p", "dev-docktor-bcrypt", "Pepper used in password generation. Change it in your instance")
 	serveCmd.Flags().StringP("env", "e", "prod", "dev or prod")
 	serveCmd.Flags().String("ldap-address", "", "LDAP full address like : ldap.server:389. Optional")
 	serveCmd.Flags().String("ldap-baseDN", "", "BaseDN. Optional")
@@ -40,6 +41,7 @@ func init() {
 	// Bind env variables.
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
 	viper.BindPFlag("auth.jwt-secret", serveCmd.Flags().Lookup("jwt-secret"))
+	viper.BindPFlag("auth.bcrypt-pepper", serveCmd.Flags().Lookup("bcrypt-pepper"))
 	viper.BindPFlag("ldap.address", serveCmd.Flags().Lookup("ldap-address"))
 	viper.BindPFlag("ldap.baseDN", serveCmd.Flags().Lookup("ldap-baseDN"))
 	viper.BindPFlag("ldap.domain", serveCmd.Flags().Lookup("ldap-domain"))

@@ -7,6 +7,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { INVALID_REQUEST_SITES } from '../sites/sites.actions.js';
 import { INVALID_REQUEST_DAEMONS } from '../daemons/daemons.actions.js';
 import { INVALID_REQUEST_USERS } from '../users/users.actions.js';
+import { LOGIN_INVALID_REQUEST, REGISTER_INVALID_REQUEST } from '../auth/auth.actions.js';
 import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from './toasts.actions.js';
 
 const initialState = {};
@@ -27,7 +28,12 @@ const toastsReducer = (state = initialState, action) => {
         case INVALID_REQUEST_USERS:
             const invalidReqUsersToast = createInvalidReqUsersToast(state, action);
             return Object.assign({}, { ...state }, invalidReqUsersToast);
-
+        case LOGIN_INVALID_REQUEST:
+            const invalidReqLoginToast = createInvalidReqLoginToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqLoginToast);
+        case REGISTER_INVALID_REQUEST:
+            const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqRegisterToast);
         case COMFIRM_DELETION:
             const confirmDelToast = createConfirmDelToast(state, action);
             return Object.assign({}, { ...state }, confirmDelToast);
@@ -40,6 +46,32 @@ const toastsReducer = (state = initialState, action) => {
         default:
             return state;
     }
+};
+
+const createInvalidReqLoginToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot login because of technical error',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createInvalidReqRegisterToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot register because of technical error',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
 };
 
 const createInvalidReqSitesToast = (state, action) => {

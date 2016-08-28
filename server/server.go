@@ -44,11 +44,13 @@ func New(version string) {
 
 	engine.GET("/ping", pong)
 
-	login := engine.Group("/create-token")
+	auth := engine.Group("/auth")
 	{
-		login.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
-		login.Use(openLDAP)
-		login.POST("*", lc.Login)
+		auth.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
+		auth.Use(openLDAP)
+		auth.POST("/login", lc.Login)
+		auth.POST("/register", lc.Register)
+		auth.GET("/*", GetIndex(version))
 	}
 
 	api := engine.Group("/api")
