@@ -5,15 +5,20 @@ import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
 
 // Daemon Actions
 import {
-  requestLogin,
-  loginError,
-  receiveLogin,
-  requestLogout,
-  receiveLogout,
-  requestProfile,
-  receiveProfile,
-  profileError
+  requestLogin, loginInvalidRequest, loginNotAuthorized, receiveLogin,
+  requestLogout, receiveLogout,
+  requestProfile, receiveProfile, profileError,
+  requestRegister, receiveRegister, registerInvalidRequest,  registerNotAuthorized,
+  switchFormAction
 } from './auth.actions.js';
+
+// Dispatch the action of switching between login and register panes
+// Could be used to reset information
+export function switchForm() {
+  return dispatch => {
+    dispatch(switchFormAction());
+  };
+}
 
 // Calls the API to get a token and
 // dispatches actions along the way
@@ -29,24 +34,31 @@ export function loginUser(creds) {
     // We dispatch requestLogin to kickoff the call to the API
     dispatch(requestLogin());
 
-    return fetch('/create-token', config)
-      .then(response =>
-        response.json().then(
-          user => ({ user, response })
-        )
-      ).then(({ user, response }) =>  {
-        if (!response.ok) {
-          // If there was a problem, we want to
-          // dispatch the error condition
-          dispatch(loginError(user.message));
-          return Promise.reject(user);
-        } else {
-          // If login was successful, set the token in local storage
+    return fetch('/auth/login', config)
+      .then (checkHttpStatus)
+      .then(parseJSON)
+      .then((user) =>  {
+          // When uer is authorized, add the JWT token in the localstorage for authentication purpose
           localStorage.setItem('id_token', user.id_token);
-          // Dispatch the success action
           dispatch(receiveLogin(user));
+      }).catch(error => {
+        // When error happens.
+        // Dispatch differents actions wether the user is not authorized
+        // or if the server encounters any other error
+        if (error.response) {
+          error.response.text().then(text => {
+            if (error.response.status == 403) {
+              // Whill print a simple error message
+              dispatch(loginNotAuthorized(text));
+            } else {
+              // Will open an error toast
+              dispatch(loginInvalidRequest(text));
+            }
+          });
+        } else {
+          dispatch(loginInvalidRequest(error.message));
         }
-      }).catch(err => console.log('Error: ', err));
+      });
   };
 }
 
@@ -59,6 +71,7 @@ export function logoutUser() {
   };
 }
 
+// Get the profile of the authenticated user
 export function profile() {
   return dispatch => {
     dispatch(requestProfile());
@@ -71,6 +84,45 @@ export function profile() {
       })
       .catch(error => {
         handleError(error, invalidRequestSites, dispatch);
+      });
+  };
+}
+
+// Register the user to the application
+export function registerUser(account) {
+
+  let config = {
+    method: 'POST',
+    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+    body: `username=${account.username}&password=${account.password}&email=${account.email}&firstname=${account.firstname}&lastname=${account.lastname}`
+  };
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(requestRegister(account));
+
+    return fetch('/auth/register', config)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then((user) =>  {
+          // When uer is authorized
+          localStorage.setItem('id_token', user.id_token);
+          dispatch(receiveRegister(user));
+      }).catch(error => {
+        // When error happens.
+        // Dispatch differents actions wether the user is not authorized
+        // or if the server encounters any other error
+        if (error.response) {
+          error.response.text().then(text => {
+            if (error.response.status == 403) {
+              dispatch(registerNotAuthorized(text));
+            } else {
+              dispatch(registerInvalidRequest(text));
+            }
+          });
+        } else {
+          dispatch(registerInvalidRequest(error.message));
+        }
       });
   };
 }

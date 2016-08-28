@@ -17,6 +17,7 @@ class Auth extends React.Component {
     this.setState({
       selected: index
     });
+    this.props.onSwitch();
   }
   _renderTitles() {
     function labels(child, index) {
@@ -57,7 +58,8 @@ Auth.propTypes = {
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element
-  ]).isRequired
+  ]).isRequired,
+  onSwitch: React.PropTypes.func
 };
 Auth.defaultProps = {
   selected: 0

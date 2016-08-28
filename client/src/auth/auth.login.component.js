@@ -9,7 +9,7 @@ import './auth.component.scss';
 class SigninPane extends React.Component {
 
   componentDidMount() {
-    $('.ui.form')
+    $('#login > .ui.form')
       .form({
         fields: {
           username : 'empty',

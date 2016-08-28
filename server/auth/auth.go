@@ -5,13 +5,18 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
+	"github.com/spf13/viper"
 )
 
 var (
 	// ErrInvalidCredentials is an error message when credentials are invalid
 	ErrInvalidCredentials = errors.New("Invalid Username or Password")
+	// ErrUsernameAlreadyTaken is an error message when the username is already used by someone else
+	ErrUsernameAlreadyTaken = errors.New("Username already taken")
 )
 
 // Authentication contains all APIs entrypoints needed for authentication
@@ -26,20 +31,83 @@ type LoginUserQuery struct {
 	Password string
 }
 
+// RegisterUserQuery represent connection data needed to register user
+type RegisterUserQuery struct {
+	Username  string
+	Password  string
+	Firstname string
+	Lastname  string
+	Email     string
+}
+
+// RegisterUser registers the user in the application
+// Can't register if user already exists (in Docktor or LDAP)
+func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
+	// First search on Docktor
+	_, err := a.Docktor.Users().Find(query.Username)
+	if err == nil {
+		// User already exists
+		return ErrUsernameAlreadyTaken
+	}
+
+	// Then search in LDAP, if configured
+	if a.LDAP != nil {
+		// TODO : search on LDAP to check if registerd user exists in LDAP but never login in app.
+	}
+
+	hashedPassword, err := protect(query.Password)
+	if err != nil {
+		fmt.Println("Cant hash password : " + err.Error())
+		return fmt.Errorf("Password can't be stored")
+	}
+
+	docktorUser := types.User{
+		Username:    query.Username,
+		Password:    hashedPassword,
+		FirstName:   query.Firstname,
+		LastName:    query.Lastname,
+		DisplayName: query.Firstname + " " + query.Lastname,
+		Email:       query.Email,
+		Created:     time.Now(),
+		Updated:     time.Now(),
+		Provider:    "local",
+		Role:        "user",
+	}
+
+	_, err = a.Docktor.Users().Save(docktorUser)
+
+	return err
+}
+
+func protect(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(passwordWithPepper(password)), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
+}
+
+func passwordWithPepper(password string) string {
+	return password + viper.GetString("auth.bcrypt-pepper")
+}
+
 // AuthenticateUser authenticates a user
 func (a *Authentication) AuthenticateUser(query *LoginUserQuery) error {
 
 	user, err := a.Docktor.Users().Find(query.Username)
 	if err != nil || user.ID.Hex() == "" {
+		fmt.Printf("User %s not found\n", query.Username)
+		fmt.Println(err.Error())
 		return a.authenticateWhenUserNotFound(query)
 	}
-
+	fmt.Println("User found")
 	return a.authenticateWhenUserFound(user, query)
 
 }
 
 func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query *LoginUserQuery) error {
 	if docktorUser.Provider == "LDAP" {
+		fmt.Println("User is LDAP")
 		// User is from LDAP
 		if a.LDAP != nil {
 			ldapUser, err := a.LDAP.Login(query)
@@ -64,7 +132,14 @@ func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query
 			return nil
 		}
 	} else {
-		// User is local
+		fmt.Println("User is local")
+		err := bcrypt.CompareHashAndPassword(
+			[]byte(docktorUser.Password),
+			[]byte(passwordWithPepper(query.Password)),
+		)
+		if err == nil {
+			return nil
+		}
 	}
 
 	return ErrInvalidCredentials

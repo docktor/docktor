@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
 import {
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS, PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAILURE
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_INVALID_REQUEST, LOGIN_NOT_AUTHORIZED,
+  LOGOUT_SUCCESS,
+  PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAILURE,
+  REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_INVALID_REQUEST, REGISTER_NOT_AUTHORIZED,
+  SWITCH_FORM
 } from './auth.actions.js';
 
 
@@ -13,7 +17,7 @@ const initialState = {
 // The auth reducer. The starting state sets authentication
 // based on a token being in local storage. In a real app,
 // we would also want a util to check if the token is expired.
-const loginReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
       return Object.assign({}, state, {
@@ -28,11 +32,17 @@ const loginReducer = (state = initialState, action) => {
         errorMessage: '',
         user : action.user
       });
-    case LOGIN_FAILURE:
+    case LOGIN_INVALID_REQUEST:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
-        errorMessage: action.message,
+        user : {}
+      });
+    case LOGIN_NOT_AUTHORIZED:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        errorMessage: action.error,
         user : {}
       });
     case LOGOUT_SUCCESS:
@@ -59,9 +69,41 @@ const loginReducer = (state = initialState, action) => {
         errorMessage: action.message,
         user : {}
       });
+    case REGISTER_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isAuthenticated: false,
+        errorMessage : '',
+        user : {}
+      });
+    case REGISTER_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: true,
+        errorMessage : '',
+        user : action.user
+      });
+    case REGISTER_INVALID_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        errorMessage : action.error,
+        user : {}
+      });
+    case REGISTER_NOT_AUTHORIZED:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        errorMessage : action.error,
+        user : {}
+      });
+    case SWITCH_FORM:
+      return Object.assign({}, state, {
+        errorMessage: ''
+      });
     default:
       return state;
   }
 };
 
-export default loginReducer;
+export default authReducer;
