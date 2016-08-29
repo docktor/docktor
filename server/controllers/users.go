@@ -34,13 +34,13 @@ func (uc *UsersController) SaveUser(c echo.Context) error {
 	err := c.Bind(&user)
 
 	if err != nil {
-		return c.String(400, fmt.Sprintf("Error while binding user: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding user: %v", err))
 	}
 	res, err := docktorAPI.Users().Save(user)
 	if err != nil {
-		return c.String(500, fmt.Sprintf("Error while saving user: %v", err))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving user: %v", err))
 	}
-	return c.JSON(200, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 //DeleteUser into docktor

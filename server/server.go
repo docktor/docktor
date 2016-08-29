@@ -97,8 +97,8 @@ func New(version string) {
 
 		users := api.Group("/users")
 		{
-			users.DELETE("/:id", uc.DeleteUser)
-			users.PUT("/:id", uc.SaveUser)
+			users.DELETE("/:id", uc.DeleteUser, isAdmin)
+			users.PUT("/:id", uc.SaveUser, isAdmin)
 			users.GET("*", uc.GetAllUsers)
 		}
 	}
