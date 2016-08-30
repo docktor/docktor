@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"gopkg.in/redis.v3"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
@@ -14,6 +16,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+func redisCache(client *redis.Client) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("redis", client)
+			return next(c)
+		}
+	}
+}
+
 func docktorAPI(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		mongoURL := viper.GetString("server.mongo")
@@ -22,11 +33,8 @@ func docktorAPI(next echo.HandlerFunc) echo.HandlerFunc {
 			c.Error(err)
 		}
 		c.Set("api", dock)
-		if err := next(c); err != nil {
-			c.Error(err)
-		}
-		dock.Close()
-		return nil
+		defer dock.Close()
+		return next(c)
 	}
 }
 

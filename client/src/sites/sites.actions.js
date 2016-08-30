@@ -37,10 +37,10 @@ export function requestDeleteSite(id) {
 // Site is deleted
 export const RECEIVE_SITE_DELETED = 'RECEIVE_SITE_DELETED';
 
-export function receiveSiteDeleted(id) {
+export function receiveSiteDeleted(response) {
   return {
     type: RECEIVE_SITE_DELETED,
-    id,
+    id: response.ID,
     receivedAt: Date.now()
   };
 }

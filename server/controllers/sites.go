@@ -48,5 +48,5 @@ func (sc *SitesController) DeleteSite(c echo.Context) error {
 	if err != nil {
 		return c.String(500, fmt.Sprintf("Error while remove site: %v", err))
 	}
-	return c.String(200, res.Hex())
+	return c.JSON(200, RestResponse{ID: res.Hex()})
 }

@@ -23,6 +23,12 @@ func (dc *DaemonsController) GetAllDaemons(c echo.Context) error {
 	return c.JSON(200, daemons)
 }
 
+//GetDaemon from docktor
+func (dc *DaemonsController) GetDaemon(c echo.Context) error {
+	daemon := c.Get("daemon").(*api.Docktor)
+	return c.JSON(200, daemon)
+}
+
 //SaveDaemon into docktor
 func (dc *DaemonsController) SaveDaemon(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)

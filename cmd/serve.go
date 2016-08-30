@@ -23,6 +23,8 @@ func init() {
 
 	// Get configuration from command line flags
 	serveCmd.Flags().StringP("mongo-url", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("redis-addr", "", "localhost:6379", "URL to access Redis")
+	serveCmd.Flags().StringP("redis-password", "", "", "Redis password. Optional")
 	serveCmd.Flags().StringP("jwt-secret", "j", "dev-docktor-secret", "Secret key used for JWT token authentication. Change it in your instance")
 	serveCmd.Flags().StringP("bcrypt-pepper", "p", "dev-docktor-bcrypt", "Pepper used in password generation. Change it in your instance")
 	serveCmd.Flags().StringP("env", "e", "prod", "dev or prod")
@@ -40,6 +42,8 @@ func init() {
 
 	// Bind env variables.
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
+	viper.BindPFlag("server.redis.addr", serveCmd.Flags().Lookup("redis-addr"))
+	viper.BindPFlag("server.redis.password", serveCmd.Flags().Lookup("redis-password"))
 	viper.BindPFlag("auth.jwt-secret", serveCmd.Flags().Lookup("jwt-secret"))
 	viper.BindPFlag("auth.bcrypt-pepper", serveCmd.Flags().Lookup("bcrypt-pepper"))
 	viper.BindPFlag("ldap.address", serveCmd.Flags().Lookup("ldap-address"))
