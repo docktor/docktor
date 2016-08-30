@@ -5,9 +5,12 @@
     font-size: .9em;
   }
   .email {
-    max-width: 180px;
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .ui.button.toggle.active {
+    background-color: #00948d !important;
   }
 }

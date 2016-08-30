@@ -28,3 +28,33 @@ export function invalidRequestUsers(error) {
     error
   };
 }
+
+export const REQUEST_SAVE_USER = 'REQUEST_SAVE_USER';
+
+export function requestSaveUser(user) {
+  return {
+    type: REQUEST_SAVE_USER,
+    user
+  };
+}
+
+export const RECEIVE_SAVED_USER = 'RECEIVE_SAVED_USER';
+
+export function receiveSavedUser(user) {
+  return {
+    type: RECEIVE_SAVED_USER,
+    user
+  };
+}
+
+export const INVALID_SAVE_USER = 'INVALID_SAVE_USER';
+
+export function invalidSaveUser(user) {
+  return function(error) {
+    return {
+    type: INVALID_SAVE_USER,
+    user,
+    error
+    };
+  };
+}

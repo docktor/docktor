@@ -19,7 +19,7 @@ const createRequestAllGroups  = () => {
 
 const createReceiveGroups  = (action) => {
     let groups = {};
-    action.groups.forEach(group => groups[group.ID] = group);
+    action.groups.forEach(group => groups[group.id] = group);
     return {
         isFetching: false,
         didInvalidate: false,

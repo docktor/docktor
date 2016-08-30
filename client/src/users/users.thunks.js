@@ -7,9 +7,8 @@ import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // User Actions
 import {
-  requestAllUsers,
-  receiveUsers,
-  invalidRequestUsers
+  requestAllUsers, receiveUsers, invalidRequestUsers,
+  requestSaveUser, receiveSavedUser, invalidSaveUser
 } from './users.actions.js';
 
 // Thunk to fetch users
@@ -26,6 +25,34 @@ export function fetchUsers() {
       .catch(error => {
         handleError(error, invalidRequestUsers, dispatch);
       });
+  };
+}
+
+export function saveUser(user) {
+
+  const id = user.id ? user.id : -1;
+
+  return function (dispatch) {
+
+    dispatch(requestSaveUser(user));
+    let request = new Request('/api/users/' + id, withAuth({
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    }));
+
+    return fetch(request)
+    .then(checkHttpStatus)
+    .then(parseJSON)
+    .then(response => {
+        dispatch(receiveSavedUser(response));
+    })
+    .catch(error => {
+        handleError(error, invalidSaveUser(user), dispatch);
+    });
   };
 }
 

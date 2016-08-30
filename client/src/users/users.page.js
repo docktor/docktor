@@ -44,7 +44,7 @@ class Users extends React.Component {
               })(fetching)}
               {users.map(user => {
                 return (
-                  <UserCard user={user} key={user.ID} />
+                  <UserCard user={user} key={user.id} />
                 );
               })}
           </div>

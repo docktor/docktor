@@ -17,15 +17,15 @@ class ServiceCard extends React.Component {
       return (
         <div className='ui card service'>
           <div className='content'>
-            <Link className='header' to={'/service/' + service.ID} title={service.Title}><i className='cube icon'></i>{service.Title}</Link>
+            <Link className='header' to={'/service/' + service.id} title={service.title}><i className='cube icon'></i>{service.title}</Link>
           </div>
           <div className='extra content'>
             <span className='right floated'>
               <i className='calendar icon'></i>
-              {moment(service.Created).fromNow()}
+              {moment(service.created).fromNow()}
             </span>
             <i className='file archive outline icon'></i>
-            {service.Images.length + ' image(s)'}
+            {service.images.length + ' image(s)'}
           </div>
         </div>
       );

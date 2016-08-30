@@ -9,7 +9,6 @@ import (
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,27 +19,32 @@ type UsersController struct {
 //GetAllUsers from docktor
 func (uc *UsersController) GetAllUsers(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
-	sites, err := docktorAPI.Users().FindAll()
+	webservice := users.Rest{Docktor: docktorAPI}
+	users, err := webservice.GetAllUserRest()
 	if err != nil {
-		return c.String(500, "Error while retreiving all users")
+		return c.String(http.StatusInternalServerError, "Error while retreiving all users")
 	}
-	return c.JSON(200, sites)
+	return c.JSON(http.StatusOK, users)
 }
 
 //SaveUser into docktor
 func (uc *UsersController) SaveUser(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
-	var user types.User
-	err := c.Bind(&user)
 
+	// Get User from body
+	var userRest users.UserRest
+	err := c.Bind(&userRest)
 	if err != nil {
-		return c.String(400, fmt.Sprintf("Error while binding user: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding user: %v", err))
 	}
-	res, err := docktorAPI.Users().Save(user)
+
+	webservice := users.Rest{Docktor: docktorAPI}
+	res, err := webservice.SaveUser(userRest)
 	if err != nil {
-		return c.String(500, fmt.Sprintf("Error while saving user: %v", err))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving user: %v", err))
 	}
-	return c.JSON(200, res)
+
+	return c.JSON(http.StatusOK, res)
 }
 
 //DeleteUser into docktor

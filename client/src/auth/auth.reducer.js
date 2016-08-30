@@ -6,6 +6,7 @@ import {
   REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_INVALID_REQUEST, REGISTER_NOT_AUTHORIZED,
   SWITCH_FORM
 } from './auth.actions.js';
+import { RECEIVE_SAVED_USER } from '../users/users.actions.js';
 
 
 const initialState = {
@@ -101,9 +102,21 @@ const authReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorMessage: ''
       });
+    case RECEIVE_SAVED_USER:
+      return Object.assign({}, state, changeUserIfNeeded(state, action));
     default:
       return state;
   }
+};
+
+const changeUserIfNeeded = (state, action) => {
+    if (action.user.username === state.user.username) {
+      return {
+          user: action.user
+      };
+    } else {
+      return {};
+    }
 };
 
 export default authReducer;

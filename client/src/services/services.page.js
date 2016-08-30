@@ -44,7 +44,7 @@ class Services extends React.Component {
               })(fetching)}
                 {services.map(service => {
                   return (
-                    <ServiceCard service={service} key={service.ID} />
+                    <ServiceCard service={service} key={service.id} />
                   );
                 })}
           </div>

@@ -22,8 +22,6 @@ export function fetchSites() {
   return function (dispatch) {
 
     dispatch(requestAllSites());
-    let error = false;
-
     return fetch('/api/sites', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
@@ -61,11 +59,11 @@ export function deleteSite(id) {
 export function saveSite(form) {
 
   let site = Object.assign({}, form);
-  site.Latitude = parseFloat(site.Latitude.replace(',', '.'));
-  site.Longitude = parseFloat(site.Longitude.replace(',', '.'));
-  site.Created = site.Created ? site.Created : new Date();
+  site.latitude = parseFloat(site.latitude.replace(',', '.'));
+  site.longitude = parseFloat(site.longitude.replace(',', '.'));
+  site.created = site.created ? site.created : new Date();
 
-  const id = site.ID ? site.ID : -1;
+  const id = site.id ? site.id : -1;
 
   return function (dispatch) {
 
@@ -79,7 +77,6 @@ export function saveSite(form) {
       },
       body: JSON.stringify(site)
     }));
-    let error = false;
     return fetch(request)
     .then(checkHttpStatus)
     .then(parseJSON)
