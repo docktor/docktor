@@ -61,11 +61,11 @@ class SitesComponent extends React.Component {
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
             />
           {sites.map(site => {
-            const sitePosition = [site.Latitude, site.Longitude];
+            const sitePosition = [site.latitude, site.longitude];
             return (
-              <Marker key={site.ID} position={sitePosition}>
+              <Marker key={site.id} position={sitePosition}>
                 <Popup>
-                  <div>{site.Title}{' '}
+                  <div>{site.title}{' '}
                     <i onClick={this.openModalEditSite(onEdit, site)} className='blue write link icon'></i>
                     <i onClick={() => onDelete(site)} className='red trash link icon'></i>
                   </div>
@@ -95,8 +95,8 @@ const mapStateToSitesProps = (state) => {
 const mapDispatchToSitesProps = (dispatch) => {
   return {
     onDelete: site => {
-      const callback = () => dispatch(deleteSite(site.ID));
-      dispatch(confirmDeletion(site.Title, callback));
+      const callback = () => dispatch(deleteSite(site.id));
+      dispatch(confirmDeletion(site.title, callback));
     },
     onCreate: position => {
       const callback = (siteForm) => dispatch(saveSite(siteForm));

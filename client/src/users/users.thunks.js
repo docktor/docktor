@@ -30,7 +30,7 @@ export function fetchUsers() {
 
 export function saveUser(user) {
 
-  const id = user.ID ? user.ID : -1;
+  const id = user.id ? user.id : -1;
 
   return function (dispatch) {
 

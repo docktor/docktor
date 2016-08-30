@@ -22,7 +22,7 @@ const createRequestAllSites = () => {
 
 const createReceiveSites = (action) => {
   let sites = {};
-  action.sites.forEach(site => sites[site.ID] = site);
+  action.sites.forEach(site => sites[site.id] = site);
   return {
     isFetching: false,
     didInvalidate: false,
@@ -58,7 +58,7 @@ const sitesReducer = (state = initialState, action) => {
       let newSiteState = Object.assign({}, state, {
         items: { ...state.items }
       });
-      newSiteState.items[action.site.ID] = action.site;
+      newSiteState.items[action.site.id] = action.site;
       return newSiteState;
     default:
       return state;

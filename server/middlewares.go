@@ -10,6 +10,7 @@ import (
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
+	"github.com/soprasteria/godocktor-api/types"
 	"github.com/spf13/viper"
 )
 
@@ -92,7 +93,7 @@ func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Go on if admin
-		if user.Role == users.AdminRole {
+		if user.Role == types.AdminRole {
 			return next(c)
 		}
 

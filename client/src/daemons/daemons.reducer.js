@@ -19,7 +19,7 @@ const createRAD = () => {
 
 const createRD = (action) => {
   let daemons = {};
-  action.daemons.forEach(daemon => daemons[daemon.ID] = daemon);
+  action.daemons.forEach(daemon => daemons[daemon.id] = daemon);
   return {
     isFetching: false,
     didInvalidate: false,

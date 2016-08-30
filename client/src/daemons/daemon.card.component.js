@@ -18,9 +18,9 @@ class DaemonCard extends React.Component {
             <div className='daemon'>
                 <div className='ui card'>
                     <div className='content'>
-                        <Link className='header' to={'/daemon/' + daemon.ID}><i className='server icon'></i>{daemon.Name}</Link>
-                        <div className='meta'>{site.Title}</div>
-                        <div className='description'>{daemon.Description}</div>
+                        <Link className='header' to={'/daemon/' + daemon.id}><i className='server icon'></i>{daemon.name}</Link>
+                        <div className='meta'>{site.title}</div>
+                        <div className='description'>{daemon.description}</div>
                     </div>
                     <div className='ui bottom attached mini blue buttons'>
                         <div className='ui button'>{' Images'}</div>

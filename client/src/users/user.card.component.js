@@ -14,7 +14,7 @@ class UserCardComponent extends React.Component {
 
     onChangeRole() {
       const oldUser = this.props.user;
-      const userToSave = Object.assign({}, oldUser, { Role: (oldUser.Role === AUTH_ADMIN_ROLE ? AUTH_USER_ROLE :  AUTH_ADMIN_ROLE) });
+      const userToSave = Object.assign({}, oldUser, { Role: (oldUser.role === AUTH_ADMIN_ROLE ? AUTH_USER_ROLE :  AUTH_ADMIN_ROLE) });
       this.props.saveUserProp(userToSave);
     }
 
@@ -26,7 +26,7 @@ class UserCardComponent extends React.Component {
         }
         if (user.isFetching) {
           classes += 'loading';
-        } else if (user.Role === AUTH_ADMIN_ROLE) {
+        } else if (user.role === AUTH_ADMIN_ROLE) {
           classes += 'active';
         }
         return classes;
@@ -36,21 +36,20 @@ class UserCardComponent extends React.Component {
         return (
           <div className='ui card user'>
             <div className='content'>
-              <img className='ui avatar image' src='/images/avatar.jpg'/>{user.DisplayName}
+              <img className='ui avatar image' src='/images/avatar.jpg'/>{user.displayName}
               <span className='right floated meta'>
                 <button onClick={() => this.onChangeRole()} className={getRoleClass(user, connectedUser)} >
-                  <i className={user.Role === AUTH_ADMIN_ROLE ? 'unlock icon' : 'lock icon'}></i>
-                  {getRoleLabel(user.Role)}
+                  <i className={user.role === AUTH_ADMIN_ROLE ? 'unlock icon' : 'lock icon'}></i>
+                  {getRoleLabel(user.role)}
                 </button>
               </span>
             </div>
             <div className='extra content'>
-              <span className='right floated'>
-                <i className='travel icon'></i>
-                {user.Groups.length + ' group(s)'}
-              </span>
-              <div className='email' title={user.Email}>
-              <i className='mail icon'></i>{user.Email}
+            <div className='ui tiny right floated label'>
+              {user.provider}
+            </div>
+              <div className='email' title={user.email}>
+              <i className='mail icon'></i>{user.email}
               </div>
             </div>
           </div>

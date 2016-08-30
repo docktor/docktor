@@ -70,8 +70,8 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 		Email:       query.Email,
 		Created:     time.Now(),
 		Updated:     time.Now(),
-		Provider:    "local",
-		Role:        "user",
+		Provider:    types.LocalProvider,
+		Role:        types.UserRole,
 	}
 
 	_, err = a.Docktor.Users().Save(docktorUser)
@@ -160,8 +160,8 @@ func (a *Authentication) authenticateWhenUserNotFound(query *LoginUserQuery) err
 			DisplayName: ldapUser.FirstName + " " + ldapUser.LastName,
 			Username:    ldapUser.Username,
 			Email:       ldapUser.Email,
-			Provider:    "LDAP",
-			Role:        "user",
+			Provider:    types.LDAPProvider,
+			Role:        types.UserRole,
 			Created:     time.Now(),
 			Updated:     time.Now(),
 		}

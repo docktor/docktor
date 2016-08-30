@@ -19,7 +19,7 @@ const createRequestAllServices  = () => {
 
 const createReceiveServices  = (action) => {
     let services = {};
-    action.services.forEach(service => services[service.ID] = service);
+    action.services.forEach(service => services[service.id] = service);
     return {
         isFetching: false,
         didInvalidate: false,

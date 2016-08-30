@@ -110,16 +110,9 @@ const authReducer = (state = initialState, action) => {
 };
 
 const changeUserIfNeeded = (state, action) => {
-    if (action.user.Username === state.user.username) {
+    if (action.user.username === state.user.username) {
       return {
-          user: {
-            displayName: action.user.DisplayName,
-            email: action.user.Email,
-            firstName: action.user.FirstName,
-            lastName: action.user.LastName,
-            role: action.user.Role,
-            username: action.user.Username
-          }
+          user: action.user
       };
     } else {
       return {};

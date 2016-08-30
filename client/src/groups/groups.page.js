@@ -44,7 +44,7 @@ class Groups extends React.Component {
               })(fetching)}
                 {groups.map(group => {
                   return (
-                    <GroupCard group={group} key={group.ID} />
+                    <GroupCard group={group} key={group.id} />
                   );
                 })}
           </div>

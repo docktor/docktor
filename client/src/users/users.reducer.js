@@ -21,11 +21,11 @@ const createRequestAllUsers  = () => {
 };
 
 const createRequestSaveUser  = (state, action) => {
-  if (action.user.ID !== -1) {
+  if (action.user.id !== -1) {
     let newItems = { ...state.items };
-    let newItem = { ...newItems[action.user.ID] };
+    let newItem = { ...newItems[action.user.id] };
     newItem.isFetching = true;
-    newItems[action.user.ID] = newItem;
+    newItems[action.user.id] = newItem;
     return {
       items: newItems
     };
@@ -36,18 +36,18 @@ const createRequestSaveUser  = (state, action) => {
 const createReceiveSavedUser = (state, action) => {
     let newItems = { ...state.items };
     action.user.isFetching = false;
-    newItems[action.user.ID] = action.user;
+    newItems[action.user.id] = action.user;
     return {
       items: newItems
     };
 };
 
 const createInvalidSaveUser = (state, action) => {
-  if (action.user.ID !== -1) {
+  if (action.user.id !== -1) {
     let newItems = { ...state.items };
-    let newItem = { ...newItems[action.user.ID] };
+    let newItem = { ...newItems[action.user.id] };
     newItem.isFetching = false;
-    newItems[action.user.ID] = newItem;
+    newItems[action.user.id] = newItem;
     return {
       items: newItems
     };
@@ -57,7 +57,7 @@ const createInvalidSaveUser = (state, action) => {
 
 const createReceiveUsers = (action) => {
     let users = {};
-    action.users.forEach(user => users[user.ID] = user);
+    action.users.forEach(user => users[user.id] = user);
     return {
         isFetching: false,
         didInvalidate: false,
