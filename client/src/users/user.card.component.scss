@@ -10,4 +10,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .ui.button.toggle.active {
+    background-color: #00948d !important;
+  }
 }

@@ -20,7 +20,7 @@ class UserCardComponent extends React.Component {
 
     render() {
       const getRoleClass = (user, connectedUser) => {
-        let classes = 'compact ui toggle button ';
+        let classes = 'tiny compact ui toggle button ';
         if (connectedUser.role !== AUTH_ADMIN_ROLE) {
           classes += 'disabled ';
         }
