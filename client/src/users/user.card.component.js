@@ -19,22 +19,26 @@ class UserCardComponent extends React.Component {
     }
 
     render() {
-      const getRoleClass = (User) => {
-        if (User.isFetching) {
-          return 'loading';
-        } else if (User.Role === AUTH_ADMIN_ROLE) {
-          return 'active';
-        } else {
-          return '';
+      const getRoleClass = (user, connectedUser) => {
+        let classes = 'compact ui toggle button ';
+        if (connectedUser.role !== AUTH_ADMIN_ROLE) {
+          classes += 'disabled ';
         }
+        if (user.isFetching) {
+          classes += 'loading';
+        } else if (user.Role === AUTH_ADMIN_ROLE) {
+          classes += 'active';
+        }
+        return classes;
       };
       const user = this.props.user;
+      const connectedUser = this.props.auth.user;
         return (
           <div className='ui card user'>
             <div className='content'>
               <img className='ui avatar image' src='/images/avatar.jpg'/>{user.DisplayName}
               <span className='right floated meta'>
-                <button onClick={this.onChangeRole.bind(this)} className={'compact ui toggle button ' + getRoleClass(user)} >
+                <button onClick={() => this.onChangeRole()} className={getRoleClass(user, connectedUser)} >
                   <i className={user.Role === AUTH_ADMIN_ROLE ? 'unlock icon' : 'lock icon'}></i>
                   {getRoleLabel(user.Role)}
                 </button>
@@ -55,12 +59,15 @@ class UserCardComponent extends React.Component {
 }
 UserCardComponent.propTypes = {
    user: React.PropTypes.object,
+   auth: React.PropTypes.object,
    saveUserProp: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
-  return {};
+  return {
+      auth: state.auth,
+  };
 };
 
 // Function to map dispatch to container props
