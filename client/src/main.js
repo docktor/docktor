@@ -10,6 +10,7 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 // Reducers
 import sites from './sites/sites.reducer.js';
 import daemons from './daemons/daemons.reducer.js';
+import daemon from './daemons/daemon/daemon.reducer.js';
 import groups from './groups/groups.reducer.js';
 import services from './services/services.reducer.js';
 import users from './users/users.reducer.js';
@@ -21,6 +22,7 @@ import auth from './auth/auth.reducer.js';
 import App from './app/app.layout.js';
 import Home from './app/home.page.js';
 import DaemonsPage from './daemons/daemons.page.js';
+import DaemonPage from './daemons/daemon/daemon.page.js';
 import GroupsPage from './groups/groups.page.js';
 import ServicesPage from './services/services.page.js';
 import UsersPage from './users/users.page.js';
@@ -42,6 +44,7 @@ const store = createStore(
     {
       sites,
       daemons,
+      daemon,
       groups,
       services,
       users,
@@ -69,6 +72,8 @@ ReactDOM.render(
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
         <Route path='daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+        <Route path='daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+        <Route path='daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
         <Route path='users' component={requireAuthorization(UsersPage)} />

@@ -86,16 +86,17 @@ func New(version string) {
 
 		daemonsAPI := api.Group("/daemons")
 		{
-			daemonsAPI.GET("", daemonsC.GetAll)
+			daemonsAPI.GET("", daemonsC.GetAll, isAdmin)
 			daemonsAPI.PUT("/:daemonID", daemonsC.Save, isAdmin)
 			daemonsAPI.DELETE("/:daemonID", daemonsC.Delete, isAdmin)
 
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.Use(isAdmin)
-				daemonAPI.Use(daemons.RetrieveDaemon)
-				daemonAPI.GET("", daemonsC.Get)
-				daemonAPI.GET("/info", daemonsC.GetInfo, redisCache(redisClient))
+				daemonAPI.GET("", daemonsC.Get, daemons.RetrieveDaemon)
+				daemonAPI.DELETE("", daemonsC.Delete)
+				daemonAPI.PUT("", daemonsC.Save)
+				daemonAPI.GET("/info", daemonsC.GetInfo, redisCache(redisClient), daemons.RetrieveDaemon)
 			}
 		}
 
