@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/soprasteria/docktor/server/daemons"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
+	"gopkg.in/redis.v3"
 )
 
 // DaemonsController contains all daemons handlers
@@ -18,15 +21,9 @@ func (dc *DaemonsController) GetAllDaemons(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	daemons, err := docktorAPI.Daemons().FindAll()
 	if err != nil {
-		return c.String(500, "Error while retreiving all daemons")
+		return c.String(http.StatusInternalServerError, "Error while retreiving all daemons")
 	}
-	return c.JSON(200, daemons)
-}
-
-//GetDaemon from docktor
-func (dc *DaemonsController) GetDaemon(c echo.Context) error {
-	daemon := c.Get("daemon").(*api.Docktor)
-	return c.JSON(200, daemon)
+	return c.JSON(http.StatusOK, daemons)
 }
 
 //SaveDaemon into docktor
@@ -36,13 +33,13 @@ func (dc *DaemonsController) SaveDaemon(c echo.Context) error {
 	err := c.Bind(&daemon)
 
 	if err != nil {
-		return c.String(400, fmt.Sprintf("Error while binding daemon: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding daemon: %v", err))
 	}
 	res, err := docktorAPI.Daemons().Save(daemon)
 	if err != nil {
-		return c.String(500, fmt.Sprintf("Error while saving daemon: %v", err))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving daemon: %v", err))
 	}
-	return c.JSON(200, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 //DeleteDaemon into docktor
@@ -51,7 +48,24 @@ func (dc *DaemonsController) DeleteDaemon(c echo.Context) error {
 	id := c.Param("id")
 	res, err := docktorAPI.Daemons().Delete(bson.ObjectIdHex(id))
 	if err != nil {
-		return c.String(500, fmt.Sprintf("Error while remove daemon: %v", err))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove daemon: %v", err))
 	}
-	return c.JSON(200, res)
+	return c.JSON(http.StatusOK, res)
+}
+
+//GetDaemon from docktor
+func (dc *DaemonsController) GetDaemon(c echo.Context) error {
+	daemon := c.Get("daemon").(*api.Docktor)
+	return c.JSON(http.StatusOK, daemon)
+}
+
+// GetDaemonInfo : get infos about daemon from docker
+func (dc *DaemonsController) GetDaemonInfo(c echo.Context) error {
+	daemon := c.Get("daemon").(types.Daemon)
+	redis := c.Get("redis").(*redis.Client)
+	infos, err := daemons.GetInfo(daemon, redis)
+	if err != nil {
+		return c.String(http.StatusOK, daemons.DaemonInvalidID)
+	}
+	return c.JSON(http.StatusOK, infos)
 }

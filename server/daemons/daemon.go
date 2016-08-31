@@ -1,20 +1,26 @@
 package daemons
 
 import (
+	"encoding/json"
 	"strconv"
 	"time"
 
+	"github.com/fsouza/go-dockerclient"
 	"github.com/soprasteria/dockerapi"
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/redis.v3"
 )
 
-// CheckHealth ping the docker daemon status using redis cache
-func CheckHealth(daemon types.Daemon, redisClient *redis.Client) error {
+// GetInfo : retrieving the docker daemon status using redis cache
+func GetInfo(daemon types.Daemon, redisClient *redis.Client) (*docker.DockerInfo, error) {
 
-	_, err := redisClient.Get(daemon.ID.Hex()).Result()
+	infosJSON, err := redisClient.Get(daemon.ID.Hex()).Result()
 	if err == nil {
-		return nil
+		var infos docker.DockerInfo
+		errUnmarshal := json.Unmarshal([]byte(infosJSON), &infos)
+		if errUnmarshal == nil {
+			return &infos, nil
+		}
 	}
 
 	dockerHost := daemon.Protocol + "://" + daemon.Host + ":" + strconv.Itoa(daemon.Port)
@@ -25,16 +31,17 @@ func CheckHealth(daemon types.Daemon, redisClient *redis.Client) error {
 		api, err = dockerapi.NewTLSClient(dockerHost, daemon.Cert, daemon.Key, daemon.Ca)
 	}
 	if err != nil {
-		return err
-	}
-	infos, err := api.Docker.Info()
-	if err != nil {
-		return err
+		return nil, err
 	}
 
-	err = redisClient.Set(daemon.ID.Hex(), infos, 5*time.Minute).Err()
+	infos, err := api.Docker.Info()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	bytes, err := json.Marshal(infos)
+	if err == nil {
+		redisClient.Set(daemon.ID.Hex(), bytes, 5*time.Minute).Err()
+	}
+	return infos, nil
 }

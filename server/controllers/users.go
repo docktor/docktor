@@ -53,9 +53,9 @@ func (uc *UsersController) DeleteUser(c echo.Context) error {
 	id := c.Param("id")
 	res, err := docktorAPI.Users().Delete(bson.ObjectIdHex(id))
 	if err != nil {
-		return c.String(500, fmt.Sprintf("Error while remove user: %v", err))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove user: %v", err))
 	}
-	return c.JSON(200, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 // Profile returns the profile of the connecter user
