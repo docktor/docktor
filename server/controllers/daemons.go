@@ -6,10 +6,10 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/daemons"
+	"github.com/soprasteria/docktor/server/redisw"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
-	"gopkg.in/redis.v3"
 )
 
 // DaemonsController contains all daemons handlers
@@ -62,8 +62,9 @@ func (dc *DaemonsController) GetDaemon(c echo.Context) error {
 // GetDaemonInfo : get infos about daemon from docker
 func (dc *DaemonsController) GetDaemonInfo(c echo.Context) error {
 	daemon := c.Get("daemon").(types.Daemon)
-	redis := c.Get("redis").(*redis.Client)
-	infos, err := daemons.GetInfo(daemon, redis)
+	redisClient := redisw.GetRedis(c)
+
+	infos, err := daemons.GetInfo(daemon, redisClient)
 	if err != nil {
 		return c.String(http.StatusOK, daemons.DaemonInvalidID)
 	}

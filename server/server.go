@@ -96,7 +96,7 @@ func New(version string) {
 				daemonAPI.Use(isAdmin)
 				daemonAPI.Use(daemons.RetrieveDaemon)
 				daemonAPI.GET("", dc.GetDaemon)
-				daemonAPI.GET("/healthcheck", dc.HealthCheck)
+				daemonAPI.GET("/info", dc.GetDaemonInfo)
 			}
 		}
 

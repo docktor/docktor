@@ -1,47 +1,34 @@
 package daemons
 
 import (
-	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/fsouza/go-dockerclient"
-	"github.com/soprasteria/dockerapi"
+	"github.com/soprasteria/docktor/server/dockerw"
+	"github.com/soprasteria/docktor/server/redisw"
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/redis.v3"
 )
 
 // GetInfo : retrieving the docker daemon status using redis cache
-func GetInfo(daemon types.Daemon, redisClient *redis.Client) (*docker.DockerInfo, error) {
+func GetInfo(daemon types.Daemon, client *redis.Client) (*docker.DockerInfo, error) {
 
-	infosJSON, err := redisClient.Get(daemon.ID.Hex()).Result()
+	var info *docker.DockerInfo
+	key := daemon.ID.Hex()
+
+	err := redisw.Get(client, key, info)
 	if err == nil {
-		var infos docker.DockerInfo
-		errUnmarshal := json.Unmarshal([]byte(infosJSON), &infos)
-		if errUnmarshal == nil {
-			return &infos, nil
-		}
+		return info, nil
 	}
-
-	dockerHost := daemon.Protocol + "://" + daemon.Host + ":" + strconv.Itoa(daemon.Port)
-	var api *dockerapi.Client
-	if daemon.Cert == "" {
-		api, err = dockerapi.NewClient(daemon.Host)
-	} else {
-		api, err = dockerapi.NewTLSClient(dockerHost, daemon.Cert, daemon.Key, daemon.Ca)
-	}
+	api, err := dockerw.InitDocker(daemon)
 	if err != nil {
 		return nil, err
 	}
 
-	infos, err := api.Docker.Info()
+	info, err = api.Docker.Info()
 	if err != nil {
 		return nil, err
 	}
-
-	bytes, err := json.Marshal(infos)
-	if err == nil {
-		redisClient.Set(daemon.ID.Hex(), bytes, 5*time.Minute).Err()
-	}
-	return infos, nil
+	redisw.Set(client, key, info, 60*time.Second)
+	return info, nil
 }
