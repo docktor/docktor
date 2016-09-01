@@ -66,7 +66,7 @@ func (dc *DaemonsController) GetDaemonInfo(c echo.Context) error {
 
 	infos, err := daemons.GetInfo(daemon, redisClient)
 	if err != nil {
-		return c.String(http.StatusOK, daemons.DaemonInvalidID)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, infos)
 }

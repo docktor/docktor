@@ -5,7 +5,7 @@ import MD5 from 'md5';
 //Actions
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { INVALID_REQUEST_SITES } from '../sites/sites.actions.js';
-import { INVALID_REQUEST_DAEMONS } from '../daemons/daemons.actions.js';
+import { INVALID_REQUEST_DAEMONS, INVALID_REQUEST_DAEMON_INFO } from '../daemons/daemons.actions.js';
 import { INVALID_REQUEST_USERS, INVALID_SAVE_USER } from '../users/users.actions.js';
 import { LOGIN_INVALID_REQUEST, REGISTER_INVALID_REQUEST } from '../auth/auth.actions.js';
 import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from './toasts.actions.js';
@@ -24,6 +24,9 @@ const toastsReducer = (state = initialState, action) => {
         case INVALID_REQUEST_DAEMONS:
             const invalidReqDaemonsToast = createInvalidReqDaemonsToast(state, action);
             return Object.assign({}, { ...state }, invalidReqDaemonsToast);
+        case INVALID_REQUEST_DAEMON_INFO:
+            const invalidDaemonInfoToast = createInvalidDaemonInfo(state, action);
+            return Object.assign({}, { ...state }, invalidDaemonInfoToast);
 
         case INVALID_REQUEST_USERS:
             const invalidReqUsersToast = createInvalidReqUsersToast(state, action);
@@ -120,7 +123,20 @@ const createInvalidSaveUserToast = (state, action) => {
     let res = {};
     const uuid = UUID.create(4);
     res[uuid] = {
-        title: 'Cannot save user ' + action.user.Username,
+        title: 'Cannot save user ' + action.user.username,
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createInvalidDaemonInfo = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot retreiving daemon info for ' + action.daemon.name,
         message: action.error,
         level: 'error',
         position: 'bl',

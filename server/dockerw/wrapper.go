@@ -14,7 +14,7 @@ func InitDocker(daemon types.Daemon) (*dockerapi.Client, error) {
 
 	dockerHost := daemon.Protocol + "://" + daemon.Host + ":" + strconv.Itoa(daemon.Port)
 	if daemon.Cert == "" {
-		api, err = dockerapi.NewClient(daemon.Host)
+		api, err = dockerapi.NewClient(dockerHost)
 	} else {
 		api, err = dockerapi.NewTLSClient(dockerHost, daemon.Cert, daemon.Key, daemon.Ca)
 	}

@@ -28,3 +28,38 @@ export function invalidRequestDaemons(error) {
     error
   };
 }
+
+// Request daemon info
+export const REQUEST_DAEMON_INFO = 'REQUEST_DAEMON_INFO';
+
+export function requestDaemonInfo(daemon) {
+  return {
+    type: REQUEST_DAEMON_INFO,
+    daemon
+  };
+}
+
+
+// Daemon info are received
+export const RECEIVE_DAEMON_INFO = 'RECEIVE_DAEMON_INFO';
+
+export function receiveDaemonInfo(daemon, info) {
+  return {
+    type: RECEIVE_DAEMON_INFO,
+    daemon,
+    info
+  };
+}
+
+// Daemon info API returns an Error
+export const INVALID_REQUEST_DAEMON_INFO = 'INVALID_REQUEST_DAEMON_INFO';
+
+export function invalidRequestDaemonInfo(daemon) {
+  return function(error) {
+    return {
+    type: INVALID_REQUEST_DAEMON_INFO,
+    daemon,
+    error
+    };
+  };
+}
