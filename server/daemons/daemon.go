@@ -29,6 +29,6 @@ func GetInfo(daemon types.Daemon, client *redis.Client) (*docker.DockerInfo, err
 	if err != nil {
 		return nil, err
 	}
-	redisw.Set(client, key, info, 60*time.Second)
+	go redisw.Set(client, key, info, 60*time.Second)
 	return info, nil
 }

@@ -56,8 +56,7 @@ func New(version string) {
 
 	auth := engine.Group("/auth")
 	{
-		auth.Use(docktorAPI)              // Enrich echo context with connexion to Docktor mongo API
-		auth.Use(redisCache(redisClient)) // Enrich echo context with connexion to Docktor mongo API
+		auth.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
 		auth.Use(openLDAP)
 		auth.POST("/login", lc.Login)
 		auth.POST("/register", lc.Register)
@@ -96,7 +95,7 @@ func New(version string) {
 				daemonAPI.Use(isAdmin)
 				daemonAPI.Use(daemons.RetrieveDaemon)
 				daemonAPI.GET("", dc.GetDaemon)
-				daemonAPI.GET("/info", dc.GetDaemonInfo)
+				daemonAPI.GET("/info", dc.GetDaemonInfo, redisCache(redisClient))
 			}
 		}
 
