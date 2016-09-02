@@ -22,34 +22,31 @@ const createRequestAllUsers  = () => {
 
 const createRequestSaveUser  = (state, action) => {
   if (action.user.id !== -1) {
-    let newItems = { ...state.items };
-    let newItem = { ...newItems[action.user.id] };
+    let newItem = { ...state.items[action.user.id] };
     newItem.isFetching = true;
-    newItems[action.user.id] = newItem;
+    state.items[action.user.id] = newItem;
     return {
-      items: newItems
+      items: state.items
     };
   }
   return {};
 };
 
 const createReceiveSavedUser = (state, action) => {
-    let newItems = { ...state.items };
     action.user.isFetching = false;
-    newItems[action.user.id] = action.user;
+    state.items[action.user.id] = action.user;
     return {
-      items: newItems
+      items: state.items
     };
 };
 
 const createInvalidSaveUser = (state, action) => {
   if (action.user.id !== -1) {
-    let newItems = { ...state.items };
-    let newItem = { ...newItems[action.user.id] };
+    let newItem = { ...state.items[action.user.id] };
     newItem.isFetching = false;
-    newItems[action.user.id] = newItem;
+    state.items[action.user.id] = newItem;
     return {
-      items: newItems
+      items: state.items
     };
   }
   return {};

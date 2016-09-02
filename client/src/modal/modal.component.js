@@ -55,7 +55,7 @@ class Modal extends React.Component {
                                 <div key={index} className={line.class + ' fields'}>
                                 {line.fields.map(field => (
                                     <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
-                                        <label>{typeof field.label !== 'undefined' ? field.label : field.name}</label>
+                                        <label>{field.label ? field.label : field.name}</label>
                                         <div className='ui fluid input'>
                                             <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value}/>
                                         </div>
