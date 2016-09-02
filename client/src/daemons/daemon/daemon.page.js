@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { fetchDaemon } from './daemon.thunks.js';
 import { fetchSitesIfNeeded } from '../../sites/sites.thunks.js';
 import { Scrollbars } from 'react-custom-scrollbars';
+import VolumesBox from '../../common/volumes.box.component.js';
 
 import './daemon.page.scss';
 
@@ -202,32 +203,8 @@ class DaemonComponent extends React.Component {
                               </div>
                               {this.renderCertificates(item, chosenProtocol)}
                               <div className='field'>
-                                <div className='ui attached message'>
-                                  <div className='header'>
-                                    <i className='large folder open icon'></i>Volumes
-                                  </div>
-                                </div>
-                                <div className='ui form attached fluid segment'>
-                                  <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
-                                  <div className='top-row'>
-                                    <div className='field'>
-                                      <label>Internal Volume</label>
-                                    </div>
-                                    <div className='field'>
-                                      <label>Default Value</label>
-                                    </div>
-                                    <div className='field'>
-                                      <label>Rights</label>
-                                    </div>
-                                    <div className='field'>
-                                      <label>Description</label>
-                                    </div>
-                                    <div className='field'>
-                                      <label>Remove</label>
-                                    </div>
-                                  </div>
-                                  {this.renderVolumes(item)}
-                                </div>
+                                <VolumesBox>
+                                </VolumesBox>
                               </div>
                               <button type='submit' className='button-form button-block'>Test</button>
                             </form>
