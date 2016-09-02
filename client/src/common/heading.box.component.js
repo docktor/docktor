@@ -14,7 +14,7 @@ class HeadingBox extends React.Component {
             <i className={icon}></i><span className='title'>{title}</span>
           </div>
         </div>
-        <div className='ui attached fluid segment'>
+        <div className={'ui attached fluid segment ' + this.props.className}>
           {children}
         </div>
       </div>
@@ -27,7 +27,8 @@ HeadingBox.propTypes = {
     React.PropTypes.array,
     React.PropTypes.element
   ]).isRequired,
-  title: React.PropTypes.string
+  title: React.PropTypes.string,
+  className: React.PropTypes.string
 };
 
 export default HeadingBox;

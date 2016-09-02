@@ -55,7 +55,7 @@ func (d *Daemons) Delete(c echo.Context) error {
 
 //Get daemon from docktor
 func (d *Daemons) Get(c echo.Context) error {
-	daemon := c.Get("daemon").(*api.Docktor)
+	daemon := c.Get("daemon").(types.Daemon)
 	return c.JSON(http.StatusOK, daemon)
 }
 

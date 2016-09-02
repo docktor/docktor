@@ -69,40 +69,6 @@ class DaemonComponent extends React.Component {
       }
   }
 
-  renderVolumes(item) {
-    return item.volumes.map(volume => {
-          return (
-            <div className='top-row'>
-              <div className='field'>
-                <input type='text' name='name' defaultValue={volume.internal} placeholder='The volume inside the container' autoComplete='off'/>
-              </div>
-              <div className='field'>
-                <input type='text' name='name' defaultValue={volume.value} placeholder='The default volume when container is created' autoComplete='off'/>
-              </div>
-              <div className='field'>
-                <div className='ui fluid selection dropdown rights'>
-                  <input type='hidden'  name='rights' value={volume.rights}/>
-                  <i className='dropdown icon'></i>
-                  <div className='default text'>Select rights</div>
-                  <div className='menu'>
-                        <div className='item' key='ro' data-value='ro'>Read-only</div>
-                        <div className='item' key='rw' data-value='ro'>Read-write</div>
-                  </div>
-                </div>
-              </div>
-              <div className='field'>
-                <textarea rows='2' name='description' defaultValue={volume.description} placeholder='Describe the utility of this volume' autoComplete='off'/>
-              </div>
-              <div className='field'>
-                <button className='ui red icon button'>
-                  <i className='trash icon'></i>
-                </button>
-              </div>
-            </div>
-          );
-        });
-  }
-
   renderCertificates(item, chosenProtocol) {
       if (item.protocol === 'https' || chosenProtocol === 'https') {
         return(
@@ -177,10 +143,10 @@ class DaemonComponent extends React.Component {
                                 </div>
                               </div>
                               <div className='top-row'>
-                                <div className='field'>
+                                <div className='three wide field'>
                                   <div className='large ui label'>Docker daemon :</div>
                                 </div>
-                                <div className='field'>
+                                <div className='two wide field'>
                                   <label>Protocol<span className='req'>*</span></label>
                                   <select id='protocol-dropdown' name='protocol' defaultValue={item.protocol} ref='protocol' className='ui fluid dropdown'  onChange={(event) => this.onChangeProtocol(event)}>
                                     <option value=''>Select protocol</option>
@@ -188,22 +154,23 @@ class DaemonComponent extends React.Component {
                                     <option value='https'>HTTPS</option>
                                   </select>
                                 </div>
-                                <div className='field'>
+                                <div className='seven wide field'>
                                   <label>Hostname<span className='req'>*</span></label>
                                   <input type='text' ref='host' name='host' placeholder='Hostname or IP' defaultValue={item.host} autoComplete='off'/>
                                 </div>
-                                <div className='field'>
+                                <div className='two wide field'>
                                   <label>Port<span className='req'>*</span></label>
                                   <input type='number' ref='port' name='port' placeholder='Port' defaultValue={item.port} autoComplete='off'/>
                                 </div>
-                                <div className='field'>
+                                <div className='two wide field'>
                                   <label>Timeout<span className='req'>*</span></label>
                                   <input type='number' ref='timeout' name='timeout' placeholder='Timeout' defaultValue={item.timeout} autoComplete='off'/>
                                 </div>
                               </div>
                               {this.renderCertificates(item, chosenProtocol)}
                               <div className='field'>
-                                <VolumesBox>
+                                <VolumesBox volumes={item.volumes}>
+                                  <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
                                 </VolumesBox>
                               </div>
                               <button type='submit' className='button-form button-block'>Test</button>

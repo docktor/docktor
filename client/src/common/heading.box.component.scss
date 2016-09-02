@@ -1,8 +1,10 @@
 
-.box .title {
-  margin-left: .5em;
-  vertical-align: middle;
-}
-.box .box-header {
-  border-radius: 0 !important;
+.box {
+  .title {
+    margin-left: .5em;
+    vertical-align: middle;
+  }
+  .box-header {
+    border-radius: 0 !important;
+  }
 }
