@@ -13,8 +13,10 @@ import:
 - package: github.com/dgrijalva/jwt-go
   version: ^3.0.0
 - package: github.com/labstack/gommon
-  version: ^0.0.3
 - package: github.com/auth0/go-jwt-middleware
 - package: gopkg.in/ldap.v2
   version: ~2.4.1
 - package: gopkg.in/asn1-ber.v1
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt

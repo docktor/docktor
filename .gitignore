@@ -5,3 +5,4 @@ dist
 docktor
 bower_components/
 .vscode
+vendor/
