@@ -35,12 +35,13 @@ export function fetchDaemons() {
 }
 
 // Thunk to fetch daemon info
-export function fetchDaemonInfo(daemon) {
+export function fetchDaemonInfo(daemon, force) {
   return function (dispatch) {
 
     dispatch(requestDaemonInfo(daemon));
-
-    return fetch('/api/daemons/' + daemon.id + '/info', withAuth({ method:'GET' }))
+    let url = `/api/daemons/${daemon.id}/info`;
+    url = force ? url + '?force=true' : url;
+    return fetch(url, withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {

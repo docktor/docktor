@@ -55,6 +55,7 @@ const createInvalidDaemonInfo = (state, action) => {
   let newItems = { ...state.items };
   let newItem = { ...newItems[action.daemon.id] };
   newItem.isFetching = false;
+  newItem.info = { status: 'DOWN' };
   newItems[action.daemon.id] = newItem;
   return {
     items: newItems

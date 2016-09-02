@@ -14,13 +14,24 @@ class DaemonCard extends React.Component {
 
     componentWillMount() {
       const daemon = this.props.daemon;
-      this.props.fetchInfo(daemon)();
+      this.props.fetchInfo(daemon, false)();
+    }
+
+    getColor(info) {
+      if (!info) {
+        return 'grey';
+      } else if (info.status === 'UP') {
+        return 'green';
+      } else {
+        return 'red';
+      }
     }
 
     render() {
         const daemon = this.props.daemon;
         const fetchInfo = this.props.fetchInfo;
         const isFetching = daemon.isFetching;
+        const info = daemon.info;
         let site = this.props.site;
         if (!site) {
             site = { Title: 'unknown' };
@@ -29,14 +40,21 @@ class DaemonCard extends React.Component {
             <div className='daemon'>
                 <div className='ui card'>
                     <div className='content'>
-                        <Link className='header' to={'/daemon/' + daemon.id}><i className='server icon'></i>{daemon.name}</Link>
+                        <div className='header'>
+                          <Link className='header' to={'/daemon/' + daemon.id}>
+                            <i className='server icon'></i>{daemon.name}
+                          </Link>
+                          <div title={info ? info.message : ''} className={'ui right floated' + (isFetching ? ' disabled' : '') + ' label ' + this.getColor(info)}>
+                            {(info ? info.status : 'UNKNOWN')}
+                          </div>
+                        </div>
                         <div className='meta'>{site.title}</div>
                         <div className='description'>{daemon.description}</div>
                     </div>
                     <div className='ui bottom attached mini blue buttons'>
-                        <div className={'ui button' + (isFetching ? ' loading' : '')}>{(daemon.info ? daemon.info.Images : '?') + ' Image(s)'}</div>
-                        <div className={'ui button' + (isFetching ? ' loading' : '')}>{(daemon.info ? daemon.info.Containers : '?') + ' Container(s)'}</div>
-                        <div className={'ui icon button' + (isFetching ? ' disabled' : '')} onClick={fetchInfo(daemon)}>
+                        <div className={'ui button' + (isFetching ? ' loading' : ' disabled')}>{(info && info.images ? info.images : '0') + ' Image(s)'}</div>
+                        <div className={'ui button' + (isFetching ? ' loading' : ' disabled')}>{(info && info.containers ? info.containers : '0') + ' Container(s)'}</div>
+                        <div className={'ui icon button' + (isFetching ? ' disabled' : '')} onClick={fetchInfo(daemon, true)}>
                             <i className='refresh icon'></i>
                         </div>
                     </div>
@@ -58,7 +76,7 @@ const mapStateToProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchInfo: (daemon) => () => dispatch(fetchDaemonInfo(daemon))
+    fetchInfo: (daemon, force) => () => dispatch(fetchDaemonInfo(daemon, force))
   };
 };
 

@@ -40,7 +40,7 @@ export const RECEIVE_SITE_DELETED = 'RECEIVE_SITE_DELETED';
 export function receiveSiteDeleted(response) {
   return {
     type: RECEIVE_SITE_DELETED,
-    id: response.ID,
+    id: response.id,
     receivedAt: Date.now()
   };
 }

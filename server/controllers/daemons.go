@@ -62,9 +62,10 @@ func (dc *DaemonsController) GetDaemon(c echo.Context) error {
 // GetDaemonInfo : get infos about daemon from docker
 func (dc *DaemonsController) GetDaemonInfo(c echo.Context) error {
 	daemon := c.Get("daemon").(types.Daemon)
+	forceParam := c.QueryParam("force")
 	redisClient := redisw.GetRedis(c)
 
-	infos, err := daemons.GetInfo(daemon, redisClient)
+	infos, err := daemons.GetInfo(daemon, redisClient, forceParam == "true")
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
