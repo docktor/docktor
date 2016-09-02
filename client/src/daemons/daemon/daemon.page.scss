@@ -1,0 +1,164 @@
+$form-bg: #2c3e50;
+$white: #fff;
+
+$main: #00948d;
+$main-light: lighten($main, 5%);
+$main-dark: darken($main, 5%);
+
+$gray-light: #a0b3b0;
+$gray: #ddd;
+$red: #da5959;
+
+$thin: 300;
+$normal: 400;
+$bold: 600;
+$br: 4px;
+
+.daemon-form {
+
+  background: rgba($form-bg, .9);
+  margin: 40px;
+  min-width: 450px;
+  padding: 40px;
+  width: 70%;
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
+  h1 {
+    color: $white;
+    font-weight: $thin;
+    margin: 0 0 30px;
+    text-align: center;
+  }
+
+  a {
+    color: $main;
+    text-decoration: none;
+    transition: .5s ease;
+    &:hover {
+      color: $main-dark;
+    }
+  }
+
+  .ui.form .field {
+    margin-bottom: 20px;
+    position: relative;
+    label {
+      color: rgba($white, .5);
+      span {
+        color: $main;
+        font-size: 1.2em;
+        margin-left: .3em;
+      }
+    }
+    input,
+    textarea,
+    .ui.dropdown {
+      border-radius: 0 !important;
+    }
+  }
+
+  .ui.form .top-row {
+    display: flex;
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+
+    > div {
+      float: left;
+      margin-right: 4%;
+      width: 48%;
+      &:last-child {
+        margin: 0;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .tab-group {
+    list-style: none;
+    margin: 0 0 40px;
+    padding: 0;
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+    li a {
+      background: rgba($gray-light, .25);
+      color: $gray-light;
+      cursor: pointer;
+      display: block;
+      float: left;
+      font-size: 20px;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      transition: .5s ease;
+      width: 50%;
+      &:hover {
+        background: $main-dark;
+        color: $white;
+      }
+    }
+    .active a {
+      background: $main;
+      color: $white;
+    }
+  }
+
+  .button-form {
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    appearance: none;
+    background: $main;
+    border: none;
+    border-radius: 0;
+    color: $white;
+    font-size: 2rem;
+    font-weight: $bold;
+    letter-spacing: .1em;
+    margin-top: 30px;
+    outline: none;
+    padding: 15px 0;
+    text-transform: uppercase;
+    transition: all.5s ease;
+    &:hover,
+    &:focus {
+      background: $main-dark;
+      color: $white;
+    }
+  }
+
+  .ui.label {
+    background-color: #3a6191;
+    border-radius: 0;
+    color: white;
+    height: 38px;
+    line-height: 38px;
+    margin-top: 24px;
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+
+  .button-block {
+    display: block;
+    width: 100%;
+  }
+
+  .forgot {
+    margin-top: -20px;
+    text-align: right;
+  }
+
+  .error {
+    color: $red;
+  }
+
+}
