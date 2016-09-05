@@ -31,15 +31,15 @@ class SigninPane extends React.Component {
       <div id='login'>
         <h1>{this.props.title}</h1>
         <form className='ui form'>
-          <div className='field'>
+          <div className='required field'>
             <label>
-              Username<span className='req'>*</span>
+              Username
             </label>
             <input type='text' ref='username' name='username' autoComplete='off' placeholder='Registered/LDAP username' />
           </div>
-          <div className='field'>
+          <div className='required field'>
               <label>
-              Password<span className='req'>*</span>
+              Password
               </label>
               <input type='password' ref='password' name='password' autoComplete='off' placeholder='Password' />
           </div>

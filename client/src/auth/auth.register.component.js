@@ -35,36 +35,36 @@ class RegisterPane extends React.Component {
         <h1>{this.props.title}</h1>
         <form className='ui form' >
         <div className='top-row'>
-          <div className='field'>
+          <div className='required field'>
             <label>
-              Username<span className='req'>*</span>
+              Username
             </label>
             <input type='text' ref='username' name='username' placeholder='A unique username' autoComplete='off'/>
           </div>
-          <div className='field'>
+          <div className='required field'>
             <label>
-              Password<span className='req'>*</span>
+              Password
             </label>
             <input type='password' ref='password' name='password'  placeholder='Set a password' autoComplete='off'/>
           </div>
         </div>
         <div className='top-row'>
-          <div className='field'>
+          <div className='required field'>
             <label>
-              First Name<span className='req'>*</span>
+              First Name
             </label>
             <input type='text' ref='firstname' name='firstname' placeholder='First Name' autoComplete='off' />
           </div>
-          <div className='field'>
+          <div className='required field'>
             <label>
-              Last Name<span className='req'>*</span>
+              Last Name
             </label>
             <input type='text' ref='lastname' name='lastname' placeholder='Last Name' autoComplete='off'/>
           </div>
         </div>
-        <div className='field'>
+        <div className='required field'>
           <label>
-            Email Address<span className='req'>*</span>
+            Email Address
           </label>
           <input type='email' ref='email' name='email' placeholder='A valid email address' autoComplete='off'/>
         </div>

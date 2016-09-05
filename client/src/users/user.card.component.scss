@@ -13,4 +13,19 @@
   .ui.button.toggle.active {
     background-color: #00948d !important;
   }
+
+  .ui.top.right.attached.button {
+    left: auto;
+    margin: 0;
+    padding: .75em 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+  .ui.provider.label {
+    background-color: #3a6191;
+
+    color: white;
+  }
 }

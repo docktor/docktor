@@ -23,12 +23,6 @@ $br: 4px;
   min-width: 450px;
   padding: 40px;
 
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-  }
-
   h1 {
     color: $white;
     font-weight: $thin;
@@ -50,11 +44,6 @@ $br: 4px;
     position: relative;
     label {
       color: rgba($white, .5);
-      span {
-        color: $main;
-        font-size: 1.2em;
-        margin-left: .3em;
-      }
     }
   }
 
@@ -139,9 +128,4 @@ $br: 4px;
     margin-top: -20px;
     text-align: right;
   }
-
-  .error {
-    color: $red;
-  }
-
 }
