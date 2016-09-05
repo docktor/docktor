@@ -23,7 +23,8 @@ var dependenciesPath = {
         './bower_components/semantic/dist/themes/default/assets/fonts/*'
     ],
     images: [
-        './client/src/**/images/*',
+        './client/src/app/images/*',
+        './client/src/users/images/*',
         './node_modules/leaflet/dist/images/*',
         './bower_components/semantic/dist/themes/default/assets/images/*'
     ]
@@ -130,7 +131,7 @@ gulp.task('bundle', ['clean-js', 'bundle-html', 'bundle-fonts', 'bundle-images',
 
 
 gulp.task('clean', function() {
-  return gulp.src(distPath.dist + '/*', {
+  return gulp.src([distPath.dist + '/*', distPath.client], {
       read: false
   }).pipe(clean());
 });

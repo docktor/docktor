@@ -33,14 +33,11 @@ $teal-button-color-active: #00827c !default;
 }
 
 .sites {
-  padding: 2em 1em;
-  padding-right: 0;
+  padding: 1em;
 }
 
 .daemons-list {
   overflow-y: auto;
-  padding-bottom: 1em;
-  padding-top: 1em;
   position: relative;
 
   .dimmable {

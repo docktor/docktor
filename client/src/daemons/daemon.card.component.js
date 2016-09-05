@@ -34,7 +34,7 @@ class DaemonCard extends React.Component {
         const info = daemon.info;
         let site = this.props.site;
         if (!site) {
-            site = { Title: 'unknown' };
+            site = { title: 'Unknown Site' };
         }
         return (
             <div className='daemon'>
