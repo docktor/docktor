@@ -14,8 +14,8 @@ export function openNewSiteModal(position, callback) {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
   line.fields.push({ label: 'Title', name: 'title', desc: 'Site Title', type: 'text', required: true });
-  line.fields.push({ label: 'Latitude', name: 'latitude', desc: 'Site Latitude', value: Math.round(position.lat * 100) / 100, type: 'number', required: true });
-  line.fields.push({ label: 'Longitude', name: 'longitude', desc: 'Site Longitude', value: Math.round(position.lng * 100) / 100, type: 'number', required: true });
+  line.fields.push({ label: 'Latitude', name: 'latitude', desc: 'Site Latitude', value: Math.round(position.lat * 10000) / 10000, type: 'number', required: true });
+  line.fields.push({ label: 'Longitude', name: 'longitude', desc: 'Site Longitude', value: Math.round(position.lng * 10000) / 10000, type: 'number', required: true });
   form.lines.push(line);
   return {
     type: OPEN_MODAL,
