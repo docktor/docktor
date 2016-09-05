@@ -112,7 +112,6 @@ func (dc *LoginController) Register(c echo.Context) error {
 //Login handles the login of a user
 //When user is authorized, it creates a JWT Token https://jwt.io/introduction/ that will be store on client
 func (dc *LoginController) Login(c echo.Context) error {
-
 	// Get input parameters
 	username := c.FormValue("username")
 	password := c.FormValue("password")

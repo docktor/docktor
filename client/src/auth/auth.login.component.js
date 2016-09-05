@@ -26,7 +26,7 @@ class SigninPane extends React.Component {
   }
 
   render() {
-    const { errorMessage } = this.props;
+    const { errorMessage, isFetching } = this.props;
     return (
       <div id='login'>
         <h1>{this.props.title}</h1>
@@ -44,11 +44,11 @@ class SigninPane extends React.Component {
               <input type='password' ref='password' name='password' autoComplete='off' placeholder='Password' />
           </div>
           {errorMessage &&
-              <p className='error'>{errorMessage}</p>
+              <p className='error api'>{errorMessage}</p>
           }
           <div className='ui error message'></div>
           <p className='forgot'><a href='#'>Forgot Password?</a></p>
-          <button type='submit' className='button button-block'>{this.props.submit}</button>
+          <button type='submit' className={'ui button button-block' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
         </form>
       </div>
     );
@@ -68,7 +68,8 @@ SigninPane.propTypes = {
   errorMessage: React.PropTypes.string,
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
-  submit: React.PropTypes.string.isRequired
+  submit: React.PropTypes.string.isRequired,
+  isFetching: React.PropTypes.bool.isRequired
 };
 
 export default SigninPane;
