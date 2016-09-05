@@ -56,9 +56,6 @@ $br: 4px;
         margin-left: .3em;
       }
     }
-    input {
-      border-radius: 0;
-    }
   }
 
   .ui.form .top-row {
@@ -117,7 +114,6 @@ $br: 4px;
     appearance: none;
     background: $main;
     border: none;
-    border-radius: 0;
     color: $white;
     font-size: 2rem;
     font-weight: $bold;

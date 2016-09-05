@@ -1,0 +1,33 @@
+$body-background-color: #28303a !default;
+
+body,
+html {
+  background-color: $body-background-color;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.root,
+.fill {
+  height: 100%;
+  width: 100%;
+}
+
+.ui.menu,
+.ui.button,
+.ui.buttons,
+.ui.card,
+.ui.label,
+.ui.cards > .card
+.ui.card,
+.ui.menu .dropdown.item .menu,
+input {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ui.buttons {
+  margin: 0;
+  padding: 1px;
+}
