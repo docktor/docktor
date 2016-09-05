@@ -8,9 +8,26 @@
 
     .content {
       padding-bottom: 0;
+      .header,
+      .meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .header {
+        max-width: 180px;
+      }
+
+      .ui.top.right.attached.label {
+        right: -1px;
+        top: -1px;
+      }
     }
     .blue.buttons {
+      height: 29px !important;
       margin-bottom: -2px !important;
+      min-height: 29px !important;
       .button {
         background-color: #3a6191;
       }

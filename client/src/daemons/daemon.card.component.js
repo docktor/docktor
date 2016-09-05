@@ -44,20 +44,34 @@ class DaemonCard extends React.Component {
                           <Link className='header' to={'/daemon/' + daemon.id}>
                             <i className='server icon'></i>{daemon.name}
                           </Link>
-                          <div title={info ? info.message : ''} className={'ui right floated' + (isFetching ? ' disabled' : '') + ' label ' + this.getColor(info)}>
-                            {(info ? info.status : 'UNKNOWN')}
-                          </div>
+                        </div>
+                        <div title={info ? info.message : ''} className={'ui top right attached' + (isFetching ? ' disabled' : '') + ' label ' + this.getColor(info)}>
+                          {(info ? info.status : 'UNKNOWN')}
                         </div>
                         <div className='meta'>{site.title}</div>
                         <div className='description'>{daemon.description}</div>
                     </div>
-                    <div className='ui bottom attached mini blue buttons'>
-                        <div className={'ui button' + (isFetching ? ' loading' : ' disabled')}>{(info && info.images ? info.images : '0') + ' Image(s)'}</div>
-                        <div className={'ui button' + (isFetching ? ' loading' : ' disabled')}>{(info && info.containers ? info.containers : '0') + ' Container(s)'}</div>
-                        <div className={'ui icon button' + (isFetching ? ' disabled' : '')} onClick={fetchInfo(daemon, true)}>
-                            <i className='refresh icon'></i>
-                        </div>
-                    </div>
+                        {
+                          (fetching => {
+                            if (fetching) {
+                              return (
+                                <div className='ui bottom attached mini blue buttons'>
+                                  <div className='ui button loading'></div>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div className='ui bottom attached mini blue buttons'>
+                                  <div className='ui button disabled'>{(info && info.images ? info.images : '0') + ' Image(s)'}</div>
+                                  <div className='ui button disabled'>{(info && info.containers ? info.containers : '0') + ' Container(s)'}</div>
+                                  <div className='ui icon button' onClick={fetchInfo(daemon, true)}>
+                                    <i className='refresh icon'></i>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          })(isFetching)
+                        }
                 </div>
             </div>
         );
