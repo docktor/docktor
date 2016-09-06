@@ -20,9 +20,9 @@ const createRequestAllDaemons = () => {
   };
 };
 
-const createReceiveDaemon = (action) => {
+const createReceiveDaemon = (state, action) => {
   let daemons = {};
-  action.daemons.forEach(daemon => daemons[daemon.id] = daemon);
+  action.daemons.forEach(daemon => daemons[daemon.id] = Object.assign({}, state.items[daemon.id], daemon));
   return {
     isFetching: false,
     didInvalidate: false,
@@ -32,7 +32,7 @@ const createReceiveDaemon = (action) => {
 };
 
 const createRequestDaemonInfo  = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   let newItem = { ...newItems[action.daemon.id] };
   newItem.isFetching = true;
   newItems[action.daemon.id] = newItem;
@@ -42,7 +42,7 @@ const createRequestDaemonInfo  = (state, action) => {
 };
 
 const createReceiveDaemonInfo = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   action.daemon.isFetching = false;
   action.daemon.info = action.info;
   newItems[action.daemon.id] = action.daemon;
@@ -52,7 +52,7 @@ const createReceiveDaemonInfo = (state, action) => {
 };
 
 const createInvalidDaemonInfo = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   let newItem = { ...newItems[action.daemon.id] };
   newItem.isFetching = false;
   newItem.info = { status: 'DOWN' };
@@ -69,7 +69,7 @@ const daemonsReducer = (state = initialState, action) => {
     case REQUEST_ALL_DAEMONS:
       return Object.assign({}, state, createRequestAllDaemons());
     case RECEIVE_DAEMONS:
-      return Object.assign({}, state, createReceiveDaemon(action));
+      return Object.assign({}, state, createReceiveDaemon(state, action));
     case REQUEST_DAEMON_INFO:
       return Object.assign({}, state, createRequestDaemonInfo(state, action));
     case RECEIVE_DAEMON_INFO:

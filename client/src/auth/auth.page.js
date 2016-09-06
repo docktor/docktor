@@ -23,17 +23,18 @@ class LoginP extends React.Component {
     }
   }
   render() {
-    const { logUser, regUser, onSwitch, errorMessage, isAuthenticated } = this.props;
+    const { logUser, regUser, onSwitch, errorMessage, isAuthenticated, isFetching } = this.props;
     return (
         <Auth selected={0} onSwitch={onSwitch}>
-          <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser}/>
-          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} />
+          <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}/>
+          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching}/>
         </Auth>
     );
   }
 };
 LoginP.propTypes = {
   isAuthenticated: React.PropTypes.bool.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
   logUser: React.PropTypes.func.isRequired,
   regUser : React.PropTypes.func.isRequired,
   onSwitch: React.PropTypes.func.isRequired,
@@ -45,12 +46,13 @@ LoginP.propTypes = {
 // Function to map state to container props
 const mapStateToLoginPageProps = (state) => {
   const { auth } = state;
-  const { isAuthenticated, errorMessage } = auth;
+  const { isAuthenticated, errorMessage, isFetching } = auth;
   const redirectTo = state.routing.locationBeforeTransitions.query.next || '/';
   return {
     isAuthenticated,
     errorMessage,
-    redirectTo
+    redirectTo,
+    isFetching
   };
 };
 

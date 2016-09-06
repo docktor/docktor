@@ -10,15 +10,15 @@ import { loginUser, registerUser, switchForm } from '../auth/auth.thunk.js';
 // HomeComponent displaying either the register/login component or information about Docktor when authenticated
 class HomeComponent extends React.Component {
   render() {
-    const { logUser, regUser, onSwitch, isAuthenticated, errorMessage } = this.props;
+    const { logUser, regUser, onSwitch, isAuthenticated, errorMessage, isFetching } = this.props;
     var content;
     if (isAuthenticated) {
       content = (<div></div>);
     } else {
       content = (
         <Auth selected={0} onSwitch={onSwitch}>
-          <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser}/>
-          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} />
+          <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}/>
+          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching} />
         </Auth>
       );
     }
@@ -29,6 +29,7 @@ class HomeComponent extends React.Component {
 }
 HomeComponent.propTypes = {
   isAuthenticated : React.PropTypes.bool.isRequired,
+  isFetching : React.PropTypes.bool.isRequired,
   logUser: React.PropTypes.func.isRequired,
   regUser : React.PropTypes.func.isRequired,
   onSwitch : React.PropTypes.func.isRequired,
@@ -38,11 +39,12 @@ HomeComponent.propTypes = {
 // Function to map state to container props
 const mapStateToProps = (state) => {
   const { auth } = state;
-  const { isAuthenticated, errorMessage } = auth;
+  const { isAuthenticated, errorMessage, isFetching } = auth;
 
   return {
     isAuthenticated,
-    errorMessage
+    errorMessage,
+    isFetching
   };
 };
 

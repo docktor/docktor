@@ -1,0 +1,61 @@
+$body-background-color: #28303a !default;
+
+body,
+html {
+  background-color: $body-background-color;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.root,
+.fill {
+  height: 100%;
+  width: 100%;
+}
+
+.ui.menu,
+.ui.button,
+.ui.buttons,
+.ui.card,
+.ui.label,
+.ui.cards > .card
+.ui.card,
+.ui.menu .dropdown.item .menu,
+.ui.modal,
+.ui.modal > :last-child,
+.ui.modal > :first-child,
+.ui.message,
+input {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ui.error.message,
+.ui.form .field.error input {
+  background-color: #f9d6d6 !important;
+  color: #9f3a38 !important;
+}
+
+.ui.form .field {
+  label {
+    color: rgba(255, 255, 255, .5) !important;
+  }
+  label:after {
+    color: #00948d !important;
+  }
+}
+
+.ui.form .field.error {
+  label {
+    color: #ce8b8a !important;
+  }
+  label:after {
+    color: #db2828 !important;
+  }
+}
+
+.ui.buttons {
+  margin: 0;
+  padding: 1px;
+}

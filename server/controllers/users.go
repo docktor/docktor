@@ -12,12 +12,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// UsersController contains all group handlers
-type UsersController struct {
+// Users contains all group handlers
+type Users struct {
 }
 
-//GetAllUsers from docktor
-func (uc *UsersController) GetAllUsers(c echo.Context) error {
+//GetAll users from docktor
+func (u *Users) GetAll(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	webservice := users.Rest{Docktor: docktorAPI}
 	users, err := webservice.GetAllUserRest()
@@ -27,8 +27,8 @@ func (uc *UsersController) GetAllUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-//SaveUser into docktor
-func (uc *UsersController) SaveUser(c echo.Context) error {
+//Save user into docktor
+func (u *Users) Save(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 
 	// Get User from body
@@ -47,8 +47,8 @@ func (uc *UsersController) SaveUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-//DeleteUser into docktor
-func (uc *UsersController) DeleteUser(c echo.Context) error {
+//Delete user into docktor
+func (u *Users) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	id := c.Param("id")
 	res, err := docktorAPI.Users().Delete(bson.ObjectIdHex(id))
@@ -59,7 +59,7 @@ func (uc *UsersController) DeleteUser(c echo.Context) error {
 }
 
 // Profile returns the profile of the connecter user
-func (uc *UsersController) Profile(c echo.Context) error {
+func (u *Users) Profile(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	userToken := c.Get("user").(*jwt.Token)
 

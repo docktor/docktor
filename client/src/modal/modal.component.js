@@ -35,16 +35,23 @@ class Modal extends React.Component {
         };
     }
 
+    closeModal() {
+      $('#modal-form').find('.ui.error.message ul').remove();
+      $('#modal-form').find('fields .error').removeClass('error').find('.prompt').remove();
+      const onClose = this.props.onClose;
+      onClose();
+    }
+
     render() {
         const modal = this.props.modal;
-        const onClose = this.props.onClose;
+        const onClose = () => this.closeModal();
         return (
             <Rodal visible={modal.isVisible}
                 onClose={onClose}
                 showCloseButton={false}
                 animation={modal.animation}>
                 <div className='ui active small modal'>
-                    <i className='close icon' onClick={onClose}></i>
+                    <i className='close circle icon' onClick={onClose}></i>
                     <div className='header'>{modal.title}</div>
                     <div className='content'>
                         <div id='modal-form' className='ui form' ref='form'>
@@ -63,6 +70,7 @@ class Modal extends React.Component {
                                 ))}
                                 </div>
                             ))}
+                            <div className='ui error message'></div>
                         </div>
                     </div>
                     <div className='actions'>

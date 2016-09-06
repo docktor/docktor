@@ -14,7 +14,7 @@ $.form = form;
 
 // Style
 import 'semantic/dist/semantic.css';
-import './app.layout.scss';
+import './common.scss';
 import './flex.scss';
 
 // App Component

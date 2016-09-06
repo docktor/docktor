@@ -32,7 +32,7 @@ class Users extends React.Component {
           <div className='flex'></div>
         </div>
         <Scrollbars className='flex ui dimmable'>
-          <div className='flex layout horizontal around-justified wrap user-list'>
+          <div className='flex layout horizontal center-center wrap user-list'>
               {(fetching => {
                 if (fetching) {
                   return (

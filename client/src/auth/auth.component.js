@@ -46,9 +46,11 @@ class Auth extends React.Component {
   }
   render() {
     return (
-      <div className='login-form login'>
-        {this._renderTitles()}
-        {this._renderContent()}
+      <div className='login-form'>
+        <div className='login'>
+          {this._renderTitles()}
+          {this._renderContent()}
+        </div>
       </div>
     );
   }

@@ -1,16 +1,25 @@
 .daemon {
   .ui.card {
     height: 140px;
-    margin-bottom: .5em !important;
-    margin-left: .5em !important;
-    margin-right: .5em !important;
-    margin-top: 1em !important;
+    margin: 1em !important;
 
     .content {
       padding-bottom: 0;
+      .header,
+      .meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .header {
+        max-width: 180px;
+      }
     }
     .blue.buttons {
+      height: 29px !important;
       margin-bottom: -2px !important;
+      min-height: 29px !important;
       .button {
         background-color: #3a6191;
       }

@@ -2,7 +2,6 @@
   position: relative !important;
   .map {
     border: 1px lightgrey solid;
-    border-radius: .28rem;
     position: relative;
     a:hover {
       cursor: pointer;
@@ -24,4 +23,8 @@
 .leaflet-bottom.leaflet-right,
 leaflet-control-zoom {
   z-index: 1 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0 !important;
 }

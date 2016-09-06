@@ -9,12 +9,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// ServicesController contains all services handlers
-type ServicesController struct {
+// Services contains all services handlers
+type Services struct {
 }
 
-//GetAllServices from docktor
-func (sc *ServicesController) GetAllServices(c echo.Context) error {
+//GetAll services from docktor
+func (s *Services) GetAll(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	services, err := docktorAPI.Services().FindAll()
 	if err != nil {
@@ -23,8 +23,8 @@ func (sc *ServicesController) GetAllServices(c echo.Context) error {
 	return c.JSON(200, services)
 }
 
-//SaveService into docktor
-func (sc *ServicesController) SaveService(c echo.Context) error {
+//Save service into docktor
+func (s *Services) Save(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	var service types.Service
 	err := c.Bind(&service)
@@ -39,8 +39,8 @@ func (sc *ServicesController) SaveService(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
-//DeleteService into docktor
-func (sc *ServicesController) DeleteService(c echo.Context) error {
+//Delete service into docktor
+func (s *Services) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	id := c.Param("id")
 	res, err := docktorAPI.Services().Delete(bson.ObjectIdHex(id))

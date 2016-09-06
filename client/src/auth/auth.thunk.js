@@ -83,7 +83,7 @@ export function profile() {
         dispatch(receiveProfile(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestSites, dispatch);
+        handleError(error, registerInvalidRequest, dispatch);
       });
   };
 }

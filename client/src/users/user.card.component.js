@@ -20,14 +20,15 @@ class UserCardComponent extends React.Component {
 
     render() {
       const getRoleClass = (user, connectedUser) => {
-        let classes = 'tiny compact ui toggle button ';
+        let classes = 'tiny compact ui top right attached toggle button';
         if (connectedUser.role !== AUTH_ADMIN_ROLE) {
-          classes += 'disabled ';
+          classes += ' disabled';
         }
         if (user.isFetching) {
-          classes += 'loading';
-        } else if (user.role === AUTH_ADMIN_ROLE) {
-          classes += 'active';
+          classes += ' loading';
+        }
+        if (user.role === AUTH_ADMIN_ROLE) {
+          classes += ' active';
         }
         return classes;
       };
@@ -45,8 +46,8 @@ class UserCardComponent extends React.Component {
               </span>
             </div>
             <div className='extra content'>
-            <div className='ui tiny right floated label'>
-              {user.provider}
+            <div className='ui tiny right floated provider label'>
+              {user.provider.toUpperCase()}
             </div>
               <div className='email' title={user.email}>
               <i className='mail icon'></i>{user.email}

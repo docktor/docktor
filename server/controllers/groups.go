@@ -9,12 +9,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// GroupsController contains all groups handlers
-type GroupsController struct {
+// Groups contains all groups handlers
+type Groups struct {
 }
 
-//GetAllGroups from docktor
-func (gc *GroupsController) GetAllGroups(c echo.Context) error {
+//GetAll groups from docktor
+func (g *Groups) GetAll(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	groups, err := docktorAPI.Groups().FindAll()
 	if err != nil {
@@ -23,8 +23,8 @@ func (gc *GroupsController) GetAllGroups(c echo.Context) error {
 	return c.JSON(200, groups)
 }
 
-//SaveGroup into docktor
-func (gc *GroupsController) SaveGroup(c echo.Context) error {
+//Save group into docktor
+func (g *Groups) Save(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	var group types.Group
 	err := c.Bind(&group)
@@ -39,8 +39,8 @@ func (gc *GroupsController) SaveGroup(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
-//DeleteGroup into docktor
-func (gc *GroupsController) DeleteGroup(c echo.Context) error {
+//Delete group into docktor
+func (g *Groups) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	id := c.Param("id")
 	res, err := docktorAPI.Groups().Delete(bson.ObjectIdHex(id))

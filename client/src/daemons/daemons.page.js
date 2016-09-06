@@ -50,7 +50,7 @@ class Daemons extends React.Component {
                 );
               }
             })(fetching)}
-              <div className='flex layout horizontal around-justified wrap daemons-list'>
+              <div className='flex layout horizontal center-center wrap daemons-list'>
                 {daemons.map(daemon => {
                   return (
                     <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />

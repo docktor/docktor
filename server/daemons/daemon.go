@@ -11,17 +11,17 @@ import (
 
 // DaemonInfo struct
 type DaemonInfo struct {
-	Status     string `json:"status"`
-	Images     int    `json:"images"`
-	Containers int    `json:"containers"`
-	Message    string `json:"message,omitempty"`
+	Status       string `json:"status"`
+	NbImages     int    `json:"nbImages"`
+	NbContainers int    `json:"nbContainers"`
+	Message      string `json:"message,omitempty"`
 }
 
 // GetInfo : retrieving the docker daemon status using redis cache
 func GetInfo(daemon types.Daemon, client *redis.Client, force bool) (*DaemonInfo, error) {
 	info := &DaemonInfo{}
 	key := daemon.ID.Hex()
-	if force == false {
+	if !force {
 		err := redisw.Get(client, key, info)
 		if err == nil {
 			return info, nil
@@ -35,12 +35,12 @@ func GetInfo(daemon types.Daemon, client *redis.Client, force bool) (*DaemonInfo
 
 	dockerInfo, err := api.Docker.Info()
 	if err != nil {
-		info = &DaemonInfo{Status: "DOWN", Images: 0, Containers: 0, Message: err.Error()}
+		info = &DaemonInfo{Status: "DOWN", NbImages: 0, NbContainers: 0, Message: err.Error()}
 		go redisw.Set(client, key, info, 5*time.Minute)
 		return info, nil
 	}
 
-	info = &DaemonInfo{Status: "UP", Images: dockerInfo.Images, Containers: dockerInfo.Containers}
+	info = &DaemonInfo{Status: "UP", NbImages: dockerInfo.Images, NbContainers: dockerInfo.Containers}
 	go redisw.Set(client, key, info, 5*time.Minute)
 	return info, nil
 }

@@ -15,137 +15,125 @@ $bold: 600;
 $br: 4px;
 
 .login-form {
-
   background: rgba($form-bg, .9);
   margin: 40px auto;
   max-width: 600px;
-  min-height: 536px;
   min-width: 450px;
-  padding: 40px;
-
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-  }
-
-  h1 {
-    color: $white;
-    font-weight: $thin;
-    margin: 0 0 30px;
-    text-align: center;
-  }
-
-  a {
-    color: $main;
-    text-decoration: none;
-    transition: .5s ease;
-    &:hover {
-      color: $main-dark;
-    }
-  }
-
-  .ui.form .field {
-    margin-bottom: 20px;
-    position: relative;
-    label {
-      color: rgba($white, .5);
-      span {
-        color: $main;
-        font-size: 1.2em;
-        margin-left: .3em;
-      }
-    }
-    input {
-      border-radius: 0;
-    }
-  }
-
-  .ui.form .top-row {
-    display: flex;
-    &:after {
-      clear: both;
-      content: '';
-      display: table;
-    }
-
-    > div {
-      float: left;
-      margin-right: 4%;
-      width: 48%;
-      &:last-child {
-        margin: 0;
-      }
-    }
-  }
-
-  .tab-group {
-    list-style: none;
-    margin: 0 0 40px;
-    padding: 0;
-    &:after {
-      clear: both;
-      content: '';
-      display: table;
-    }
-    li a {
-      background: rgba($gray-light, .25);
-      color: $gray-light;
-      cursor: pointer;
-      display: block;
-      float: left;
-      font-size: 20px;
-      padding: 15px;
+  .login {
+    margin: 40px;
+    h1 {
+      color: $white;
+      font-weight: $thin;
+      margin: 0 0 30px;
       text-align: center;
+    }
+
+    a {
+      color: $main;
       text-decoration: none;
       transition: .5s ease;
-      width: 50%;
       &:hover {
+        color: $main-dark;
+      }
+    }
+
+    .ui.form .field {
+      margin-bottom: 20px;
+      position: relative;
+      label {
+        color: rgba($white, .5);
+      }
+    }
+
+    .ui.form .top-row {
+      display: flex;
+      &:after {
+        clear: both;
+        content: '';
+        display: table;
+      }
+
+      > div {
+        float: left;
+        margin-right: 4%;
+        width: 48%;
+        &:last-child {
+          margin: 0;
+        }
+      }
+    }
+
+    .tab-group {
+      list-style: none;
+      margin: 0 0 40px;
+      padding: 0;
+      &:after {
+        clear: both;
+        content: '';
+        display: table;
+      }
+      li a {
+        background: rgba($gray-light, .25);
+        color: $gray-light;
+        cursor: pointer;
+        display: block;
+        float: left;
+        font-size: 20px;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        transition: .5s ease;
+        width: 50%;
+        &:hover {
+          background: $main-dark;
+          color: $white;
+        }
+      }
+      .active a {
+        background: $main;
+        color: $white;
+      }
+    }
+
+    .button {
+      -moz-appearance: none; /* Firefox */
+      -webkit-appearance: none; /* Safari and Chrome */
+      appearance: none;
+      background: $main;
+      border: none;
+      color: $white;
+      font-size: 2rem;
+      font-weight: $bold;
+      letter-spacing: .1em;
+      margin-top: 30px;
+      outline: none;
+      padding: 15px 0;
+      text-transform: uppercase;
+      transition: all.5s ease;
+      &:hover,
+      &:focus {
         background: $main-dark;
         color: $white;
       }
     }
-    .active a {
-      background: $main;
-      color: $white;
+
+    .button-block {
+      display: block;
+      width: 100%;
     }
-  }
 
-  .button {
-    -moz-appearance: none; /* Firefox */
-    -webkit-appearance: none; /* Safari and Chrome */
-    appearance: none;
-    background: $main;
-    border: none;
-    border-radius: 0;
-    color: $white;
-    font-size: 2rem;
-    font-weight: $bold;
-    letter-spacing: .1em;
-    margin-top: 30px;
-    outline: none;
-    padding: 15px 0;
-    text-transform: uppercase;
-    transition: all.5s ease;
-    &:hover,
-    &:focus {
-      background: $main-dark;
-      color: $white;
+    .forgot {
+      text-align: right;
     }
-  }
 
-  .button-block {
-    display: block;
-    width: 100%;
   }
-
-  .forgot {
-    margin-top: -20px;
-    text-align: right;
+  .error.api {
+    background-color: #f9d6d6 !important;
+    color: #9f3a38 !important;
+    line-height: 1.4285em;
+    margin: 1em 0;
+    min-height: 1em;
+    padding: 1em 1.5em;
+    position: relative;
   }
-
-  .error {
-    color: $red;
-  }
-
 }

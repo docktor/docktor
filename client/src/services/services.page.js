@@ -32,7 +32,7 @@ class Services extends React.Component {
           <div className='flex'></div>
         </div>
         <Scrollbars className='flex ui dimmable'>
-          <div className='flex layout horizontal around-justified services-list wrap'>
+          <div className='flex layout horizontal center-center services-list wrap'>
               {(fetching => {
                 if (fetching) {
                   return (
