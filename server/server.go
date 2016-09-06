@@ -74,14 +74,14 @@ func New(version string) {
 
 		profileAPI := api.Group("/profile")
 		{
-			profileAPI.GET("*", usersC.Profile)
+			profileAPI.GET("", usersC.Profile)
 		}
 
 		sitesAPI := api.Group("/sites")
 		{
 			sitesAPI.DELETE("/:id", sitesC.Delete, isAdmin)
 			sitesAPI.PUT("/:id", sitesC.Save, isAdmin)
-			sitesAPI.GET("*", sitesC.GetAll)
+			sitesAPI.GET("", sitesC.GetAll)
 		}
 
 		daemonsAPI := api.Group("/daemons")
@@ -103,21 +103,21 @@ func New(version string) {
 		{
 			servicesAPI.DELETE("/:id", servicesC.Delete, isAdmin)
 			servicesAPI.PUT("/:id", servicesC.Save, isAdmin)
-			servicesAPI.GET("*", servicesC.GetAll)
+			servicesAPI.GET("", servicesC.GetAll)
 		}
 
 		groupsAPI := api.Group("/groups")
 		{
 			groupsAPI.DELETE(":id", groupsC.Delete, isAdmin)
 			groupsAPI.PUT(":id", groupsC.Save, isAdmin)
-			groupsAPI.GET("*", groupsC.GetAll)
+			groupsAPI.GET("", groupsC.GetAll)
 		}
 
 		usersAPI := api.Group("/users")
 		{
 			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
 			usersAPI.PUT("/:id", usersC.Save, isAdmin)
-			usersAPI.GET("*", usersC.GetAll)
+			usersAPI.GET("", usersC.GetAll)
 		}
 	}
 
