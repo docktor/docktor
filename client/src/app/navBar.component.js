@@ -27,6 +27,13 @@ class NavBarComponent extends React.Component {
     $('.navbar .ui.dropdown').dropdown();
   }
 
+  isActiveURL(url) {
+    if (!this.props.location || !this.props.location.pathname) {
+      return '';
+    }
+    return this.props.location.pathname.startsWith(url) ? ' active' : '';
+  }
+
   render() {
     const { logout } = this.props;
     return (
@@ -34,10 +41,10 @@ class NavBarComponent extends React.Component {
         <IndexLink to='/' className='item brand'>
           <i className='large fitted doctor icon'></i>{' '}Docktor
         </IndexLink>
-        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/daemons' activeClassName='active' className='item'>Daemons</Link>}
-        {this.isAuthorized() && <Link to='/services' activeClassName='active' className='item'>Services</Link>}
-        {this.isAuthorized() && <Link to='/groups' activeClassName='active' className='item'>Groups</Link>}
-        {this.isAuthorized() && <Link to='/users' activeClassName='active' className='item'>Users</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
+        {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
+        {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
+        {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
           <div className='ui dropdown item'>
@@ -54,13 +61,15 @@ class NavBarComponent extends React.Component {
 }
 NavBarComponent.propTypes = {
   logout: React.PropTypes.func.isRequired,
-  auth: React.PropTypes.object.isRequired
+  auth: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    location: state.routing.locationBeforeTransitions
   };
 };
 
