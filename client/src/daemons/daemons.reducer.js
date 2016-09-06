@@ -32,7 +32,7 @@ const createReceiveDaemon = (state, action) => {
 };
 
 const createRequestDaemonInfo  = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   let newItem = { ...newItems[action.daemon.id] };
   newItem.isFetching = true;
   newItems[action.daemon.id] = newItem;
@@ -42,7 +42,7 @@ const createRequestDaemonInfo  = (state, action) => {
 };
 
 const createReceiveDaemonInfo = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   action.daemon.isFetching = false;
   action.daemon.info = action.info;
   newItems[action.daemon.id] = action.daemon;
@@ -52,7 +52,7 @@ const createReceiveDaemonInfo = (state, action) => {
 };
 
 const createInvalidDaemonInfo = (state, action) => {
-  let newItems = { ...state.items };
+  let newItems = state.items;
   let newItem = { ...newItems[action.daemon.id] };
   newItem.isFetching = false;
   newItem.info = { status: 'DOWN' };
