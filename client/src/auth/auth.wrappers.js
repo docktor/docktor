@@ -11,9 +11,7 @@ export const withAuth = (fetchOptions) => {
   }
   // Look up the jwt token
   var token = localStorage.getItem('id_token');
-  if (token) {
-      headers = { ...headers, 'Authorization' : 'Bearer ' + token };
-  }
+  headers = { ...headers, 'Authorization' : 'Bearer ' + token };
 
   return Object.assign({}, fetchOptions, {
     headers: headers

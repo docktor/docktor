@@ -2,13 +2,16 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, dispatchError } from '../utils/utils.js';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // Daemon Actions
 import {
   requestAllDaemons,
   receiveDaemons,
-  invalidRequestDaemons
+  invalidRequestDaemons,
+  requestDaemonInfo,
+  receiveDaemonInfo,
+  invalidRequestDaemonInfo
 } from './daemons.actions.js';
 
 /********** Thunk Functions **********/
@@ -26,7 +29,26 @@ export function fetchDaemons() {
         dispatch(receiveDaemons(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestSites, dispatch);
+        handleError(error, invalidRequestDaemons, dispatch);
+      });
+  };
+}
+
+// Thunk to fetch daemon info
+export function fetchDaemonInfo(daemon, force) {
+  return function (dispatch) {
+
+    dispatch(requestDaemonInfo(daemon));
+    let url = `/api/daemons/${daemon.id}/info`;
+    url = force ? url + '?force=true' : url;
+    return fetch(url, withAuth({ method:'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(receiveDaemonInfo(daemon, response));
+      })
+      .catch(error => {
+        handleError(error, invalidRequestDaemonInfo(daemon), dispatch);
       });
   };
 }

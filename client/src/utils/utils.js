@@ -1,5 +1,5 @@
 
-import { loginError } from '../auth/auth.actions.js';
+import { loginNotAuthorized } from '../auth/auth.actions.js';
 import { push } from 'react-router-redux';
 
 // Throw error if http response is in error
@@ -24,7 +24,7 @@ export const parseJSON = response => {
 export const dispatchError = (status, message, action, dispatchFunc) => {
   if(status === 401) {
     // When JWT Token expired or is invalid, redirect to auth
-    dispatchFunc(loginError(message));
+    dispatchFunc(loginNotAuthorized(message));
     dispatchFunc(push('/login'));
   } else {
     dispatchFunc(action);
