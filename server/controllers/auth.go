@@ -15,8 +15,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// LoginController contains all login handlers
-type LoginController struct {
+// Auth contains all login handlers
+type Auth struct {
 }
 
 // MyCustomClaims contains data that will be signed in the JWT token
@@ -32,7 +32,7 @@ type Token struct {
 }
 
 // Register create an account
-func (dc *LoginController) Register(c echo.Context) error {
+func (a *Auth) Register(c echo.Context) error {
 
 	// Get form data
 	username := c.FormValue("username")
@@ -111,7 +111,7 @@ func (dc *LoginController) Register(c echo.Context) error {
 
 //Login handles the login of a user
 //When user is authorized, it creates a JWT Token https://jwt.io/introduction/ that will be store on client
-func (dc *LoginController) Login(c echo.Context) error {
+func (a *Auth) Login(c echo.Context) error {
 	// Get input parameters
 	username := c.FormValue("username")
 	password := c.FormValue("password")

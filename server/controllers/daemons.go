@@ -12,12 +12,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// DaemonsController contains all daemons handlers
-type DaemonsController struct {
+// Daemons contains all daemons handlers
+type Daemons struct {
 }
 
-//GetAllDaemons from docktor
-func (dc *DaemonsController) GetAllDaemons(c echo.Context) error {
+//GetAll daemons from docktor
+func (d *Daemons) GetAll(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	daemons, err := docktorAPI.Daemons().FindAll()
 	if err != nil {
@@ -26,8 +26,8 @@ func (dc *DaemonsController) GetAllDaemons(c echo.Context) error {
 	return c.JSON(http.StatusOK, daemons)
 }
 
-//SaveDaemon into docktor
-func (dc *DaemonsController) SaveDaemon(c echo.Context) error {
+//Save daemon into docktor
+func (d *Daemons) Save(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	var daemon types.Daemon
 	err := c.Bind(&daemon)
@@ -42,8 +42,8 @@ func (dc *DaemonsController) SaveDaemon(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-//DeleteDaemon into docktor
-func (dc *DaemonsController) DeleteDaemon(c echo.Context) error {
+//Delete daemon into docktor
+func (d *Daemons) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	id := c.Param("id")
 	res, err := docktorAPI.Daemons().Delete(bson.ObjectIdHex(id))
@@ -53,14 +53,14 @@ func (dc *DaemonsController) DeleteDaemon(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-//GetDaemon from docktor
-func (dc *DaemonsController) GetDaemon(c echo.Context) error {
+//Get daemon from docktor
+func (d *Daemons) Get(c echo.Context) error {
 	daemon := c.Get("daemon").(*api.Docktor)
 	return c.JSON(http.StatusOK, daemon)
 }
 
-// GetDaemonInfo : get infos about daemon from docker
-func (dc *DaemonsController) GetDaemonInfo(c echo.Context) error {
+// GetInfo : get infos about daemon from docker
+func (d *Daemons) GetInfo(c echo.Context) error {
 	daemon := c.Get("daemon").(types.Daemon)
 	forceParam := c.QueryParam("force")
 	redisClient := redisw.GetRedis(c)

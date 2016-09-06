@@ -38,12 +38,12 @@ func New(version string) {
 	})
 
 	engine := echo.New()
-	sc := controllers.SitesController{}
-	dc := controllers.DaemonsController{}
-	sec := controllers.ServicesController{}
-	gc := controllers.GroupsController{}
-	uc := controllers.UsersController{}
-	lc := controllers.LoginController{}
+	sitesC := controllers.Sites{}
+	daemonsC := controllers.Daemons{}
+	servicesC := controllers.Services{}
+	groupsC := controllers.Groups{}
+	usersC := controllers.Users{}
+	authC := controllers.Auth{}
 
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
@@ -58,8 +58,8 @@ func New(version string) {
 	{
 		auth.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
 		auth.Use(openLDAP)
-		auth.POST("/login", lc.Login)
-		auth.POST("/register", lc.Register)
+		auth.POST("/login", authC.Login)
+		auth.POST("/register", authC.Register)
 		auth.GET("/*", GetIndex(version))
 	}
 
@@ -74,50 +74,50 @@ func New(version string) {
 
 		profileAPI := api.Group("/profile")
 		{
-			profileAPI.GET("*", uc.Profile)
+			profileAPI.GET("*", usersC.Profile)
 		}
 
 		sitesAPI := api.Group("/sites")
 		{
-			sitesAPI.DELETE("/:id", sc.DeleteSite, isAdmin)
-			sitesAPI.PUT("/:id", sc.SaveSite, isAdmin)
-			sitesAPI.GET("*", sc.GetAllSites)
+			sitesAPI.DELETE("/:id", sitesC.Delete, isAdmin)
+			sitesAPI.PUT("/:id", sitesC.Save, isAdmin)
+			sitesAPI.GET("*", sitesC.GetAll)
 		}
 
 		daemonsAPI := api.Group("/daemons")
 		{
-			daemonsAPI.GET("", dc.GetAllDaemons)
-			daemonsAPI.PUT("/:daemonID", dc.SaveDaemon, isAdmin)
-			daemonsAPI.DELETE("/:daemonID", dc.DeleteDaemon, isAdmin)
+			daemonsAPI.GET("", daemonsC.GetAll)
+			daemonsAPI.PUT("/:daemonID", daemonsC.Save, isAdmin)
+			daemonsAPI.DELETE("/:daemonID", daemonsC.Delete, isAdmin)
 
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.Use(isAdmin)
 				daemonAPI.Use(daemons.RetrieveDaemon)
-				daemonAPI.GET("", dc.GetDaemon)
-				daemonAPI.GET("/info", dc.GetDaemonInfo, redisCache(redisClient))
+				daemonAPI.GET("", daemonsC.Get)
+				daemonAPI.GET("/info", daemonsC.GetInfo, redisCache(redisClient))
 			}
 		}
 
 		servicesAPI := api.Group("/services")
 		{
-			servicesAPI.DELETE("/:id", sec.DeleteService, isAdmin)
-			servicesAPI.PUT("/:id", sec.SaveService, isAdmin)
-			servicesAPI.GET("*", sec.GetAllServices)
+			servicesAPI.DELETE("/:id", servicesC.Delete, isAdmin)
+			servicesAPI.PUT("/:id", servicesC.Save, isAdmin)
+			servicesAPI.GET("*", servicesC.GetAll)
 		}
 
 		groupsAPI := api.Group("/groups")
 		{
-			groupsAPI.DELETE(":id", gc.DeleteGroup, isAdmin)
-			groupsAPI.PUT(":id", gc.SaveGroup, isAdmin)
-			groupsAPI.GET("*", gc.GetAllGroups)
+			groupsAPI.DELETE(":id", groupsC.Delete, isAdmin)
+			groupsAPI.PUT(":id", groupsC.Save, isAdmin)
+			groupsAPI.GET("*", groupsC.GetAll)
 		}
 
 		usersAPI := api.Group("/users")
 		{
-			usersAPI.DELETE("/:id", uc.DeleteUser, isAdmin)
-			usersAPI.PUT("/:id", uc.SaveUser, isAdmin)
-			usersAPI.GET("*", uc.GetAllUsers)
+			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
+			usersAPI.PUT("/:id", usersC.Save, isAdmin)
+			usersAPI.GET("*", usersC.GetAll)
 		}
 	}
 
