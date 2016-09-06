@@ -132,7 +132,7 @@ func New(version string) {
 }
 
 func pong(c echo.Context) error {
-	return c.JSON(200, JSON{
+	return c.JSON(http.StatusOK, JSON{
 		"message": "pong",
 	})
 }
