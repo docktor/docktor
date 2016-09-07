@@ -71,9 +71,11 @@ ReactDOM.render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
-        <Route path='daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
-        <Route path='daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
-        <Route path='daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+        <Route path='daemons'>
+          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+          <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+        </Route>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
         <Route path='users' component={requireAuthorization(UsersPage)} />
