@@ -95,10 +95,6 @@ rules:
   no-trailing-zero: 1
   no-transition-all: 0
   no-url-protocols: 1
-  no-vendor-prefixes:
-    - 1
-    - additional-identifiers: []
-      excluded-identifiers: []
   placeholder-in-extend: 1
   placeholder-name-format:
     - 1
