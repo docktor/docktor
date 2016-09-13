@@ -149,7 +149,7 @@ class DaemonComponent extends React.Component {
                               </div>
                               <div className='five fields'>
                                 <div className='two wide field'>
-                                  <div className='large ui label'>Docker daemon :</div>
+                                  <div className='large ui label'>Docker</div>
                                 </div>
                                 <div className='two wide field required'>
                                   <label>Protocol</label>
@@ -175,6 +175,15 @@ class DaemonComponent extends React.Component {
 
                               {this.renderCertificates(item, chosenProtocol)}
 
+                              <div className='five fields'>
+                                <div className='two wide field'>
+                                  <div className='large ui label'>cAdvisor</div>
+                                </div>
+                                <div className='fourteen wide field required'>
+                                  <label>cAdvisor Api Url</label>
+                                  <input type='text' ref='cadvisor' name='cadvisor' placeholder='cAdvisor Api Url' defaultValue={item.cadvisor} autoComplete='off'/>
+                                </div>
+                              </div>
 
                               <VolumesBox volumes={item.volumes} ref='volumes'>
                                 <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>

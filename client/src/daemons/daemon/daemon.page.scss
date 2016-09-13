@@ -79,5 +79,10 @@ $br: 4px;
     margin-top: 24px;
     padding-bottom: 0;
     padding-top: 0;
+    text-align: center;
+    width: 100%;
+    @media only screen and (max-width: 767px) {
+      width: 25% !important;
+    }
   }
 }

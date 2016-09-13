@@ -33,6 +33,7 @@ class VolumesBox extends React.Component {
       settings.fields['rights' + index] = 'empty';
     });
     $('.volume.ui.form').form(settings);
+    $('.volume.ui.form').find('.error').removeClass('error').find('.prompt').remove();
   }
 
   onAddVolume(event) {
@@ -68,7 +69,7 @@ class VolumesBox extends React.Component {
           const title = '-v ' + volume.value + ':' + volume.internal + ':' + volume.rights;
           return (
             <div key={'volume' + index} className='fields'>
-              <div className='five wide field'>
+              <div className='five wide field required'>
                 <label className='hidden'>External Volume</label>
                 <input title={title} type='text' value={volume.value} placeholder='The default volume when container is created' autoComplete='off'
                     onChange={(event) => this.onChangeVolume(event, index, 'value')} data-validate={'external' + index}/>
@@ -89,7 +90,7 @@ class VolumesBox extends React.Component {
               </div>
               <div className='three wide field'>
                 <label className='hidden'>Description</label>
-                <textarea rows='2' defaultValue={volume.description} placeholder='Describe the utility of this volume' autoComplete='off'
+                <textarea rows='2' defaultValue={volume.description} placeholder='Describe this volume' autoComplete='off'
                   onChange={(event) => this.onChangeVolume(event, index, 'description')} />
               </div>
               <div className='button field'>
@@ -106,23 +107,29 @@ class VolumesBox extends React.Component {
     return (
       <HeadingBox className='volume ui form' icon='large folder open icon' title='Volumes'>
         {this.props.children ? this.props.children : <div></div>}
-        <div className='fields header'>
-          <div className='five wide field'>
-            <label>External Volume</label>
-          </div>
-          <div className='five wide field required'>
-            <label>Internal Volume</label>
-          </div>
-          <div className='three wide field required'>
-            <label>Rights</label>
-          </div>
-          <div className='three wide field'>
-            <label>Description</label>
-          </div>
-          <div className='one wide field'>
-            <label></label>
-          </div>
-        </div>
+        {(nbVolumes => {
+          if(nbVolumes) {
+            return (
+              <div className='fields header'>
+                <div className='five wide field required'>
+                  <label>External Volume</label>
+                </div>
+                <div className='five wide field required'>
+                  <label>Internal Volume</label>
+                </div>
+                <div className='three wide field required'>
+                  <label>Rights</label>
+                </div>
+                <div className='three wide field'>
+                  <label>Description</label>
+                </div>
+                <div className='one wide field'>
+                  <label></label>
+                </div>
+              </div>
+            );
+          }
+        })(this.state.volumes.length)}
         {
           this.state.volumes.map((volume, index) => {
               return (
