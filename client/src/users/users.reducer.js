@@ -1,11 +1,5 @@
-import {
-    INVALID_REQUEST_USERS,
-    REQUEST_ALL_USERS,
-    RECEIVE_USERS,
-    REQUEST_SAVE_USER,
-    RECEIVE_SAVED_USER,
-    INVALID_SAVE_USER
-} from './users.actions.js';
+// import constants
+import UsersConstants from './users.constants.js';
 
 const initialState = {
     isFetching: false,
@@ -65,17 +59,17 @@ const createReceiveUsers = (action) => {
 
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
-        case INVALID_REQUEST_USERS:
+        case UsersConstants.INVALID_REQUEST_USERS:
             return Object.assign({}, initialState);
-        case REQUEST_ALL_USERS:
+        case UsersConstants.REQUEST_ALL_USERS:
             return Object.assign({}, state, createRequestAllUsers());
-        case RECEIVE_USERS:
+        case UsersConstants.RECEIVE_USERS:
             return Object.assign({}, state, createReceiveUsers(action));
-        case REQUEST_SAVE_USER:
+        case UsersConstants.REQUEST_SAVE_USER:
             return Object.assign({}, state, createRequestSaveUser(state, action));
-        case RECEIVE_SAVED_USER:
+        case UsersConstants.RECEIVE_SAVED_USER:
             return Object.assign({}, state, createReceiveSavedUser(state, action));
-        case INVALID_SAVE_USER:
+        case UsersConstants.INVALID_SAVE_USER:
             return Object.assign({}, state, createInvalidSaveUser(state, action));
         default:
             return state;

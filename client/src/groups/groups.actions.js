@@ -1,30 +1,27 @@
-// Request all groups
-export const REQUEST_ALL_GROUPS = 'REQUEST_ALL_GROUPS';
+// import constants
+import GroupsConstants from './groups.constants.js';
 
+// Request all groups
 export function requestAllGroups() {
   return {
-    type: REQUEST_ALL_GROUPS
+    type: GroupsConstants.REQUEST_ALL_GROUPS
   };
 }
 
 
 // Groups are received
-export const RECEIVE_GROUPS = 'RECEIVE_GROUPS';
-
 export function receiveGroups(groups) {
   return {
-    type: RECEIVE_GROUPS,
+    type: GroupsConstants.RECEIVE_GROUPS,
     groups,
     receivedAt: Date.now()
   };
 }
 
 // Groups API returns an Error
-export const INVALID_REQUEST_GROUPS = 'INVALID_REQUEST_GROUPS';
-
 export function invalidRequestGroups(error) {
   return {
-    type: INVALID_REQUEST_GROUPS,
+    type: GroupsConstants.INVALID_REQUEST_GROUPS,
     error
   };
 }

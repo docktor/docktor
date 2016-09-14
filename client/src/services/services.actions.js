@@ -1,30 +1,27 @@
-// Request all services
-export const REQUEST_ALL_SERVICES = 'REQUEST_ALL_SERVICES';
+// import constants
+import ServicesConstants from './services.constants.js';
 
+// Request all services
 export function requestAllServices() {
   return {
-    type: REQUEST_ALL_SERVICES
+    type: ServicesConstants.REQUEST_ALL_SERVICES
   };
 }
 
 
 // Services are received
-export const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
-
 export function receiveServices(services) {
   return {
-    type: RECEIVE_SERVICES,
+    type: ServicesConstants.RECEIVE_SERVICES,
     services,
     receivedAt: Date.now()
   };
 }
 
 // Services API returns an Error
-export const INVALID_REQUEST_SERVICES = 'INVALID_REQUEST_SERVICES';
-
 export function invalidRequestServices(error) {
   return {
-    type: INVALID_REQUEST_SERVICES,
+    type: ServicesConstants.INVALID_REQUEST_SERVICES,
     error
   };
 }

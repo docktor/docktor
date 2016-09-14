@@ -1,11 +1,5 @@
-import {
-  INVALID_REQUEST_SITES,
-  REQUEST_ALL_SITES,
-  RECEIVE_SITES,
-  REQUEST_DELETE_SITE,
-  RECEIVE_SITE_DELETED,
-  RECEIVE_SITE_SAVED
-} from './sites.actions.js';
+// import constants
+import SitesConstants from './sites.constants.js';
 
 const initialState = {
   isFetching: false,
@@ -40,21 +34,21 @@ const createRequestDeleteSite = () => {
 
 const sitesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INVALID_REQUEST_SITES:
+    case SitesConstants.INVALID_REQUEST_SITES:
       return Object.assign({}, initialState);
-    case REQUEST_ALL_SITES:
+    case SitesConstants.REQUEST_ALL_SITES:
       return Object.assign({}, state, createRequestAllSites());
-    case RECEIVE_SITES:
+    case SitesConstants.RECEIVE_SITES:
       return Object.assign({}, state, createReceiveSites(action));
-    case REQUEST_DELETE_SITE:
+    case SitesConstants.REQUEST_DELETE_SITE:
       return Object.assign({}, state, createRequestDeleteSite());
-    case RECEIVE_SITE_DELETED:
+    case SitesConstants.RECEIVE_SITE_DELETED:
       let deletedSiteState = Object.assign({}, state, {
         items: { ...state.items }
       });
       delete deletedSiteState.items[action.id];
       return deletedSiteState;
-    case RECEIVE_SITE_SAVED:
+    case SitesConstants.RECEIVE_SITE_SAVED:
       let newSiteState = Object.assign({}, state, {
         items: { ...state.items }
       });

@@ -1,11 +1,5 @@
-import {
-  INVALID_REQUEST_DAEMONS,
-  REQUEST_ALL_DAEMONS,
-  RECEIVE_DAEMONS,
-  REQUEST_DAEMON_INFO,
-  RECEIVE_DAEMON_INFO,
-  INVALID_REQUEST_DAEMON_INFO
-} from './daemons.actions.js';
+// import constants
+import DaemonsConstants from './daemons.constants.js';
 
 const initialState = {
   isFetching: false,
@@ -33,9 +27,11 @@ const createReceiveDaemon = (state, action) => {
 
 const createRequestDaemonInfo  = (state, action) => {
   let newItems = state.items;
-  let newItem = { ...newItems[action.daemon.id] };
-  newItem.isFetching = true;
-  newItems[action.daemon.id] = newItem;
+  if (action.daemon.id) {
+    let newItem = { ...newItems[action.daemon.id] };
+    newItem.isFetching = true;
+    newItems[action.daemon.id] = newItem;
+  }
   return {
     items: newItems
   };
@@ -45,7 +41,9 @@ const createReceiveDaemonInfo = (state, action) => {
   let newItems = state.items;
   action.daemon.isFetching = false;
   action.daemon.info = action.info;
-  newItems[action.daemon.id] = action.daemon;
+  if (action.daemon.id) {
+    newItems[action.daemon.id] = action.daemon;
+  }
   return {
     items: newItems
   };
@@ -53,10 +51,12 @@ const createReceiveDaemonInfo = (state, action) => {
 
 const createInvalidDaemonInfo = (state, action) => {
   let newItems = state.items;
-  let newItem = { ...newItems[action.daemon.id] };
-  newItem.isFetching = false;
-  newItem.info = { status: 'DOWN' };
-  newItems[action.daemon.id] = newItem;
+  if (action.daemon.id) {
+    let newItem = { ...newItems[action.daemon.id] };
+    newItem.isFetching = false;
+    newItem.info = { status: 'DOWN' };
+    newItems[action.daemon.id] = newItem;
+  }
   return {
     items: newItems
   };
@@ -64,17 +64,17 @@ const createInvalidDaemonInfo = (state, action) => {
 
 const daemonsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INVALID_REQUEST_DAEMONS:
+    case DaemonsConstants.INVALID_REQUEST_DAEMONS:
       return Object.assign({}, initialState);
-    case REQUEST_ALL_DAEMONS:
+    case DaemonsConstants.REQUEST_ALL_DAEMONS:
       return Object.assign({}, state, createRequestAllDaemons());
-    case RECEIVE_DAEMONS:
+    case DaemonsConstants.RECEIVE_DAEMONS:
       return Object.assign({}, state, createReceiveDaemon(state, action));
-    case REQUEST_DAEMON_INFO:
+    case DaemonsConstants.REQUEST_DAEMON_INFO:
       return Object.assign({}, state, createRequestDaemonInfo(state, action));
-    case RECEIVE_DAEMON_INFO:
+    case DaemonsConstants.RECEIVE_DAEMON_INFO:
       return Object.assign({}, state, createReceiveDaemonInfo(state, action));
-    case INVALID_REQUEST_DAEMON_INFO:
+    case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
       return Object.assign({}, state, createInvalidDaemonInfo(state, action));
     default:
       return state;

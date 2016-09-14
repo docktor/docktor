@@ -48,6 +48,12 @@ class DaemonComponent extends React.Component {
   componentDidUpdate() {
     $('#sites-dropdown').dropdown();
     $('#protocol-dropdown').dropdown();
+    this.refs.scrollbars.scrollTop();
+  }
+  componentDidUpdate() {
+    $('#sites-dropdown').dropdown();
+    $('#protocol-dropdown').dropdown();
+    this.refs.scrollbars.scrollTop();
   }
 
   onChangeProtocol(event) {
@@ -183,7 +189,7 @@ class DaemonComponent extends React.Component {
     const chosenProtocol = this.state.chosenProtocol;
     return (
       <div className='flex layout vertical start-justified'>
-        <Scrollbars className='flex ui dimmable'>
+        <Scrollbars ref='scrollbars' className='flex ui dimmable'>
            <div className='flex layout horizontal around-justified'>
                 {((isFetching, didInvalidate) => {
                   if (isFetching) {
@@ -198,7 +204,7 @@ class DaemonComponent extends React.Component {
                     );
                   } else {
                       return (
-                        <div className='flex layout vertical start-justified daemon'>
+                        <div className='flex layout vertical start-justified daemon-details'>
                             <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
                             <form className='ui form daemon-form'>
                               <input type='hidden' name='created' ref='created' defaultValue={item.created}/>

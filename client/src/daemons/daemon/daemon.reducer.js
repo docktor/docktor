@@ -1,8 +1,4 @@
-import {
-  INVALID_REQUEST_DAEMON,
-  REQUEST_DAEMON,
-  RECEIVE_DAEMON
-} from './daemon.actions.js';
+import DaemonConstants from './daemon.constants.js';
 
 const initialState = {
   isFetching: false,
@@ -12,15 +8,15 @@ const initialState = {
 
 const daemonReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INVALID_REQUEST_DAEMON:
+    case DaemonConstants.INVALID_REQUEST_DAEMON:
       return Object.assign({}, initialState);
-    case REQUEST_DAEMON:
+    case DaemonConstants.REQUEST_DAEMON:
       return Object.assign({}, state, {
         isFetching: true,
         didInvalidate: false,
         item: {}
       });
-    case RECEIVE_DAEMON:
+    case DaemonConstants.RECEIVE_DAEMON:
       return Object.assign({}, state, {
         isFetching: false,
         item: action.daemon

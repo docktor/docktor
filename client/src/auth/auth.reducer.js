@@ -1,12 +1,6 @@
-import { combineReducers } from 'redux';
-import {
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_INVALID_REQUEST, LOGIN_NOT_AUTHORIZED,
-  LOGOUT_SUCCESS,
-  PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAILURE,
-  REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_INVALID_REQUEST, REGISTER_NOT_AUTHORIZED,
-  SWITCH_FORM
-} from './auth.actions.js';
-import { RECEIVE_SAVED_USER } from '../users/users.actions.js';
+// import constants
+import AuthConstants from './auth.constants.js';
+import UsersConstants from '../users/users.constants.js';
 
 
 const initialState = {
@@ -20,89 +14,89 @@ const initialState = {
 // we would also want a util to check if the token is expired.
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN_REQUEST:
+    case AuthConstants.LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         isAuthenticated: false,
         user : {}
       });
-    case LOGIN_SUCCESS:
+    case AuthConstants.LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
         errorMessage: '',
         user : action.user
       });
-    case LOGIN_INVALID_REQUEST:
+    case AuthConstants.LOGIN_INVALID_REQUEST:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         user : {}
       });
-    case LOGIN_NOT_AUTHORIZED:
+    case AuthConstants.LOGIN_NOT_AUTHORIZED:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         errorMessage: action.error,
         user : {}
       });
-    case LOGOUT_SUCCESS:
+    case AuthConstants.LOGOUT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         user : {}
       });
-    case PROFILE_REQUEST:
+    case AuthConstants.PROFILE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
       });
-    case PROFILE_SUCCESS:
+    case AuthConstants.PROFILE_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
         errorMessage: '',
         user : action.user
       });
-    case PROFILE_FAILURE:
+    case AuthConstants.PROFILE_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         errorMessage: action.message,
         user : {}
       });
-    case REGISTER_REQUEST:
+    case AuthConstants.REGISTER_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         isAuthenticated: false,
         errorMessage : '',
         user : {}
       });
-    case REGISTER_SUCCESS:
+    case AuthConstants.REGISTER_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
         errorMessage : '',
         user : action.user
       });
-    case REGISTER_INVALID_REQUEST:
+    case AuthConstants.REGISTER_INVALID_REQUEST:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         errorMessage : action.error,
         user : {}
       });
-    case REGISTER_NOT_AUTHORIZED:
+    case AuthConstants.REGISTER_NOT_AUTHORIZED:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
         errorMessage : action.error,
         user : {}
       });
-    case SWITCH_FORM:
+    case AuthConstants.SWITCH_FORM:
       return Object.assign({}, state, {
         errorMessage: ''
       });
-    case RECEIVE_SAVED_USER:
+    case UsersConstants.RECEIVE_SAVED_USER:
       return Object.assign({}, state, changeUserIfNeeded(state, action));
     default:
       return state;

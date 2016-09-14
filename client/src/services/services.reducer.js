@@ -1,8 +1,5 @@
-import {
-    INVALID_REQUEST_SERVICES,
-    REQUEST_ALL_SERVICES,
-    RECEIVE_SERVICES
-} from './services.actions.js';
+// import constants
+import ServicesConstants from './services.constants.js';
 
 const initialState = {
     isFetching: false,
@@ -30,11 +27,11 @@ const createReceiveServices  = (action) => {
 
 const servicesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case INVALID_REQUEST_SERVICES:
+        case ServicesConstants.INVALID_REQUEST_SERVICES:
             return Object.assign({}, initialState);
-        case REQUEST_ALL_SERVICES:
+        case ServicesConstants.REQUEST_ALL_SERVICES:
             return Object.assign({}, state, createRequestAllServices());
-        case RECEIVE_SERVICES:
+        case ServicesConstants.RECEIVE_SERVICES:
             return Object.assign({}, state, createReceiveServices(action));
         default:
             return state;

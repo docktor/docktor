@@ -1,58 +1,52 @@
-// Request all users
-export const REQUEST_ALL_USERS = 'REQUEST_ALL_USERS';
+// import constants
+import UsersConstants from './users.constants.js';
 
+// Request all users
 export function requestAllUsers() {
   return {
-    type: REQUEST_ALL_USERS
+    type: UsersConstants.REQUEST_ALL_USERS
   };
 }
 
 
 // Users are received
-export const RECEIVE_USERS = 'RECEIVE_USERS';
-
 export function receiveUsers(users) {
   return {
-    type: RECEIVE_USERS,
+    type: UsersConstants.RECEIVE_USERS,
     users,
     receivedAt: Date.now()
   };
 }
 
 // Users API returns an Error
-export const INVALID_REQUEST_USERS = 'INVALID_REQUEST_USERS';
-
 export function invalidRequestUsers(error) {
   return {
-    type: INVALID_REQUEST_USERS,
+    type: UsersConstants.INVALID_REQUEST_USERS,
     error
   };
 }
 
-export const REQUEST_SAVE_USER = 'REQUEST_SAVE_USER';
-
+// Request save user
 export function requestSaveUser(user) {
   return {
-    type: REQUEST_SAVE_USER,
+    type: UsersConstants.REQUEST_SAVE_USER,
     user
   };
 }
 
-export const RECEIVE_SAVED_USER = 'RECEIVE_SAVED_USER';
-
+// User was saved
 export function receiveSavedUser(user) {
   return {
-    type: RECEIVE_SAVED_USER,
+    type: UsersConstants.RECEIVE_SAVED_USER,
     user
   };
 }
 
-export const INVALID_SAVE_USER = 'INVALID_SAVE_USER';
-
+// Users API returns an Error
 export function invalidSaveUser(user) {
   return function(error) {
     return {
-    type: INVALID_SAVE_USER,
+    type: UsersConstants.INVALID_SAVE_USER,
     user,
     error
     };

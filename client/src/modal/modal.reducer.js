@@ -1,4 +1,5 @@
-import { CLOSE_MODAL, OPEN_MODAL } from './modal.actions.js';
+// import constants
+import ModalConstants from './modal.constants.js';
 
 const initialState = {
     isVisible: false,
@@ -7,10 +8,10 @@ const initialState = {
 
 const modalReducer = (state = initialState, action) => {
     switch (action.type) {
-        case CLOSE_MODAL:
+        case ModalConstants.CLOSE_MODAL:
             return Object.assign({}, initialState);
 
-        case OPEN_MODAL:
+        case ModalConstants.OPEN_MODAL:
             return Object.assign({}, initModal(action));
 
         default:
