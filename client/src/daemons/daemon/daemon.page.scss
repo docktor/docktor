@@ -13,9 +13,9 @@ $normal: 400;
 $bold: 600;
 $br: 4px;
 
-.daemon-form {
+.daemon {
 
-  .ui.form {
+  .ui.form.daemon-form {
     padding-left: .5em !important;
     padding-right: .5em !important;
   }
@@ -118,7 +118,6 @@ $br: 4px;
 
     .ReactTags__tagInput {
       border-radius: 0;
-      margin-top: 5px;
       margin-bottom: 5px;
       display: inline-block;
 
@@ -149,7 +148,7 @@ $br: 4px;
         background: #f8f8f9;
         font-size: 12px;
         display: inline-block;
-        padding: .68em 1em;
+        padding: .5em 1em;
         margin-right: 5px;
         margin-bottom: 5px;
         cursor: move;

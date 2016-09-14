@@ -21,7 +21,16 @@ class DaemonComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { chosenProtocol: null, tags: [] };
+    const tags = [];
+    if (props.daemon.tags) {
+      props.daemon.tags.forEach((tag, index) => {
+        tags.push({
+            id: index,
+            text: tag
+        });
+      });
+    }
+    this.state = { chosenProtocol: null, tags: tags };
   }
 
   componentWillMount() {
@@ -69,14 +78,54 @@ class DaemonComponent extends React.Component {
       this.setState({ tags });
   }
 
+  isFormValid() {
+    const settings = {
+      fields:{
+        site:'empty',
+        name:'empty',
+        volume:'empty',
+        protocol:'empty',
+        host:'empty',
+        port:'empty',
+        timeout:'empty'
+      }
+    };
+    $('.ui.form.daemon-form').form(settings);
+    $('.ui.form.daemon-form').form('validate form');
+    return $('.ui.form.daemon-form').form('is valid');
+  }
+
   onSave(event) {
     event.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
-    console.log(volumesBox.isFormValid());
-    console.log(volumesBox.state.volumes);
-    console.log(variablesBox.isFormValid());
-    console.log(variablesBox.state.variables);
+    let formValid = true;
+    formValid = formValid && volumesBox.isFormValid();
+    formValid = formValid && variablesBox.isFormValid();
+    formValid = formValid && this.isFormValid();
+    if (formValid) {
+      const tags = [];
+      this.state.tags.forEach(tag => tags.push(tag.text));
+      const daemon = {
+        name: this.refs.name.value,
+        site: this.refs.site.value,
+        description: this.refs.description.value,
+        cadvisorApi: this.refs.cadvisorApi.value,
+        volume: this.refs.volume.value,
+        protocol: this.refs.protocol.value,
+        host: this.refs.host.value,
+        port: this.refs.port.value,
+        timeout: this.refs.timeout.value,
+        ca: this.refs.ca ? this.refs.ca.value : '',
+        cert: this.refs.cert ? this.refs.cert.value : '',
+        key: this.refs.key ? this.refs.key.value : '',
+        created: this.refs.created.value,
+        id: this.refs.id.value,
+        volumes: volumesBox.state.volumes,
+        variables: variablesBox.state.variables,
+        tags: tags,
+      };
+    }
   }
 
   renderSites(sites, defaultSite) {
@@ -149,9 +198,11 @@ class DaemonComponent extends React.Component {
                     );
                   } else {
                       return (
-                        <div className='flex layout vertical start-justified daemon-form daemon'>
+                        <div className='flex layout vertical start-justified daemon'>
                             <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
-                            <form className='ui form'>
+                            <form className='ui form daemon-form'>
+                              <input type='hidden' name='created' ref='created' defaultValue={item.created}/>
+                              <input type='hidden' name='id' ref='id' defaultValue={item.id}/>
                               <div className='two fields'>
                                 <div className='field required'>
                                   <label>
