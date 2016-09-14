@@ -5,7 +5,7 @@ import HeadingBox from './heading.box.component.js';
 
 import './volumes.box.component.scss';
 
-// VolumesBox listing a list of users
+// VolumesBox is a list of docker volumes
 class VolumesBox extends React.Component {
 
   constructor(props) {
@@ -71,7 +71,7 @@ class VolumesBox extends React.Component {
             <div key={'volume' + index} className='fields'>
               <div className='five wide field required'>
                 <label className='hidden'>External Volume</label>
-                <input title={title} type='text' value={volume.value} placeholder='The default volume when container is created' autoComplete='off'
+                <input title={title} type='text' value={volume.value} placeholder='The default volume on host' autoComplete='off'
                     onChange={(event) => this.onChangeVolume(event, index, 'value')} data-validate={'external' + index}/>
               </div>
               <div className='five wide field required'>
@@ -141,6 +141,7 @@ class VolumesBox extends React.Component {
     );
   }
 };
+
 VolumesBox.propTypes = {
   volumes: React.PropTypes.array,
   children: React.PropTypes.oneOfType([

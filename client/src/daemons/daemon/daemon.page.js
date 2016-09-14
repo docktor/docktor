@@ -2,12 +2,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { goBack } from 'react-router-redux';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { WithContext as ReactTags } from 'react-tag-input';
 
+// Thunks/Actions
 import { fetchDaemon } from './daemon.thunks.js';
 import { fetchSitesIfNeeded } from '../../sites/sites.thunks.js';
-import { Scrollbars } from 'react-custom-scrollbars';
-import VolumesBox from '../../common/volumes.box.component.js';
 
+// Components
+import VolumesBox from '../../common/volumes.box.component.js';
+import VariablesBox from '../../common/variables.box.component.js';
+
+// Style
 import './daemon.page.scss';
 
 // Daemon Component
@@ -15,7 +21,7 @@ class DaemonComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { chosenProtocol: null };
+    this.state = { chosenProtocol: null, tags: [] };
   }
 
   componentWillMount() {
@@ -39,11 +45,38 @@ class DaemonComponent extends React.Component {
     this.setState({ chosenProtocol: event.target.value });
   }
 
+  handleDeleteTag(i) {
+      let tags = this.state.tags;
+      tags.splice(i, 1);
+      this.setState({ tags });
+  }
+  handleAddTag(tag) {
+      let tags = this.state.tags;
+      tags.push({
+          id: tags.length + 1,
+          text: tag
+      });
+      this.setState({ tags });
+  }
+  handleDragTag(tag, currPos, newPos) {
+      let tags = this.state.tags;
+
+      // mutate array
+      tags.splice(currPos, 1);
+      tags.splice(newPos, 0, tag);
+
+      // re-render
+      this.setState({ tags });
+  }
+
   onSave(event) {
     event.preventDefault();
     const volumesBox = this.refs.volumes;
+    const variablesBox = this.refs.variables;
     console.log(volumesBox.isFormValid());
     console.log(volumesBox.state.volumes);
+    console.log(variablesBox.isFormValid());
+    console.log(variablesBox.state.variables);
   }
 
   renderSites(sites, defaultSite) {
@@ -61,8 +94,7 @@ class DaemonComponent extends React.Component {
           <i className='dropdown icon'></i>
           <div className='default text'>Select Site</div>
           <div className='menu'>
-            {
-              items.map(site => {
+            {items.map(site => {
               return (
                 <div className='item' key={site.id} data-value={site.id}>{site.title}</div>
               );
@@ -117,8 +149,7 @@ class DaemonComponent extends React.Component {
                     );
                   } else {
                       return (
-                        <div className='daemon-form daemon'>
-                          <div id='daemon'>
+                        <div className='flex layout vertical start-justified daemon-form daemon'>
                             <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
                             <form className='ui form'>
                               <div className='two fields'>
@@ -147,6 +178,17 @@ class DaemonComponent extends React.Component {
                                   <input type='text' ref='volume' name='volume' placeholder='volume' defaultValue={item.volume} autoComplete='off'/>
                                 </div>
                               </div>
+
+                              <div className='five fields'>
+                                <div className='two wide field'>
+                                  <div className='large ui label'>cAdvisor</div>
+                                </div>
+                                <div className='fourteen wide field'>
+                                  <label>cAdvisor Api Url</label>
+                                  <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
+                                </div>
+                              </div>
+
                               <div className='five fields'>
                                 <div className='two wide field'>
                                   <div className='large ui label'>Docker</div>
@@ -175,25 +217,25 @@ class DaemonComponent extends React.Component {
 
                               {this.renderCertificates(item, chosenProtocol)}
 
-                              <div className='five fields'>
-                                <div className='two wide field'>
-                                  <div className='large ui label'>cAdvisor</div>
-                                </div>
-                                <div className='fourteen wide field required'>
-                                  <label>cAdvisor Api Url</label>
-                                  <input type='text' ref='cadvisor' name='cadvisor' placeholder='cAdvisor Api Url' defaultValue={item.cadvisor} autoComplete='off'/>
-                                </div>
-                              </div>
-
-                              <VolumesBox volumes={item.volumes} ref='volumes'>
-                                <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
-                              </VolumesBox>
-                              <div className='field'>
-                                <a className='ui fluid button button-form' onClick={(event) => this.onSave(event)}>Save</a>
-                              </div>
                             </form>
+                            <VolumesBox volumes={item.volumes} ref='volumes'>
+                              <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
+                            </VolumesBox>
+                            <VariablesBox volumes={item.variables} ref='variables'>
+                              <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
+                            </VariablesBox>
+                            <div className='tags'>
+                              <div className='large ui label'>Tags</div>
+                              <ReactTags tags={this.state.tags}
+                                handleDelete={(i) => this.handleDeleteTag(i)}
+                                handleAddition={(tag) => this.handleAddTag(tag)}
+                                handleDrag={(tag, currPos, newPos) => this.handleDragTag(tag, currPos, newPos)} />
+                            </div>
+                            <div className='flex button-form'>
+                              <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
+                            </div>
                           </div>
-                        </div>
+
                       );
                   }
                 })(isFetching, didInvalidate)}
