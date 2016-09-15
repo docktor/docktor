@@ -4,11 +4,7 @@ import { withAuth } from '../../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../../utils/utils.js';
 
 // Daemon Actions
-import {
-  requestDaemon,
-  receiveDaemon,
-  invalidRequestDaemon
-} from './daemon.actions.js';
+import * as DaemonActions from './daemon.actions.js';
 
 /********** Thunk Functions **********/
 
@@ -16,16 +12,16 @@ import {
 export function fetchDaemon(id) {
   return function (dispatch) {
 
-    dispatch(requestDaemon(id));
+    dispatch(DaemonActions.requestDaemon(id));
 
     return fetch(`/api/daemons/${id}`, withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(receiveDaemon(response));
+        dispatch(DaemonActions.receiveDaemon(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestDaemon, dispatch);
+        handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
       });
   };
 }

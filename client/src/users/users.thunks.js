@@ -6,24 +6,21 @@ import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // User Actions
-import {
-  requestAllUsers, receiveUsers, invalidRequestUsers,
-  requestSaveUser, receiveSavedUser, invalidSaveUser
-} from './users.actions.js';
+import * as UsersActions from './users.actions.js';
 
 // Thunk to fetch users
 export function fetchUsers() {
   return function (dispatch) {
 
-    dispatch(requestAllUsers());
+    dispatch(UsersActions.requestAllUsers());
     return fetch('/api/users', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(receiveUsers(response));
+          dispatch(UsersActions.receiveUsers(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestUsers, dispatch);
+        handleError(error, UsersActions.invalidRequestUsers, dispatch);
       });
   };
 }
@@ -48,10 +45,10 @@ export function saveUser(user) {
     .then(checkHttpStatus)
     .then(parseJSON)
     .then(response => {
-        dispatch(receiveSavedUser(response));
+        dispatch(UsersActions.receiveSavedUser(response));
     })
     .catch(error => {
-        handleError(error, invalidSaveUser(user), dispatch);
+        handleError(error, UsersActions.invalidSaveUser(user), dispatch);
     });
   };
 }

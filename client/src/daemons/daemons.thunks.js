@@ -4,15 +4,8 @@ import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
-// Daemon Actions
-import {
-  requestAllDaemons,
-  receiveDaemons,
-  invalidRequestDaemons,
-  requestDaemonInfo,
-  receiveDaemonInfo,
-  invalidRequestDaemonInfo
-} from './daemons.actions.js';
+// Daemons Actions
+import * as DaemonsActions from './daemons.actions.js';
 
 /********** Thunk Functions **********/
 
@@ -20,16 +13,16 @@ import {
 export function fetchDaemons() {
   return function (dispatch) {
 
-    dispatch(requestAllDaemons());
+    dispatch(DaemonsActions.requestAllDaemons());
 
     return fetch('/api/daemons', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(receiveDaemons(response));
+        dispatch(DaemonsActions.receiveDaemons(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestDaemons, dispatch);
+        handleError(error, DaemonsActions.invalidRequestDaemons, dispatch);
       });
   };
 }
@@ -38,17 +31,17 @@ export function fetchDaemons() {
 export function fetchDaemonInfo(daemon, force) {
   return function (dispatch) {
 
-    dispatch(requestDaemonInfo(daemon));
+    dispatch(DaemonsActions.requestDaemonInfo(daemon));
     let url = `/api/daemons/${daemon.id}/info`;
     url = force ? url + '?force=true' : url;
     return fetch(url, withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(receiveDaemonInfo(daemon, response));
+        dispatch(DaemonsActions.receiveDaemonInfo(daemon, response));
       })
       .catch(error => {
-        handleError(error, invalidRequestDaemonInfo(daemon), dispatch);
+        handleError(error, DaemonsActions.invalidRequestDaemonInfo(daemon), dispatch);
       });
   };
 }

@@ -5,25 +5,21 @@ import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // User Actions
-import {
-  requestAllGroups,
-  receiveGroups,
-  invalidRequestGroups
-} from './groups.actions.js';
+import * as GroupsActions from './groups.actions.js';
 
 // Thunk to fetch users
 export function fetchGroups() {
   return function (dispatch) {
 
-    dispatch(requestAllGroups());
+    dispatch(GroupsActions.requestAllGroups());
     return fetch('/api/groups', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(receiveGroups(response));
+          dispatch(GroupsActions.receiveGroups(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestGroups, dispatch);
+        handleError(error, GroupsActions.invalidRequestGroups, dispatch);
       });
   };
 }

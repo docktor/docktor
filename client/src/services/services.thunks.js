@@ -6,25 +6,21 @@ import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // User Actions
-import {
-  requestAllServices,
-  receiveServices,
-  invalidRequestServices
-} from './services.actions.js';
+import * as ServicesActions from './services.actions.js';
 
 // Thunk to fetch users
 export function fetchServices() {
   return function (dispatch) {
 
-    dispatch(requestAllServices());
+    dispatch(ServicesActions.requestAllServices());
     return fetch('/api/services', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(receiveServices(response));
+          dispatch(ServicesActions.receiveServices(response));
       })
       .catch(error => {
-        handleError(error, invalidRequestServices, dispatch);
+        handleError(error, ServicesActions.invalidRequestServices, dispatch);
       });
   };
 }
