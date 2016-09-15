@@ -31,7 +31,7 @@ export function saveUser(user) {
 
   return function (dispatch) {
 
-    dispatch(requestSaveUser(user));
+    dispatch(UsersActions.requestSaveUser(user));
     let request = new Request('/api/users/' + id, withAuth({
       method: 'PUT',
       headers: {

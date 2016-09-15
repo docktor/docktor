@@ -106,9 +106,9 @@ class DaemonComponent extends React.Component {
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
     let formValid = true;
-    formValid = formValid && volumesBox.isFormValid();
-    formValid = formValid && variablesBox.isFormValid();
-    formValid = formValid && this.isFormValid();
+    formValid = volumesBox.isFormValid() && formValid;
+    formValid = variablesBox.isFormValid() && formValid;
+    formValid = this.isFormValid() && formValid;
     if (formValid) {
       const tags = [];
       this.state.tags.forEach(tag => tags.push(tag.text));
@@ -194,7 +194,7 @@ class DaemonComponent extends React.Component {
                 {((isFetching, didInvalidate) => {
                   if (isFetching) {
                     return (
-                        <div className='ui active inverted dimmer'>
+                        <div className='ui active dimmer'>
                           <div className='ui text loader'>Fetching</div>
                         </div>
                     );
