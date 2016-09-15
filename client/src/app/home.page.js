@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Auth from '../auth/auth.component.js';
 import Signin from '../auth/auth.login.component.js';
 import Register from '../auth/auth.register.component.js';
-import { loginUser, registerUser, switchForm } from '../auth/auth.thunk.js';
+import AuthThunks from '../auth/auth.thunk.js';
 
 // HomeComponent displaying either the register/login component or information about Docktor when authenticated
 class HomeComponent extends React.Component {
@@ -52,13 +52,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     logUser: (creds) => {
-      dispatch(loginUser(creds));
+      dispatch(AuthThunks.loginUser(creds));
     },
     regUser: (account) => {
-      dispatch(registerUser(account));
+      dispatch(AuthThunks.registerUser(account));
     },
     onSwitch: () => {
-      dispatch(switchForm());
+      dispatch(AuthThunks.switchForm());
     }
   };
 };

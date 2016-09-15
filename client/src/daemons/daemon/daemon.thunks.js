@@ -9,7 +9,7 @@ import * as DaemonActions from './daemon.actions.js';
 /********** Thunk Functions **********/
 
 // Thunk to fetch daemons
-export function fetchDaemon(id) {
+const fetchDaemon = (id) => {
   return function (dispatch) {
 
     dispatch(DaemonActions.requestDaemon(id));
@@ -24,4 +24,7 @@ export function fetchDaemon(id) {
         handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
       });
   };
-}
+};
+ export default {
+   fetchDaemon
+ };

@@ -30,7 +30,7 @@ import AuthPage from './auth/auth.page.js';
 import { requireAuthorization } from './auth/auth.isAuthorized.js';
 
 // thunks
-import { profile } from './auth/auth.thunk.js';
+import AuthThunks from './auth/auth.thunk.js';
 
 // Constants
 import { AUTH_ADMIN_ROLE } from './auth/auth.constants.js';
@@ -59,7 +59,7 @@ const store = createStore(
 
 const authToken = localStorage.getItem('id_token');
 if (authToken) {
-  store.dispatch(profile());
+  store.dispatch(AuthThunks.profile());
 }
 
 // Create an enhanced history that syncs navigation events with the store

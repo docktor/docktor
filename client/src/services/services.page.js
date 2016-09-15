@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
-import { fetchServicesIfNeeded } from './services.thunks.js';
+import ServicesThunks from './services.thunks.js';
 
 // Components
 import ServiceCard from './service.card.component.js';
@@ -67,7 +67,7 @@ const mapStateToServicesProps = (state) => {
 const mapDispatchToServicesProps = (dispatch) => {
   return {
     fetchServices : () => {
-      dispatch(fetchServicesIfNeeded());
+      dispatch(ServicesThunks.fetchIfNeeded());
     }
   };
 };

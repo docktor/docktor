@@ -5,9 +5,9 @@ import { goBack } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
 
-// Thunks/Actions
-import { fetchDaemon } from './daemon.thunks.js';
-import { fetchSitesIfNeeded } from '../../sites/sites.thunks.js';
+// Thunks
+import SitesThunks from '../../sites/sites.thunks.js';
+import DaemonThunks from './daemon.thunks.js';
 
 // Components
 import VolumesBox from '../../common/volumes.box.component.js';
@@ -45,15 +45,12 @@ class DaemonComponent extends React.Component {
 
   }
 
-  componentDidUpdate() {
-    $('#sites-dropdown').dropdown();
-    $('#protocol-dropdown').dropdown();
-    this.refs.scrollbars.scrollTop();
-  }
-  componentDidUpdate() {
-    $('#sites-dropdown').dropdown();
-    $('#protocol-dropdown').dropdown();
-    this.refs.scrollbars.scrollTop();
+  componentDidUpdate(prevProps, prevState) {
+    if ($.isEmptyObject(prevProps.daemon.item)) {
+      $('#sites-dropdown').dropdown();
+      $('#protocol-dropdown').dropdown();
+      this.refs.scrollbars.scrollTop();
+    }
   }
 
   onChangeProtocol(event) {
@@ -323,9 +320,9 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon : (id) => {dispatch(fetchDaemon(id));},
-    fetchSites : () => {dispatch(fetchSitesIfNeeded());},
-    backTo : () => {dispatch(goBack());}
+    fetchDaemon: (id) => {dispatch(DaemonThunks.fetchDaemon(id));},
+    fetchSites: () => {dispatch(SitesThunks.fetchIfNeeded());},
+    backTo: () => {dispatch(goBack());}
   };
 };
 

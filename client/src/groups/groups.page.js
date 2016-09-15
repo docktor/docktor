@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
-import { fetchGroupsIfNeeded } from './groups.thunks.js';
+import GroupsThunks from './groups.thunks.js';
 
 // Components
 import GroupCard from './group.card.component.js';
@@ -67,7 +67,7 @@ const mapStateToGroupsProps = (state) => {
 const mapDispatchToGroupsProps = (dispatch) => {
   return {
     fetchGroups : () => {
-      dispatch(fetchGroupsIfNeeded());
+      dispatch(GroupsThunks.fetchIfNeeded());
     }
   };
 };

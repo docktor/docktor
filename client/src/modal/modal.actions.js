@@ -2,14 +2,14 @@
 import ModalConstants from './modal.constants.js';
 
 // Close Modal
-export function closeModal() {
+const closeModal = () => {
   return {
     type: ModalConstants.CLOSE_MODAL
   };
-}
+};
 
 // New Site Modal
-export function openNewSiteModal(position, callback) {
+const openNewSiteModal = (position, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
   line.fields.push({ label: 'Title', name: 'title', desc: 'Site Title', type: 'text', required: true });
@@ -22,10 +22,10 @@ export function openNewSiteModal(position, callback) {
     form,
     callback
   };
-}
+};
 
 // Edit Site Modal
-export function openEditSiteModal(site, callback) {
+const openEditSiteModal = (site, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
   line.fields.push({ label: 'Title', name: 'title', desc: 'Site Title', value: site.title, type: 'text', required: true });
@@ -41,4 +41,10 @@ export function openEditSiteModal(site, callback) {
     form,
     callback
   };
-}
+};
+
+export default {
+  closeModal,
+  openNewSiteModal,
+  openEditSiteModal
+};

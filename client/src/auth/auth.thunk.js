@@ -4,19 +4,19 @@ import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
 // Auth Actions
-import * as AuthActions from './auth.actions.js';
+import AuthActions from './auth.actions.js';
 
 // Dispatch the action of switching between login and register panes
 // Could be used to reset information
-export function switchForm() {
+const switchForm = () => {
   return dispatch => {
     dispatch(AuthActions.switchFormAction());
   };
-}
+};
 
 // Calls the API to get a token and
 // dispatches actions along the way
-export function loginUser(creds) {
+const loginUser = (creds) => {
 
   let config = {
     method: 'POST',
@@ -54,19 +54,19 @@ export function loginUser(creds) {
         }
       });
   };
-}
+};
 
 // Logs the user out
-export function logoutUser() {
+const logoutUser = () => {
   return dispatch => {
     dispatch(AuthActions.requestLogout());
     localStorage.removeItem('id_token');
     dispatch(AuthActions.receiveLogout());
   };
-}
+};
 
 // Get the profile of the authenticated user
-export function profile() {
+const profile = () => {
   return dispatch => {
     dispatch(AuthActions.requestProfile());
 
@@ -80,10 +80,10 @@ export function profile() {
         handleError(error, AuthActions.profileError, dispatch);
       });
   };
-}
+};
 
 // Register the user to the application
-export function registerUser(account) {
+const registerUser = (account) => {
 
   let config = {
     method: 'POST',
@@ -119,4 +119,12 @@ export function registerUser(account) {
         }
       });
   };
-}
+};
+
+export default {
+  switchForm,
+  loginUser,
+  logoutUser,
+  profile,
+  registerUser
+};

@@ -114,7 +114,7 @@ export const generateEntitiesThunks = (entitiesName) => {
     return (dispatch) => {
       dispatch(Actions.requestAll());
 
-      return fetch('/api/daemons', withAuth({ method:'GET' }))
+      return fetch(`/api/${entitiesName}`, withAuth({ method:'GET' }))
         .then(checkHttpStatus)
         .then(parseJSON)
         .then(response => {

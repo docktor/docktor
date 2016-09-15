@@ -8,8 +8,6 @@ import { generateEntitiesThunks } from '../utils/entities.js';
 // Daemons Actions
 import DaemonsActions from './daemons.actions.js';
 
-const EntitiesThunks = generateEntitiesThunks('daemons');
-
 /********** Thunk Functions **********/
 
 // Thunk to fetch daemon info

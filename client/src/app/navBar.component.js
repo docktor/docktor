@@ -3,7 +3,7 @@ import React from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { logoutUser } from '../auth/auth.thunk.js';
+import AuthThunks from '../auth/auth.thunk.js';
 import { isRoleAuthorized } from '../auth/auth.wrappers.js';
 
 // Constants
@@ -77,7 +77,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     logout : () => {
-      dispatch(logoutUser());
+      dispatch(AuthThunks.logoutUser());
     }
   };
 };
