@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 // Components
-import { fetchDaemonInfo } from './daemons.thunks.js';
+import DaemonsThunks from './daemons.thunks.js';
 
 // Style
 import './daemon.card.component.scss';
@@ -90,7 +90,7 @@ const mapStateToProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchInfo: (daemon, force) => () => dispatch(fetchDaemonInfo(daemon, force))
+    fetchInfo: (daemon, force) => () => dispatch(DaemonsThunks.fetchDaemonInfo(daemon, force))
   };
 };
 
