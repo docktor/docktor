@@ -21,16 +21,20 @@ class DaemonComponent extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = { chosenProtocol: null, tags: [] };
+  }
+
+  componentWillReceiveProps(nextProps) {
     const tags = [];
-    if (props.daemon.tags) {
-      props.daemon.tags.forEach((tag, index) => {
+    if (nextProps.daemon.item.tags) {
+      nextProps.daemon.item.tags.forEach((tag, index) => {
         tags.push({
             id: index,
             text: tag
         });
       });
     }
-    this.state = { chosenProtocol: null, tags: tags };
+    this.setState({ tags });
   }
 
   componentWillMount() {

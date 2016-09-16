@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
+import { push } from 'react-router-redux';
 import { withAuth } from '../../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../../utils/utils.js';
 
@@ -52,6 +53,7 @@ const saveDaemon = (form) => {
       .then(parseJSON)
       .then(response => {
         dispatch(DaemonActions.savedDaemon(response));
+        dispatch(push('/daemons'));
       })
       .catch(error => {
         handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
