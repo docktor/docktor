@@ -42,15 +42,14 @@ class DaemonComponent extends React.Component {
     } else {
       // New daemon
     }
-
   }
 
   componentDidUpdate(prevProps, prevState) {
     if ($.isEmptyObject(prevProps.daemon.item)) {
-      $('#sites-dropdown').dropdown();
-      $('#protocol-dropdown').dropdown();
       this.refs.scrollbars.scrollTop();
     }
+    $('#sites-dropdown').dropdown();
+    $('#protocol-dropdown').dropdown();
   }
 
   onChangeProtocol(event) {
@@ -128,6 +127,7 @@ class DaemonComponent extends React.Component {
         variables: variablesBox.state.variables,
         tags: tags,
       };
+      this.props.save(daemon);
     }
   }
 
@@ -188,111 +188,106 @@ class DaemonComponent extends React.Component {
       <div className='flex layout vertical start-justified'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
            <div className='flex layout horizontal around-justified'>
-                {((isFetching, didInvalidate) => {
+                {((isFetching) => {
                   if (isFetching) {
                     return (
                         <div className='ui active dimmer'>
                           <div className='ui text loader'>Fetching</div>
                         </div>
                     );
-                  } else if (didInvalidate) {
-                    return (
-                      <div>No daemon</div>
-                    );
                   } else {
-                      return (
-                        <div className='flex layout vertical start-justified daemon-details'>
-                            <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
-                            <form className='ui form daemon-form'>
-                              <input type='hidden' name='created' ref='created' defaultValue={item.created}/>
-                              <input type='hidden' name='id' ref='id' defaultValue={item.id}/>
-                              <div className='two fields'>
-                                <div className='field required'>
-                                  <label>
-                                    Name
-                                  </label>
-                                  <input type='text' ref='name' name='name' defaultValue={item.name} placeholder='A unique name' autoComplete='off' />
-                                </div>
-                                <div className='field'>
-                                  <label>Description</label>
-                                  <textarea rows='4' ref='description' name='description' defaultValue={item.description} placeholder='A description of the daemon' autoComplete='off'/>
-                                </div>
-                              </div>
-                              <div className='two fields'>
-                                <div className='field required'>
-                                  <label>
-                                    Site
-                                  </label>
-                                  {this.renderSites(sites, item.site)}
-                                </div>
-                                <div className='field required'>
-                                  <label>
-                                    Default data volume
-                                  </label>
-                                  <input type='text' ref='volume' name='volume' placeholder='volume' defaultValue={item.volume} autoComplete='off'/>
-                                </div>
-                              </div>
-
-                              <div className='five fields'>
-                                <div className='two wide field'>
-                                  <div className='large ui label'>cAdvisor</div>
-                                </div>
-                                <div className='fourteen wide field'>
-                                  <label>cAdvisor Api Url</label>
-                                  <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
-                                </div>
-                              </div>
-
-                              <div className='five fields'>
-                                <div className='two wide field'>
-                                  <div className='large ui label'>Docker</div>
-                                </div>
-                                <div className='two wide field required'>
-                                  <label>Protocol</label>
-                                  <select id='protocol-dropdown' name='protocol' defaultValue={item.protocol} ref='protocol' className='ui fluid dropdown'  onChange={(event) => this.onChangeProtocol(event)}>
-                                    <option value=''>Select protocol</option>
-                                    <option value='http'>HTTP</option>
-                                    <option value='https'>HTTPS</option>
-                                  </select>
-                                </div>
-                                <div className='six wide field required'>
-                                  <label>Hostname</label>
-                                  <input type='text' ref='host' name='host' placeholder='Hostname or IP' defaultValue={item.host} autoComplete='off'/>
-                                </div>
-                                <div className='three wide field required'>
-                                  <label>Port</label>
-                                  <input type='number' ref='port' name='port' placeholder='Port' defaultValue={item.port} autoComplete='off'/>
-                                </div>
-                                <div className='three wide field required'>
-                                  <label>Timeout</label>
-                                  <input type='number' ref='timeout' name='timeout' placeholder='Timeout' defaultValue={item.timeout} autoComplete='off'/>
-                                </div>
-                              </div>
-
-                              {this.renderCertificates(item, chosenProtocol)}
-
-                            </form>
-                            <VolumesBox volumes={item.volumes} ref='volumes'>
-                              <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
-                            </VolumesBox>
-                            <VariablesBox volumes={item.variables} ref='variables'>
-                              <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
-                            </VariablesBox>
-                            <div className='tags'>
-                              <div className='large ui label'>Tags</div>
-                              <ReactTags tags={this.state.tags}
-                                handleDelete={(i) => this.handleDeleteTag(i)}
-                                handleAddition={(tag) => this.handleAddTag(tag)}
-                                handleDrag={(tag, currPos, newPos) => this.handleDragTag(tag, currPos, newPos)} />
+                    return (
+                      <div className='flex layout vertical start-justified daemon-details'>
+                        <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
+                        <form className='ui form daemon-form'>
+                          <input type='hidden' name='created' ref='created' defaultValue={item.created}/>
+                          <input type='hidden' name='id' ref='id' defaultValue={item.id}/>
+                          <div className='two fields'>
+                            <div className='field required'>
+                              <label>
+                                Name
+                              </label>
+                              <input type='text' ref='name' name='name' defaultValue={item.name} placeholder='A unique name' autoComplete='off' />
                             </div>
-                            <div className='flex button-form'>
-                              <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
+                            <div className='field'>
+                              <label>Description</label>
+                              <textarea rows='4' ref='description' name='description' defaultValue={item.description} placeholder='A description of the daemon' autoComplete='off'/>
+                            </div>
+                          </div>
+                          <div className='two fields'>
+                            <div className='field required'>
+                              <label>
+                                Site
+                              </label>
+                              {this.renderSites(sites, item.site)}
+                            </div>
+                            <div className='field required'>
+                              <label>
+                                Default data volume
+                              </label>
+                              <input type='text' ref='volume' name='volume' placeholder='volume' defaultValue={item.volume} autoComplete='off'/>
                             </div>
                           </div>
 
-                      );
+                          <div className='five fields'>
+                            <div className='two wide field'>
+                              <div className='large ui label'>cAdvisor</div>
+                            </div>
+                            <div className='fourteen wide field'>
+                              <label>cAdvisor Api Url</label>
+                              <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
+                            </div>
+                          </div>
+
+                          <div className='five fields'>
+                            <div className='two wide field'>
+                              <div className='large ui label'>Docker</div>
+                            </div>
+                            <div className='two wide field required'>
+                              <label>Protocol</label>
+                              <select id='protocol-dropdown' name='protocol' defaultValue={item.protocol} ref='protocol' className='ui fluid dropdown'  onChange={(event) => this.onChangeProtocol(event)}>
+                                <option value=''>Select protocol</option>
+                                <option value='http'>HTTP</option>
+                                <option value='https'>HTTPS</option>
+                              </select>
+                            </div>
+                            <div className='six wide field required'>
+                              <label>Hostname</label>
+                              <input type='text' ref='host' name='host' placeholder='Hostname or IP' defaultValue={item.host} autoComplete='off'/>
+                            </div>
+                            <div className='three wide field required'>
+                              <label>Port</label>
+                              <input type='number' ref='port' name='port' placeholder='Port' defaultValue={item.port} autoComplete='off'/>
+                            </div>
+                            <div className='three wide field required'>
+                              <label>Timeout</label>
+                              <input type='number' ref='timeout' name='timeout' placeholder='Timeout' defaultValue={item.timeout} autoComplete='off'/>
+                            </div>
+                          </div>
+
+                          {this.renderCertificates(item, chosenProtocol)}
+
+                        </form>
+                        <VolumesBox volumes={item.volumes} ref='volumes'>
+                          <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
+                        </VolumesBox>
+                        <VariablesBox volumes={item.variables} ref='variables'>
+                          <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
+                        </VariablesBox>
+                        <div className='tags'>
+                          <div className='large ui label'>Tags</div>
+                          <ReactTags tags={this.state.tags}
+                            handleDelete={(i) => this.handleDeleteTag(i)}
+                            handleAddition={(tag) => this.handleAddTag(tag)}
+                            handleDrag={(tag, currPos, newPos) => this.handleDragTag(tag, currPos, newPos)} />
+                        </div>
+                        <div className='flex button-form'>
+                          <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
+                        </div>
+                      </div>
+                    );
                   }
-                })(isFetching, didInvalidate)}
+                })(isFetching)}
             </div>
           </Scrollbars>
       </div>
@@ -305,7 +300,8 @@ DaemonComponent.propTypes = {
   sites: React.PropTypes.object,
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
-  backTo: React.PropTypes.func
+  backTo: React.PropTypes.func,
+  save: React.PropTypes.func
 };
 
 // Function to map state to container props
@@ -322,7 +318,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchDaemon: (id) => {dispatch(DaemonThunks.fetchDaemon(id));},
     fetchSites: () => {dispatch(SitesThunks.fetchIfNeeded());},
-    backTo: () => {dispatch(goBack());}
+    backTo: () => {dispatch(goBack());},
+    save: (daemon) => {dispatch(DaemonThunks.saveDaemon(daemon));}
   };
 };
 

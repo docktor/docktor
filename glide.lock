@@ -94,7 +94,7 @@ imports:
   subpackages:
   - utils
 - name: github.com/soprasteria/godocktor-api
-  version: 21e89a3e83fcf9670bde60192020177e51c06a97
+  version: 4e5ccd1101921d0c0db9eaff939d22d3a0b03ade
   subpackages:
   - daemons
   - groups
