@@ -1,7 +1,7 @@
+import { generateEntitiesConstants } from '../utils/entities.js';
+
 export default {
-  REQUEST_ALL_SITES: 'REQUEST_ALL_SITES',
-  RECEIVE_SITES: 'RECEIVE_SITES',
-  INVALID_REQUEST_SITES: 'INVALID_REQUEST_SITES',
+  ...generateEntitiesConstants('sites'),
   REQUEST_DELETE_SITE: 'REQUEST_DELETE_SITE',
   RECEIVE_SITE_DELETED: 'RECEIVE_SITE_DELETED',
   REQUEST_SAVE_SITE: 'REQUEST_SAVE_SITE',

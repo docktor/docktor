@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { AUTH_ADMIN_ROLE, AUTH_USER_ROLE, getRoleLabel } from '../auth/auth.constants.js';
-import {  saveUser } from './users.thunks.js';
+import UsersThunks from './users.thunks.js';
 
 // Style
 import './user.card.component.scss';
@@ -74,7 +74,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveUserProp: (user) => {
-      dispatch(saveUser(user));
+      dispatch(UsersThunks.saveUser(user));
     }
   };
 };

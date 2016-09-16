@@ -1,7 +1,7 @@
+import { generateEntitiesConstants } from '../utils/entities.js';
+
 export default {
-  REQUEST_ALL_USERS: 'REQUEST_ALL_USERS',
-  RECEIVE_USERS: 'RECEIVE_USERS',
-  INVALID_REQUEST_USERS: 'INVALID_REQUEST_USERS',
+  ...generateEntitiesConstants('users'),
   REQUEST_SAVE_USER: 'REQUEST_SAVE_USER',
   RECEIVE_SAVED_USER: 'RECEIVE_SAVED_USER',
   INVALID_SAVE_USER: 'INVALID_SAVE_USER'

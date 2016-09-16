@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import Auth from './auth.component.js';
 import Signin from './auth.login.component.js';
 import Register from './auth.register.component.js';
-import { loginUser, registerUser, switchForm } from './auth.thunk.js';
+import AuthThunks from './auth.thunk.js';
 
 class LoginP extends React.Component {
 
@@ -60,16 +60,16 @@ const mapStateToLoginPageProps = (state) => {
 const mapDispatchToLoginPageProps = (dispatch) => {
   return {
     logUser: (creds) => {
-      dispatch(loginUser(creds));
+      dispatch(AuthThunks.loginUser(creds));
     },
     redirect: (path) => {
       dispatch(push(path));
     },
     regUser: (account) => {
-      dispatch(registerUser(account));
+      dispatch(AuthThunks.registerUser(account));
     },
     onSwitch: () => {
-      dispatch(switchForm());
+      dispatch(AuthThunks.switchForm());
     }
   };
 };

@@ -1,5 +1,5 @@
+import { generateEntitiesConstants } from '../utils/entities.js';
+
 export default {
-  REQUEST_ALL_SERVICES: 'REQUEST_ALL_SERVICES',
-  RECEIVE_SERVICES: 'RECEIVE_SERVICES',
-  INVALID_REQUEST_SERVICES: 'INVALID_REQUEST_SERVICES'
+  ...generateEntitiesConstants('services')
 };

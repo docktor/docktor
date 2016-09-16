@@ -1,5 +1,5 @@
+import { generateEntitiesConstants } from '../utils/entities.js';
+
 export default {
-  REQUEST_ALL_GROUPS: 'REQUEST_ALL_GROUPS',
-  RECEIVE_GROUPS: 'RECEIVE_GROUPS',
-  INVALID_REQUEST_GROUPS: 'INVALID_REQUEST_GROUPS'
+  ...generateEntitiesConstants('groups')
 };

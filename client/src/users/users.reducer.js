@@ -1,18 +1,6 @@
 // import constants
 import UsersConstants from './users.constants.js';
-
-const initialState = {
-    isFetching: false,
-    didInvalidate: true,
-    items: {}
-};
-
-const createRequestAllUsers  = () => {
-    return {
-        isFetching: true,
-        didInvalidate: false
-    };
-};
+import { generateEntitiesReducer } from '../utils/entities.js';
 
 const createRequestSaveUser  = (state, action) => {
   if (action.user.id !== -1) {
@@ -46,33 +34,17 @@ const createInvalidSaveUser = (state, action) => {
   return {};
 };
 
-const createReceiveUsers = (action) => {
-    let users = {};
-    action.users.forEach(user => users[user.id] = user);
-    return {
-        isFetching: false,
-        didInvalidate: false,
-        items: users,
-        lastUpdated: action.receivedAt
-    };
-};
-
-const usersReducer = (state = initialState, action) => {
+const usersReducer = (state, action) => {
+    const entitiesState = generateEntitiesReducer(state, action, 'users');
     switch (action.type) {
-        case UsersConstants.INVALID_REQUEST_USERS:
-            return Object.assign({}, initialState);
-        case UsersConstants.REQUEST_ALL_USERS:
-            return Object.assign({}, state, createRequestAllUsers());
-        case UsersConstants.RECEIVE_USERS:
-            return Object.assign({}, state, createReceiveUsers(action));
         case UsersConstants.REQUEST_SAVE_USER:
-            return Object.assign({}, state, createRequestSaveUser(state, action));
+            return Object.assign({}, entitiesState, createRequestSaveUser(state, action));
         case UsersConstants.RECEIVE_SAVED_USER:
-            return Object.assign({}, state, createReceiveSavedUser(state, action));
+            return Object.assign({}, entitiesState, createReceiveSavedUser(state, action));
         case UsersConstants.INVALID_SAVE_USER:
-            return Object.assign({}, state, createInvalidSaveUser(state, action));
+            return Object.assign({}, entitiesState, createInvalidSaveUser(state, action));
         default:
-            return state;
+            return entitiesState;
     }
 };
 

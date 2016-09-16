@@ -4,9 +4,9 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { deleteSite, saveSite } from './sites.thunks.js';
-import { confirmDeletion } from '../toasts/toasts.actions.js';
-import { openNewSiteModal, openEditSiteModal } from '../modal/modal.actions.js';
+import SitesThunks from './sites.thunks.js';
+import ToastsActions from '../toasts/toasts.actions.js';
+import ModalActions from '../modal/modal.actions.js';
 
 // Style
 import 'leaflet/dist/leaflet.css';
@@ -95,16 +95,16 @@ const mapStateToSitesProps = (state) => {
 const mapDispatchToSitesProps = (dispatch) => {
   return {
     onDelete: site => {
-      const callback = () => dispatch(deleteSite(site.id));
-      dispatch(confirmDeletion(site.title, callback));
+      const callback = () => dispatch(SitesThunks.deleteSite(site.id));
+      dispatch(ToastsActions.confirmDeletion(site.title, callback));
     },
     onCreate: position => {
-      const callback = (siteForm) => dispatch(saveSite(siteForm));
-      dispatch(openNewSiteModal(position, callback));
+      const callback = (siteForm) => dispatch(SitesThunks.saveSite(siteForm));
+      dispatch(ModalActions.openNewSiteModal(position, callback));
     },
     onEdit: site => {
-      const callback = (siteForm) => dispatch(saveSite(siteForm));
-      dispatch(openEditSiteModal(site, callback));
+      const callback = (siteForm) => dispatch(SitesThunks.saveSite(siteForm));
+      dispatch(ModalActions.openEditSiteModal(site, callback));
     }
   };
 };

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
-import { fetchUsersIfNeeded } from './users.thunks.js';
+import UsersThunks from './users.thunks.js';
 
 // Components
 import UserCard from './user.card.component.js';
@@ -67,7 +67,7 @@ const mapStateToUsersProps = (state) => {
 const mapDispatchToUsersProps = (dispatch) => {
   return {
     fetchUsers : () => {
-      dispatch(fetchUsersIfNeeded());
+      dispatch(UsersThunks.fetchIfNeeded());
     }
   };
 };

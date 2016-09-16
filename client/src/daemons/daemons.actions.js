@@ -1,50 +1,27 @@
 // import constants
 import DaemonsConstants from './daemons.constants.js';
-
-// Request all daemons
-export function requestAllDaemons() {
-  return {
-    type: DaemonsConstants.REQUEST_ALL_DAEMONS
-  };
-}
-
-// Daemons are received
-export function receiveDaemons(daemons) {
-  return {
-    type: DaemonsConstants.RECEIVE_DAEMONS,
-    daemons,
-    receivedAt: Date.now()
-  };
-}
-
-// Daemons API returns an Error
-export function invalidRequestDaemons(error) {
-  return {
-    type: DaemonsConstants.INVALID_REQUEST_DAEMONS,
-    error
-  };
-}
+import { generateEntitiesActions } from '../utils/entities.js';
 
 // Request daemon info
-export function requestDaemonInfo(daemon) {
+const requestDaemonInfo = (daemon) => {
   return {
     type: DaemonsConstants.REQUEST_DAEMON_INFO,
     daemon
   };
-}
+};
 
 
 // Daemon info are received
-export function receiveDaemonInfo(daemon, info) {
+const receiveDaemonInfo = (daemon, info) => {
   return {
     type: DaemonsConstants.RECEIVE_DAEMON_INFO,
     daemon,
     info
   };
-}
+};
 
 // Daemon info API returns an Error
-export function invalidRequestDaemonInfo(daemon) {
+const invalidRequestDaemonInfo = (daemon) => {
   return function(error) {
     return {
     type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
@@ -52,4 +29,11 @@ export function invalidRequestDaemonInfo(daemon) {
     error
     };
   };
-}
+};
+
+export default {
+  ...generateEntitiesActions('daemons'),
+  requestDaemonInfo,
+  receiveDaemonInfo,
+  invalidRequestDaemonInfo
+};

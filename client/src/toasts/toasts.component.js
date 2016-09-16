@@ -4,7 +4,7 @@ import NotificationSystem from 'react-notification-system';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { closeNotification } from './toasts.actions.js';
+import ToastsActions from './toasts.actions.js';
 
 // Style
 import './toasts.component.scss';
@@ -62,7 +62,7 @@ const mapStateToNotificationsProps = (state) => {
 
 // Function to map dispatch to container props
 const mapDispatchToNotificationsProps = (dispatch) => {
-    return { onClose: id => dispatch(closeNotification(id)) };
+    return { onClose: id => dispatch(ToastsActions.closeNotification(id)) };
 };
 
 // Redux container to Sites component
