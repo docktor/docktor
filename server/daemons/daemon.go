@@ -17,6 +17,11 @@ type DaemonInfo struct {
 	Message      string `json:"message,omitempty"`
 }
 
+const (
+	statusUP   string = "UP"
+	statusDOWN string = "DOWN"
+)
+
 // GetInfo : retrieving the docker daemon status using redis cache
 func GetInfo(daemon types.Daemon, client *redis.Client, force bool) (*DaemonInfo, error) {
 	info := &DaemonInfo{}
@@ -35,12 +40,12 @@ func GetInfo(daemon types.Daemon, client *redis.Client, force bool) (*DaemonInfo
 
 	dockerInfo, err := api.Docker.Info()
 	if err != nil {
-		info = &DaemonInfo{Status: "DOWN", NbImages: 0, NbContainers: 0, Message: err.Error()}
+		info = &DaemonInfo{Status: statusDOWN, NbImages: 0, NbContainers: 0, Message: err.Error()}
 		go redisw.Set(client, key, info, 5*time.Minute)
 		return info, nil
 	}
 
-	info = &DaemonInfo{Status: "UP", NbImages: dockerInfo.Images, NbContainers: dockerInfo.Containers}
+	info = &DaemonInfo{Status: statusUP, NbImages: dockerInfo.Images, NbContainers: dockerInfo.Containers}
 	go redisw.Set(client, key, info, 5*time.Minute)
 	return info, nil
 }

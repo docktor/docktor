@@ -4,11 +4,13 @@ import MD5 from 'md5';
 
 //Actions
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { INVALID_REQUEST_SITES } from '../sites/sites.actions.js';
-import { INVALID_REQUEST_DAEMONS, INVALID_REQUEST_DAEMON_INFO } from '../daemons/daemons.actions.js';
-import { INVALID_REQUEST_USERS, INVALID_SAVE_USER } from '../users/users.actions.js';
-import { LOGIN_INVALID_REQUEST, REGISTER_INVALID_REQUEST } from '../auth/auth.actions.js';
-import { CLOSE_NOTIFICATION, COMFIRM_DELETION } from './toasts.actions.js';
+import SitesConstants from '../sites/sites.constants.js';
+import DaemonsConstants from '../daemons/daemons.constants.js';
+import UsersConstants from '../users/users.constants.js';
+import GroupsConstants from '../groups/groups.constants.js';
+import ServicesConstants from '../services/services.constants.js';
+import AuthConstants from '../auth/auth.constants.js';
+import ToastsConstants from './toasts.constants.js';
 
 const initialState = {};
 
@@ -16,35 +18,38 @@ const toastsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOCATION_CHANGE:
              return Object.assign({}, initialState);
-
-        case INVALID_REQUEST_SITES:
-            const invalidReqSitesToast = createInvalidReqSitesToast(state, action);
-            return Object.assign({}, { ...state }, invalidReqSitesToast);
-
-        case INVALID_REQUEST_DAEMONS:
-            const invalidReqDaemonsToast = createInvalidReqDaemonsToast(state, action);
-            return Object.assign({}, { ...state }, invalidReqDaemonsToast);
-        case INVALID_REQUEST_DAEMON_INFO:
+        case SitesConstants.INVALID_REQUEST_SITES:
+            const invalidReqToastSites = createInvalidReqToast(state, action, 'Sites');
+            return Object.assign({}, { ...state }, invalidReqToastSites);
+        case DaemonsConstants.INVALID_REQUEST_DAEMONS:
+            const invalidReqToastDaemons = createInvalidReqToast(state, action, 'Daemons');
+            return Object.assign({}, { ...state }, invalidReqToastDaemons);
+        case UsersConstants.INVALID_REQUEST_USERS:
+            const invalidReqToastUsers = createInvalidReqToast(state, action, 'Users');
+            return Object.assign({}, { ...state }, invalidReqToastUsers);
+        case GroupsConstants.INVALID_REQUEST_GROUPS:
+            const invalidReqToastGroups = createInvalidReqToast(state, action, 'Groups');
+            return Object.assign({}, { ...state }, invalidReqToastGroups);
+        case ServicesConstants.INVALID_REQUEST_SERVICES:
+            const invalidReqToastServices = createInvalidReqToast(state, action, 'Services');
+            return Object.assign({}, { ...state }, invalidReqToastServices);
+        case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
             const invalidDaemonInfoToast = createInvalidDaemonInfo(state, action);
             return Object.assign({}, { ...state }, invalidDaemonInfoToast);
-
-        case INVALID_REQUEST_USERS:
-            const invalidReqUsersToast = createInvalidReqUsersToast(state, action);
-            return Object.assign({}, { ...state }, invalidReqUsersToast);
-        case INVALID_SAVE_USER:
+        case UsersConstants.INVALID_SAVE_USER:
             const invalidSaveUserToast = createInvalidSaveUserToast(state, action);
             return Object.assign({}, { ...state }, invalidSaveUserToast);
-        case LOGIN_INVALID_REQUEST:
+        case AuthConstants.LOGIN_INVALID_REQUEST:
             const invalidReqLoginToast = createInvalidReqLoginToast(state, action);
             return Object.assign({}, { ...state }, invalidReqLoginToast);
-        case REGISTER_INVALID_REQUEST:
+        case AuthConstants.REGISTER_INVALID_REQUEST:
             const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
             return Object.assign({}, { ...state }, invalidReqRegisterToast);
-        case COMFIRM_DELETION:
+        case ToastsConstants.COMFIRM_DELETION:
             const confirmDelToast = createConfirmDelToast(state, action);
             return Object.assign({}, { ...state }, confirmDelToast);
 
-        case CLOSE_NOTIFICATION:
+        case ToastsConstants.CLOSE_NOTIFICATION:
             let resState = Object.assign({}, { ...state });
             delete resState[action.id];
             return resState;
@@ -80,37 +85,11 @@ const createInvalidReqRegisterToast = (state, action) => {
     return res;
 };
 
-const createInvalidReqSitesToast = (state, action) => {
+const createInvalidReqToast = (state, action, api) => {
     let res = {};
     const uuid = UUID.create(4);
     res[uuid] = {
-        title: 'Error on Sites API',
-        message: action.error,
-        level: 'error',
-        position: 'bl',
-        uid: uuid
-    };
-    return res;
-};
-
-const createInvalidReqDaemonsToast = (state, action) => {
-    let res = {};
-    const uuid = UUID.create(4);
-    res[uuid] = {
-        title: 'Error on Daemons API',
-        message: action.error,
-        level: 'error',
-        position: 'bl',
-        uid: uuid
-    };
-    return res;
-};
-
-const createInvalidReqUsersToast = (state, action) => {
-    let res = {};
-    const uuid = UUID.create(4);
-    res[uuid] = {
-        title: 'Error on Users API',
+        title: `Error on ${api} API`,
         message: action.error,
         level: 'error',
         position: 'bl',

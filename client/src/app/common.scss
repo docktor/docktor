@@ -26,35 +26,67 @@ html {
 .ui.modal > :last-child,
 .ui.modal > :first-child,
 .ui.message,
+.ui.dropdown,
+.ui.dropdown .menu,
+textarea,
 input {
   border-radius: 0 !important;
   box-shadow: none !important;
 }
 
-.ui.error.message,
-.ui.form .field.error input {
+.ui.error.message {
   background-color: #f9d6d6 !important;
-  color: #9f3a38 !important;
 }
-
-.ui.form .field {
-  label {
-    color: rgba(255, 255, 255, .5) !important;
+.ui.form {
+  & .error {
+    ::-webkit-input-placeholder {
+      color: rgba(191, 191, 191, .87);
+    }
+    :focus::-webkit-input-placeholder {
+      color: rgba(115, 115, 115, .87);
+    }
+    ::-moz-placeholder {
+      color: rgba(191, 191, 191, .87);
+    }
+    :focus::-moz-placeholder {
+      color: rgba(115, 115, 115, .87);
+    }
   }
-  label:after {
-    color: #00948d !important;
+
+  .field {
+    label {
+      color: rgba(255, 255, 255, .5) !important;
+    }
+    label:after {
+      color: #00948d !important;
+    }
+    &.error {
+      input {
+        background-color: #f9d6d6 !important;
+        color: #9f3a38 !important;
+      }
+      label {
+        color: #ce8b8a !important;
+      }
+      label:after {
+        color: #db2828 !important;
+      }
+
+      ::-webkit-input-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-webkit-input-placeholder {
+        color: #ce8b8a;
+      }
+      ::-moz-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-moz-placeholder {
+        color: #ce8b8a;
+      }
+    }
   }
 }
-
-.ui.form .field.error {
-  label {
-    color: #ce8b8a !important;
-  }
-  label:after {
-    color: #db2828 !important;
-  }
-}
-
 .ui.buttons {
   margin: 0;
   padding: 1px;

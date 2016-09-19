@@ -6,8 +6,10 @@ import { Scrollbars } from 'react-custom-scrollbars';
 // Components
 import DaemonCard from './daemon.card.component.js';
 import Sites from '../sites/sites.component.js';
-import { fetchSitesIfNeeded } from '../sites/sites.thunks.js';
-import { fetchDaemonsIfNeeded } from '../daemons/daemons.thunks.js';
+
+// Thunks
+import SitesThunks from '../sites/sites.thunks.js';
+import DaemonsThunks from '../daemons/daemons.thunks.js';
 
 // Style
 import './daemons.page.scss';
@@ -78,8 +80,8 @@ const mapStateToDaemonsProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToDaemonsProps = (dispatch) => {
   return {
-    fetchSite : () =>{dispatch(fetchSitesIfNeeded());},
-    fetchDaemons : () => {dispatch(fetchDaemonsIfNeeded());}
+    fetchSite: () =>{dispatch(SitesThunks.fetchIfNeeded());},
+    fetchDaemons: () => {dispatch(DaemonsThunks.fetchIfNeeded());}
   };
 };
 

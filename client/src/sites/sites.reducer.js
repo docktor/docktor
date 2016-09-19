@@ -1,35 +1,6 @@
-import {
-  INVALID_REQUEST_SITES,
-  REQUEST_ALL_SITES,
-  RECEIVE_SITES,
-  REQUEST_DELETE_SITE,
-  RECEIVE_SITE_DELETED,
-  RECEIVE_SITE_SAVED
-} from './sites.actions.js';
-
-const initialState = {
-  isFetching: false,
-  didInvalidate: true,
-  items: {}
-};
-
-const createRequestAllSites = () => {
-  return {
-    isFetching: true,
-    didInvalidate: false
-  };
-};
-
-const createReceiveSites = (action) => {
-  let sites = {};
-  action.sites.forEach(site => sites[site.id] = site);
-  return {
-    isFetching: false,
-    didInvalidate: false,
-    items: sites,
-    lastUpdated: action.receivedAt
-  };
-};
+// import constants
+import SitesConstants from './sites.constants.js';
+import { generateEntitiesReducer } from '../utils/entities.js';
 
 const createRequestDeleteSite = () => {
   return {
@@ -38,30 +9,25 @@ const createRequestDeleteSite = () => {
   };
 };
 
-const sitesReducer = (state = initialState, action) => {
+const sitesReducer = (state, action) => {
+  const entitiesState = generateEntitiesReducer(state, action, 'sites');
   switch (action.type) {
-    case INVALID_REQUEST_SITES:
-      return Object.assign({}, initialState);
-    case REQUEST_ALL_SITES:
-      return Object.assign({}, state, createRequestAllSites());
-    case RECEIVE_SITES:
-      return Object.assign({}, state, createReceiveSites(action));
-    case REQUEST_DELETE_SITE:
-      return Object.assign({}, state, createRequestDeleteSite());
-    case RECEIVE_SITE_DELETED:
-      let deletedSiteState = Object.assign({}, state, {
-        items: { ...state.items }
+    case SitesConstants.REQUEST_DELETE_SITE:
+      return Object.assign({}, entitiesState, createRequestDeleteSite());
+    case SitesConstants.RECEIVE_SITE_DELETED:
+      let deletedSiteState = Object.assign({}, entitiesState, {
+        items: { ...entitiesState.items }
       });
       delete deletedSiteState.items[action.id];
       return deletedSiteState;
-    case RECEIVE_SITE_SAVED:
-      let newSiteState = Object.assign({}, state, {
-        items: { ...state.items }
+    case SitesConstants.RECEIVE_SITE_SAVED:
+      let newSiteState = Object.assign({}, entitiesState, {
+        items: { ...entitiesState.items }
       });
       newSiteState.items[action.site.id] = action.site;
       return newSiteState;
     default:
-      return state;
+      return entitiesState;
   }
 };
 

@@ -28,9 +28,6 @@ rules:
   brace-style:
     - 1
     - allow-single-line: true
-  class-name-format:
-    - 1
-    - convention: hyphenatedlowercase
   clean-import-paths:
     - 1
     - filename-extension: false
@@ -95,17 +92,10 @@ rules:
   no-trailing-zero: 1
   no-transition-all: 0
   no-url-protocols: 1
-  no-vendor-prefixes:
-    - 1
-    - additional-identifiers: []
-      excluded-identifiers: []
   placeholder-in-extend: 1
   placeholder-name-format:
     - 1
     - convention: hyphenatedlowercase
-  property-sort-order:
-    - 1
-    - ignore-custom-properties: false
   property-units:
     - 1
     - global:

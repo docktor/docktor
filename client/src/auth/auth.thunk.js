@@ -3,26 +3,20 @@ import 'babel-polyfill';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
 
-// Daemon Actions
-import {
-  requestLogin, loginInvalidRequest, loginNotAuthorized, receiveLogin,
-  requestLogout, receiveLogout,
-  requestProfile, receiveProfile, profileError,
-  requestRegister, receiveRegister, registerInvalidRequest,  registerNotAuthorized,
-  switchFormAction
-} from './auth.actions.js';
+// Auth Actions
+import AuthActions from './auth.actions.js';
 
 // Dispatch the action of switching between login and register panes
 // Could be used to reset information
-export function switchForm() {
+const switchForm = () => {
   return dispatch => {
-    dispatch(switchFormAction());
+    dispatch(AuthActions.switchFormAction());
   };
-}
+};
 
 // Calls the API to get a token and
 // dispatches actions along the way
-export function loginUser(creds) {
+const loginUser = (creds) => {
 
   let config = {
     method: 'POST',
@@ -32,7 +26,7 @@ export function loginUser(creds) {
 
   return dispatch => {
     // We dispatch requestLogin to kickoff the call to the API
-    dispatch(requestLogin());
+    dispatch(AuthActions.requestLogin());
 
     return fetch('/auth/login', config)
       .then (checkHttpStatus)
@@ -40,7 +34,7 @@ export function loginUser(creds) {
       .then((user) =>  {
           // When uer is authorized, add the JWT token in the localstorage for authentication purpose
           localStorage.setItem('id_token', user.id_token);
-          dispatch(receiveLogin(user));
+          dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
         // When error happens.
         // Dispatch differents actions wether the user is not authorized
@@ -49,47 +43,47 @@ export function loginUser(creds) {
           error.response.text().then(text => {
             if (error.response.status == 403) {
               // Whill print a simple error message
-              dispatch(loginNotAuthorized(text));
+              dispatch(AuthActions.loginNotAuthorized(text));
             } else {
               // Will open an error toast
-              dispatch(loginInvalidRequest(text));
+              dispatch(AuthActions.loginInvalidRequest(text));
             }
           });
         } else {
-          dispatch(loginInvalidRequest(error.message));
+          dispatch(AuthActions.loginInvalidRequest(error.message));
         }
       });
   };
-}
+};
 
 // Logs the user out
-export function logoutUser() {
+const logoutUser = () => {
   return dispatch => {
-    dispatch(requestLogout());
+    dispatch(AuthActions.requestLogout());
     localStorage.removeItem('id_token');
-    dispatch(receiveLogout());
+    dispatch(AuthActions.receiveLogout());
   };
-}
+};
 
 // Get the profile of the authenticated user
-export function profile() {
+const profile = () => {
   return dispatch => {
-    dispatch(requestProfile());
+    dispatch(AuthActions.requestProfile());
 
     return fetch('/api/profile', withAuth({ method:'GET' }))
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(receiveProfile(response));
+        dispatch(AuthActions.receiveProfile(response));
       })
       .catch(error => {
-        handleError(error, registerInvalidRequest, dispatch);
+        handleError(error, AuthActions.profileError, dispatch);
       });
   };
-}
+};
 
 // Register the user to the application
-export function registerUser(account) {
+const registerUser = (account) => {
 
   let config = {
     method: 'POST',
@@ -99,7 +93,7 @@ export function registerUser(account) {
 
   return dispatch => {
     // We dispatch requestLogin to kickoff the call to the API
-    dispatch(requestRegister(account));
+    dispatch(AuthActions.requestRegister(account));
 
     return fetch('/auth/register', config)
       .then(checkHttpStatus)
@@ -107,7 +101,7 @@ export function registerUser(account) {
       .then((user) =>  {
           // When uer is authorized
           localStorage.setItem('id_token', user.id_token);
-          dispatch(receiveRegister(user));
+          dispatch(AuthActions.receiveRegister(user));
       }).catch(error => {
         // When error happens.
         // Dispatch differents actions wether the user is not authorized
@@ -115,14 +109,22 @@ export function registerUser(account) {
         if (error.response) {
           error.response.text().then(text => {
             if (error.response.status == 403) {
-              dispatch(registerNotAuthorized(text));
+              dispatch(AuthActions.registerNotAuthorized(text));
             } else {
-              dispatch(registerInvalidRequest(text));
+              dispatch(AuthActions.registerInvalidRequest(text));
             }
           });
         } else {
-          dispatch(registerInvalidRequest(error.message));
+          dispatch(AuthActions.registerInvalidRequest(error.message));
         }
       });
   };
-}
+};
+
+export default {
+  switchForm,
+  loginUser,
+  logoutUser,
+  profile,
+  registerUser
+};

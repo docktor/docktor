@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Actions for redux container
-import { closeModal } from './modal.actions.js';
+import ModalActions from './modal.actions.js';
 
 // Components
 import Rodal from 'rodal';
@@ -96,7 +96,7 @@ const mapStateToModalProps = (state) => {
 
 // Function to map dispatch to container props
 const mapDispatchToModalProps = (dispatch) => {
-    return { onClose: () => dispatch(closeModal()) };
+    return { onClose: () => dispatch(ModalActions.closeModal()) };
 };
 
 // Redux container to Sites component

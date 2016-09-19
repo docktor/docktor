@@ -1,22 +1,24 @@
-// Confirm site deletion
-export const COMFIRM_DELETION = 'COMFIRM_DELETION';
+// import constants
+import ToastsConstants from './toasts.constants.js';
 
-export function confirmDeletion(title, callback) {
+// Confirm site deletion
+const confirmDeletion = (title, callback) => {
   return {
-    type: COMFIRM_DELETION,
+    type: ToastsConstants.COMFIRM_DELETION,
     title,
     callback
   };
-}
-
-
+};
 
 // Close Notifications
-export const CLOSE_NOTIFICATION = 'CLOSE_NOTIFICATION';
-
-export function closeNotification(id) {
+const closeNotification = (id) => {
   return {
-    type: CLOSE_NOTIFICATION,
+    type: ToastsConstants.CLOSE_NOTIFICATION,
     id
   };
-}
+};
+
+export default {
+  confirmDeletion,
+  closeNotification
+};

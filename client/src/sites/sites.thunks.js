@@ -3,42 +3,18 @@ import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
+import { generateEntitiesThunks } from '../utils/entities.js';
 
 // Site Actions
-import {
-  requestAllSites,
-  receiveSites,
-  invalidRequestSites,
-  requestDeleteSite,
-  receiveSiteDeleted,
-  requestSaveSite,
-  receiveSiteSaved
-} from './sites.actions.js';
+import SitesActions from './sites.actions.js';
 
 /********** Thunk Functions **********/
 
-// Thunk to fetch sites
-export function fetchSites() {
-  return function (dispatch) {
-
-    dispatch(requestAllSites());
-    return fetch('/api/sites', withAuth({ method:'GET' }))
-      .then(checkHttpStatus)
-      .then(parseJSON)
-      .then(response => {
-          dispatch(receiveSites(response));
-      })
-      .catch(error => {
-        handleError(error, invalidRequestSites, dispatch);
-      });
-  };
-}
-
 // Thunk to delete a site
-export function deleteSite(id) {
+const deleteSite = (id) => {
   return function (dispatch) {
 
-    dispatch(requestDeleteSite(id));
+    dispatch(SitesActions.requestDeleteSite(id));
 
     let request = new Request('/api/sites/' + id, withAuth({
       method: 'DELETE'
@@ -47,16 +23,16 @@ export function deleteSite(id) {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(receiveSiteDeleted(response));
+          dispatch(SitesActions.receiveSiteDeleted(response));
       })
       .catch(error => {
-          handleError(error, invalidRequestSites, dispatch);
+          handleError(error, SitesActions.invalidRequestSites, dispatch);
       });
   };
-}
+};
 
 // Thunk to save a site
-export function saveSite(form) {
+const saveSite = (form) => {
 
   let site = Object.assign({}, form);
   site.latitude = parseFloat(site.latitude.replace(',', '.'));
@@ -67,7 +43,7 @@ export function saveSite(form) {
 
   return function (dispatch) {
 
-    dispatch(requestSaveSite(site));
+    dispatch(SitesActions.requestSaveSite(site));
 
     let request = new Request('/api/sites/' + id, withAuth({
       method: 'PUT',
@@ -81,37 +57,16 @@ export function saveSite(form) {
     .then(checkHttpStatus)
     .then(parseJSON)
     .then(response => {
-        dispatch(receiveSiteSaved(response));
+        dispatch(SitesActions.receiveSiteSaved(response));
     })
     .catch(error => {
-        handleError(error, invalidRequestSites, dispatch);
+        handleError(error, SitesActions.invalidRequestSites, dispatch);
     });
   };
-}
+};
 
-
-/********** Helper Functions **********/
-
-// Check that if sites should be fetched
-function shouldFetchSites(state) {
-  const sites = state.sites;
-  if (!sites || sites.didInvalidate) {
-    return true;
-  } else if (sites.isFetching) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-// Thunk to fech sites only if needed
-export function fetchSitesIfNeeded() {
-
-  return (dispatch, getState) => {
-    if (shouldFetchSites(getState())) {
-      return dispatch(fetchSites());
-    } else {
-      return Promise.resolve();
-    }
-  };
-}
+export default {
+  ...generateEntitiesThunks('sites'),
+  deleteSite,
+  saveSite
+};

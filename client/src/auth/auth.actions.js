@@ -1,131 +1,137 @@
+// import constants
+import AuthConstants from './auth.constants.js';
+
 // ==== Register actions
 
 // Action when account creation is starting
-export const REGISTER_REQUEST = 'REGISTER_REQUEST';
-export function requestRegister() {
+const requestRegister = () => {
   return {
-    type: REGISTER_REQUEST
+    type: AuthConstants.REGISTER_REQUEST
   };
-}
+};
 
 // Action when user successfully created his account
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
-export function receiveRegister(register) {
+const receiveRegister = (register) => {
   return {
-    type: REGISTER_SUCCESS,
+    type: AuthConstants.REGISTER_SUCCESS,
     id_token : register.id_token,
     user : register.user
   };
-}
+};
 
 // Action when a technical error happens when creating a user account
-export const REGISTER_INVALID_REQUEST = 'REGISTER_INVALID_REQUEST';
-export function registerInvalidRequest(error) {
+const registerInvalidRequest = (error) => {
   return {
-    type: REGISTER_INVALID_REQUEST,
+    type: AuthConstants.REGISTER_INVALID_REQUEST,
     error
   };
-}
+};
 
 // Action when user is not authorized to create a user (for example when user already exists)
-export const REGISTER_NOT_AUTHORIZED = 'REGISTER_NOT_AUTHORIZED';
-export function registerNotAuthorized(error) {
+const registerNotAuthorized = (error) => {
   return {
-    type: REGISTER_NOT_AUTHORIZED,
+    type: AuthConstants.REGISTER_NOT_AUTHORIZED,
     error
   };
-}
+};
 
 // ==== Login actions
 
 // Action when user is requesting to log in
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export function requestLogin() {
+const requestLogin = () => {
   return {
-    type: LOGIN_REQUEST
+    type: AuthConstants.LOGIN_REQUEST
   };
-}
+};
 
 // Action when user successfully login in application
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export function receiveLogin(login) {
+const receiveLogin = (login) => {
   return {
-    type: LOGIN_SUCCESS,
+    type: AuthConstants.LOGIN_SUCCESS,
     id_token: login.id_token,
     user: login.user
   };
-}
+};
 
 // Action when a technical error happens when trying to log in a user
-export const LOGIN_INVALID_REQUEST = 'LOGIN_INVALID_REQUEST';
-export function loginInvalidRequest(error) {
+const loginInvalidRequest = (error) => {
   return {
-    type: LOGIN_INVALID_REQUEST,
+    type: AuthConstants.LOGIN_INVALID_REQUEST,
     error
   };
-}
+};
 
 // Action when user is not authorized to authenticate (bad password for example)
-export const LOGIN_NOT_AUTHORIZED = 'LOGIN_NOT_AUTHORIZED';
-export function loginNotAuthorized(error) {
+const loginNotAuthorized = (error) => {
   return {
-    type: LOGIN_NOT_AUTHORIZED,
+    type: AuthConstants.LOGIN_NOT_AUTHORIZED,
     error
   };
-}
+};
 
 // ==== Log out actions
 
 // Action when user is requesting to log out
-export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
-export function requestLogout() {
+const requestLogout = () => {
   return {
-    type: LOGOUT_REQUEST
+    type: AuthConstants.LOGOUT_REQUEST
   };
-}
+};
 
 // Action when user successfully log out the application
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
-export function receiveLogout() {
+const receiveLogout = () => {
   return {
-    type: LOGOUT_SUCCESS
+    type: AuthConstants.LOGOUT_SUCCESS
   };
-}
+};
 
 // ==== Profile actions
 
 // Action when starting to get profile of authenticated user
-export const PROFILE_REQUEST = 'PROFILE_REQUEST';
-export function requestProfile() {
+const requestProfile = () => {
   return {
-    type: PROFILE_REQUEST
+    type: AuthConstants.PROFILE_REQUEST
   };
-}
+};
 
 // Action when authenticated user successfully get his profile information
-export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
-export function receiveProfile(user) {
+const receiveProfile = (user) => {
   return {
-    type: PROFILE_SUCCESS,
+    type: AuthConstants.PROFILE_SUCCESS,
     user
   };
-}
+};
 
 // Action when technical error heppens while getting profile information
-export const PROFILE_FAILURE = 'PROFILE_FAILURE';
-export function profileError(message) {
+const profileError = (message) => {
   return {
-    type: PROFILE_FAILURE,
+    type: AuthConstants.PROFILE_FAILURE,
     message
   };
-}
+};
 
 // ==== Switch form
 
 // Action when user switch from register to login tab on authentication page
-export const SWITCH_FORM = 'SWITCH_FORM';
-export function switchFormAction() {
+const switchFormAction = () => {
   return {
-    type: SWITCH_FORM
+    type: AuthConstants.SWITCH_FORM
   };
-}
+};
+
+export default {
+  requestRegister,
+  receiveRegister,
+  registerInvalidRequest,
+  registerNotAuthorized,
+  requestLogin,
+  receiveLogin,
+  loginInvalidRequest,
+  loginNotAuthorized,
+  requestLogout,
+  receiveLogout,
+  requestProfile,
+  receiveProfile,
+  profileError,
+  switchFormAction
+};

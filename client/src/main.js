@@ -10,6 +10,7 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 // Reducers
 import sites from './sites/sites.reducer.js';
 import daemons from './daemons/daemons.reducer.js';
+import daemon from './daemons/daemon/daemon.reducer.js';
 import groups from './groups/groups.reducer.js';
 import services from './services/services.reducer.js';
 import users from './users/users.reducer.js';
@@ -21,6 +22,7 @@ import auth from './auth/auth.reducer.js';
 import App from './app/app.layout.js';
 import Home from './app/home.page.js';
 import DaemonsPage from './daemons/daemons.page.js';
+import DaemonPage from './daemons/daemon/daemon.page.js';
 import GroupsPage from './groups/groups.page.js';
 import ServicesPage from './services/services.page.js';
 import UsersPage from './users/users.page.js';
@@ -28,7 +30,7 @@ import AuthPage from './auth/auth.page.js';
 import { requireAuthorization } from './auth/auth.isAuthorized.js';
 
 // thunks
-import { profile } from './auth/auth.thunk.js';
+import AuthThunks from './auth/auth.thunk.js';
 
 // Constants
 import { AUTH_ADMIN_ROLE } from './auth/auth.constants.js';
@@ -42,6 +44,7 @@ const store = createStore(
     {
       sites,
       daemons,
+      daemon,
       groups,
       services,
       users,
@@ -56,7 +59,7 @@ const store = createStore(
 
 const authToken = localStorage.getItem('id_token');
 if (authToken) {
-  store.dispatch(profile());
+  store.dispatch(AuthThunks.profile());
 }
 
 // Create an enhanced history that syncs navigation events with the store
@@ -68,7 +71,11 @@ ReactDOM.render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
-        <Route path='daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+        <Route path='daemons'>
+          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+          <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+        </Route>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
         <Route path='users' component={requireAuthorization(UsersPage)} />

@@ -1,60 +1,37 @@
-// Request all users
-export const REQUEST_ALL_USERS = 'REQUEST_ALL_USERS';
+// import constants
+import UsersConstants from './users.constants.js';
+import { generateEntitiesActions } from '../utils/entities.js';
 
-export function requestAllUsers() {
+// Request save user
+const requestSaveUser = (user) => {
   return {
-    type: REQUEST_ALL_USERS
+    type: UsersConstants.REQUEST_SAVE_USER,
+    user
   };
-}
+};
 
-
-// Users are received
-export const RECEIVE_USERS = 'RECEIVE_USERS';
-
-export function receiveUsers(users) {
+// User was saved
+const receiveSavedUser = (user) => {
   return {
-    type: RECEIVE_USERS,
-    users,
-    receivedAt: Date.now()
+    type: UsersConstants.RECEIVE_SAVED_USER,
+    user
   };
-}
+};
 
 // Users API returns an Error
-export const INVALID_REQUEST_USERS = 'INVALID_REQUEST_USERS';
-
-export function invalidRequestUsers(error) {
-  return {
-    type: INVALID_REQUEST_USERS,
-    error
-  };
-}
-
-export const REQUEST_SAVE_USER = 'REQUEST_SAVE_USER';
-
-export function requestSaveUser(user) {
-  return {
-    type: REQUEST_SAVE_USER,
-    user
-  };
-}
-
-export const RECEIVE_SAVED_USER = 'RECEIVE_SAVED_USER';
-
-export function receiveSavedUser(user) {
-  return {
-    type: RECEIVE_SAVED_USER,
-    user
-  };
-}
-
-export const INVALID_SAVE_USER = 'INVALID_SAVE_USER';
-
-export function invalidSaveUser(user) {
+const invalidSaveUser = (user) => {
   return function(error) {
     return {
-    type: INVALID_SAVE_USER,
-    user,
-    error
+      type: UsersConstants.INVALID_SAVE_USER,
+      user,
+      error
     };
   };
-}
+};
+
+export default {
+  ...generateEntitiesActions('users'),
+  requestSaveUser,
+  receiveSavedUser,
+  invalidSaveUser
+};

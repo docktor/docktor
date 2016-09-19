@@ -1,76 +1,44 @@
-// Imports for fetch API
-import 'babel-polyfill';
-import fetch from 'isomorphic-fetch';
-
-
-// Request all sites
-export const REQUEST_ALL_SITES = 'REQUEST_ALL_SITES';
-
-export function requestAllSites() {
-  return {
-    type: REQUEST_ALL_SITES
-  };
-}
-
-
-// Sites are received
-export const RECEIVE_SITES = 'RECEIVE_SITES';
-
-export function receiveSites(sites) {
-  return {
-    type: RECEIVE_SITES,
-    sites,
-    receivedAt: Date.now()
-  };
-}
+// import constants
+import SitesConstants from './sites.constants.js';
+import { generateEntitiesActions } from '../utils/entities.js';
 
 // Request site deletion
-export const REQUEST_DELETE_SITE = 'REQUEST_DELETE_SITE';
-
-export function requestDeleteSite(id) {
+const requestDeleteSite = (id) => {
   return {
-    type: REQUEST_DELETE_SITE,
+    type: SitesConstants.REQUEST_DELETE_SITE,
     id
   };
-}
+};
 
 // Site is deleted
-export const RECEIVE_SITE_DELETED = 'RECEIVE_SITE_DELETED';
-
-export function receiveSiteDeleted(response) {
+const receiveSiteDeleted = (response) => {
   return {
-    type: RECEIVE_SITE_DELETED,
+    type: SitesConstants.RECEIVE_SITE_DELETED,
     id: response.id,
     receivedAt: Date.now()
   };
-}
+};
 
 // Request save site
-export const REQUEST_SAVE_SITE = 'REQUEST_SAVE_SITE';
-
-export function requestSaveSite(site) {
+const requestSaveSite = (site) => {
   return {
-    type: REQUEST_SAVE_SITE,
+    type: SitesConstants.REQUEST_SAVE_SITE,
     site
   };
-}
+};
 
 // Site is saved
-export const RECEIVE_SITE_SAVED = 'RECEIVE_SITE_SAVED';
-
-export function receiveSiteSaved(site) {
+const receiveSiteSaved = (site) => {
   return {
-    type: RECEIVE_SITE_SAVED,
+    type: SitesConstants.RECEIVE_SITE_SAVED,
     site
   };
-}
+};
 
-// Site API returns an Error
-export const INVALID_REQUEST_SITES = 'INVALID_REQUEST_SITES';
-
-export function invalidRequestSites(error) {
-  return {
-    type: INVALID_REQUEST_SITES,
-    error
-  };
-}
+export default {
+  ...generateEntitiesActions('sites'),
+  requestDeleteSite,
+  receiveSiteDeleted,
+  requestSaveSite,
+  receiveSiteSaved
+};

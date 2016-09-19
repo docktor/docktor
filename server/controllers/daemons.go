@@ -45,17 +45,17 @@ func (d *Daemons) Save(c echo.Context) error {
 //Delete daemon into docktor
 func (d *Daemons) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
-	id := c.Param("id")
+	id := c.Param("daemonID")
 	res, err := docktorAPI.Daemons().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove daemon: %v", err))
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, RestResponse{ID: res.Hex()})
 }
 
 //Get daemon from docktor
 func (d *Daemons) Get(c echo.Context) error {
-	daemon := c.Get("daemon").(*api.Docktor)
+	daemon := c.Get("daemon").(types.Daemon)
 	return c.JSON(http.StatusOK, daemon)
 }
 
