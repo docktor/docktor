@@ -56,6 +56,8 @@ const daemonsReducer = (state, action) => {
       };
       delete deletedDaemonState.items[action.id];
       return deletedDaemonState;
+    case DaemonsConstants.CHANGE_FILTER:
+      return { ...entitiesState, filter: action.filter };
     default:
       return entitiesState;
   }

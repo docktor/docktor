@@ -24,10 +24,18 @@ const receiveDaemonInfo = (daemon, info) => {
 const invalidRequestDaemonInfo = (daemon) => {
   return function(error) {
     return {
-    type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
-    daemon,
-    error
+      type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
+      daemon,
+      error
     };
+  };
+};
+
+// Daemon info API returns an Error
+const changeFilter = (filter) => {
+  return {
+    type: DaemonsConstants.CHANGE_FILTER,
+    filter
   };
 };
 
@@ -35,5 +43,6 @@ export default {
   ...generateEntitiesActions('daemons'),
   requestDaemonInfo,
   receiveDaemonInfo,
-  invalidRequestDaemonInfo
+  invalidRequestDaemonInfo,
+  changeFilter
 };
