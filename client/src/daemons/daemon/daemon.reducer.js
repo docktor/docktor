@@ -29,7 +29,7 @@ const daemonReducer = (state = initialState, action) => {
         isFetching: true,
         didInvalidate: false
       });
-    case DaemonConstants.SAVED_DAEMON:
+    case DaemonConstants.DAEMON_SAVED:
       let newDaemonState = Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,

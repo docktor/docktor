@@ -49,13 +49,13 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
   const { CONST_REQUEST, CONST_RECEIVE, CONST_INVALID } = getConsts(entitiesName);
   switch (action.type) {
     case CONST_INVALID:
-    return Object.assign({}, state, initialState);
+      return Object.assign({}, state, initialState);
     case CONST_REQUEST:
-    return Object.assign({}, state, createRequest());
+      return Object.assign({}, state, createRequest());
     case CONST_RECEIVE:
-    return Object.assign({}, state, createReceive(state, action));
+      return Object.assign({}, state, createReceive(state, action));
     default:
-    return state;
+      return state;
   }
 };
 

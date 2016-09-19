@@ -32,6 +32,11 @@ $br: 4px;
     font-weight: $thin;
     margin: 0 0 30px;
     text-transform: uppercase;
+
+    .right-floated {
+      float: right !important;
+      margin-right: 1em;
+    }
   }
 
   a {

@@ -22,9 +22,9 @@ const receiveSavedUser = (user) => {
 const invalidSaveUser = (user) => {
   return function(error) {
     return {
-    type: UsersConstants.INVALID_SAVE_USER,
-    user,
-    error
+      type: UsersConstants.INVALID_SAVE_USER,
+      user,
+      error
     };
   };
 };

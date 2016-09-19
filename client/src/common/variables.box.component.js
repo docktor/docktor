@@ -12,7 +12,7 @@ class VariablesBox extends React.Component {
     super(props);
 
     // Set state of component from the props.
-    this.state = { variables : this.props.variables ? this.props.variables : [] };
+    this.state = { variables : this.props.variables || [] };
   }
 
   componentDidMount() {
@@ -64,38 +64,38 @@ class VariablesBox extends React.Component {
   }
 
   renderVariable(variable, index) {
-          const title = '-e ' + variable.name.toUpperCase() + '=' + variable.value;
-          return (
-            <div key={'variable' + index} className='fields'>
-              <div className='five wide field required'>
-                <label className='hidden'>Variable Name</label>
-                <input title={title} type='text' value={variable.name} placeholder='The environment variable name' autoComplete='off'
-                  onChange={(event) => this.onChangeVariable(event, index, 'name')} data-validate={'name' + index} />
-              </div>
-              <div className='five wide field required'>
-                <label className='hidden'>Variable Value</label>
-                <input title={title} type='text' value={variable.value} placeholder='The environment variable value' autoComplete='off'
-                  onChange={(event) => this.onChangeVariable(event, index, 'value')} data-validate={'value' + index} />
-              </div>
-              <div className='five wide field'>
-                <label className='hidden'>Description</label>
-                <textarea rows='2' defaultValue={variable.description} placeholder='Describe this variable' autoComplete='off'
-                  onChange={(event) => this.onChangeVariable(event, index, 'description')} />
-              </div>
-              <div className='button field'>
-                <button className='ui red icon button' onClick={(event) => this.onRemoveVariable(event, index)}>
-                  <i className='trash icon'></i>
-                </button>
-              </div>
-            </div>
-          );
+    const title = '-e ' + variable.name + '=' + variable.value;
+    return (
+      <div key={'variable' + index} className='fields'>
+        <div className='five wide field required'>
+          <label className='hidden'>Variable Name</label>
+          <input title={title} type='text' value={variable.name} placeholder='The environment variable name' autoComplete='off'
+            onChange={(event) => this.onChangeVariable(event, index, 'name')} data-validate={'name' + index} />
+        </div>
+        <div className='five wide field required'>
+          <label className='hidden'>Variable Value</label>
+          <input title={title} type='text' value={variable.value} placeholder='The environment variable value' autoComplete='off'
+            onChange={(event) => this.onChangeVariable(event, index, 'value')} data-validate={'value' + index} />
+        </div>
+        <div className='five wide field'>
+          <label className='hidden'>Description</label>
+          <textarea rows='2' defaultValue={variable.description} placeholder='Describe this variable' autoComplete='off'
+            onChange={(event) => this.onChangeVariable(event, index, 'description')} />
+        </div>
+        <div className='button field'>
+          <button className='ui red icon button' onClick={(event) => this.onRemoveVariable(event, index)}>
+            <i className='trash icon'></i>
+          </button>
+        </div>
+      </div>
+    );
   }
 
 
   render() {
     return (
       <HeadingBox className='variable ui form' icon='large settings icon' title='Variables'>
-        {this.props.children ? this.props.children : <div></div>}
+        {this.props.children || <div></div>}
         {(nbVariables => {
           if(nbVariables) {
             return (

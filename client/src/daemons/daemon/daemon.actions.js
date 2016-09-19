@@ -26,12 +26,30 @@ const requestSaveDaemon = (daemon) => {
 };
 
 // Daemon is saved
-const savedDaemon = (daemon) => {
+const daemonSaved = (daemon) => {
   return {
-    type: DaemonConstants.SAVED_DAEMON,
+    type: DaemonConstants.DAEMON_SAVED,
     daemon
   };
 };
+
+// Request site deletion
+const requestDeleteDaemon = (id) => {
+  return {
+    type: DaemonConstants.REQUEST_DELETE_DAEMON,
+    id
+  };
+};
+
+// Daemon is deleted
+const daemonDeleted = (response) => {
+  return {
+    type: DaemonConstants.DAEMON_DELETED,
+    id: response.id,
+    receivedAt: Date.now()
+  };
+};
+
 
 // Daemon API returns an Error
 const invalidRequestDaemon = (error) => {
@@ -45,6 +63,8 @@ export default {
   requestDaemon,
   receiveDaemon,
   requestSaveDaemon,
-  savedDaemon,
+  daemonSaved,
+  requestDeleteDaemon,
+  daemonDeleted,
   invalidRequestDaemon
 };

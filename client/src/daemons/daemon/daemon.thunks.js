@@ -34,7 +34,7 @@ const saveDaemon = (form) => {
   daemon.port = parseInt(daemon.port);
   daemon.timeout = parseInt(daemon.timeout);
   daemon.created = daemon.created ? daemon.created : new Date();
-  const id = form.id ? form.id : -1;
+  const id = form.id || -1;
   return function (dispatch) {
 
     dispatch(DaemonActions.requestSaveDaemon(daemon));
@@ -52,7 +52,7 @@ const saveDaemon = (form) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(DaemonActions.savedDaemon(response));
+        dispatch(DaemonActions.daemonSaved(response));
         dispatch(push('/daemons'));
       })
       .catch(error => {
@@ -61,7 +61,30 @@ const saveDaemon = (form) => {
   };
 };
 
+// Thunk to delete a site
+const deleteDaemon = (id) => {
+  return function (dispatch) {
+
+    dispatch(DaemonActions.requestDeleteDaemon(id));
+
+    let request = new Request('/api/daemons/' + id, withAuth({
+      method: 'DELETE'
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+          dispatch(DaemonActions.daemonDeleted(response));
+          dispatch(push('/daemons'));
+      })
+      .catch(error => {
+          handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
+      });
+  };
+};
+
  export default {
    fetchDaemon,
-   saveDaemon
+   saveDaemon,
+   deleteDaemon
  };

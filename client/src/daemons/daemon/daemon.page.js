@@ -5,9 +5,11 @@ import { goBack } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
 
-// Thunks
+// Thunks / Actions
+import ToastsActions from '../../toasts/toasts.actions.js';
 import SitesThunks from '../../sites/sites.thunks.js';
 import DaemonThunks from './daemon.thunks.js';
+
 
 // Components
 import VolumesBox from '../../common/volumes.box.component.js';
@@ -105,13 +107,10 @@ class DaemonComponent extends React.Component {
     event.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
-    let formValid = true;
-    formValid = volumesBox.isFormValid() && formValid;
-    formValid = variablesBox.isFormValid() && formValid;
-    formValid = this.isFormValid() && formValid;
+    // isFormValid validate the form and return the status so all the forms must be validated before doing anything
+    let formValid = volumesBox.isFormValid() & variablesBox.isFormValid() & this.isFormValid();
     if (formValid) {
-      const tags = [];
-      this.state.tags.forEach(tag => tags.push(tag.text));
+      const tags = this.state.tags.map(tag => tag.text);
       const daemon = {
         name: this.refs.name.value,
         site: this.refs.site.value,
@@ -131,7 +130,7 @@ class DaemonComponent extends React.Component {
         variables: variablesBox.state.variables,
         tags: tags,
       };
-      this.props.save(daemon);
+      this.props.onSave(daemon);
     }
   }
 
@@ -150,11 +149,7 @@ class DaemonComponent extends React.Component {
           <i className='dropdown icon'></i>
           <div className='default text'>Select Site</div>
           <div className='menu'>
-            {items.map(site => {
-              return (
-                <div className='item' key={site.id} data-value={site.id}>{site.title}</div>
-              );
-            })}
+            {items.map(site => <div className='item' key={site.id} data-value={site.id}>{site.title}</div>)}
           </div>
         </div>
         );
@@ -163,7 +158,7 @@ class DaemonComponent extends React.Component {
 
   renderCertificates(item, chosenProtocol) {
       if (item.protocol === 'https' || chosenProtocol === 'https') {
-        return(
+        return (
         <div className='three fields'>
           <div className='field'>
             <label>CA</label>
@@ -180,7 +175,7 @@ class DaemonComponent extends React.Component {
         </div>
       );
     } else {
-      <div></div>;
+      return <div></div>;
     }
   }
 
@@ -202,7 +197,8 @@ class DaemonComponent extends React.Component {
                   } else {
                     return (
                       <div className='flex layout vertical start-justified daemon-details'>
-                        <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name}</h1>
+
+                        <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{item.name} <button onClick={() => this.props.onDelete(item)} className='ui red button right-floated'><i className='trash icon'></i>Remove</button></h1>
                         <form className='ui form daemon-form'>
                           <input type='hidden' name='created' ref='created' defaultValue={item.created}/>
                           <input type='hidden' name='id' ref='id' defaultValue={item.id}/>
@@ -261,11 +257,11 @@ class DaemonComponent extends React.Component {
                             </div>
                             <div className='three wide field required'>
                               <label>Port</label>
-                              <input type='number' ref='port' name='port' placeholder='Port' defaultValue={item.port} autoComplete='off'/>
+                              <input type='number' ref='port' name='port' min='0' placeholder='Port' defaultValue={item.port} autoComplete='off'/>
                             </div>
                             <div className='three wide field required'>
                               <label>Timeout</label>
-                              <input type='number' ref='timeout' name='timeout' placeholder='Timeout' defaultValue={item.timeout} autoComplete='off'/>
+                              <input type='number' ref='timeout' name='timeout' min='0' placeholder='Timeout' defaultValue={item.timeout} autoComplete='off'/>
                             </div>
                           </div>
 
@@ -275,7 +271,7 @@ class DaemonComponent extends React.Component {
                         <VolumesBox volumes={item.volumes} ref='volumes'>
                           <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
                         </VolumesBox>
-                        <VariablesBox volumes={item.variables} ref='variables'>
+                        <VariablesBox variables={item.variables} ref='variables'>
                           <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
                         </VariablesBox>
                         <div className='tags'>
@@ -305,7 +301,8 @@ DaemonComponent.propTypes = {
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
   backTo: React.PropTypes.func,
-  save: React.PropTypes.func
+  onSave: React.PropTypes.func,
+  onDelete: React.PropTypes.func
 };
 
 // Function to map state to container props
@@ -320,10 +317,14 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon: (id) => {dispatch(DaemonThunks.fetchDaemon(id));},
-    fetchSites: () => {dispatch(SitesThunks.fetchIfNeeded());},
-    backTo: () => {dispatch(goBack());},
-    save: (daemon) => {dispatch(DaemonThunks.saveDaemon(daemon));}
+    fetchDaemon: (id) => dispatch(DaemonThunks.fetchDaemon(id)),
+    fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
+    backTo: () => dispatch(goBack()),
+    onSave: (daemon) => dispatch(DaemonThunks.saveDaemon(daemon)),
+    onDelete: daemon => {
+      const callback = () => dispatch(DaemonThunks.deleteDaemon(daemon.id));
+      dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
+    }
   };
 };
 

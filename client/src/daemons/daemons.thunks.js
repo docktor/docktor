@@ -29,8 +29,6 @@ const fetchDaemonInfo = (daemon, force) => {
   };
 };
 
-
-
 export default {
   ...generateEntitiesThunks('daemons'),
   fetchDaemonInfo

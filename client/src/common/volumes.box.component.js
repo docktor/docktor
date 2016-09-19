@@ -12,7 +12,7 @@ class VolumesBox extends React.Component {
     super(props);
 
     // Set state of component from the props.
-    this.state = { volumes : this.props.volumes ? this.props.volumes : [] };
+    this.state = { volumes : this.props.volumes || [] };
   }
 
   componentDidMount() {
@@ -66,47 +66,47 @@ class VolumesBox extends React.Component {
   }
 
   renderVolume(volume, index) {
-          const title = '-v ' + volume.value + ':' + volume.internal + ':' + volume.rights;
-          return (
-            <div key={'volume' + index} className='fields'>
-              <div className='five wide field required'>
-                <label className='hidden'>External Volume</label>
-                <input title={title} type='text' value={volume.value} placeholder='The default volume on host' autoComplete='off'
-                    onChange={(event) => this.onChangeVolume(event, index, 'value')} data-validate={'external' + index}/>
-              </div>
-              <div className='five wide field required'>
-                <label className='hidden'>Internal Volume</label>
-                <input title={title} type='text' value={volume.internal} placeholder='The volume inside the container' autoComplete='off'
-                    onChange={(event) => this.onChangeVolume(event, index, 'internal')} data-validate={'internal' + index} />
-              </div>
-              <div className='three wide field required' title={title}>
-                <label className='hidden'>Rights</label>
-                <select value={volume.rights} className='ui fluid dropdown rights'
-                    onChange={(event) => this.onChangeVolume(event, index, 'rights')} data-validate={'rights' + index} >
-                  <option value=''>Select rights</option>
-                  <option value='ro'>Read-only</option>
-                  <option value='rw'>Read-write</option>
-                </select>
-              </div>
-              <div className='three wide field'>
-                <label className='hidden'>Description</label>
-                <textarea rows='2' defaultValue={volume.description} placeholder='Describe this volume' autoComplete='off'
-                  onChange={(event) => this.onChangeVolume(event, index, 'description')} />
-              </div>
-              <div className='button field'>
-                <button className='ui red icon button' onClick={(event) => this.onRemoveVolume(event, index)}>
-                  <i className='trash icon'></i>
-                </button>
-              </div>
-            </div>
-          );
+    const title = '-v ' + volume.value + ':' + volume.internal + ':' + volume.rights;
+    return (
+      <div key={'volume' + index} className='fields'>
+        <div className='five wide field required'>
+          <label className='hidden'>External Volume</label>
+          <input title={title} type='text' value={volume.value} placeholder='The default volume on host' autoComplete='off'
+              onChange={(event) => this.onChangeVolume(event, index, 'value')} data-validate={'external' + index}/>
+        </div>
+        <div className='five wide field required'>
+          <label className='hidden'>Internal Volume</label>
+          <input title={title} type='text' value={volume.internal} placeholder='The volume inside the container' autoComplete='off'
+              onChange={(event) => this.onChangeVolume(event, index, 'internal')} data-validate={'internal' + index} />
+        </div>
+        <div className='three wide field required' title={title}>
+          <label className='hidden'>Rights</label>
+          <select value={volume.rights} className='ui fluid dropdown rights'
+              onChange={(event) => this.onChangeVolume(event, index, 'rights')} data-validate={'rights' + index} >
+            <option value='' disabled>Select rights</option>
+            <option value='ro'>Read-only</option>
+            <option value='rw'>Read-write</option>
+          </select>
+        </div>
+        <div className='three wide field'>
+          <label className='hidden'>Description</label>
+          <textarea rows='2' defaultValue={volume.description} placeholder='Describe this volume' autoComplete='off'
+            onChange={(event) => this.onChangeVolume(event, index, 'description')} />
+        </div>
+        <div className='button field'>
+          <button className='ui red icon button' onClick={(event) => this.onRemoveVolume(event, index)}>
+            <i className='trash icon'></i>
+          </button>
+        </div>
+      </div>
+    );
   }
 
 
   render() {
     return (
       <HeadingBox className='volume ui form' icon='large folder open icon' title='Volumes'>
-        {this.props.children ? this.props.children : <div></div>}
+        {this.props.children || <div></div>}
         {(nbVolumes => {
           if(nbVolumes) {
             return (

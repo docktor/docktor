@@ -1,5 +1,6 @@
 // import constants
 import DaemonsConstants from './daemons.constants.js';
+import DaemonConstants from './daemon/daemon.constants.js';
 import { generateEntitiesReducer } from '../utils/entities.js';
 
 const createRequestDaemonInfo  = (state, action) => {
@@ -43,11 +44,18 @@ const daemonsReducer = (state, action) => {
   const entitiesState = generateEntitiesReducer(state, action, 'daemons');
   switch (action.type) {
     case DaemonsConstants.REQUEST_DAEMON_INFO:
-      return Object.assign({}, entitiesState, createRequestDaemonInfo(state, action));
+      return { ...entitiesState, ...createRequestDaemonInfo(state, action) };
     case DaemonsConstants.RECEIVE_DAEMON_INFO:
-      return Object.assign({}, entitiesState, createReceiveDaemonInfo(state, action));
+      return { ...entitiesState, ...createReceiveDaemonInfo(state, action) };
     case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
-      return Object.assign({}, entitiesState, createInvalidDaemonInfo(state, action));
+      return { ...entitiesState, ...createInvalidDaemonInfo(state, action) };
+    case DaemonConstants.DAEMON_DELETED:
+      let deletedDaemonState = {
+        ...entitiesState,
+        items: { ...entitiesState.items }
+      };
+      delete deletedDaemonState.items[action.id];
+      return deletedDaemonState;
     default:
       return entitiesState;
   }
