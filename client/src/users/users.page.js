@@ -5,9 +5,13 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
 import UsersThunks from './users.thunks.js';
+import UsersActions from './users.actions.js';
 
 // Components
 import UserCard from './user.card.component.js';
+
+// Selectors
+import { getFilteredUsers } from './users.selectors.js';
 
 // Style
 import './users.page.scss';
@@ -20,14 +24,16 @@ class Users extends React.Component {
   }
 
   render() {
-    const users = Object.values(this.props.users.items);
-    const fetching = this.props.users.isFetching;
+    const users = this.props.users;
+    const filterValue = this.props.filterValue;
+    const fetching = this.props.isFetching;
+    const changeFilter = this.props.changeFilter;
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal center-center users-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...'/>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue=''/>
           </div>
           <div className='flex'></div>
         </div>
@@ -54,13 +60,19 @@ class Users extends React.Component {
   }
 }
 Users.propTypes = {
-  users: React.PropTypes.object,
+  users: React.PropTypes.array,
+  filterValue: React.PropTypes.string,
+  isFetching: React.PropTypes.bool,
   fetchUsers: React.PropTypes.func.isRequired,
+  changeFilter: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
 const mapStateToUsersProps = (state) => {
-  return { users: state.users };
+  const filterValue = state.services.filterValue;
+  const users = getFilteredUsers(state.users.items, filterValue);
+  const isFetching = state.services.isFetching;
+  return { filterValue, users, isFetching };
 };
 
 // Function to map dispatch to container props
@@ -68,7 +80,8 @@ const mapDispatchToUsersProps = (dispatch) => {
   return {
     fetchUsers : () => {
       dispatch(UsersThunks.fetchIfNeeded());
-    }
+    },
+    changeFilter: (filterValue) => dispatch(UsersActions.changeFilter(filterValue))
   };
 };
 
