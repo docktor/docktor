@@ -13,7 +13,7 @@ import DaemonsThunks from './daemons.thunks.js';
 import DaemonsActions from './daemons.actions.js';
 
 // Selectors
-import { getFilteredDaemons } from '../daemons/daemons.selectors.js';
+import { getFilteredDaemons } from './daemons.selectors.js';
 
 // Style
 import './daemons.page.scss';
@@ -30,13 +30,14 @@ class Daemons extends React.Component {
     const sites = this.props.sites;
     const daemons = this.props.daemons;
     const fetching = this.props.isFetching;
+    const filterValue = this.props.filterValue;
     const changeFilter = this.props.changeFilter;
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal center-center daemons-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)}/>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
           </div>
           <div className='flex'></div>
           <div className='ui teal labeled icon button'>
@@ -74,6 +75,7 @@ Daemons.propTypes = {
   sites: React.PropTypes.object,
   daemons: React.PropTypes.array,
   isFetching: React.PropTypes.bool,
+  filterValue: React.PropTypes.string,
   fetchSite: React.PropTypes.func.isRequired,
   fetchDaemons: React.PropTypes.func.isRequired,
   changeFilter: React.PropTypes.func,
@@ -81,11 +83,11 @@ Daemons.propTypes = {
 
 // Function to map state to container props
 const mapStateToDaemonsProps = (state) => {
-  return {
-    sites: state.sites.items,
-    daemons: getFilteredDaemons(state.daemons.items, state.sites.items, state.daemons.filter),
-    isFetching: state.daemons.isFetching || state.daemons.isFetching
-   };
+  const filterValue = state.daemons.filterValue;
+  const sites = state.sites.items;
+  const daemons = getFilteredDaemons(state.daemons.items, sites, filterValue);
+  const isFetching = state.daemons.isFetching || state.daemons.isFetching;
+  return { filterValue, sites, daemons, isFetching };
 };
 
 // Function to map dispatch to container props
@@ -93,7 +95,7 @@ const mapDispatchToDaemonsProps = (dispatch) => {
   return {
     fetchSite: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
-    changeFilter: (filter) => dispatch(DaemonsActions.changeFilter(filter))
+    changeFilter: (filterValue) => dispatch(DaemonsActions.changeFilter(filterValue))
   };
 };
 

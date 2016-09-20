@@ -31,11 +31,11 @@ const invalidRequestDaemonInfo = (daemon) => {
   };
 };
 
-// Daemon info API returns an Error
-const changeFilter = (filter) => {
+// Change filter
+const changeFilter = (filterValue) => {
   return {
     type: DaemonsConstants.CHANGE_FILTER,
-    filter
+    filterValue
   };
 };
 

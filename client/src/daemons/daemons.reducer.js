@@ -49,6 +49,11 @@ const daemonsReducer = (state, action) => {
       return { ...entitiesState, ...createReceiveDaemonInfo(state, action) };
     case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
       return { ...entitiesState, ...createInvalidDaemonInfo(state, action) };
+    case DaemonConstants.DAEMON_SAVED:
+      let items = { ...entitiesState.items };
+      items[action.daemon.id] = { ...items[action.daemon.id], ...action.daemon };
+      entitiesState.items = items;
+      return entitiesState;
     case DaemonConstants.DAEMON_DELETED:
       let deletedDaemonState = {
         ...entitiesState,
@@ -57,7 +62,7 @@ const daemonsReducer = (state, action) => {
       delete deletedDaemonState.items[action.id];
       return deletedDaemonState;
     case DaemonsConstants.CHANGE_FILTER:
-      return { ...entitiesState, filter: action.filter };
+      return { ...entitiesState, filterValue: action.filterValue };
     default:
       return entitiesState;
   }
