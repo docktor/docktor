@@ -5,9 +5,13 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 // API Fetching
 import ServicesThunks from './services.thunks.js';
+import ServicesActions from './services.actions.js';
 
 // Components
 import ServiceCard from './service.card.component.js';
+
+// Selectors
+import { getFilteredServices } from './services.selectors.js';
 
 // Style
 import './services.page.scss';
@@ -20,14 +24,16 @@ class Services extends React.Component {
   }
 
   render() {
-    const services = Object.values(this.props.services.items);
-    const fetching = this.props.services.isFetching;
+    const services = this.props.services;
+    const filterValue = this.props.filterValue;
+    const fetching = this.props.isFetching;
+    const changeFilter = this.props.changeFilter;
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal center-center services-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...'/>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
           </div>
           <div className='flex'></div>
         </div>
@@ -54,13 +60,19 @@ class Services extends React.Component {
   }
 }
 Services.propTypes = {
-  services: React.PropTypes.object,
+  services: React.PropTypes.array,
+  filterValue: React.PropTypes.string,
+  isFetching: React.PropTypes.bool,
   fetchServices: React.PropTypes.func.isRequired,
+  changeFilter: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
 const mapStateToServicesProps = (state) => {
-  return { services: state.services };
+  const filterValue = state.services.filterValue;
+  const services = getFilteredServices(state.services.items, filterValue);
+  const isFetching = state.services.isFetching;
+  return { filterValue, services, isFetching };
 };
 
 // Function to map dispatch to container props
@@ -68,7 +80,8 @@ const mapDispatchToServicesProps = (dispatch) => {
   return {
     fetchServices : () => {
       dispatch(ServicesThunks.fetchIfNeeded());
-    }
+    },
+    changeFilter: (filterValue) => dispatch(ServicesActions.changeFilter(filterValue))
   };
 };
 
