@@ -37,7 +37,7 @@ class Daemons extends React.Component {
         <div className='layout horizontal center-center daemons-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue={filterValue}/>
+              <input type='text' placeholder='Search...' disabled={fetching} onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
           </div>
           <div className='flex'></div>
           <div className='ui teal labeled icon button'>
@@ -49,22 +49,19 @@ class Daemons extends React.Component {
             <Sites/>
           </div>
           <Scrollbars className='flex-2 ui dimmable'>
-            {(fetching => {
-              if (fetching) {
-                return (
-                    <div className='flex ui active inverted dimmer'>
-                      <div className='ui text loader'>Fetching</div>
-                    </div>
-                );
-              }
-            })(fetching)}
-              <div className='flex layout horizontal center-center wrap daemons-list'>
-                {daemons.map(daemon => {
-                  return (
-                    <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />
-                  );
-                })}
+            {fetching ?
+              <div className='flex ui active inverted dimmer'>
+                <div className='ui text loader'>Fetching</div>
               </div>
+              : ''
+            }
+            <div className='flex layout horizontal center-center wrap daemons-list'>
+              {daemons.map(daemon => {
+                return (
+                  <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />
+                );
+              })}
+            </div>
           </Scrollbars>
         </div>
       </div>
@@ -83,7 +80,7 @@ Daemons.propTypes = {
 
 // Function to map state to container props
 const mapStateToDaemonsProps = (state) => {
-  const filterValue = state.daemons.filterValue;
+  const filterValue = state.daemons.filterValue || '';
   const sites = state.sites.items;
   const daemons = getFilteredDaemons(state.daemons.items, sites, filterValue);
   const isFetching = state.daemons.isFetching || state.daemons.isFetching;

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 // Actions for redux container
 import SitesThunks from './sites.thunks.js';
 import ToastsActions from '../toasts/toasts.actions.js';
+import DaemonsActions from '../daemons/daemons.actions.js';
 import ModalActions from '../modal/modal.actions.js';
 
 // Style
@@ -36,6 +37,7 @@ class SitesComponent extends React.Component {
     const onDelete = this.props.onDelete;
     const onCreate = this.props.onCreate;
     const onEdit = this.props.onEdit;
+    const changeFilter = this.props.changeFilter;
     return (
       <div className='flex-2 self-stretch map-container layout horizontal center-center'>
         <Map ref='sitesMap' className='flex self-stretch map' center={initPosition} zoom={this.initPosition.zoom} onClick={(e) => onCreate(e.latlng)}>
@@ -51,6 +53,7 @@ class SitesComponent extends React.Component {
                   <div>
                     {site.title}
                     <span className='popup-actions'>
+                      <i onClick={() => changeFilter('site: ' + site.title)} className='teal search link icon'></i>
                       <i onClick={() => onEdit(site, () => this.closePopup())} className='blue write link icon'></i>
                       <i onClick={() => onDelete(site)} className='red trash link icon'></i>
                     </span>
@@ -68,7 +71,8 @@ SitesComponent.propTypes = {
   sites: React.PropTypes.object,
   onCreate: React.PropTypes.func,
   onEdit: React.PropTypes.func,
-  onDelete: React.PropTypes.func
+  onDelete: React.PropTypes.func,
+  changeFilter: React.PropTypes.func
 };
 
 
@@ -94,7 +98,8 @@ const mapDispatchToSitesProps = (dispatch) => {
         dispatch(SitesThunks.saveSite(siteForm));
       };
       dispatch(ModalActions.openEditSiteModal(site, callback));
-    }
+    },
+    changeFilter: (filterValue) => dispatch(DaemonsActions.changeFilter(filterValue))
   };
 };
 
