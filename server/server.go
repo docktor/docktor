@@ -44,6 +44,7 @@ func New(version string) {
 	groupsC := controllers.Groups{}
 	usersC := controllers.Users{}
 	authC := controllers.Auth{}
+	exportC := controllers.Export{}
 
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
@@ -119,6 +120,11 @@ func New(version string) {
 			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
 			usersAPI.PUT("/:id", usersC.Save, isAdmin)
 			usersAPI.GET("", usersC.GetAll)
+		}
+
+		exportAPI := api.Group("/export")
+		{
+			exportAPI.GET("", exportC.ExportAll)
 		}
 	}
 

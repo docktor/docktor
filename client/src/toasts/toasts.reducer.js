@@ -10,6 +10,7 @@ import UsersConstants from '../users/users.constants.js';
 import GroupsConstants from '../groups/groups.constants.js';
 import ServicesConstants from '../services/services.constants.js';
 import AuthConstants from '../auth/auth.constants.js';
+import ExportConstants from '../export/export.constants.js';
 import ToastsConstants from './toasts.constants.js';
 
 const initialState = {};
@@ -45,6 +46,9 @@ const toastsReducer = (state = initialState, action) => {
         case AuthConstants.REGISTER_INVALID_REQUEST:
             const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
             return Object.assign({}, { ...state }, invalidReqRegisterToast);
+        case ExportConstants.EXPORT_ALL_INVALID_REQUEST:
+            const invalidReqExportToast = createInvalidReqExportToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqExportToast);
         case ToastsConstants.COMFIRM_DELETION:
             const confirmDelToast = createConfirmDelToast(state, action);
             return Object.assign({}, { ...state }, confirmDelToast);
@@ -77,6 +81,20 @@ const createInvalidReqRegisterToast = (state, action) => {
     const uuid = UUID.create(4);
     res[uuid] = {
         title: 'Cannot register because of technical error',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+
+const createInvalidReqExportToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot generate an export because of technical error',
         message: action.error,
         level: 'error',
         position: 'bl',

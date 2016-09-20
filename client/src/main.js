@@ -17,6 +17,7 @@ import users from './users/users.reducer.js';
 import toasts from './toasts/toasts.reducer.js';
 import modal from './modal/modal.reducer.js';
 import auth from './auth/auth.reducer.js';
+import exportReducer from './export/export.reducer.js';
 
 //Components
 import App from './app/app.layout.js';
@@ -51,6 +52,7 @@ const store = createStore(
       toasts,
       modal,
       auth,
+      export: exportReducer,
       routing: routerReducer,
     }
   ),

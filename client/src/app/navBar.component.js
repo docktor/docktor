@@ -4,6 +4,7 @@ import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import AuthThunks from '../auth/auth.thunk.js';
+import ExportThunks from '../export/export.thunk.js';
 import { isRoleAuthorized } from '../auth/auth.wrappers.js';
 
 // Constants
@@ -35,7 +36,7 @@ class NavBarComponent extends React.Component {
   }
 
   render() {
-    const { logout } = this.props;
+    const { logout, exportDocktor, isExportFetching } = this.props;
     return (
       <div className='ui inverted fluid menu navbar'>
         <IndexLink to='/' className='item brand'>
@@ -47,11 +48,13 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
+          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'></i></div> : ''}
           <div className='ui dropdown item'>
             <i className='inverted large user icon'></i>{' ' + this.props.auth.user.displayName}
             <div className='menu'>
-              <a className='item'>Settings</a>
-              <a className='item' onClick={logout} >Logout</a>
+              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className='item'><i className='download icon'></i>Export</a>}
+              <a className='item'><i className='settings icon'></i>Settings</a>
+              <a className='item' onClick={logout} ><i className='sign out icon'></i>Logout</a>
             </div>
           </div>
         </div>}
@@ -61,23 +64,29 @@ class NavBarComponent extends React.Component {
 }
 NavBarComponent.propTypes = {
   logout: React.PropTypes.func.isRequired,
+  exportDocktor: React.PropTypes.func.isRequired,
   auth: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired
+  location: React.PropTypes.object.isRequired,
+  isExportFetching: React.PropTypes.bool.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
-    location: state.routing.locationBeforeTransitions
+    location: state.routing.locationBeforeTransitions,
+    isExportFetching: state.export.isFetching
   };
 };
 
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout : () => {
+    logout: () => {
       dispatch(AuthThunks.logoutUser());
+    },
+    exportDocktor: () => {
+      dispatch(ExportThunks.exportAll());
     }
   };
 };
