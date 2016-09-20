@@ -37,7 +37,7 @@ class Daemons extends React.Component {
         <div className='layout horizontal center-center daemons-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue={filterValue}/>
           </div>
           <div className='flex'></div>
           <div className='ui teal labeled icon button'>

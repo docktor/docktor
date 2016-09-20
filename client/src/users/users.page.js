@@ -33,7 +33,7 @@ class Users extends React.Component {
         <div className='layout horizontal center-center users-bar'>
           <div className='ui icon input'>
             <i className='search icon'></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue=''/>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue={filterValue}/>
           </div>
           <div className='flex'></div>
         </div>
@@ -69,9 +69,9 @@ Users.propTypes = {
 
 // Function to map state to container props
 const mapStateToUsersProps = (state) => {
-  const filterValue = state.services.filterValue;
+  const filterValue = state.users.filterValue;
   const users = getFilteredUsers(state.users.items, filterValue);
-  const isFetching = state.services.isFetching;
+  const isFetching = state.users.isFetching;
   return { filterValue, users, isFetching };
 };
 
