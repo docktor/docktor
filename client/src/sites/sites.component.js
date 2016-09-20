@@ -21,20 +21,12 @@ class SitesComponent extends React.Component {
 
   componentDidUpdate() {
     setTimeout(() => {
-      this.refs.map1.leafletElement.invalidateSize(false);
+      this.refs.sitesMap.leafletElement.invalidateSize(false);
     }, 300); // Adjust timeout to tab transition
   }
 
-  openModalNewSite(onCreate) {
-    return e => {
-      onCreate(e.latlng);
-    };
-  }
-
-  openModalEditSite(onEdit, site) {
-    return () => {
-      onEdit(site);
-    };
+  closePopup() {
+    this.refs.sitesMap.leafletElement.closePopup();
   }
 
   render() {
@@ -46,16 +38,7 @@ class SitesComponent extends React.Component {
     const onEdit = this.props.onEdit;
     return (
       <div className='flex-2 self-stretch map-container layout horizontal center-center'>
-        <Map ref='map1' className='flex self-stretch map' center={initPosition} zoom={this.initPosition.zoom} onClick={this.openModalNewSite(onCreate)}>
-          {(fetching => {
-            if (fetching) {
-              return (
-                <div className='ui active inverted dimmer'>
-                  <div className='ui text loader'>Fetching</div>
-                </div>
-              );
-            }
-          })(fetching)}
+        <Map ref='sitesMap' className='flex self-stretch map' center={initPosition} zoom={this.initPosition.zoom} onClick={(e) => onCreate(e.latlng)}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -65,9 +48,12 @@ class SitesComponent extends React.Component {
             return (
               <Marker key={site.id} position={sitePosition}>
                 <Popup>
-                  <div>{site.title}{' '}
-                    <i onClick={this.openModalEditSite(onEdit, site)} className='blue write link icon'></i>
-                    <i onClick={() => onDelete(site)} className='red trash link icon'></i>
+                  <div>
+                    {site.title}
+                    <span className='popup-actions'>
+                      <i onClick={() => onEdit(site, () => this.closePopup())} className='blue write link icon'></i>
+                      <i onClick={() => onDelete(site)} className='red trash link icon'></i>
+                    </span>
                   </div>
                 </Popup>
               </Marker>
@@ -102,8 +88,11 @@ const mapDispatchToSitesProps = (dispatch) => {
       const callback = (siteForm) => dispatch(SitesThunks.saveSite(siteForm));
       dispatch(ModalActions.openNewSiteModal(position, callback));
     },
-    onEdit: site => {
-      const callback = (siteForm) => dispatch(SitesThunks.saveSite(siteForm));
+    onEdit: (site, closePopup) => {
+      const callback = (siteForm) => {
+        closePopup();
+        dispatch(SitesThunks.saveSite(siteForm));
+      };
       dispatch(ModalActions.openEditSiteModal(site, callback));
     }
   };

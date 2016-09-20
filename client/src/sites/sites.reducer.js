@@ -2,7 +2,7 @@
 import SitesConstants from './sites.constants.js';
 import { generateEntitiesReducer } from '../utils/entities.js';
 
-const createRequestDeleteSite = () => {
+const createRequestSite = () => {
   return {
     isFetching: false,
     didInvalidate: false
@@ -13,17 +13,22 @@ const sitesReducer = (state, action) => {
   const entitiesState = generateEntitiesReducer(state, action, 'sites');
   switch (action.type) {
     case SitesConstants.REQUEST_DELETE_SITE:
-      return Object.assign({}, entitiesState, createRequestDeleteSite());
+    case SitesConstants.REQUEST_SAVE_SITE:
+      return { ...entitiesState, ...createRequestSite() };
     case SitesConstants.RECEIVE_SITE_DELETED:
-      let deletedSiteState = Object.assign({}, entitiesState, {
-        items: { ...entitiesState.items }
-      });
+      let deletedSiteState = {
+        ...entitiesState,
+        items: { ...entitiesState.items },
+        isFetching: false
+      };
       delete deletedSiteState.items[action.id];
       return deletedSiteState;
     case SitesConstants.RECEIVE_SITE_SAVED:
-      let newSiteState = Object.assign({}, entitiesState, {
-        items: { ...entitiesState.items }
-      });
+      let newSiteState = {
+        ...entitiesState,
+        items: { ...entitiesState.items },
+        isFetching: false
+      };
       newSiteState.items[action.site.id] = action.site;
       return newSiteState;
     default:

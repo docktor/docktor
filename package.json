@@ -60,7 +60,7 @@
     "react": "^15.3.1",
     "react-custom-scrollbars": "^4.0.0",
     "react-dom": "^15.3.1",
-    "react-leaflet": "^0.12.1",
+    "react-leaflet": "^0.12.2",
     "react-notification-system": "^0.2.10",
     "react-redux": "^4.4.5",
     "react-router": "^2.7.0",
