@@ -3,7 +3,7 @@ import DaemonConstants from './daemon.constants.js';
 const initialState = {
   isFetching: false,
   didInvalidate: true,
-  item: {}
+  item: { volumes:[], variables:[] }
 };
 
 const daemonReducer = (state = initialState, action) => {
@@ -36,6 +36,8 @@ const daemonReducer = (state = initialState, action) => {
         item : action.daemon
       });
       return newDaemonState;
+    case DaemonConstants.NEW_DAEMON:
+      return initialState;
     default:
       return state;
   }

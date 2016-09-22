@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Link } from 'react-router';
 
 // Components
 import DaemonCard from './daemon.card.component.js';
@@ -34,14 +35,16 @@ class Daemons extends React.Component {
     const changeFilter = this.props.changeFilter;
     return (
       <div className='flex layout vertical start-justified'>
-        <div className='layout horizontal center-center daemons-bar'>
-          <div className='ui icon input'>
-            <i className='search icon'></i>
-              <input type='text' placeholder='Search...' disabled={fetching} onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
+        <div className='layout horizontal justified daemons-bar'>
+          <div className='ui left corner labeled icon input flex' >
+            <div className='ui left corner label'><i className='search icon'></i></div>
+            <i className='remove link icon' onClick={() => changeFilter('')}></i>
+            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
           </div>
-          <div className='flex'></div>
-          <div className='ui teal labeled icon button'>
-            <i className='plus icon'></i>New Daemon
+          <div className='flex-2 layout horizontal end-justified'>
+            <Link className='ui teal labeled icon button' to={'/daemons/new'}>
+              <i className='plus icon'></i>New Daemon
+            </Link>
           </div>
         </div>
         <div className='flex layout horizontal around-justified'>
