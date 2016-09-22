@@ -17,7 +17,7 @@ import './sites.component.scss';
 class SitesComponent extends React.Component {
   constructor() {
     super();
-    this.initPosition = { lat: 45, lng: 5, zoom: 4 };
+    this.state = { lat: 45, lng: 5, zoom: 4 };
   }
 
   componentDidUpdate() {
@@ -31,8 +31,8 @@ class SitesComponent extends React.Component {
   }
 
   render() {
-    const initPosition = [this.initPosition.lat, this.initPosition.lng];
-    const sites = Object.values(this.props.sites.items);
+    const initPosition = [this.state.lat, this.state.lng];
+    const sites = this.props.sites;
     const fetching = this.props.sites.isFetching;
     const onDelete = this.props.onDelete;
     const onCreate = this.props.onCreate;
@@ -40,7 +40,7 @@ class SitesComponent extends React.Component {
     const changeFilter = this.props.changeFilter;
     return (
       <div className='flex-2 self-stretch map-container layout horizontal center-center'>
-        <Map ref='sitesMap' className='flex self-stretch map' center={initPosition} zoom={this.initPosition.zoom} onClick={(e) => onCreate(e.latlng)}>
+        <Map ref='sitesMap' className='flex self-stretch map' center={initPosition} zoom={this.state.zoom} onClick={(e) => onCreate(e.latlng)}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -68,7 +68,7 @@ class SitesComponent extends React.Component {
   }
 }
 SitesComponent.propTypes = {
-  sites: React.PropTypes.object,
+  sites: React.PropTypes.array,
   onCreate: React.PropTypes.func,
   onEdit: React.PropTypes.func,
   onDelete: React.PropTypes.func,
@@ -78,7 +78,7 @@ SitesComponent.propTypes = {
 
 // Function to map state to container props
 const mapStateToSitesProps = (state) => {
-  return { sites: state.sites };
+  return { sites: Object.values(state.sites.items) };
 };
 
 // Function to map dispatch to container props
