@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
+import DebounceInput from 'react-debounce-input';
 
 // Thunks / Actions
 import GroupsThunks from './groups.thunks.js';
@@ -31,11 +32,17 @@ class Groups extends React.Component {
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal center-center groups-bar'>
-          <div className='ui icon input'>
-            <i className='search icon'></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} defaultValue={filterValue}/>
+          <div className='ui left corner labeled icon input flex' >
+            <div className='ui left corner label'><i className='search icon'></i></div>
+            <i className='remove link icon' onClick={() => changeFilter('')}></i>
+            <DebounceInput
+              minLength={1}
+              debounceTimeout={300}
+              placeholder='Search...'
+              onChange={(event) => changeFilter(event.target.value)}
+              value={filterValue}/>
           </div>
-          <div className='flex'></div>
+          <div className='flex-2'></div>
         </div>
         <Scrollbars className='flex ui dimmable'>
           <div className='flex layout horizontal center-center groups-list wrap'>

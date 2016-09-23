@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
+import DebounceInput from 'react-debounce-input';
 
 // Components
 import DaemonCard from './daemon.card.component.js';
@@ -39,7 +40,12 @@ class Daemons extends React.Component {
           <div className='ui left corner labeled icon input flex' >
             <div className='ui left corner label'><i className='search icon'></i></div>
             <i className='remove link icon' onClick={() => changeFilter('')}></i>
-            <input type='text' placeholder='Search...' onChange={(event) => changeFilter(event.target.value)} value={filterValue}/>
+            <DebounceInput
+              minLength={1}
+              debounceTimeout={300}
+              placeholder='Search...'
+              onChange={(event) => changeFilter(event.target.value)}
+              value={filterValue}/>
           </div>
           <div className='flex-2 layout horizontal end-justified'>
             <Link className='ui teal labeled icon button' to={'/daemons/new'}>
