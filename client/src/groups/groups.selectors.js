@@ -12,6 +12,8 @@ export const getFilteredGroups = (groups, filterValue) => {
         const value = query[key];
         switch(key) {
           case 'text':
+            match &= containsWithoutAccents(JSON.stringify(Object.values(group)), value);
+            return;
           case 'name':
           case 'title':
             match &= containsWithoutAccents(group.title, value);

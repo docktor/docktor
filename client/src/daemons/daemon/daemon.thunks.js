@@ -33,7 +33,7 @@ const saveDaemon = (form) => {
   let daemon = Object.assign({}, form);
   daemon.port = parseInt(daemon.port);
   daemon.timeout = parseInt(daemon.timeout);
-  daemon.created = new Date(daemon.created);
+  daemon.created = daemon.created ? new Date(daemon.created) : new Date();
   const id = form.id || -1;
   return function (dispatch) {
 

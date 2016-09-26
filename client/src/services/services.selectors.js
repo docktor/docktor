@@ -12,6 +12,8 @@ export const getFilteredServices = (services, filterValue) => {
         const value = query[key];
         switch(key) {
           case 'text':
+            match &= containsWithoutAccents(JSON.stringify(Object.values(service)), value);
+            return;
           case 'name':
           case 'title':
             match &= containsWithoutAccents(service.title, value);

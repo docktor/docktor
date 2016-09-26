@@ -12,6 +12,8 @@ export const getFilteredUsers = (users, filterValue) => {
         const value = query[key];
         switch(key) {
           case 'text':
+            match &= containsWithoutAccents(JSON.stringify(Object.values(user)), value);
+            return;
           case 'name':
           case 'title':
             match &= containsWithoutAccents(user.displayName, value);

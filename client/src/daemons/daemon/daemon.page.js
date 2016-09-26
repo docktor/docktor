@@ -54,13 +54,11 @@ class DaemonComponent extends React.Component {
       volumesBox.setState({ volumes: [] });
       const variablesBox = this.refs.variables;
       variablesBox.setState({ variables: [] });
+      this.refs.scrollbars.scrollTop();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevProps.daemon.item.id) {
-      this.refs.scrollbars.scrollTop();
-    }
     $('#sites-dropdown').dropdown();
     $('#protocol-dropdown').dropdown();
     $('.ui.corner.label').popup();
@@ -193,7 +191,7 @@ class DaemonComponent extends React.Component {
     const chosenProtocol = this.state.chosenProtocol;
     const popup = `
       <div>
-        Example : <strong>http://host:port/api/v1.3</strong>
+        Example: <strong>http://host:port/api/v1.x</strong>
         <br/>
         cAdvisor is used to retrieve monitoring stats (CPU, RAM, FS) on host where docker's daemon is running.
         <hr/>
@@ -250,7 +248,7 @@ class DaemonComponent extends React.Component {
 
                           <label>cAdvisor Api Url</label>
                           <div className='ui corner labeled input'>
-                            <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
+                            <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='http://host:port/api/v1.x' defaultValue={item.cadvisorApi} autoComplete='off'/>
                             <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
                               <i className='help circle link icon' ></i>
                             </div>

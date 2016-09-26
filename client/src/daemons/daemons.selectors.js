@@ -12,7 +12,11 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
         const value = query[key];
         switch(key) {
           case 'text':
+            const d = { ...daemon, site:sites[daemon.site] };
+            match &= containsWithoutAccents(JSON.stringify(Object.values(d)), value);
+            return;
           case 'name':
+          case 'title':
             match &= containsWithoutAccents(daemon.name, value);
             return;
           case 'site':
