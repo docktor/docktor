@@ -1,4 +1,5 @@
-import { transformFilterToObject } from '../utils/utils.js';
+import { transformFilterToObject } from '../utils/search.js';
+import { containsWithoutAccents } from '../utils/strings.js';
 
 export const getFilteredDaemons = (daemons, sites, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -8,19 +9,19 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
       let match = true;
       const query = transformFilterToObject(filterValue);
       Object.keys(query).forEach(key => {
-        const value = query[key].toLowerCase();
+        const value = query[key];
         switch(key) {
           case 'text':
           case 'name':
-            match &= daemon.name.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(daemon.name, value);
             return;
           case 'site':
             const site = sites[daemon.site];
-            match &= site && site.title.toLowerCase().indexOf(value) !== -1;
+            match &= site && containsWithoutAccents(site.title, value);
             return;
           case 'tags':
             const tags = daemon.tags || [];
-            match &= tags.filter(tag => tag.toLowerCase().indexOf(value) !== -1).length > 0;
+            match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
             return;
           default:
             match = false;

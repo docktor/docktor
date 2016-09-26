@@ -1,4 +1,5 @@
-import { transformFilterToObject } from '../utils/utils.js';
+import { transformFilterToObject } from '../utils/search.js';
+import { containsWithoutAccents } from '../utils/strings.js';
 
 export const getFilteredUsers = (users, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -8,25 +9,25 @@ export const getFilteredUsers = (users, filterValue) => {
       let match = true;
       const query = transformFilterToObject(filterValue);
       Object.keys(query).forEach(key => {
-        const value = query[key].toLowerCase();
+        const value = query[key];
         switch(key) {
           case 'text':
           case 'name':
           case 'title':
-            match &= user.displayName.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(user.displayName, value);
             return;
           case 'username':
-            match &= user.username.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(user.username, value);
             return;
           case 'provider':
-            match &= user.provider.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(user.provider, value);
             return;
           case 'role':
-            match &= user.role.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(user.role, value);
             return;
           case 'tags':
             const tags = user.tags || [];
-            match &= tags.filter(tag => tag.toLowerCase().indexOf(value) !== -1).length > 0;
+            match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
             return;
           default:
             match = false;

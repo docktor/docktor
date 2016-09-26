@@ -1,4 +1,5 @@
-import { transformFilterToObject } from '../utils/utils.js';
+import { transformFilterToObject } from '../utils/search.js';
+import { containsWithoutAccents } from '../utils/strings.js';
 
 export const getFilteredGroups = (groups, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -8,16 +9,16 @@ export const getFilteredGroups = (groups, filterValue) => {
       let match = true;
       const query = transformFilterToObject(filterValue);
       Object.keys(query).forEach(key => {
-        const value = query[key].toLowerCase();
+        const value = query[key];
         switch(key) {
           case 'text':
           case 'name':
           case 'title':
-            match &= group.title.toLowerCase().indexOf(value) !== -1;
+            match &= containsWithoutAccents(group.title, value);
             return;
           case 'tags':
             const tags = group.tags || [];
-            match &= tags.filter(tag => tag.toLowerCase().indexOf(value) !== -1).length > 0;
+            match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
             return;
           default:
             match = false;
