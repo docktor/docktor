@@ -124,7 +124,7 @@ func New(version string) {
 
 		exportAPI := api.Group("/export")
 		{
-			exportAPI.GET("", exportC.ExportAll)
+			exportAPI.GET("", exportC.ExportAll, isAdmin)
 		}
 	}
 

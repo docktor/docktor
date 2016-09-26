@@ -52,7 +52,7 @@ class NavBarComponent extends React.Component {
           <div className='ui dropdown item'>
             <i className='inverted large user icon'></i>{' ' + this.props.auth.user.displayName}
             <div className='menu'>
-              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className='item'><i className='download icon'></i>Export</a>}
+              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className={'item ' + (isExportFetching ? 'disabled' : '')}><i className='download icon'></i>Export</a>}
               <a className='item'><i className='settings icon'></i>Settings</a>
               <a className='item' onClick={logout} ><i className='sign out icon'></i>Logout</a>
             </div>
