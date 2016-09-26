@@ -63,6 +63,7 @@ class DaemonComponent extends React.Component {
     }
     $('#sites-dropdown').dropdown();
     $('#protocol-dropdown').dropdown();
+    $('.ui.corner.label').popup();
   }
 
   onChangeProtocol(event) {
@@ -190,6 +191,15 @@ class DaemonComponent extends React.Component {
     const { item, isFetching, didInvalidate } = this.props.daemon;
     const sites = this.props.sites;
     const chosenProtocol = this.state.chosenProtocol;
+    const popup = `
+      <div>
+        Example : <strong>http://host:port/api/v1.3</strong>
+        <br/>
+        cAdvisor is used to retrieve monitoring stats (CPU, RAM, FS) on host where docker's daemon is running.
+        <hr/>
+        Docktor recommands to have a cAdvisor instance for each daemon.
+      </div>
+    `;
     return (
       <div className='flex layout vertical start-justified'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
@@ -234,17 +244,22 @@ class DaemonComponent extends React.Component {
 
                       <div className='five fields'>
                         <div className='two wide field'>
-                          <div className='large ui label'>cAdvisor</div>
+                          <div className='large ui label form-label'>cAdvisor</div>
                         </div>
                         <div className='fourteen wide field'>
+
                           <label>cAdvisor Api Url</label>
-                          <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
+                          <div className='ui corner labeled input'>
+                            <input type='text' ref='cadvisorApi' name='cadvisorApi' placeholder='cAdvisor Api Url' defaultValue={item.cadvisorApi} autoComplete='off'/>
+                            <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
+                              <i className='help circle link icon' ></i>
+                            </div>
+                          </div>
                         </div>
                       </div>
-
                       <div className='five fields'>
                         <div className='two wide field'>
-                          <div className='large ui label'>Docker</div>
+                          <div className='large ui label form-label'>Docker</div>
                         </div>
                         <div className='two wide field required'>
                           <label>Protocol</label>
@@ -278,7 +293,7 @@ class DaemonComponent extends React.Component {
                       <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
                     </VariablesBox>
                     <div className='tags'>
-                      <div className='large ui label'>Tags</div>
+                      <div className='large ui label form-label'>Tags</div>
                       <ReactTags tags={this.state.tags}
                         handleDelete={(i) => this.handleDeleteTag(i)}
                         handleAddition={(tag) => this.handleAddTag(tag)}
