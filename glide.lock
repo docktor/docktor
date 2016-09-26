@@ -1,5 +1,5 @@
-hash: c14610801bebf867e4a5f2f6d82354942aa5c352be8543e906fe10858b3b4036
-updated: 2016-09-02T13:57:21.757874882+02:00
+hash: 5200974fd89eee66473ae7f57323ee4604341237b9abbf77490590cab3eccb2c
+updated: 2016-09-20T14:52:22.972357356+02:00
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
@@ -117,6 +117,8 @@ imports:
   version: 103ce5cd2042f2fe629c1957abb64ab3e7f50235
 - name: github.com/spf13/viper
   version: 7fb2782df3d83e0036cc89f461ed0422628776f4
+- name: github.com/tealeg/xlsx
+  version: 887b805086ab2016cdcdbb7a3cab8c0b867e5a64
 - name: github.com/valyala/fasttemplate
   version: 3b874956e03f1636d171bda64b130f9135f42cff
 - name: golang.org/x/crypto
@@ -163,7 +165,7 @@ imports:
   - internal/hashtag
   - internal/pool
 - name: gopkg.in/redis.v4
-  version: 49f197e6d11de35192fce19b2b9fd2f9b8b13c4a
+  version: 938235994ea88a05678f8060741d5f34ed6a5ff3
 - name: gopkg.in/yaml.v2
   version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
 testImports: []
