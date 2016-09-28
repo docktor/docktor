@@ -8,15 +8,7 @@ $teal-button-color-active: #00827c !default;
 .daemons-bar {
   background-color: $daemons-bar-background-color;
   min-height: 3em;
-  padding: .5em;
-
-  div:first-child {
-    margin-left: 1em !important;
-  }
-
-  div:last-child {
-    margin-right: 1em !important;
-  }
+  padding: .5em 1em;
 
   .ui.teal.button {
     background-color: $teal-button-color !important;

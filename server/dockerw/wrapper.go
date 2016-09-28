@@ -16,7 +16,14 @@ func InitDocker(daemon types.Daemon) (*dockerapi.Client, error) {
 	if daemon.Cert == "" {
 		api, err = dockerapi.NewClient(dockerHost)
 	} else {
-		api, err = dockerapi.NewTLSClient(dockerHost, daemon.Cert, daemon.Key, daemon.Ca)
+		params := dockerapi.TLSClientFromBytesParameters{
+			Host:               dockerHost,
+			CertPEMBlock:       []byte(daemon.Cert),
+			KeyPEMBlock:        []byte(daemon.Key),
+			CaPEMCert:          []byte(daemon.Ca),
+			InsecureSkipVerify: false,
+		}
+		api, err = dockerapi.NewTLSClientFromBytes(params)
 	}
 	return api, err
 }

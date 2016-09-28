@@ -1,7 +1,7 @@
 // Imports for fetch API
 import 'babel-polyfill';
 import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/utils.js';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 import { download } from '../utils/files.js';
 
 // Export actions

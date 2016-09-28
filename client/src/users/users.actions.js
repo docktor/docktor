@@ -29,9 +29,19 @@ const invalidSaveUser = (user) => {
   };
 };
 
+// Change filter
+const changeFilter = (filterValue) => {
+  return {
+    type: UsersConstants.CHANGE_FILTER,
+    filterValue
+  };
+};
+
+
 export default {
   ...generateEntitiesActions('users'),
   requestSaveUser,
   receiveSavedUser,
-  invalidSaveUser
+  invalidSaveUser,
+  changeFilter
 };

@@ -1,5 +1,6 @@
 import { generateEntitiesConstants } from '../utils/entities.js';
 
 export default {
-  ...generateEntitiesConstants('groups')
+  ...generateEntitiesConstants('groups'),
+  CHANGE_FILTER: 'CHANGE_FILTER_GROUPS'
 };

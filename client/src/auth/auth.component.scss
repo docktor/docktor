@@ -16,15 +16,15 @@ $br: 4px;
 
 .login-form {
   background: rgba($form-bg, .9);
-  margin: 40px auto;
+  margin: 2em auto;
   max-width: 600px;
   min-width: 450px;
   .login {
-    margin: 40px;
+    margin: 2em;
     h1 {
       color: $white;
       font-weight: $thin;
-      margin: 0 0 30px;
+      margin: 0 0 1em;
       text-align: center;
     }
 

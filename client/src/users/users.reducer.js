@@ -43,6 +43,8 @@ const usersReducer = (state, action) => {
             return Object.assign({}, entitiesState, createReceiveSavedUser(state, action));
         case UsersConstants.INVALID_SAVE_USER:
             return Object.assign({}, entitiesState, createInvalidSaveUser(state, action));
+        case UsersConstants.CHANGE_FILTER:
+          return { ...entitiesState, filterValue: action.filterValue };
         default:
             return entitiesState;
     }
