@@ -3,10 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"net/mail"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/soprasteria/docktor/server/email"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"github.com/spf13/viper"
@@ -75,8 +77,24 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 	}
 
 	_, err = a.Docktor.Users().Save(docktorUser)
+	if err != nil {
+		return err
+	}
+
+	go sendWelcomeEmail(docktorUser)
 
 	return err
+}
+
+func sendWelcomeEmail(user types.User) error {
+
+	return email.Send(email.SendOptions{
+		To: []mail.Address{
+			{Name: user.DisplayName, Address: user.Email},
+		},
+		Subject: "Welcome to Docktor",
+		Body:    "Your account has been created !",
+	})
 }
 
 func protect(password string) (string, error) {

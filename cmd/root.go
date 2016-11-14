@@ -52,7 +52,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.docktor.yaml)")
 }
 
@@ -76,4 +75,5 @@ func initConfig() {
 		fmt.Println("Cant read config file:" + viper.ConfigFileUsed())
 	}
 
+	viper.Debug()
 }
