@@ -74,6 +74,4 @@ func initConfig() {
 	} else {
 		fmt.Println("Cant read config file:" + viper.ConfigFileUsed())
 	}
-
-	viper.Debug()
 }

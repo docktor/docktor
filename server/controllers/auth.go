@@ -74,6 +74,8 @@ func (a *Auth) Register(c echo.Context) error {
 		LDAP:    ldap,
 	}
 
+	fmt.Printf("%+v", login)
+
 	// Log in the application
 	err := login.RegisterUser(&auth.RegisterUserQuery{
 		Username:  username,

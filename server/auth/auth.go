@@ -19,6 +19,8 @@ var (
 	ErrInvalidCredentials = errors.New("Invalid Username or Password")
 	// ErrUsernameAlreadyTaken is an error message when the username is already used by someone else
 	ErrUsernameAlreadyTaken = errors.New("Username already taken")
+	// ErrUsernameAlreadyTakenOnLDAP is an error message when the username is already used by someone else on LDAP
+	ErrUsernameAlreadyTakenOnLDAP = errors.New("Username already taken in the configured LDAP server. Try login instead")
 )
 
 // Authentication contains all APIs entrypoints needed for authentication
@@ -54,7 +56,10 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 
 	// Then search in LDAP, if configured
 	if a.LDAP != nil {
-		// TODO : search on LDAP to check if registerd user exists in LDAP but never login in app.
+		user, err := a.LDAP.Search(query.Username)
+		if err == nil && user.Username == query.Username {
+			return ErrUsernameAlreadyTakenOnLDAP
+		}
 	}
 
 	hashedPassword, err := protect(query.Password)
