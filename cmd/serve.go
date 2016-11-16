@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/soprasteria/docktor/server"
+	"github.com/soprasteria/docktor/server/email"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -15,6 +16,7 @@ var serveCmd = &cobra.Command{
 	Short: "Launch Docktor server",
 	Long:  `Docktor server will listen on 0.0.0.0:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
+		email.InitSMTPConfiguration()
 		server.New(VERSION)
 	},
 }
@@ -37,8 +39,13 @@ func init() {
 	serveCmd.Flags().String("ldap-attr-username", "cn", "LDAP attribute for username of users.")
 	serveCmd.Flags().String("ldap-attr-firstname", "givenName", "LDAP attribute for firstname of users.")
 	serveCmd.Flags().String("ldap-attr-lastname", "sn", "LDAP attribute for lastname of users.")
-	serveCmd.Flags().String("ldap-attr-realname", "cn", "LDAP attribute for real name of users.")
-	serveCmd.Flags().String("ldap-attr-email", "mail", "LDAP attribute for email of users.")
+	serveCmd.Flags().String("ldap-attr-realname", "cn", "LDAP attribute for firstname of users.")
+	serveCmd.Flags().String("ldap-attr-email", "mail", "LDAP attribute for lastname of users.")
+	serveCmd.Flags().String("smtp-server", "", "SMTP server with its port.")
+	serveCmd.Flags().String("smtp-user", "", "SMTP user for authentication.")
+	serveCmd.Flags().String("smtp-password", "", "SMTP password for authentication.")
+	serveCmd.Flags().String("smtp-sender", "", "Email used as sender of emails")
+	serveCmd.Flags().String("smtp-identity", "", "Identity of the sender")
 
 	// Bind env variables.
 	viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
@@ -55,8 +62,13 @@ func init() {
 	viper.BindPFlag("ldap.attr.username", serveCmd.Flags().Lookup("ldap-attr-username"))
 	viper.BindPFlag("ldap.attr.firstname", serveCmd.Flags().Lookup("ldap-attr-firstname"))
 	viper.BindPFlag("ldap.attr.lastname", serveCmd.Flags().Lookup("ldap-attr-lastname"))
-	viper.BindPFlag("ldap.attr.realName", serveCmd.Flags().Lookup("ldap-attr-realname"))
+	viper.BindPFlag("ldap.attr.realname", serveCmd.Flags().Lookup("ldap-attr-realname"))
 	viper.BindPFlag("ldap.attr.email", serveCmd.Flags().Lookup("ldap-attr-email"))
+	viper.BindPFlag("smtp.server", serveCmd.Flags().Lookup("smtp-server"))
+	viper.BindPFlag("smtp.user", serveCmd.Flags().Lookup("smtp-user"))
+	viper.BindPFlag("smtp.password", serveCmd.Flags().Lookup("smtp-password"))
+	viper.BindPFlag("smtp.sender", serveCmd.Flags().Lookup("smtp-sender"))
+	viper.BindPFlag("smtp.identity", serveCmd.Flags().Lookup("smtp-identity"))
 	viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 

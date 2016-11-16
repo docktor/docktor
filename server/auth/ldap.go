@@ -48,6 +48,32 @@ func NewLDAP(server *LDAPConf) *LDAP {
 	return &LDAP{server: server}
 }
 
+// Search search existence of username in LDAP
+// Returns the info about the user if found, error otherwize
+func (a *LDAP) Search(username string) (*LDAPUserInfo, error) {
+	// Reach the ldap server
+	if err := a.dial(); err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer a.conn.Close()
+
+	// perform initial authentication
+	if err := a.initialBind(); err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	// find user entry & attributes
+	ldapUser, err := a.searchForUser(username)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	return ldapUser, nil
+}
+
 //Login log the user in
 func (a *LDAP) Login(query *LoginUserQuery) (*LDAPUserInfo, error) {
 	// Reach the ldap server

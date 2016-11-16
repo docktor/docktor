@@ -1,17 +1,20 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
+	"net/mail"
 
-	"gopkg.in/redis.v3"
+	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
+	"github.com/soprasteria/docktor/server/email"
 	"github.com/spf13/viper"
 )
 
@@ -58,7 +61,9 @@ func New(version string) {
 	auth := engine.Group("/auth")
 	{
 		auth.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
-		auth.Use(openLDAP)
+		if viper.GetString("ldap.address") != "" {
+			auth.Use(openLDAP)
+		}
 		auth.POST("/login", authC.Login)
 		auth.POST("/register", authC.Register)
 		auth.GET("/*", GetIndex(version))
@@ -138,6 +143,17 @@ func New(version string) {
 }
 
 func pong(c echo.Context) error {
+
+	err := email.Send(email.SendOptions{
+		To: []mail.Address{
+			{Name: "Mathieu Cornic", Address: "mathieu.cornic@gmail.com"},
+		},
+		Subject: "Un test",
+		Body:    "Le body",
+	})
+
+	fmt.Println(err)
+
 	return c.JSON(http.StatusOK, JSON{
 		"message": "pong",
 	})
