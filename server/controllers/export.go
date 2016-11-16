@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"io"
+	"mime"
 	"net/http"
 	"time"
 
@@ -23,5 +25,23 @@ func (a *Export) ExportAll(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Can't export docktor data in a file")
 	}
-	return c.ServeContent(data, fmt.Sprintf("DocktorExport-%s.xlsx", time.Now()), time.Now())
+
+	return serveContent(c, data, fmt.Sprintf("DocktorExport-%s.xlsx", time.Now()), time.Now())
+}
+
+func serveContent(c echo.Context, content io.ReadSeeker, name string, modtime time.Time) error {
+	req := c.Request()
+	res := c.Response()
+
+	if t, err := time.Parse(http.TimeFormat, req.Header.Get("If-Modified-Since")); err == nil && modtime.Before(t.Add(1*time.Second)) {
+		res.Header().Del("Content-Type")
+		res.Header().Del("Content-Length")
+		return c.NoContent(http.StatusNotModified)
+	}
+
+	res.Header().Set("Content-Type", mime.TypeByExtension(name))
+	res.Header().Set("Last-Modified", modtime.UTC().Format(http.TimeFormat))
+	res.WriteHeader(http.StatusOK)
+	_, err := io.Copy(res, content)
+	return err
 }

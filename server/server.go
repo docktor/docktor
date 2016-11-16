@@ -10,7 +10,6 @@ import (
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
@@ -54,7 +53,7 @@ func New(version string) {
 	engine.Use(middleware.Gzip())
 
 	t := &Template{Templates: template.Must(template.ParseFiles("./client/dist/index.tmpl"))}
-	engine.SetRenderer(t)
+	engine.Renderer = t
 
 	engine.GET("/ping", pong)
 
@@ -139,7 +138,9 @@ func New(version string) {
 	engine.Static("/fonts", "client/dist/fonts")
 
 	engine.GET("/*", GetIndex(version))
-	engine.Run(standard.New(":8080")) // listen and server on 0.0.0.0:8080
+	if err := engine.Start(":8080"); err != nil {
+		engine.Logger.Fatal(err.Error())
+	}
 }
 
 func pong(c echo.Context) error {

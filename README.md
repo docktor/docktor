@@ -1,14 +1,14 @@
 ## Run
 You will need a mongo database.
 
-1. Get js dependancies  
+1. Get js dependencies  
 ```bash
 npm install
 ```
 
-2. Get go dependancies  
+2. Get go dependencies into vendor
 ```bash
-glide install
+govendor sync
 ```
 
 3. Launch Docktor  
