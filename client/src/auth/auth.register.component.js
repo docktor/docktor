@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import './auth.component.scss';
+import './../common/tabform.component.scss';
 
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {
@@ -101,7 +101,8 @@ RegisterPane.propTypes = {
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   submit: React.PropTypes.string.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  isFetching: React.PropTypes.bool.isRequired,
+  link: React.PropTypes.string.isRequired
 };
 
 export default RegisterPane;

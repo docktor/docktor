@@ -96,6 +96,8 @@ const authReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorMessage: ''
       });
+    case UsersConstants.REQUEST_SAVE_USER:
+      return Object.assign({}, state, authenticatedUserIsFetching(state, action));
     case UsersConstants.RECEIVE_SAVED_USER:
       return Object.assign({}, state, changeUserIfNeeded(state, action));
     default:
@@ -103,10 +105,20 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const changeUserIfNeeded = (state, action) => {
+const authenticatedUserIsFetching = (state, action) => {
     if (action.user.username === state.user.username) {
       return {
-          user: action.user
+          user: Object.assign({}, action.user, { isFetching: true })
+      };
+    } else {
+      return {};
+    }
+};
+
+const changeUserIfNeeded = (state, action) => {
+    if (action.user.id === state.user.id) {
+      return {
+          user: Object.assign({}, action.user, { isFetching: false })
       };
     } else {
       return {};

@@ -14,12 +14,12 @@ $normal: 400;
 $bold: 600;
 $br: 4px;
 
-.login-form {
+.tab-form {
   background: rgba($form-bg, .9);
   margin: 2em auto;
   max-width: 600px;
   min-width: 450px;
-  .login {
+  .tabs {
     margin: 2em;
     h1 {
       color: $white;
@@ -127,13 +127,23 @@ $br: 4px;
     }
 
   }
-  .error.api {
-    background-color: #f9d6d6 !important;
-    color: #9f3a38 !important;
+
+  .api {
+
     line-height: 1.4285em;
     margin: 1em 0;
     min-height: 1em;
     padding: 1em 1.5em;
     position: relative;
   }
+
+  .error.api {
+      background-color: #f9d6d6 !important;
+      color: #9f3a38 !important;
+  }
+  .info.api {
+      background-color: #3498db !important;
+      color: white !important;
+  }
+
 }

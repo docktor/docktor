@@ -1,11 +1,9 @@
 package server
 
 import (
-	"fmt"
 	"html/template"
 	"io"
 	"net/http"
-	"net/mail"
 
 	redis "gopkg.in/redis.v3"
 
@@ -13,7 +11,6 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
-	"github.com/soprasteria/docktor/server/email"
 	"github.com/spf13/viper"
 )
 
@@ -74,8 +71,10 @@ func New(version string) {
 		config := middleware.JWTConfig{
 			Claims:     &controllers.MyCustomClaims{},
 			SigningKey: []byte(viper.GetString("auth.jwt-secret")),
+			ContextKey: "user-token",
 		}
 		api.Use(middleware.JWTWithConfig(config)) // Enrich echo context with JWT
+		api.Use(getAuhenticatedUser)              // Enrich echo context with authenticated user (fetched from JWT token)
 
 		profileAPI := api.Group("/profile")
 		{
@@ -122,7 +121,7 @@ func New(version string) {
 		usersAPI := api.Group("/users")
 		{
 			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
-			usersAPI.PUT("/:id", usersC.Save, isAdmin)
+			usersAPI.PUT("/:id", usersC.Update, isAdmin)
 			usersAPI.GET("", usersC.GetAll)
 		}
 
@@ -144,16 +143,6 @@ func New(version string) {
 }
 
 func pong(c echo.Context) error {
-
-	err := email.Send(email.SendOptions{
-		To: []mail.Address{
-			{Name: "Mathieu Cornic", Address: "mathieu.cornic@gmail.com"},
-		},
-		Subject: "Un test",
-		Body:    "Le body",
-	})
-
-	fmt.Println(err)
 
 	return c.JSON(http.StatusOK, JSON{
 		"message": "pong",

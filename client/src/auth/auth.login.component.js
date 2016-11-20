@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import './auth.component.scss';
+import './../common/tabform.component.scss';
 
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {
@@ -69,7 +69,8 @@ SigninPane.propTypes = {
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   submit: React.PropTypes.string.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  isFetching: React.PropTypes.bool.isRequired,
+  link: React.PropTypes.string.isRequired
 };
 
 export default SigninPane;

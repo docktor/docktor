@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"gopkg.in/redis.v3"
-
 	"github.com/dgrijalva/jwt-go"
+
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
@@ -14,6 +13,7 @@ import (
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"github.com/spf13/viper"
+	"gopkg.in/redis.v3"
 )
 
 func redisCache(client *redis.Client) echo.MiddlewareFunc {
@@ -84,10 +84,10 @@ func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// Get api from context
-		userToken := c.Get("user").(*jwt.Token)
+		userToken := c.Get("user-token").(*jwt.Token)
 		docktorAPI := c.Get("api").(*api.Docktor)
 
 		// Parse the token
@@ -100,13 +100,25 @@ func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
 		}
 
+		c.Set("user", user)
+
+		return next(c)
+
+	}
+}
+
+func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// Get user from context
+		user := c.Get("user").(users.UserRest)
+
 		// Go on if admin
 		if user.Role == types.AdminRole {
 			return next(c)
 		}
 
 		// Refuse connection otherwise
-		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
+		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", user.Username))
 
 	}
 }
