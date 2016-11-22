@@ -120,8 +120,11 @@ func New(version string) {
 
 		usersAPI := api.Group("/users")
 		{
-			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
-			usersAPI.PUT("/:id", usersC.Update, isAdmin)
+			// No "isAdmin" middleware on users because users can delete/modify themselves
+			// Rights are implemented in each controller
+			usersAPI.DELETE("/:id", usersC.Delete)
+			usersAPI.PUT("/:id", usersC.Update)
+			usersAPI.PUT("/:id/password", usersC.ChangePassword)
 			usersAPI.GET("", usersC.GetAll)
 		}
 

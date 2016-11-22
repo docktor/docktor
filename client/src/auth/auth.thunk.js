@@ -121,10 +121,52 @@ const registerUser = (account) => {
   };
 };
 
+// Change password of the user connected to the application
+const changePassword = (account) => {
+
+  return dispatch => {
+
+    let request = new Request(`/api/users/${account.id}/password`, withAuth({
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(account)
+    }));
+
+    // We dispatch requestChangePassword to kickoff the call to the API
+    dispatch(AuthActions.requestChangePassword());
+
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(AuthActions.receiveChangePassword());
+      })
+      .catch(error => {
+        if (error.response) {
+          error.response.text().then(text => {
+            if (error.response.status == 403) {
+              dispatch(AuthActions.changePasswordNotAuthorized(text));
+            } else {
+              dispatch(AuthActions.changePasswordInvalidRequest(text));
+            }
+          });
+        } else {
+          dispatch(AuthActions.changePasswordInvalidRequest(error.message));
+        }
+      });
+  };
+};
+
+
+
 export default {
   switchForm,
   loginUser,
   logoutUser,
   profile,
-  registerUser
+  registerUser,
+  changePassword
 };

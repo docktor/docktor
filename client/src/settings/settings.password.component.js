@@ -2,11 +2,17 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import UserConstants from '../users/users.constants.js';
+
 // Style
 import '../common/tabform.component.scss';
 
 // ChangePasswordPane containg fields to change password
 class ChangePasswordPane extends React.Component {
+
+  _isDisabled(user) {
+    return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
+  }
 
   componentDidMount() {
     $('#change-password > .ui.form')
@@ -26,7 +32,7 @@ class ChangePasswordPane extends React.Component {
   }
 
   render() {
-    const { errorMessage, isFetching } = this.props;
+    const { user } = this.props;
     return (
       <div id='change-password'>
         <h1>{this.props.title}</h1>
@@ -35,19 +41,29 @@ class ChangePasswordPane extends React.Component {
               <label>
                 Old password
               </label>
-              <input type='password' ref='oldPassword' name='oldPassword' placeholder='Your old password' autoComplete='off'/>
+              <input
+              type='password' ref='oldPassword' defaultValue=''
+              name='oldPassword' placeholder='Your old password' autoComplete='off'
+              disabled={this._isDisabled(user) ? 'true' : ''}
+              />
             </div>
           <div className='required field'>
             <label>
               New password
             </label>
-            <input type='password' ref='newPassword' name='newPassword' placeholder='Your new password' autoComplete='off'/>
+            <input type='password' ref='newPassword'  defaultValue=''
+            name='newPassword' placeholder='Your new password' autoComplete='off'
+            disabled={this._isDisabled(user) ? 'true' : ''}
+            />
           </div>
-          {errorMessage &&
-              <p className='error api'>{errorMessage}</p>
+          {!user.isFetching && user.passwordErrorMessage &&
+              <p className='error api'>{user.passwordErrorMessage}</p>
+          }
+          {this._isDisabled(user) &&
+              <p className='info api'>You can't change your password here because your user comes from a LDAP provider</p>
           }
           <div className='ui error message'></div>
-          <button type='submit' className={'ui button button-block' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
+          <button type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')} disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}</button>
         </form>
       </div>
     );
@@ -55,23 +71,23 @@ class ChangePasswordPane extends React.Component {
   handleClick(event) {
       event.preventDefault();
       const oldPassword = this.refs.oldPassword;
-      const newPassord = this.refs.newPassword;
+      const newPassword = this.refs.newPassword;
       const account = {
+        id: this.props.user.id,
         oldPassword: oldPassword.value.trim(),
-        newPassord: newPassord.value.trim()
+        newPassword: newPassword.value.trim()
       };
-      this.props.onSaveClick(account);
+      this.props.onChangePassword(account);
   }
 };
 
 ChangePasswordPane.propTypes = {
-  onSaveClick: React.PropTypes.func,
-  errorMessage: React.PropTypes.string,
+  onChangePassword: React.PropTypes.func,
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   submit: React.PropTypes.string,
-  isFetching: React.PropTypes.bool.isRequired,
-  link: React.PropTypes.string.isRequired
+  link: React.PropTypes.string.isRequired,
+  user: React.PropTypes.object.isRequired
 };
 
 export default ChangePasswordPane;

@@ -26,14 +26,17 @@ type UserRest struct {
 	Provider    types.Provider `json:"provider"`
 }
 
+// IsAdmin checks that the user is an admin, meaning he can do anythin on the application.
 func (u UserRest) IsAdmin() bool {
 	return u.Role == types.AdminRole
 }
 
+//IsSupervisor checks that the user is a supervisor, meaning he sees anything that sees an admin, but as read-only
 func (u UserRest) IsSupervisor() bool {
 	return u.Role == types.SupervisorRole
 }
 
+// IsNormalUser checks that the user is a classic one
 func (u UserRest) IsNormalUser() bool {
 	return u.Role == types.UserRole
 }

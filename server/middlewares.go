@@ -97,7 +97,8 @@ func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 		webservice := users.Rest{Docktor: docktorAPI}
 		user, err := webservice.GetUserRest(claims.Username)
 		if err != nil {
-			return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
+			// Will logout the user automatically, as server considers the token to be invalid
+			return c.String(http.StatusUnauthorized, fmt.Sprintf("Your account %q has been removed. Please create a new one.", claims.Username))
 		}
 
 		c.Set("user", user)

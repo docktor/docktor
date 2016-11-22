@@ -20,7 +20,10 @@ class TabForm extends React.Component {
     this.setState({
       selected: index
     });
-    this.props.onSwitch();
+    const sw = this.props.onSwitch;
+    if (sw) {
+      sw();
+    }
   }
   _renderTitles() {
     function labels(child, index) {

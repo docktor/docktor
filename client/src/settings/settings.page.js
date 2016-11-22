@@ -6,6 +6,7 @@ import TabForm from '../common/tabform.component.js';
 import Profile from './settings.profile.component.js';
 import ChangePassword from './settings.password.component.js';
 import UsersThunks from '../users/users.thunks.js';
+import AuthTunks from '../auth/auth.thunk.js';
 
 // Style
 import './settings.component.scss';
@@ -23,14 +24,24 @@ class SettingsP extends React.Component {
   }
 
   render() {
-    const { user, isAuthenticated, errorMessage, isFetching, saveProfile } = this.props;
+    const { user, isAuthenticated, isFetching, saveProfile, changePassword, deleteAccount } = this.props;
     if (isFetching) {
-      return <div>Loading...</div>;
+      return (
+          <div className='ui active inverted dimmer'>
+            <div className='ui text loader'>Fetching</div>
+          </div>
+       );
     } else if (isAuthenticated) {
       return (
-      <TabForm selected={this._selectTab()} /*onSwitch={onSwitch}*/>
-          <Profile link='profile' label='Profile' title='Edit your profile' submit='Save' user={user} errorMessage={errorMessage} onSaveEditClick={saveProfile}/>
-          <ChangePassword link='change-password' label='Password' title='Change your password' submit='Save' /*errorMessage={errorMessage}*/ /*onSaveEditlick={saveUser}*/ /*isFetching={isFetching}*//>
+      <TabForm selected={this._selectTab()}>
+          <Profile
+            link='profile' label='Profile' title='Edit your profile' submit='Save'
+            user={user} onSave={saveProfile} onDelete={deleteAccount}
+            />
+          <ChangePassword
+            link='change-password' label='Password' title='Change your password' submit='Change password'
+            user={user} onChangePassword={changePassword}
+            />
       </TabForm>
       );
     } else {
@@ -42,18 +53,18 @@ class SettingsP extends React.Component {
 SettingsP.propTypes = {
   user: React.PropTypes.object,
   isAuthenticated: React.PropTypes.bool.isRequired,
-  errorMessage: React.PropTypes.string,
   location: React.PropTypes.object,
   saveProfile: React.PropTypes.func.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  changePassword: React.PropTypes.func.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
+  deleteAccount: React.PropTypes.func.isRequired,
 };
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
   const { auth, routing } = state;
   const { user, isAuthenticated, isFetching } = auth;
-  const errorMessage = '';
-  return { user, isAuthenticated, isFetching, errorMessage };
+  return { user, isAuthenticated, isFetching };
 };
 
 // Function to map dispatch to container props
@@ -62,6 +73,12 @@ const mapDispatchToProps = (dispatch) => {
     saveProfile: (user) => {
       dispatch(UsersThunks.saveUser(user));
     },
+    changePassword: (account) => {
+      dispatch(AuthTunks.changePassword(account));
+    },
+    deleteAccount: (user) => {
+      dispatch(UsersThunks.deleteUser(user));
+    }
   };
 };
 

@@ -29,6 +29,34 @@ const invalidSaveUser = (user) => {
   };
 };
 
+
+// Request delete user
+const requestDeleteUser = (user) => {
+  return {
+    type: UsersConstants.REQUEST_DELETE_USER,
+    user
+  };
+};
+
+// User was deleted
+const receiveDeletedUser = (removedID) => {
+  return {
+    type: UsersConstants.RECEIVE_DELETED_USER,
+    removedID
+  };
+};
+
+// Users API returns an Error
+const invalidDeleteUser = (user) => {
+  return function(error) {
+    return {
+      type: UsersConstants.INVALID_DELETE_USER,
+      user,
+      error
+    };
+  };
+};
+
 // Change filter
 const changeFilter = (filterValue) => {
   return {
@@ -43,5 +71,8 @@ export default {
   requestSaveUser,
   receiveSavedUser,
   invalidSaveUser,
+  requestDeleteUser,
+  receiveDeletedUser,
+  invalidDeleteUser,
   changeFilter
 };

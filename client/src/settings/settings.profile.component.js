@@ -2,7 +2,10 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { USER_LDAP_PROVIDER } from '../users/users.constants.js';
+import Rodal from 'rodal';
+
+import UserConstants from '../users/users.constants.js';
+
 
 // Style
 import '../common/tabform.component.scss';
@@ -10,15 +13,32 @@ import '../common/tabform.component.scss';
 // ProfilePane containg fields to edit an existing account
 class ProfilePane extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { isRemovalModalVisible: false };
+  }
+
   _isDisabled(user) {
-    return user.provider === USER_LDAP_PROVIDER;
+    return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
+  }
+
+  _removeAccount() {
+    this.setState({ isRemovalModalVisible: true });
+  }
+
+  _closeRemoveAccountModal() {
+    this.setState({ isRemovalModalVisible: false });
+  }
+
+  _validateRemoval() {
+    this.props.onDelete(this.props.user);
+    this._closeRemoveAccountModal();
   }
 
   componentDidMount() {
     $('#profile > .ui.form')
       .form({
         fields: {
-          username : ['empty', 'doesntContain[ ]'],
           email : ['email', 'empty', 'doesntContain[ ]'],
           firstname: ['empty'],
           lastname: ['empty']
@@ -34,7 +54,7 @@ class ProfilePane extends React.Component {
   }
 
   render() {
-    const { errorMessage, user } = this.props;
+    const { user } = this.props;
     return (
       <div id='profile'>
         <h1>{this.props.title}</h1>
@@ -71,17 +91,41 @@ class ProfilePane extends React.Component {
             placeholder='A valid email address' autoComplete='off'
             disabled={this._isDisabled(user) ? 'true' : ''}/>
           </div>
-          {errorMessage &&
-              <p className='error api'>{errorMessage}</p>
+          <div className={'ui red labeled icon button button-block' + (user.isDeleting ? ' loading' : '')} tabIndex='0' onClick={() => this._removeAccount()}>
+            <i className='trash icon'></i>Remove your account
+          </div>
+          {!user.isFetching && user.errorMessage &&
+              <p className='error api'>{user.errorMessage}</p>
           }
+          <div className='ui error message'></div>
           {this._isDisabled(user) &&
               <p className='info api'>You can't edit your personal data because it's own by a LDAP provider</p>
           }
           <button
-            type='submit' className={'ui button button-block' + (user.isFetching ? ' loading' : '')}
+            type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')}
             disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}
           </button>
         </form>
+        <Rodal visible={this.state.isRemovalModalVisible}
+            onClose={() => this._closeRemoveAccountModal()}>
+            <div className='ui active small modal'>
+                <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()}></i>
+                <div className='header'><i className='large trash icon'></i> Remove your account</div>
+                <div className='content'>
+                    <h2>Are you sure to delete your account ?</h2>
+                    <p>This action is irreversible and you will lose all your data</p>
+                </div>
+                <div className='actions'>
+                    <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
+                        No
+                    </div>
+                    <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
+                        Yes
+                        <i className='trash icon'></i>
+                    </div>
+                </div>
+            </div>
+        </Rodal>
       </div>
     );
   }
@@ -98,13 +142,13 @@ class ProfilePane extends React.Component {
       };
       // Override user with values defined by authenticated person
       const userToSave = Object.assign({}, this.props.user, account);
-      this.props.onSaveEditClick(userToSave);
+      this.props.onSave(userToSave);
   }
 };
 
 ProfilePane.propTypes = {
-  onSaveEditClick: React.PropTypes.func,
-  errorMessage: React.PropTypes.string,
+  onSave: React.PropTypes.func,
+  onDelete: React.PropTypes.func.isRequired,
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   submit: React.PropTypes.string,

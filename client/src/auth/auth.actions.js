@@ -85,6 +85,38 @@ const receiveLogout = () => {
   };
 };
 
+// ==== Change password actions
+
+// Action when user is starting password change
+const requestChangePassword = () => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_REQUEST
+  };
+};
+
+// Action when user successfully changed his password
+const receiveChangePassword = (register) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_SUCCESS
+  };
+};
+
+// Action when a technical error happens when changing password
+const changePasswordInvalidRequest = (error) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST,
+    error
+  };
+};
+
+// Action when user is not authorized to change password
+const changePasswordNotAuthorized = (error) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_NOT_AUTHORIZED,
+    error
+  };
+};
+
 // ==== Profile actions
 
 // Action when starting to get profile of authenticated user
@@ -133,5 +165,9 @@ export default {
   requestProfile,
   receiveProfile,
   profileError,
-  switchFormAction
+  switchFormAction,
+  requestChangePassword,
+  receiveChangePassword,
+  changePasswordInvalidRequest,
+  changePasswordNotAuthorized
 };

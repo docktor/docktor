@@ -72,7 +72,7 @@ class RegisterPane extends React.Component {
               <p className='error api'>{errorMessage}</p>
           }
           <div className='ui error message'></div>
-          <button type='submit' className={'ui button button-block' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
+          <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
         </form>
       </div>
     );

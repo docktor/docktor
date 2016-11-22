@@ -28,6 +28,9 @@ const toastsReducer = (state = initialState, action) => {
         case UsersConstants.INVALID_REQUEST_USERS:
             const invalidReqToastUsers = createInvalidReqToast(state, action, 'Users');
             return Object.assign({}, { ...state }, invalidReqToastUsers);
+        case UsersConstants.INVALID_DELETE_USER:
+            const invalidDeleteUserToast = createinvalidDeleteUserToast(state, action);
+            return Object.assign({}, { ...state }, invalidDeleteUserToast);
         case GroupsConstants.INVALID_REQUEST_GROUPS:
             const invalidReqToastGroups = createInvalidReqToast(state, action, 'Groups');
             return Object.assign({}, { ...state }, invalidReqToastGroups);
@@ -46,6 +49,12 @@ const toastsReducer = (state = initialState, action) => {
         case AuthConstants.REGISTER_INVALID_REQUEST:
             const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
             return Object.assign({}, { ...state }, invalidReqRegisterToast);
+        case AuthConstants.CHANGE_PASSWORD_SUCCESS:
+            const successPasswordChange = createSuccessfulChangePasswordToast(state, action);
+            return Object.assign({}, { ...state }, successPasswordChange);
+        case AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST:
+            const invalidReqChangePasswordToast = createInvalidReqChangePasswordToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqChangePasswordToast);
         case ExportConstants.EXPORT_ALL_INVALID_REQUEST:
             const invalidReqExportToast = createInvalidReqExportToast(state, action);
             return Object.assign({}, { ...state }, invalidReqExportToast);
@@ -116,6 +125,19 @@ const createInvalidReqToast = (state, action, api) => {
     return res;
 };
 
+const createinvalidDeleteUserToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: `Can not delete user ${action.user.username}`,
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
 const createInvalidSaveUserToast = (state, action) => {
     let res = {};
     const uuid = UUID.create(4);
@@ -123,6 +145,32 @@ const createInvalidSaveUserToast = (state, action) => {
         title: 'Cannot save user ' + action.user.username,
         message: action.error,
         level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createInvalidReqChangePasswordToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot change password',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createSuccessfulChangePasswordToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Password change',
+        message: 'Your password has been changed successfully',
+        level: 'info',
         position: 'bl',
         uid: uuid
     };

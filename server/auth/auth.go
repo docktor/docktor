@@ -21,6 +21,8 @@ var (
 	ErrUsernameAlreadyTaken = errors.New("Username already taken")
 	// ErrUsernameAlreadyTakenOnLDAP is an error message when the username is already used by someone else on LDAP
 	ErrUsernameAlreadyTakenOnLDAP = errors.New("Username already taken in the configured LDAP server. Try login instead")
+	// ErrInvalidOldPassword is an error message when the user tries to change his password but the old password does not match the right one
+	ErrInvalidOldPassword = errors.New("Old password is wrong")
 )
 
 // Authentication contains all APIs entrypoints needed for authentication
@@ -42,6 +44,43 @@ type RegisterUserQuery struct {
 	Firstname string
 	Lastname  string
 	Email     string
+}
+
+// ChangePassword changes the password of the user
+func (a *Authentication) ChangePassword(id, oldPassword, newPassword string) error {
+	if a.Docktor == nil {
+		return errors.New("Docktor API is not initialized")
+	}
+
+	user, err := a.Docktor.Users().FindByID(id)
+	if err != nil {
+		return errors.New("Can't find the user")
+	}
+
+	if user.Provider != types.LocalProvider {
+		return errors.New("Only local users can modify their passwords")
+	}
+
+	// Checks that the old password given matches with the stored password
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(user.Password),
+		[]byte(passwordWithPepper(oldPassword)),
+	)
+	if err != nil {
+		return ErrInvalidOldPassword
+	}
+
+	hashedPassword, err := protect(newPassword)
+	if err != nil {
+		fmt.Println("Cant hash password : " + err.Error())
+		return fmt.Errorf("Password can't be stored")
+	}
+
+	user.Password = hashedPassword
+
+	_, err = a.Docktor.Users().Save(user)
+
+	return err
 }
 
 // RegisterUser registers the user in the application
