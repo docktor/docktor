@@ -1,9 +1,9 @@
 ## Run
 You will need a mongo database.
 
-1. Get js dependencies  
+1. Get js dependencies
 ```bash
-npm install
+yarn install
 ```
 
 2. Get go dependencies into vendor
@@ -11,7 +11,7 @@ npm install
 govendor sync
 ```
 
-3. Launch Docktor  
+3. Launch Docktor
 ```bash
 gulp
 ```
