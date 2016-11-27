@@ -142,6 +142,38 @@ const profileError = (message) => {
   };
 };
 
+// ==== Reset password actions
+
+// Action when starting to reset password of a user
+const requestResetPassword = () => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_REQUEST
+  };
+};
+
+// Action when user successfully reset the password
+const receiveResetPassword = () => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_SUCCESS
+  };
+};
+
+// Action when technical error happens while resetting password of user
+const resetPasswordInvalidRequest = (error) => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_INVALID_REQUEST,
+    error
+  };
+};
+
+// Action when user is not authorized to reset password (wrong information given)
+const resetPasswordNotAuthorized = (error) => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_NOT_AUTHORIZED,
+    error
+  };
+};
+
 // ==== Switch form
 
 // Action when user switch from register to login tab on authentication page
@@ -169,5 +201,9 @@ export default {
   requestChangePassword,
   receiveChangePassword,
   changePasswordInvalidRequest,
-  changePasswordNotAuthorized
+  changePasswordNotAuthorized,
+  requestResetPassword,
+  receiveResetPassword,
+  resetPasswordInvalidRequest,
+  resetPasswordNotAuthorized,
 };

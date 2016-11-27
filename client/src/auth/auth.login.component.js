@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
+import { Link } from 'react-router';
 
 // Style
 import './../common/tabform.component.scss';
@@ -47,7 +48,7 @@ class SigninPane extends React.Component {
               <p className='error api'>{errorMessage}</p>
           }
           <div className='ui error message'></div>
-          <p className='forgot'><a href='#'>Forgot Password?</a></p>
+          <p className='forgot'><Link to='/reset_password'>Forgot Password?</Link></p>
           <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
         </form>
       </div>

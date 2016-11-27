@@ -8,7 +8,6 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
-	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
@@ -91,7 +90,7 @@ func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 		docktorAPI := c.Get("api").(*api.Docktor)
 
 		// Parse the token
-		claims := userToken.Claims.(*controllers.MyCustomClaims)
+		claims := userToken.Claims.(*auth.MyCustomClaims)
 
 		// Get the user from database
 		webservice := users.Rest{Docktor: docktorAPI}

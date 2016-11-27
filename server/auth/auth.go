@@ -3,15 +3,19 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"net/mail"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
-
-	"github.com/soprasteria/docktor/server/email"
+	"github.com/dgrijalva/jwt-go"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"github.com/spf13/viper"
+	"golang.org/x/crypto/bcrypt"
+	mgo "gopkg.in/mgo.v2"
+)
+
+const (
+	authenticationTokenValidity = time.Hour * 24 * 7
+	resetPasswordTokenValidity  = time.Hour * 1
 )
 
 var (
@@ -23,6 +27,8 @@ var (
 	ErrUsernameAlreadyTakenOnLDAP = errors.New("Username already taken in the configured LDAP server. Try login instead")
 	// ErrInvalidOldPassword is an error message when the user tries to change his password but the old password does not match the right one
 	ErrInvalidOldPassword = errors.New("Old password is wrong")
+	// ErrTokenInvalid is an error message when a identication token is invalid
+	ErrTokenInvalid = errors.New("Token is invalid or too old. Try resetting your password again")
 )
 
 // Authentication contains all APIs entrypoints needed for authentication
@@ -44,6 +50,12 @@ type RegisterUserQuery struct {
 	Firstname string
 	Lastname  string
 	Email     string
+}
+
+// MyCustomClaims contains data that will be signed in the JWT token
+type MyCustomClaims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
 }
 
 // ChangePassword changes the password of the user
@@ -125,20 +137,43 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 		return err
 	}
 
-	go sendWelcomeEmail(docktorUser)
+	go SendWelcomeEmail(docktorUser)
 
 	return err
 }
 
-func sendWelcomeEmail(user types.User) error {
+// CreateLoginToken generates a signed JWT Token from user to get the token when logged in.
+func (a *Authentication) CreateLoginToken(username string) (string, error) {
+	oneWeek := time.Now().Add(authenticationTokenValidity)
+	authSecret := viper.GetString("auth.jwt-secret")
+	return createToken(username, authSecret, oneWeek)
+}
 
-	return email.Send(email.SendOptions{
-		To: []mail.Address{
-			{Name: user.DisplayName, Address: user.Email},
+// CreateResetPasswordToken generates a signed JWT Token from user to get the token when forgetting password
+func (a *Authentication) CreateResetPasswordToken(username string) (string, error) {
+	oneHour := time.Now().Add(resetPasswordTokenValidity)
+	resetPasswordSecret := viper.GetString("auth.reset-pwd-secret")
+	return createToken(username, resetPasswordSecret, oneHour)
+}
+
+// createToken generates a JWT token from a username, a secret key and an expiration date to securise it
+func createToken(username, secret string, expiresAt time.Time) (string, error) {
+	claims := MyCustomClaims{
+		username,
+		jwt.StandardClaims{
+			ExpiresAt: expiresAt.Unix(),
+			Issuer:    "docktor",
 		},
-		Subject: "Welcome to Docktor",
-		Body:    "Your account has been created !",
-	})
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString([]byte(secret))
+
+	if err != nil {
+		return "", err
+	}
+
+	return signedToken, nil
 }
 
 func protect(password string) (string, error) {
@@ -151,6 +186,81 @@ func protect(password string) (string, error) {
 
 func passwordWithPepper(password string) string {
 	return password + viper.GetString("auth.bcrypt-pepper")
+}
+
+// ResetPasswordUser resets the password of the user
+// At the end of this method, user won't be able to authenticate again until a new password is set
+func (a *Authentication) ResetPasswordUser(username string) (types.User, error) {
+	user, err := a.Docktor.Users().Find(username)
+	if err != nil {
+		if err == mgo.ErrNotFound || user.ID.Hex() == "" {
+			return types.User{}, fmt.Errorf("User %q does not exist", username)
+		}
+		return types.User{}, err
+	}
+
+	if user.Provider != types.LocalProvider {
+		return types.User{}, fmt.Errorf("User %q has to be a local user and not a remote one (like LDAP)", username)
+	}
+
+	// TODO : check if JWT can be invalidated.
+
+	// Reset the password in DB, helping user to change password when hacker found it.
+	// Don't check if it fails because password change will be possible even if password is reset in DB.
+	user.Password = ""
+	user.Updated = time.Now()
+	a.Docktor.Users().Save(user)
+
+	return user, nil
+}
+
+func (a *Authentication) setPassword(username, password string) (types.User, error) {
+	user, err := a.Docktor.Users().Find(username)
+	if err != nil {
+		if err == mgo.ErrNotFound || user.ID.Hex() == "" {
+			return types.User{}, fmt.Errorf("User %q does not exist", username)
+		}
+		return types.User{}, err
+	}
+
+	if user.Provider != types.LocalProvider {
+		return types.User{}, fmt.Errorf("User %q has to be a local user and not a remote one (like LDAP)", username)
+	}
+
+	protectedPassword, err := protect(password)
+	if err != nil {
+		return types.User{}, errors.New("New password can't be stored")
+	}
+	user.Password = protectedPassword
+	user.Updated = time.Now()
+	_, err = a.Docktor.Users().Save(user)
+	if err != nil {
+		return types.User{}, err
+	}
+
+	return user, nil
+}
+
+func (a *Authentication) ChangeResetPasswordUser(token, newPassword string) (types.User, error) {
+
+	parsedToken, err := jwt.ParseWithClaims(token, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		fmt.Printf("%+v\n", viper.GetString("auth.reset-pwd-secret"))
+		return []byte(viper.GetString("auth.reset-pwd-secret")), nil
+	})
+	if err != nil {
+		return types.User{}, ErrTokenInvalid
+	}
+
+	claims, ok := parsedToken.Claims.(*MyCustomClaims)
+	if !ok || !parsedToken.Valid {
+		return types.User{}, ErrTokenInvalid
+	}
+
+	return a.setPassword(claims.Username, newPassword)
 }
 
 // AuthenticateUser authenticates a user

@@ -16,6 +16,12 @@ class TabForm extends React.Component {
       selected: this.props.selected
     };
   }
+  _childsAsArray() {
+      if (!Array.isArray(this.props.children)) {
+        return [this.props.children];
+      }
+      return this.props.children;
+    }
   _handleClick(index) {
     this.setState({
       selected: index
@@ -37,17 +43,21 @@ class TabForm extends React.Component {
         </li>
       );
     }
-    return ( <ul className = 'tab-group' > {
-        this
-        .props
-        .children
-        .map(labels.bind(this))
-      } </ul>
-    );
+    function title(childs, _this) {
+      if (childs.length <= 1) {
+        return (<div></div>);
+      } else {
+        return ( <ul className = 'tab-group' > {
+                childs.map(labels.bind(_this))
+              } </ul>
+            );
+      }
+    }
+   return title(this._childsAsArray(), this);
   }
   _renderContent() {
     return (
-      <div className = 'tab-content' > {this.props.children[this.state.selected]} </div>
+      <div className = 'tab-content' > {this._childsAsArray()[this.state.selected]} </div>
     );
   }
   render() {

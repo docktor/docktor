@@ -49,6 +49,12 @@ const toastsReducer = (state = initialState, action) => {
         case AuthConstants.REGISTER_INVALID_REQUEST:
             const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
             return Object.assign({}, { ...state }, invalidReqRegisterToast);
+        case AuthConstants.RESET_PASSWORD_SUCCESS:
+            const successResetPassword = createSuccessfulResetPasswordToast(state, action);
+            return Object.assign({}, { ...state }, successResetPassword);
+        case AuthConstants.RESET_PASSWORD_INVALID_REQUEST:
+            const invalidReqResetPasswordToast = createInvalidReqResetPasswordToast(state, action);
+            return Object.assign({}, { ...state }, invalidReqResetPasswordToast);
         case AuthConstants.CHANGE_PASSWORD_SUCCESS:
             const successPasswordChange = createSuccessfulChangePasswordToast(state, action);
             return Object.assign({}, { ...state }, successPasswordChange);
@@ -145,6 +151,32 @@ const createInvalidSaveUserToast = (state, action) => {
         title: 'Cannot save user ' + action.user.username,
         message: action.error,
         level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createInvalidReqResetPasswordToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Cannot reset password because technical error happened',
+        message: action.error,
+        level: 'error',
+        position: 'bl',
+        uid: uuid
+    };
+    return res;
+};
+
+const createSuccessfulResetPasswordToast = (state, action) => {
+    let res = {};
+    const uuid = UUID.create(4);
+    res[uuid] = {
+        title: 'Password successfuly reset',
+        message: 'Your password has been successfully reset. You should see an email coming with details to set a new one',
+        level: 'info',
         position: 'bl',
         uid: uuid
     };

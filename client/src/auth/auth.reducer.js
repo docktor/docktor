@@ -1,6 +1,7 @@
 // import constants
 import AuthConstants from './auth.constants.js';
 import UsersConstants from '../users/users.constants.js';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 
 const initialState = {
@@ -14,6 +15,8 @@ const initialState = {
 // we would also want a util to check if the token is expired.
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOCATION_CHANGE:
+      return Object.assign({}, state, { errorMessage: '' });
     case AuthConstants.LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
@@ -95,6 +98,24 @@ const authReducer = (state = initialState, action) => {
     case AuthConstants.SWITCH_FORM:
       return Object.assign({}, state, {
         errorMessage: ''
+      });
+    case AuthConstants.RESET_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true
+      });
+    case AuthConstants.RESET_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        errorMessage: ''
+      });
+    case AuthConstants.RESET_PASSWORD_INVALID_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: false
+      });
+    case AuthConstants.RESET_PASSWORD_NOT_AUTHORIZED:
+      return Object.assign({}, state, {
+        isFetching: false,
+        errorMessage: action.error
       });
     case AuthConstants.CHANGE_PASSWORD_REQUEST:
       return Object.assign({}, state, {
