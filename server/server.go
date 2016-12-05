@@ -1,19 +1,17 @@
 package server
 
 import (
-	"fmt"
 	"html/template"
 	"io"
 	"net/http"
-	"net/mail"
 
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
-	"github.com/soprasteria/docktor/server/email"
 	"github.com/spf13/viper"
 )
 
@@ -57,30 +55,31 @@ func New(version string) {
 
 	engine.GET("/ping", pong)
 
-	auth := engine.Group("/auth")
+	authAPI := engine.Group("/auth")
 	{
-		auth.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
+		authAPI.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
 		if viper.GetString("ldap.address") != "" {
-			auth.Use(openLDAP)
+			authAPI.Use(openLDAP)
 		}
-		auth.POST("/login", authC.Login)
-		auth.POST("/register", authC.Register)
-		auth.GET("/*", GetIndex(version))
+		authAPI.POST("/login", authC.Login)
+		authAPI.POST("/register", authC.Register)
+		authAPI.POST("/reset_password", authC.ResetPassword)              // Reset the forgotten password
+		authAPI.POST("/change_reset_password", authC.ChangeResetPassword) // Change password that has been reset
+		authAPI.GET("/*", GetIndex(version))
 	}
 
 	api := engine.Group("/api")
 	{
 		api.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
 		config := middleware.JWTConfig{
-			Claims:     &controllers.MyCustomClaims{},
+			Claims:     &auth.MyCustomClaims{},
 			SigningKey: []byte(viper.GetString("auth.jwt-secret")),
+			ContextKey: "user-token",
 		}
 		api.Use(middleware.JWTWithConfig(config)) // Enrich echo context with JWT
+		api.Use(getAuhenticatedUser)              // Enrich echo context with authenticated user (fetched from JWT token)
 
-		profileAPI := api.Group("/profile")
-		{
-			profileAPI.GET("", usersC.Profile)
-		}
+		api.GET("/profile", usersC.Profile)
 
 		sitesAPI := api.Group("/sites")
 		{
@@ -121,8 +120,11 @@ func New(version string) {
 
 		usersAPI := api.Group("/users")
 		{
-			usersAPI.DELETE("/:id", usersC.Delete, isAdmin)
-			usersAPI.PUT("/:id", usersC.Save, isAdmin)
+			// No "isAdmin" middleware on users because users can delete/modify themselves
+			// Rights are implemented in each controller
+			usersAPI.DELETE("/:id", usersC.Delete)
+			usersAPI.PUT("/:id", usersC.Update)
+			usersAPI.PUT("/:id/password", usersC.ChangePassword)
 			usersAPI.GET("", usersC.GetAll)
 		}
 
@@ -144,16 +146,6 @@ func New(version string) {
 }
 
 func pong(c echo.Context) error {
-
-	err := email.Send(email.SendOptions{
-		To: []mail.Address{
-			{Name: "Mathieu Cornic", Address: "mathieu.cornic@gmail.com"},
-		},
-		Subject: "Un test",
-		Body:    "Le body",
-	})
-
-	fmt.Println(err)
 
 	return c.JSON(http.StatusOK, JSON{
 		"message": "pong",

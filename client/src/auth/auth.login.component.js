@@ -1,9 +1,10 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
+import { Link } from 'react-router';
 
 // Style
-import './auth.component.scss';
+import './../common/tabform.component.scss';
 
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {
@@ -47,8 +48,8 @@ class SigninPane extends React.Component {
               <p className='error api'>{errorMessage}</p>
           }
           <div className='ui error message'></div>
-          <p className='forgot'><a href='#'>Forgot Password?</a></p>
-          <button type='submit' className={'ui button button-block' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
+          <p className='forgot'><Link to='/reset_password'>Forgot Password?</Link></p>
+          <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
         </form>
       </div>
     );
@@ -69,7 +70,8 @@ SigninPane.propTypes = {
   label: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   submit: React.PropTypes.string.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  isFetching: React.PropTypes.bool.isRequired,
+  link: React.PropTypes.string.isRequired
 };
 
 export default SigninPane;

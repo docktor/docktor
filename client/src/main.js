@@ -26,8 +26,11 @@ import DaemonsPage from './daemons/daemons.page.js';
 import DaemonPage from './daemons/daemon/daemon.page.js';
 import GroupsPage from './groups/groups.page.js';
 import ServicesPage from './services/services.page.js';
+import SettingsPage from './settings/settings.page.js';
 import UsersPage from './users/users.page.js';
 import AuthPage from './auth/auth.page.js';
+import ChangeResetPasswordPage from './auth/auth.change-reset-password.page.js';
+import ResetPasswordPage from './auth/auth.reset-password.page.js';
 import { requireAuthorization } from './auth/auth.isAuthorized.js';
 
 // thunks
@@ -81,7 +84,10 @@ ReactDOM.render(
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
         <Route path='users' component={requireAuthorization(UsersPage)} />
+        <Route path='settings' component={requireAuthorization(SettingsPage)} />
         <Route path='login' component={AuthPage} />
+        <Route path='change_reset_password' component={ChangeResetPasswordPage} />
+        <Route path='reset_password' component={ResetPasswordPage} />
       </Route>
     </Router>
   </Provider>,

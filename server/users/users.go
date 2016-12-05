@@ -3,6 +3,7 @@ package users
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
@@ -25,6 +26,21 @@ type UserRest struct {
 	Provider    types.Provider `json:"provider"`
 }
 
+// IsAdmin checks that the user is an admin, meaning he can do anythin on the application.
+func (u UserRest) IsAdmin() bool {
+	return u.Role == types.AdminRole
+}
+
+//IsSupervisor checks that the user is a supervisor, meaning he sees anything that sees an admin, but as read-only
+func (u UserRest) IsSupervisor() bool {
+	return u.Role == types.SupervisorRole
+}
+
+// IsNormalUser checks that the user is a classic one
+func (u UserRest) IsNormalUser() bool {
+	return u.Role == types.UserRole
+}
+
 // GetUserRest returns a Docktor user, amputed of sensible data
 func GetUserRest(user types.User) UserRest {
 	return UserRest{
@@ -41,14 +57,13 @@ func GetUserRest(user types.User) UserRest {
 
 // OverwriteUserFromRest get data from userWithNewData and put it in userToOverwrite
 // userToOverwrite can have existing data
-// ID is not updated because it's a read-only attribute. If it's a user creation, the
+// ID and Provider are not updated because it's a read-only attributes.
 func OverwriteUserFromRest(userToOverwrite types.User, userWithNewData UserRest) types.User {
 	userToOverwrite.Username = userWithNewData.Username
 	userToOverwrite.FirstName = userWithNewData.FirstName
 	userToOverwrite.LastName = userWithNewData.LastName
 	userToOverwrite.DisplayName = userWithNewData.DisplayName
 	userToOverwrite.Email = userWithNewData.Email
-	userToOverwrite.Provider = userWithNewData.Provider
 	userToOverwrite.Role = userWithNewData.Role
 	return userToOverwrite
 }
@@ -88,29 +103,36 @@ func (s *Rest) GetAllUserRest() ([]UserRest, error) {
 	return GetUsersRest(users), nil
 }
 
-// SaveUser saves rest user saves the user in database
-// If needed, will get the user first from database and update the one
-func (s *Rest) SaveUser(user UserRest) (UserRest, error) {
+// UpdateUser saves rest user in database
+// Password, username and provider are not updatable here
+func (s *Rest) UpdateUser(user UserRest) (UserRest, error) {
 	if s.Docktor == nil {
 		return UserRest{}, errors.New("Docktor API is not initialized")
 	}
 
-	var userToSave types.User
-
-	// Prefill user to save with the one from database if present
-	if user.ID != "" && user.ID != "-1" {
-		// supposelly existing user
-		userFromDocktor, err := s.Docktor.Users().FindByID(user.ID)
-		if err == nil && userFromDocktor.ID.Hex() != "" {
-			userToSave = userFromDocktor
-		}
+	// Search for user
+	userFromDocktor, err := s.Docktor.Users().FindByID(user.ID)
+	if err != nil {
+		return UserRest{}, err
+	}
+	if userFromDocktor.ID.Hex() == "" {
+		return UserRest{}, errors.New("User does not exists")
 	}
 
-	// Overwrite Docktor user with rest user data
-	userToSave = OverwriteUserFromRest(userToSave, user)
+	if userFromDocktor.Provider == types.LocalProvider {
+		// Can update personal data only if it's a local user
+		// as LDAP providers are masters of this type of data
+		userFromDocktor.Email = user.Email
+		userFromDocktor.DisplayName = user.DisplayName
+		userFromDocktor.FirstName = user.FirstName
+		userFromDocktor.LastName = user.LastName
+	}
+	userFromDocktor.Updated = time.Now()
+	userFromDocktor.Role = user.Role
+	// TODO: update groups and favorites
 
 	// Save the user
-	res, err := s.Docktor.Users().Save(userToSave)
+	res, err := s.Docktor.Users().Save(userFromDocktor)
 	if err != nil {
 		return UserRest{}, err
 	}

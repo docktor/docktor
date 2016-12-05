@@ -4,12 +4,21 @@ import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
 
-import Auth from './auth.component.js';
+import TabForm from '../common/tabform.component.js';
 import Signin from './auth.login.component.js';
 import Register from './auth.register.component.js';
 import AuthThunks from './auth.thunk.js';
 
 class LoginP extends React.Component {
+
+  _selectTab() {
+    const location = this.props.location;
+    if (location && location.hash === '#register') {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.isAuthenticated && !nextProps.errorMessage) {
@@ -25,10 +34,10 @@ class LoginP extends React.Component {
   render() {
     const { logUser, regUser, onSwitch, errorMessage, isAuthenticated, isFetching } = this.props;
     return (
-        <Auth selected={0} onSwitch={onSwitch}>
-          <Signin label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}/>
-          <Register label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching}/>
-        </Auth>
+        <TabForm selected={this._selectTab()} onSwitch={onSwitch}>
+          <Signin link='sign-in' label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}/>
+          <Register link='register' label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching}/>
+        </TabForm>
     );
   }
 };
@@ -40,7 +49,8 @@ LoginP.propTypes = {
   onSwitch: React.PropTypes.func.isRequired,
   redirect: React.PropTypes.func.isRequired,
   errorMessage: React.PropTypes.string,
-  redirectTo : React.PropTypes.string
+  redirectTo : React.PropTypes.string,
+  location: React.PropTypes.object
 };
 
 // Function to map state to container props

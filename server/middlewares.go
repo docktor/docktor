@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"net/http"
 
-	"gopkg.in/redis.v3"
-
 	"github.com/dgrijalva/jwt-go"
+
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
-	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/users"
 	api "github.com/soprasteria/godocktor-api"
 	"github.com/soprasteria/godocktor-api/types"
 	"github.com/spf13/viper"
+	"gopkg.in/redis.v3"
 )
 
 func redisCache(client *redis.Client) echo.MiddlewareFunc {
@@ -84,21 +83,34 @@ func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// Get api from context
-		userToken := c.Get("user").(*jwt.Token)
+		userToken := c.Get("user-token").(*jwt.Token)
 		docktorAPI := c.Get("api").(*api.Docktor)
 
 		// Parse the token
-		claims := userToken.Claims.(*controllers.MyCustomClaims)
+		claims := userToken.Claims.(*auth.MyCustomClaims)
 
 		// Get the user from database
 		webservice := users.Rest{Docktor: docktorAPI}
 		user, err := webservice.GetUserRest(claims.Username)
 		if err != nil {
-			return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
+			// Will logout the user automatically, as server considers the token to be invalid
+			return c.String(http.StatusUnauthorized, fmt.Sprintf("Your account %q has been removed. Please create a new one.", claims.Username))
 		}
+
+		c.Set("user", user)
+
+		return next(c)
+
+	}
+}
+
+func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// Get user from context
+		user := c.Get("user").(users.UserRest)
 
 		// Go on if admin
 		if user.Role == types.AdminRole {
@@ -106,7 +118,7 @@ func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Refuse connection otherwise
-		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", claims.Username))
+		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", user.Username))
 
 	}
 }

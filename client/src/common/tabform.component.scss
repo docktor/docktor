@@ -14,12 +14,12 @@ $normal: 400;
 $bold: 600;
 $br: 4px;
 
-.login-form {
+.tab-form {
   background: rgba($form-bg, .9);
   margin: 2em auto;
   max-width: 600px;
   min-width: 450px;
-  .login {
+  .tabs {
     margin: 2em;
     h1 {
       color: $white;
@@ -83,19 +83,43 @@ $br: 4px;
         text-align: center;
         text-decoration: none;
         transition: .5s ease;
-        width: 50%;
         &:hover {
           background: $main-dark;
           color: $white;
         }
       }
+
+      li:first-child:nth-last-child(1) a {
+        width: 100%;
+      }
+
+      li:first-child:nth-last-child(2) a,
+      li:first-child:nth-last-child(2) ~ li a {
+        width: 50%;
+      }
+
+      li:first-child:nth-last-child(3) a ,
+      li:first-child:nth-last-child(3) ~ li a {
+        width: 33.3333%;
+      }
+
+      li:first-child:nth-last-child(4) a,
+      li:first-child:nth-last-child(4) ~ li a {
+        width: 25%;
+      }
+
+      li:first-child:nth-last-child(5) a,
+      li:first-child:nth-last-child(5) ~ li a {
+        width: 20%;
+      }
+
       .active a {
         background: $main;
         color: $white;
       }
     }
 
-    .button {
+    .button.submit {
       -moz-appearance: none; /* Firefox */
       -webkit-appearance: none; /* Safari and Chrome */
       appearance: none;
@@ -127,13 +151,23 @@ $br: 4px;
     }
 
   }
-  .error.api {
-    background-color: #f9d6d6 !important;
-    color: #9f3a38 !important;
+
+  .api {
+
     line-height: 1.4285em;
     margin: 1em 0;
     min-height: 1em;
     padding: 1em 1.5em;
     position: relative;
   }
+
+  .error.api {
+      background-color: #f9d6d6 !important;
+      color: #9f3a38 !important;
+  }
+  .info.api {
+      background-color: #3498db !important;
+      color: white !important;
+  }
+
 }

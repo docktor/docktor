@@ -37,7 +37,32 @@ const saveUser = (user) => {
   };
 };
 
+const deleteUser = (user) => {
+    return function (dispatch) {
+
+    dispatch(UsersActions.requestDeleteUser(user));
+    let request = new Request('/api/users/' + user.id, withAuth({
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }));
+
+    return fetch(request)
+    .then(checkHttpStatus)
+    .then(parseJSON)
+    .then(response => {
+        dispatch(UsersActions.receiveDeletedUser(response));
+    })
+    .catch(error => {
+        handleError(error, UsersActions.invalidDeleteUser(user), dispatch);
+    });
+  };
+};
+
 export default {
   ...generateEntitiesThunks('users'),
-  saveUser
+  saveUser,
+  deleteUser
 };

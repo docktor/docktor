@@ -85,6 +85,38 @@ const receiveLogout = () => {
   };
 };
 
+// ==== Change password actions
+
+// Action when user is starting password change
+const requestChangePassword = () => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_REQUEST
+  };
+};
+
+// Action when user successfully changed his password
+const receiveChangePassword = (register) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_SUCCESS
+  };
+};
+
+// Action when a technical error happens when changing password
+const changePasswordInvalidRequest = (error) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST,
+    error
+  };
+};
+
+// Action when user is not authorized to change password
+const changePasswordNotAuthorized = (error) => {
+  return {
+    type: AuthConstants.CHANGE_PASSWORD_NOT_AUTHORIZED,
+    error
+  };
+};
+
 // ==== Profile actions
 
 // Action when starting to get profile of authenticated user
@@ -107,6 +139,38 @@ const profileError = (message) => {
   return {
     type: AuthConstants.PROFILE_FAILURE,
     message
+  };
+};
+
+// ==== Reset password actions
+
+// Action when starting to reset password of a user
+const requestResetPassword = () => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_REQUEST
+  };
+};
+
+// Action when user successfully reset the password
+const receiveResetPassword = () => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_SUCCESS
+  };
+};
+
+// Action when technical error happens while resetting password of user
+const resetPasswordInvalidRequest = (error) => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_INVALID_REQUEST,
+    error
+  };
+};
+
+// Action when user is not authorized to reset password (wrong information given)
+const resetPasswordNotAuthorized = (error) => {
+  return {
+    type: AuthConstants.RESET_PASSWORD_NOT_AUTHORIZED,
+    error
   };
 };
 
@@ -133,5 +197,13 @@ export default {
   requestProfile,
   receiveProfile,
   profileError,
-  switchFormAction
+  switchFormAction,
+  requestChangePassword,
+  receiveChangePassword,
+  changePasswordInvalidRequest,
+  changePasswordNotAuthorized,
+  requestResetPassword,
+  receiveResetPassword,
+  resetPasswordInvalidRequest,
+  resetPasswordNotAuthorized,
 };
