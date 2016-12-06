@@ -1,0 +1,46 @@
+$daemons-bar-background-color: #2c3e50 !default;
+$inverted-dimmer-background-color: white !default;
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
+
+
+.daemons-bar {
+  background-color: $daemons-bar-background-color;
+  min-height: 3em;
+  padding: .5em 1em;
+
+  .ui.teal.button {
+    background-color: $teal-button-color !important;
+
+  }
+  .ui.teal.button:hover {
+    background-color: $teal-button-color-hover !important;
+  }
+
+  .ui.teal.button:active {
+    background-color: $teal-button-color-active !important;
+  }
+
+}
+
+.sites {
+  padding: 1em;
+}
+
+.daemons-list {
+  overflow-y: auto;
+  position: relative;
+
+  .dimmable {
+    height: calc(100% - 4em);
+    left: 0;
+    margin: 2em 1em !important;
+    position: absolute;
+    top: 0;
+    width: calc(100% - 2em);
+    .ui.inverted.dimmer {
+      background-color: $inverted-dimmer-background-color;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.ui.card.group {
+  margin: 1em !important;
+  max-height: 200px;
+  max-width: 300px;
+  .link.header {
+    font-size: 1.1em !important;
+    margin-right: 0;
+    max-width: 180px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    a {
+      color: #00948d !important;
+    }
+    a:hover {
+      color: #00827c !important;
+    }
+  }
+  .extra.content, .meta {
+    font-size: .9em;
+  }
+  .description {
+    max-width: 270px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

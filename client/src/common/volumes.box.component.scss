@@ -1,0 +1,45 @@
+.volume {
+  margin: 0 0 1em !important;
+
+  .fields {
+    .field {
+      padding: .25 !important;
+    }
+  }
+
+  .fields,
+  .field {
+    margin-bottom: 5px !important;
+    &.header {
+      display: flex;
+      margin-bottom: 0 !important;
+      @media only screen and (max-width: 767px) {
+        display: none;
+      }
+    }
+
+    &.header .field label,
+    label {
+      color: black !important;
+      &.hidden {
+        display: none;
+        @media only screen and (max-width: 767px) {
+          color: black !important;
+          display: block;
+        }
+      }
+    }
+
+    &.button {
+      width: 6.25% !important;
+    }
+    &.button,
+    .button {
+      @media only screen and (max-width: 767px) {
+        width: 100% !important;
+      }
+    }
+
+
+  }
+}

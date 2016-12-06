@@ -1,0 +1,60 @@
+.daemon {
+  .ui.card {
+    height: 140px;
+    margin: 1em !important;
+
+    .content {
+      padding-bottom: 0;
+      .header,
+      .meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .header {
+        max-width: 180px;
+      }
+    }
+    .blue.buttons {
+      height: 29px !important;
+      margin-bottom: -2px !important;
+      min-height: 29px !important;
+      .button {
+        background-color: #3a6191;
+      }
+      .button:hover {
+        background-color: #355680;
+      }
+      .button:active,
+      .loading.button {
+        background-color: #2d486b;
+      }
+      .disabled.button {
+        background-color: #2d486b;
+        opacity: 1 !important;
+      }
+    }
+  }
+  .description {
+    font-size: .9em !important;
+    height: 45px;
+    overflow-y: auto !important;
+  }
+  .meta {
+    border-bottom: 1px grey solid;
+    font-size: 1em !important;
+    padding-bottom: .5em;
+  }
+  .header {
+    font-size: 1.05em !important;
+    text-transform: uppercase;
+  }
+  .ui.active.dimmer {
+    z-index: 2000;
+  }
+  .leaflet-control-attribution.leaflet-control,
+  .leaflet-top.leaflet-left {
+    z-index: 1;
+  }
+}

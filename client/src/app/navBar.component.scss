@@ -1,0 +1,26 @@
+.ui.vertical.menu {
+  display: none;
+  margin-top: -15px !important;
+  width: 100%;
+}
+
+.ui.menu .item {
+  padding: .5em 1em;
+}
+
+.brand {
+  background-color: #00948d !important;
+  font-size: 18px;
+  font-variant: small-caps;
+  padding: .5em !important;
+  padding-bottom: 10px !important;
+}
+.navbar {
+  background-color: #3a6191 !important;
+  margin: 0 !important;
+  max-height: 35px !important;
+  min-height: 35px !important;
+  .loader {
+    padding: .4em .5em;
+  }
+}
