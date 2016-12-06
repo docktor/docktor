@@ -2,11 +2,13 @@ package auth
 
 import (
 	"fmt"
+	"net/mail"
+
 	"github.com/soprasteria/docktor/server/email"
 	"github.com/soprasteria/godocktor-api/types"
-	"net/mail"
 )
 
+// SendWelcomeEmail sends a welcome email after a user's registration
 func SendWelcomeEmail(user types.User) error {
 
 	return email.Send(email.SendOptions{
@@ -18,6 +20,7 @@ func SendWelcomeEmail(user types.User) error {
 	})
 }
 
+// SendResetPasswordEmail sends an email to a user who forgot his password
 func SendResetPasswordEmail(user types.User, url string) error {
 	return email.Send(email.SendOptions{
 		To: []mail.Address{
