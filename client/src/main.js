@@ -8,36 +8,37 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 
 // Reducers
-import sites from './sites/sites.reducer.js';
-import daemons from './daemons/daemons.reducer.js';
-import daemon from './daemons/daemon/daemon.reducer.js';
-import groups from './groups/groups.reducer.js';
-import services from './services/services.reducer.js';
-import users from './users/users.reducer.js';
-import toasts from './toasts/toasts.reducer.js';
-import modal from './modal/modal.reducer.js';
-import auth from './auth/auth.reducer.js';
-import exportReducer from './export/export.reducer.js';
+import sites from './modules/sites/sites.reducer.js';
+import daemons from './modules/daemons/daemons.reducer.js';
+import daemon from './modules/daemons/daemon/daemon.reducer.js';
+import groups from './modules/groups/groups.reducer.js';
+import services from './modules/services/services.reducer.js';
+import users from './modules/users/users.reducer.js';
+import toasts from './modules/toasts/toasts.reducer.js';
+import modal from './modules/modal/modal.reducer.js';
+import auth from './modules/auth/auth.reducer.js';
+import exportReducer from './modules/export/export.reducer.js';
 
 //Components
-import App from './app/app.layout.js';
-import Home from './app/home.page.js';
-import DaemonsPage from './daemons/daemons.page.js';
-import DaemonPage from './daemons/daemon/daemon.page.js';
-import GroupsPage from './groups/groups.page.js';
-import ServicesPage from './services/services.page.js';
-import SettingsPage from './settings/settings.page.js';
-import UsersPage from './users/users.page.js';
-import AuthPage from './auth/auth.page.js';
-import ChangeResetPasswordPage from './auth/auth.change-reset-password.page.js';
-import ResetPasswordPage from './auth/auth.reset-password.page.js';
-import { requireAuthorization } from './auth/auth.isAuthorized.js';
+import App from './components/app/app.layout.js';
+import Home from './components/app/home.page.js';
+import DaemonsPage from './components/daemons/daemons.page.js';
+import DaemonPage from './components/daemons/daemon/daemon.page.js';
+import GroupsPage from './components/groups/groups.page.js';
+import ServicesPage from './components/services/services.page.js';
+
+import SettingsPage from './components/settings/settings.page.js';
+import UsersPage from './components/users/users.page.js';
+import AuthPage from './components/auth/auth.page.js';
+import ChangeResetPasswordPage from './components/auth/auth.change-reset-password.page.js';
+import ResetPasswordPage from './components/auth/auth.reset-password.page.js';
+import { requireAuthorization } from './components/auth/auth.isAuthorized.js';
 
 // thunks
-import AuthThunks from './auth/auth.thunk.js';
+import AuthThunks from './modules/auth/auth.thunk.js';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.constants.js';
 
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);
@@ -82,7 +83,7 @@ ReactDOM.render(
           <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
         </Route>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
-        <Route path='services' component={requireAuthorization(ServicesPage)}/>
+        <Route path='services' component={requireAuthorization(ServicesPage)} />
         <Route path='users' component={requireAuthorization(UsersPage)} />
         <Route path='settings' component={requireAuthorization(SettingsPage)} />
         <Route path='login' component={AuthPage} />

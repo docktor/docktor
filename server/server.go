@@ -12,6 +12,7 @@ import (
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
+	"github.com/soprasteria/docktor/server/services"
 	"github.com/spf13/viper"
 )
 
@@ -90,10 +91,7 @@ func New(version string) {
 
 		daemonsAPI := api.Group("/daemons")
 		{
-			daemonsAPI.GET("", daemonsC.GetAll, isReadOnlyAdmin)
-			daemonsAPI.PUT("/:daemonID", daemonsC.Save, isAdmin)
-			daemonsAPI.DELETE("/:daemonID", daemonsC.Delete, isAdmin)
-
+			daemonsAPI.GET("", daemonsC.GetAll, isAdmin)
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.GET("", daemonsC.Get, isReadOnlyAdmin, daemons.RetrieveDaemon)
@@ -105,9 +103,14 @@ func New(version string) {
 
 		servicesAPI := api.Group("/services")
 		{
-			servicesAPI.DELETE("/:id", servicesC.Delete, isAdmin)
-			servicesAPI.PUT("/:id", servicesC.Save, isAdmin)
 			servicesAPI.GET("", servicesC.GetAll)
+			serviceAPI := servicesAPI.Group("/:serviceID")
+			{
+				serviceAPI.Use(isAdmin)
+				serviceAPI.GET("", servicesC.Get, services.RetrieveService)
+				serviceAPI.DELETE("", servicesC.Delete)
+				serviceAPI.PUT("", servicesC.Save)
+			}
 		}
 
 		groupsAPI := api.Group("/groups")

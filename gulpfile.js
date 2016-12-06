@@ -23,8 +23,8 @@ var dependenciesPath = {
         './bower_components/semantic/dist/themes/default/assets/fonts/*'
     ],
     images: [
-        './client/src/app/images/*',
-        './client/src/users/images/*',
+        './client/src/components/app/images/*',
+        './client/src/components/users/user/images/*',
         './node_modules/leaflet/dist/images/*',
         './bower_components/semantic/dist/themes/default/assets/images/*'
     ]
@@ -81,7 +81,7 @@ gulp.task('go-fmt', function() {
 });
 
 gulp.task('go-run', function() {
-    go = gulpgo.run('main.go', ['serve', '-e', 'dev'], {
+    go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379'], {
         cwd: __dirname,
         stdio: 'inherit'
     });
