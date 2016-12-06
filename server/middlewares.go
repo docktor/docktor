@@ -15,6 +15,9 @@ import (
 	"gopkg.in/redis.v3"
 )
 
+// NotAuthorized is a template string used to report an unauthorized access to the API
+var NotAuthorized = "API not authorized for user %q"
+
 func redisCache(client *redis.Client) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -107,6 +110,24 @@ func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+// isReadOnlyAdmin is a middleware checking that user has rights to see administration data as read-only.
+func isReadOnlyAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// Get user from context
+		user := c.Get("user").(users.UserRest)
+
+		// Go on if admin or supervisor
+		if user.Role == types.AdminRole || user.Role == types.SupervisorRole {
+			return next(c)
+		}
+
+		// Refuse connection otherwise
+		return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
+
+	}
+}
+
+// isAdmin is a middleware checking that user has rights to modify administration data as read-write.
 func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// Get user from context
@@ -118,7 +139,7 @@ func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		// Refuse connection otherwise
-		return c.String(http.StatusForbidden, fmt.Sprintf("API not authorized for user %q", user.Username))
+		return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
 
 	}
 }
