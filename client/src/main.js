@@ -37,7 +37,7 @@ import { requireAuthorization } from './auth/auth.isAuthorized.js';
 import AuthThunks from './auth/auth.thunk.js';
 
 // Constants
-import { AUTH_ADMIN_ROLE } from './auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './auth/auth.constants.js';
 
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);
@@ -77,9 +77,9 @@ ReactDOM.render(
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
         <Route path='daemons'>
-          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])}/>
+          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
           <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
-          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
+          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
         </Route>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
         <Route path='services' component={requireAuthorization(ServicesPage)}/>
