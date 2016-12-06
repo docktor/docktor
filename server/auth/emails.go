@@ -2,9 +2,10 @@ package auth
 
 import (
 	"fmt"
-	"github.com/soprasteria/docktor/server/email"
-	"github.com/soprasteria/godocktor-api/types"
 	"net/mail"
+
+	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/email"
 )
 
 func SendWelcomeEmail(user types.User) error {

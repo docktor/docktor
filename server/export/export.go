@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
+	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/tealeg/xlsx"
 )
 

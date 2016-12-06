@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
-	api "github.com/soprasteria/godocktor-api"
+	api "github.com/soprasteria/docktor/model"
 	"gopkg.in/mgo.v2/bson"
 )
 

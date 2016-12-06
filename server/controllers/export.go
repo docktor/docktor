@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/export"
-	api "github.com/soprasteria/godocktor-api"
 )
 
 // Export contains all handlers for exporting data as csv/xlsx and so on

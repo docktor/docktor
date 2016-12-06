@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/daemons"
 	"github.com/soprasteria/docktor/server/redisw"
-	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
 )
 

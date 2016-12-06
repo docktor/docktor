@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/godocktor-api"
+	api "github.com/soprasteria/docktor/model"
 )
 
 // RetrieveDaemon find daemon using id param and put it in echo.Context
