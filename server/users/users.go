@@ -41,6 +41,15 @@ func (u UserRest) IsNormalUser() bool {
 	return u.Role == types.UserRole
 }
 
+// HasValidRole checks the user has a known role
+func (u UserRest) HasValidRole() bool {
+	if u.Role != types.AdminRole && u.Role != types.SupervisorRole && u.Role != types.UserRole {
+		return false
+	}
+
+	return true
+}
+
 // GetUserRest returns a Docktor user, amputed of sensible data
 func GetUserRest(user types.User) UserRest {
 	return UserRest{
@@ -128,7 +137,11 @@ func (s *Rest) UpdateUser(user UserRest) (UserRest, error) {
 		userFromDocktor.LastName = user.LastName
 	}
 	userFromDocktor.Updated = time.Now()
-	userFromDocktor.Role = user.Role
+
+	if user.HasValidRole() {
+		userFromDocktor.Role = user.Role
+	}
+
 	// TODO: update groups and favorites
 
 	// Save the user
