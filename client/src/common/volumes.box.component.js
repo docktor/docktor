@@ -12,7 +12,7 @@ class VolumesBox extends React.Component {
     super(props);
 
     // Set state of component from the props.
-    this.state = { volumes : this.props.volumes || [] };
+    this.state = { volumes: this.props.volumes || [] };
   }
 
   componentDidMount() {
@@ -26,7 +26,7 @@ class VolumesBox extends React.Component {
   }
 
   refreshForm() {
-    const settings = { fields:{} };
+    const settings = { fields: {} };
     this.state.volumes.forEach((volume, index) => {
       settings.fields['external' + index] = 'empty';
       settings.fields['internal' + index] = 'empty';
@@ -71,18 +71,18 @@ class VolumesBox extends React.Component {
       <div key={'volume' + index} className='fields'>
         <div className='five wide field required'>
           <label className='hidden'>External Volume</label>
-          <input title={title} type='text' value={volume.value} placeholder='The default volume on host' autoComplete='off'
-              onChange={(event) => this.onChangeVolume(event, index, 'value')} data-validate={'external' + index}/>
+          <input title={title} type='text' value={volume.external} placeholder='The default volume on host' autoComplete='off'
+            onChange={(event) => this.onChangeVolume(event, index, 'external')} data-validate={'external' + index} />
         </div>
         <div className='five wide field required'>
           <label className='hidden'>Internal Volume</label>
           <input title={title} type='text' value={volume.internal} placeholder='The volume inside the container' autoComplete='off'
-              onChange={(event) => this.onChangeVolume(event, index, 'internal')} data-validate={'internal' + index} />
+            onChange={(event) => this.onChangeVolume(event, index, 'internal')} data-validate={'internal' + index} />
         </div>
         <div className='three wide field required' title={title}>
           <label className='hidden'>Rights</label>
           <select value={volume.rights} className='ui fluid dropdown rights'
-              onChange={(event) => this.onChangeVolume(event, index, 'rights')} data-validate={'rights' + index} >
+            onChange={(event) => this.onChangeVolume(event, index, 'rights')} data-validate={'rights' + index} >
             <option value='' disabled>Select rights</option>
             <option value='ro'>Read-only</option>
             <option value='rw'>Read-write</option>
@@ -108,7 +108,7 @@ class VolumesBox extends React.Component {
       <HeadingBox className='volume ui form' icon='large folder open icon' title='Volumes'>
         {this.props.children || <div></div>}
         {(nbVolumes => {
-          if(nbVolumes) {
+          if (nbVolumes) {
             return (
               <div className='fields header'>
                 <div className='five wide field required'>
@@ -132,10 +132,10 @@ class VolumesBox extends React.Component {
         })(this.state.volumes.length)}
         {
           this.state.volumes.map((volume, index) => {
-              return (
-                this.renderVolume(volume, index)
-              );
-        })}
+            return (
+              this.renderVolume(volume, index)
+            );
+          })}
         <div className='ui green small right folder open icon button' onClick={(event) => this.onAddVolume(event)}> <i className='plus icon'></i>Add volume</div>
       </HeadingBox>
     );

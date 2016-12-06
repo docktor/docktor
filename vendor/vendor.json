@@ -376,50 +376,6 @@
 			"revisionTime": "2016-09-30T14:29:56Z"
 		},
 		{
-			"checksumSHA1": "sghppYV2KAqrQiqncbofc1puFzc=",
-			"path": "github.com/soprasteria/godocktor-api",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z",
-			"version": "v2",
-			"versionExact": "v2"
-		},
-		{
-			"checksumSHA1": "6rOXE8dS+rrM7HNBbHmhiKQ+4tA=",
-			"path": "github.com/soprasteria/godocktor-api/daemons",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
-			"checksumSHA1": "6Z34MoeoNNkmRoT59FJGT58P/CM=",
-			"path": "github.com/soprasteria/godocktor-api/groups",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
-			"checksumSHA1": "/rxpq6wXPzxttCVlmJ6WgrHyTEo=",
-			"path": "github.com/soprasteria/godocktor-api/services",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
-			"checksumSHA1": "NGxWxh5yvi0dds6P8Z2fUeuoytw=",
-			"path": "github.com/soprasteria/godocktor-api/sites",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
-			"checksumSHA1": "42hS/oOoTnbXKzeGtHxmB4C7n+s=",
-			"path": "github.com/soprasteria/godocktor-api/types",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
-			"checksumSHA1": "JCBsGGJ3vqfQbkeyhQiTOP+0fo4=",
-			"path": "github.com/soprasteria/godocktor-api/users",
-			"revision": "febaafc90659d399d7173dde41da3be3cc8fd038",
-			"revisionTime": "2016-11-16T16:22:00Z"
-		},
-		{
 			"checksumSHA1": "f2mjcLDkc28ImTfmedA5kfcOzUw=",
 			"path": "github.com/spf13/afero",
 			"revision": "06b7e5f50606ecd49148a01a6008942d9b669217",

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
+	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/bcrypt"
 	mgo "gopkg.in/mgo.v2"

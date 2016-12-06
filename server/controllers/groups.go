@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
+	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"gopkg.in/mgo.v2/bson"
 )
 

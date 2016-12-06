@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"fmt"
 
-	api "github.com/soprasteria/godocktor-api"
-	"github.com/soprasteria/godocktor-api/types"
+	"gopkg.in/mgo.v2/bson"
+
+	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/tealeg/xlsx"
 )
 
@@ -63,7 +65,7 @@ func (e *Export) addDaemonSheet(file *xlsx.File, daemons []types.Daemon, sites [
 	data := [][]interface{}{}
 	for _, daemon := range daemons {
 		// Search in the slice of slices already fetched instead of requesting the database for performance purpose
-		site, err := findSite(daemon.Site.Hex(), sites)
+		site, err := findSite(daemon.Site, sites)
 		siteName := "Unknown"
 		if err == nil {
 			siteName = site.Title
@@ -114,7 +116,7 @@ func (e *Export) addGroupSheet(file *xlsx.File, groups []types.Group, daemons []
 				siteName := daemonName
 				if err == nil {
 					daemonName = daemon.Name
-					site, err := findSite(daemon.Site.Hex(), sites)
+					site, err := findSite(daemon.Site, sites)
 					if err == nil {
 						siteName = site.Title
 					}
@@ -140,18 +142,18 @@ func (e *Export) addGroupSheet(file *xlsx.File, groups []types.Group, daemons []
 	return sheet, nil
 }
 
-func findDaemon(id string, daemons []types.Daemon) (types.Daemon, error) {
+func findDaemon(id bson.ObjectId, daemons []types.Daemon) (types.Daemon, error) {
 	for _, d := range daemons {
-		if d.ID.Hex() == id {
+		if d.ID == id {
 			return d, nil
 		}
 	}
 	return types.Daemon{}, fmt.Errorf("Can't find daemon of id %v", id)
 }
 
-func findSite(id string, sites []types.Site) (types.Site, error) {
+func findSite(id bson.ObjectId, sites []types.Site) (types.Site, error) {
 	for _, s := range sites {
-		if s.ID.Hex() == id {
+		if s.ID == id {
 			return s, nil
 		}
 	}

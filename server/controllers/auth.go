@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/labstack/echo"
+	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
-	api "github.com/soprasteria/godocktor-api"
 )
 
 // Auth contains all login handlers
