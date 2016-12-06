@@ -36,8 +36,6 @@ const daemonReducer = (state = initialState, action) => {
       item : action.daemon
     });
     return newDaemonState;
-  case DaemonConstants.NEW_DAEMON:
-    return initialState;
   default:
     return state;
   }

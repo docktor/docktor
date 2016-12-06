@@ -59,13 +59,6 @@ const invalidRequestService = (error) => {
   };
 };
 
-// New Service
-const newService = () => {
-  return {
-    type: ServiceConstants.NEW_SERVICE
-  };
-};
-
 export default {
   requestService,
   receiveService,
@@ -73,6 +66,5 @@ export default {
   serviceSaved,
   requestDeleteService,
   serviceDeleted,
-  invalidRequestService,
-  newService
+  invalidRequestService
 };

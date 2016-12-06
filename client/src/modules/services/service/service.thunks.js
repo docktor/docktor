@@ -74,17 +74,17 @@ const deleteService = (id) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(ServiceActions.serviceDeleted(response));
-          dispatch(push('/services'));
+        dispatch(ServiceActions.serviceDeleted(response));
+        dispatch(push('/services'));
       })
       .catch(error => {
-          handleError(error, ServiceActions.invalidRequestService, dispatch);
+        handleError(error, ServiceActions.invalidRequestService, dispatch);
       });
   };
 };
 
- export default {
-   fetchService,
-   saveService,
-   deleteService
- };
+export default {
+  fetchService,
+  saveService,
+  deleteService
+};

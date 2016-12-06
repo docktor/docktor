@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
-import { goBack } from 'react-router-redux';
+import { Link } from 'react-router';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
 
@@ -36,8 +36,8 @@ class ServiceComponent extends React.Component {
     if (nextProps.service.tags) {
       nextProps.service.tags.forEach((tag, index) => {
         tags.push({
-            id: index,
-            text: tag
+          id: index,
+          text: tag
         });
       });
     }
@@ -54,7 +54,6 @@ class ServiceComponent extends React.Component {
       this.props.fetchService(serviceId);
     } else {
       // New service
-      this.props.newService();
       $('.ui.form.service-form').form('clear');
       this.refs.scrollbars.scrollTop();
     }
@@ -63,7 +62,7 @@ class ServiceComponent extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     $('.ui.pointing.two.item.menu .item').tab();
     $('.ui.accordion').accordion();
-    if (prevProps.service.isFetching) {
+    if (prevProps.isFetching) {
       this.refs.scrollbars.scrollTop();
     }
   }
@@ -73,27 +72,27 @@ class ServiceComponent extends React.Component {
   }
 
   handleDeleteTag(i) {
-      let tags = this.state.tags;
-      tags.splice(i, 1);
-      this.setState({ tags });
+    let tags = this.state.tags;
+    tags.splice(i, 1);
+    this.setState({ tags });
   }
   handleAddTag(tag) {
-      let tags = this.state.tags;
-      tags.push({
-          id: tags.length + 1,
-          text: tag
-      });
-      this.setState({ tags });
+    let tags = this.state.tags;
+    tags.push({
+      id: tags.length + 1,
+      text: tag
+    });
+    this.setState({ tags });
   }
   handleDragTag(tag, currPos, newPos) {
-      let tags = this.state.tags;
+    let tags = this.state.tags;
 
       // mutate array
-      tags.splice(currPos, 1);
-      tags.splice(newPos, 0, tag);
+    tags.splice(currPos, 1);
+    tags.splice(newPos, 0, tag);
 
       // re-render
-      this.setState({ tags });
+    this.setState({ tags });
   }
 
   isFormValid() {
@@ -204,7 +203,15 @@ class ServiceComponent extends React.Component {
                   </div>
                 :
                   <div className='flex layout vertical start-justified service-details'>
-                    <h1><a onClick={()=> this.props.backTo()}><i className='arrow left icon'></i></a>{this.props.service.name || 'New Service'} <button disabled={!service.id} onClick={() => this.props.onDelete(item)} className='ui red button right-floated'><i className='trash icon'></i>Remove</button></h1>
+                    <h1>
+                      <Link to={'/services'}>
+                        <i className='arrow left icon'></i>
+                      </Link>
+                      {this.props.service.title || 'New Service'}
+                      <button disabled={!service.id} onClick={() => this.props.onDelete(service)} className='ui red button right-floated'>
+                        <i className='trash icon'></i>Remove
+                      </button>
+                    </h1>
                     {this.renderTabular(service)}
                     <div className='flex button-form'>
                       <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
@@ -221,19 +228,20 @@ ServiceComponent.propTypes = {
   service: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   serviceId: React.PropTypes.string,
-  newService: React.PropTypes.func.isRequired,
   fetchService: React.PropTypes.func.isRequired,
-  backTo: React.PropTypes.func,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
+  const paramId = ownProps.params.id;
+  const service = state.service;
+  const emptyService = { commands: [], urls: [], jobs: [], images:[] };
   return {
-    service: state.service.item,
-    isFetching: state.service.isFetching,
-    serviceId: ownProps.params.id
+    service: paramId ? service.item : emptyService,
+    isFetching: service.isFetching,
+    serviceId: paramId
   };
 };
 
@@ -241,8 +249,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchService: (id) => dispatch(ServiceThunks.fetchService(id)),
-    newService: () => dispatch(ServiceActions.newService()),
-    backTo: () => dispatch(goBack()),
     onSave: (service) => dispatch(ServiceThunks.saveService(service)),
     onDelete: service => {
       const callback = () => dispatch(ServiceThunks.deleteService(service.id));

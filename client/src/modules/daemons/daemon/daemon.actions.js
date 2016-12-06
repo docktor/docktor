@@ -59,13 +59,6 @@ const invalidRequestDaemon = (error) => {
   };
 };
 
-// New Daemon
-const newDaemon = () => {
-  return {
-    type: DaemonConstants.NEW_DAEMON
-  };
-};
-
 export default {
   requestDaemon,
   receiveDaemon,
@@ -73,6 +66,5 @@ export default {
   daemonSaved,
   requestDeleteDaemon,
   daemonDeleted,
-  invalidRequestDaemon,
-  newDaemon
+  invalidRequestDaemon
 };
