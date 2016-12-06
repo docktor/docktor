@@ -151,7 +151,7 @@ func (r *Repo) FindContainersOnDaemon(daemon types.Daemon, containersID []string
 	// Containers filtered by daemon and docker containers
 	filterContainers := bson.M{"$match": bson.M{
 		"containers.containerId": &bson.M{"$nin": containersID},
-		"containers.daemonId":    daemon.ID.Hex(),
+		"containers.daemonId":    daemon.ID,
 	}}
 	// Get ids from containers
 	getIds := bson.M{"$project": bson.M{"container": "$containers"}}

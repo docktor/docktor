@@ -16,18 +16,31 @@ const (
 type Volume struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	Internal    string        `bson:"internal" json:"internal"`                 // volume inside the container
-	Value       string        `bson:"value" json:"value"`                       // volume outside the contaienr
+	External    string        `bson:"external" json:"external"`                 // volume outside the contaienr
 	Rights      Rights        `bson:"rights,omitempty" json:"rights,omitempty"` // ro or rw
 	Description string        `bson:"description" json:"description"`
 }
 
-// Volumes is a slice of volumes
-type Volumes []Volume
+// Format prints a volume as a string like : external:internal:rights
+func (v Volume) Format() string {
+
+	var rights string
+	if v.Rights == "" {
+		rights = string(ReadWriteRights)
+	} else {
+		rights = string(v.Rights)
+	}
+
+	return v.External + ":" + v.Internal + ":" + rights
+}
 
 // Equals checks that two volumes are equals based on some properties
-func (a Volume) Equals(b Volume) bool {
-	return a.Internal == b.Internal && a.Rights == b.Rights
+func (v Volume) Equals(b Volume) bool {
+	return v.Internal == b.Internal && v.Rights == b.Rights
 }
+
+// Volumes is a slice of volumes
+type Volumes []Volume
 
 // Equals check that two slices of volumes have the same content
 func (a Volumes) Equals(b Volumes) bool {

@@ -10,31 +10,43 @@ type Variable struct {
 	Description string        `bson:"description" json:"description"`
 }
 
+// Format prints a parameter container as a string like : key=value
+func (v Variable) Format() string {
+	if v.Name == "" || v.Value == "" {
+		return ""
+	}
+	return v.Name + "=" + v.Value
+}
+
+func (v Variable) String() string {
+	return v.Format()
+}
+
+// Equals checks that two variables are equals based on some properties
+func (v Variable) Equals(b Variable) bool {
+	return v.Name == b.Name
+}
+
 // Variables is a slice of variables
 type Variables []Variable
 
-// Equals checks that two variables are equals based on some properties
-func (a Variable) Equals(b Variable) bool {
-	return a.Name == b.Name
-}
-
 // Equals check that two slices of variables have the same content
-func (a Variables) Equals(b Variables) bool {
+func (vs Variables) Equals(b Variables) bool {
 
-	if a == nil && b == nil {
+	if vs == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if vs == nil || b == nil {
 		return false
 	}
 
-	if len(a) != len(b) {
+	if len(vs) != len(b) {
 		return false
 	}
 
 	var aMap = map[string]Variable{}
-	for _, v := range a {
+	for _, v := range vs {
 		aMap[v.Name] = v
 	}
 
@@ -49,17 +61,17 @@ func (a Variables) Equals(b Variables) bool {
 }
 
 // IsIncluded check that the first slices of variables is included into the second
-func (a Variables) IsIncluded(b Variables) bool {
+func (vs Variables) IsIncluded(b Variables) bool {
 
-	if a == nil && b == nil {
+	if vs == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if vs == nil || b == nil {
 		return false
 	}
 
-	if len(a) > len(b) {
+	if len(vs) > len(b) {
 		return false
 	}
 
@@ -68,7 +80,7 @@ func (a Variables) IsIncluded(b Variables) bool {
 		bMap[v.Name] = v
 	}
 
-	for _, v := range a {
+	for _, v := range vs {
 		_, ok := bMap[v.Name]
 		if !ok {
 			return false

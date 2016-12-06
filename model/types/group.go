@@ -6,10 +6,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	// MemberUserRole is the default role for a simple user in a group
+	MemberUserRole MemberRole = "user"
+	// MemberModeratorRole is the role for user able to administrate their group
+	MemberModeratorRole MemberRole = "moderator"
+)
+
+// MemberRole defines the types of role available for a user as a member of a group
+type MemberRole string
+
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
-	Daemon      string        `bson:"daemon" json:"daemon"`
+	Daemon      bson.ObjectId `bson:"daemon" json:"daemon"`
 	Partition   string        `bson:"partition,omitempty" json:"partition,omitempty"`
 	Description string        `bson:"description" json:"description"`
 }
@@ -25,10 +35,8 @@ type Group struct {
 	Description  string        `bson:"description" json:"description"`
 	PortMinRange int           `bson:"portminrange" json:"portminrange"`
 	PortMaxRange int           `bson:"portmaxrange" json:"portmaxrange"`
-	Daemon       bson.ObjectId `bson:"daemon" json:"daemon"`
 	FileSystems  FileSystems   `bson:"filesystems" json:"filesystems"`
 	Containers   Containers    `bson:"containers" json:"containers"`
-	User         bson.ObjectId `bson:"variables" json:"variables"`
 }
 
 // AddFileSystem adds a FileSystem to the Group

@@ -10,31 +10,43 @@ type Parameter struct {
 	Description string        `bson:"description" json:"description"`
 }
 
+// Format prints a parameter container as a string like : key=value
+func (p Parameter) Format() string {
+	if p.Name == "" || p.Value == "" {
+		return ""
+	}
+	return p.Name + "=" + p.Value
+}
+
+func (p Parameter) String() string {
+	return p.Format()
+}
+
+// Equals checks that two parameters are equals based on some properties
+func (p Parameter) Equals(b Parameter) bool {
+	return p.Name == b.Name
+}
+
 // Parameters is a slice of parameters
 type Parameters []Parameter
 
-// Equals checks that two parameters are equals based on some properties
-func (a Parameter) Equals(b Parameter) bool {
-	return a.Name == b.Name
-}
-
 // Equals check that two slices of parameters have the same content
-func (a Parameters) Equals(b Parameters) bool {
+func (ps Parameters) Equals(b Parameters) bool {
 
-	if a == nil && b == nil {
+	if ps == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if ps == nil || b == nil {
 		return false
 	}
 
-	if len(a) != len(b) {
+	if len(ps) != len(b) {
 		return false
 	}
 
 	var aMap = map[string]Parameter{}
-	for _, v := range a {
+	for _, v := range ps {
 		aMap[v.Name] = v
 	}
 
@@ -48,17 +60,17 @@ func (a Parameters) Equals(b Parameters) bool {
 }
 
 // IsIncluded check that the first slices of parameters is included into the second
-func (a Parameters) IsIncluded(b Parameters) bool {
+func (ps Parameters) IsIncluded(b Parameters) bool {
 
-	if a == nil && b == nil {
+	if ps == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if ps == nil || b == nil {
 		return false
 	}
 
-	if len(a) > len(b) {
+	if len(ps) > len(b) {
 		return false
 	}
 
@@ -67,7 +79,7 @@ func (a Parameters) IsIncluded(b Parameters) bool {
 		bMap[v.Name] = v
 	}
 
-	for _, v := range a {
+	for _, v := range ps {
 		_, ok := bMap[v.Name]
 		if !ok {
 			return false

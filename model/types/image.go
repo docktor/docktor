@@ -8,14 +8,15 @@ import (
 
 // Image defines a docker image
 type Image struct {
-	ID         bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
-	Name       string        `bson:"name" json:"name"`
-	Created    time.Time     `bson:"created" json:"created"`
-	Variables  Variables     `bson:"variables" json:"variables"`
-	Ports      Ports         `bson:"ports" json:"ports"`
-	Volumes    Volumes       `bson:"volumes" json:"volumes"`
-	Parameters Parameters    `bson:"parameters" json:"parameters"`
-	Active     bool
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name        string        `bson:"name" json:"name"`
+	Created     time.Time     `bson:"created" json:"created"`
+	Variables   Variables     `bson:"variables" json:"variables"`
+	Ports       Ports         `bson:"ports" json:"ports"`
+	Volumes     Volumes       `bson:"volumes" json:"volumes"`
+	Parameters  Parameters    `bson:"parameters" json:"parameters"`
+	Active      bool          `bson:"active" json:"active"`
+	Description string        `bson:"description" json:"description"`
 }
 
 // AddVariable adds a Variable to the Image
@@ -66,8 +67,8 @@ func (i Image) IsIncludedInConf(b Image) bool {
 // IsCompatibleWithContainer checks that an image is compatible with a Container instance
 // It does not check the name for example, but will check ports, variables, parameters and volumes
 func (i Image) IsCompatibleWithContainer(b Container) bool {
-	return i.Parameters.IsIncluded(b.Parameters.AsParameters()) &&
-		i.Ports.IsIncluded(b.Ports.AsPorts()) &&
-		i.Variables.IsIncluded(b.Variables.AsVariables()) &&
-		i.Volumes.IsIncluded(b.Volumes.AsVolumes())
+	return i.Parameters.IsIncluded(b.Parameters) &&
+		i.Ports.IsIncluded(b.Ports) &&
+		i.Variables.IsIncluded(b.Variables) &&
+		i.Volumes.IsIncluded(b.Volumes)
 }
