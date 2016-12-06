@@ -8,7 +8,7 @@ import ExportThunks from '../export/export.thunk.js';
 import { isRoleAuthorized } from '../auth/auth.wrappers.js';
 
 // Constants
-import { AUTH_ADMIN_ROLE } from '../auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../auth/auth.constants.js';
 
 // Style
 import './navBar.component.scss';
@@ -42,7 +42,7 @@ class NavBarComponent extends React.Component {
         <IndexLink to='/' className='item brand'>
           <i className='large fitted doctor icon'></i>{' '}Docktor
         </IndexLink>
-        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
         {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
         {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
         {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}

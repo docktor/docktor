@@ -36,37 +36,37 @@ class RegisterPane extends React.Component {
         <form className='ui form' >
           <div className='top-row'>
             <div className='required field'>
-              <label>
+              <label htmlFor='username'>
                 Username
               </label>
-              <input type='text' ref='username' name='username' placeholder='A unique username' autoComplete='off'/>
+              <input type='text' id='username' ref='username' name='username' placeholder='A unique username' autoComplete='off'/>
             </div>
             <div className='required field'>
-              <label>
+              <label htmlFor='password'>
                 Password
               </label>
-              <input type='password' ref='password' name='password'  placeholder='Set a password' autoComplete='off'/>
+              <input type='password' id='password' ref='password' name='password'  placeholder='Set a password' autoComplete='off'/>
             </div>
           </div>
           <div className='top-row'>
             <div className='required field'>
-              <label>
+              <label htmlFor='firstname'>
                 First Name
               </label>
-              <input type='text' ref='firstname' name='firstname' placeholder='First Name' autoComplete='off' />
+              <input type='text' id='firstname' ref='firstname' name='firstname' placeholder='First Name' autoComplete='off' />
             </div>
             <div className='required field'>
-              <label>
+              <label htmlFor='lastname'>
                 Last Name
               </label>
-              <input type='text' ref='lastname' name='lastname' placeholder='Last Name' autoComplete='off'/>
+              <input type='text' id='lastname' ref='lastname' name='lastname' placeholder='Last Name' autoComplete='off'/>
             </div>
           </div>
           <div className='required field'>
-            <label>
+            <label htmlFor='email'>
               Email Address
             </label>
-            <input type='email' ref='email' name='email' placeholder='A valid email address' autoComplete='off'/>
+            <input type='email' id='email' ref='email' name='email' placeholder='A valid email address' autoComplete='off'/>
           </div>
           {errorMessage &&
               <p className='error api'>{errorMessage}</p>

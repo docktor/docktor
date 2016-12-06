@@ -21,6 +21,7 @@ type smtpAuthentication struct {
 
 var smtpConfig smtpAuthentication
 
+// InitSMTPConfiguration initializes the SMTP configuration from the smtp.* parameters
 func InitSMTPConfiguration() {
 	server := viper.GetString("smtp.server")
 	if server != "" {

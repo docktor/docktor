@@ -87,7 +87,12 @@ input {
     }
   }
 }
+
 .ui.buttons {
   margin: 0;
   padding: 1px;
+}
+
+.ui.yellow.buttons .button, .ui.yellow.button {
+  background-color: #f1c40f; // yellow from https://flatuicolors.com/
 }

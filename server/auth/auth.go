@@ -241,6 +241,7 @@ func (a *Authentication) setPassword(username, password string) (types.User, err
 	return user, nil
 }
 
+// ChangeResetPasswordUser securely changes the password of a user
 func (a *Authentication) ChangeResetPasswordUser(token, newPassword string) (types.User, error) {
 
 	parsedToken, err := jwt.ParseWithClaims(token, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
