@@ -33,16 +33,16 @@ class SigninPane extends React.Component {
         <h1>{this.props.title}</h1>
         <form className='ui form'>
           <div className='required field'>
-            <label>
+            <label htmlFor='login-username'>
               Username
             </label>
-            <input type='text' ref='username' name='username' autoComplete='off' placeholder='Registered/LDAP username' />
+            <input type='text' id='login-username' ref='username' name='username' autoComplete='off' placeholder='Registered/LDAP username' />
           </div>
           <div className='required field'>
-              <label>
+              <label htmlFor='login-password'>
               Password
               </label>
-              <input type='password' ref='password' name='password' autoComplete='off' placeholder='Password' />
+              <input type='password' id='login-password' ref='password' name='password' autoComplete='off' placeholder='Password' />
           </div>
           {errorMessage &&
               <p className='error api'>{errorMessage}</p>

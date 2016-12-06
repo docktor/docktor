@@ -50,7 +50,7 @@ class UserCardComponent extends React.Component {
               {user.provider.toUpperCase()}
             </div>
               <div className='email' title={user.email}>
-              <i className='mail icon'></i>{user.email}
+            <i className='mail icon'></i> <a href={'mailto:' + user.email}>{user.email}</a>
               </div>
             </div>
           </div>

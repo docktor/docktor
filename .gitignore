@@ -4,5 +4,6 @@ dist
 .idea/
 docktor
 bower_components/
-.vscode
+.vscode/
 vendor/*/
+debug
