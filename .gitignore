@@ -1,7 +1,8 @@
 npm-debug.log
 yarn-error.log
 node_modules/
-dist
+dist/
+client/dist/
 .idea/
 docktor
 bower_components/
