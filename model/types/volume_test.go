@@ -2,11 +2,11 @@ package types
 
 import "fmt"
 
-func ExampleVolumeEquals() {
-	a := Volume{Internal: "/tmp", Value: "/external/tmp", Rights: "rw"}
-	b := Volume{Internal: "/tmp", Value: "/external/tmp2", Rights: "rw"}
-	c := Volume{Internal: "/internal/tmp", Value: "/external/tmp2", Rights: "rw"}
-	d := Volume{Internal: "/tmp", Value: "/external/tmp", Rights: "ro"}
+func ExampleVolume_Equals() {
+	a := Volume{Internal: "/tmp", External: "/external/tmp", Rights: "rw"}
+	b := Volume{Internal: "/tmp", External: "/external/tmp2", Rights: "rw"}
+	c := Volume{Internal: "/internal/tmp", External: "/external/tmp2", Rights: "rw"}
+	d := Volume{Internal: "/tmp", External: "/external/tmp", Rights: "ro"}
 	fmt.Println(a.Equals(b))
 	fmt.Println(a.Equals(c))
 	fmt.Println(a.Equals(d))
@@ -16,10 +16,10 @@ func ExampleVolumeEquals() {
 	// false
 }
 
-func ExampleVolumesEquals() {
-	a := Volume{Internal: "/tmp", Value: "/external/tmp", Rights: "rw"}
-	b := Volume{Internal: "/tmp", Value: "/external/tmp2", Rights: "rw"}
-	c := Volume{Internal: "/internal/tmp", Value: "/external/tmp2", Rights: "rw"}
+func ExampleVolumes_Equals() {
+	a := Volume{Internal: "/tmp", External: "/external/tmp", Rights: "rw"}
+	b := Volume{Internal: "/tmp", External: "/external/tmp2", Rights: "rw"}
+	c := Volume{Internal: "/internal/tmp", External: "/external/tmp2", Rights: "rw"}
 
 	v1 := Volumes{a, b}
 	v2 := Volumes{a, b}

@@ -1,3 +1,5 @@
+# Docktor [![Build Status](https://travis-ci.org/soprasteria/docktor.svg?branch=golang)](https://travis-ci.org/soprasteria/docktor)
+
 ## Run
 You will need a mongo database.
 

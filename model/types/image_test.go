@@ -9,7 +9,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ExampleImageIdEquals() {
+func ExampleImage_EqualsInConf_withID() {
 	i := Image{
 		ID: bson.ObjectId("1"),
 	}
@@ -20,7 +20,7 @@ func ExampleImageIdEquals() {
 	// Output: true
 }
 
-func ExampleImageEquals() {
+func ExampleImage_EqualsInConf() {
 	i := Image{
 		ID:         bson.ObjectId("1"),
 		Name:       "temp",
@@ -117,8 +117,8 @@ func TestImageRemovedVolumeEquals(t *testing.T) {
 		Variables: Variables{},
 		Ports:     Ports{},
 		Volumes: Volumes{
-			{Internal: "/tmp", Value: "/external/tmp", Rights: "rw"},
-			{Internal: "/data", Value: "/external/data", Rights: "rw"},
+			{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
+			{Internal: "/data", External: "/external/data", Rights: "rw"},
 		},
 		Parameters: Parameters{},
 	}
@@ -128,7 +128,7 @@ func TestImageRemovedVolumeEquals(t *testing.T) {
 		Variables: Variables{},
 		Ports:     Ports{},
 		Volumes: Volumes{
-			{Internal: "/tmp", Value: "/external/tmp", Rights: "rw"},
+			{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
 		},
 		Parameters: Parameters{},
 	}

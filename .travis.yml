@@ -19,8 +19,8 @@ install:
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/kardianos/govendor
   - govendor sync -v
-  - npm install -g bower babel-eslint eslint eslint-plugin-react gulp sass-lint yarn
-  - bower --version && eslint --version && gulp --version && sass-lint --version && yarn --version
+  - go get -t -v ./cmd/... ./model/... ./server/...
+  - npm install -g yarn
   - yarn install
 
 script:
@@ -34,7 +34,6 @@ script:
 
   - go test ./cmd/... ./model/... ./server/...
 
-  - eslint "client/**/*.js"
-  - sass-lint "client/**/*.scss"
+  - npm run lint
 
-  - gulp dist
+  - npm run dist

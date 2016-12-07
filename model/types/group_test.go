@@ -2,15 +2,15 @@ package types
 
 import "fmt"
 
-func ExampleGroupVolumeFormat() {
-	vc := VolumeContainer{
+func ExampleVolume_Format() {
+	vc := Volume{
 		External: "/brace/yourselves",
 		Internal: "/winter/is/coming",
 		Rights:   "ro",
 	}
 	fmt.Println(vc.Format())
 
-	vc = VolumeContainer{
+	vc = Volume{
 		External: "/brace/yourselves",
 		Internal: "/winter/is/coming",
 	}
