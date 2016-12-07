@@ -50,3 +50,9 @@ func (s *Services) Delete(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, res)
 }
+
+//Get service from docktor
+func (s *Services) Get(c echo.Context) error {
+	service := c.Get("service").(types.Service)
+	return c.JSON(http.StatusOK, service)
+}

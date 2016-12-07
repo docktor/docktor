@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/mail"
 
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/email"
-	"github.com/soprasteria/godocktor-api/types"
 )
 
 // SendWelcomeEmail sends a welcome email after a user's registration

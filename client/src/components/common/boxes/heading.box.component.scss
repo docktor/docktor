@@ -1,0 +1,22 @@
+
+.box {
+  .title {
+    margin-left: .5em;
+    vertical-align: middle;
+  }
+  .box-header {
+    border: 1px solid #d4d4d5;
+    border-radius: 0 !important;
+  }
+
+  .ui.attached {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    &.segment {
+      width: 100% !important;
+    }
+  }
+
+  padding-left: 1em;
+  padding-right: 1em;
+}
