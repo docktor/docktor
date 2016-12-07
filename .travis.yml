@@ -1,0 +1,40 @@
+language: go
+
+go:
+  - 1.6
+  - 1.7
+
+cache:
+  directories:
+    - bower_components
+    - node_modules
+    - vendor
+
+before_install:
+  - nvm --version
+  - nvm install 7.2.0
+  - node --version && npm --version
+
+install:
+  - go get -v github.com/golang/lint/golint
+  - go get -v github.com/kardianos/govendor
+  - govendor sync -v
+  - npm install -g bower babel-eslint eslint eslint-plugin-react gulp sass-lint yarn
+  - bower --version && eslint --version && gulp --version && sass-lint --version && yarn --version
+  - yarn install
+
+script:
+  - go vet ./main.go
+  - go vet ./cmd/... ./model/... ./server/...
+
+  - golint ./main.go
+  - golint ./cmd/...
+  - golint ./model/...
+  - golint ./server/...
+
+  - go test ./cmd/... ./model/... ./server/...
+
+  - eslint "client/**/*.js"
+  - sass-lint "client/**/*.scss"
+
+  - gulp dist
