@@ -85,6 +85,7 @@ func New(version string) {
 
 		tagsAPI := api.Group("/tags")
 		{
+<<<<<<< HEAD
 			tagsAPI.GET("", tagsC.GetAll)
 			tagsAPI.POST("", tagsC.Save, isAdmin)
 			tagAPI := tagsAPI.Group("/:id")
@@ -93,6 +94,11 @@ func New(version string) {
 				tagAPI.DELETE("", tagsC.Delete)
 				tagAPI.PUT("", tagsC.Save)
 			}
+=======
+			tagsAPI.DELETE("/:id", tagsC.Delete, isAdmin)
+			tagsAPI.PUT("/:id", tagsC.Save, isAdmin)
+			tagsAPI.GET("", tagsC.GetAll)
+>>>>>>> d7996aa... feat(tags) : create/update/delete/getall on tags is available in API
 		}
 
 		sitesAPI := api.Group("/sites")
