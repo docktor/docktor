@@ -18,7 +18,7 @@ import URLsBox from '../../common/urls.box.component.js';
 import JobsBox from '../../common/jobs.box.component.js';
 import VolumesBox from '../../common/volumes.box.component.js';
 import VariablesBox from '../../common/variables.box.component.js';
-import Image from './docker-images/image.component.js';
+import ImageDetails from './images-details/image.component.js';
 
 // Style
 import './service.page.scss';
@@ -47,7 +47,6 @@ class ServiceComponent extends React.Component {
 
   componentDidMount() {
     $('.ui.pointing.two.item.menu .item').tab();
-    $('.ui.accordion').accordion();
     const serviceId = this.props.serviceId;
     if (serviceId) {
       // Fetch when known service
@@ -61,7 +60,6 @@ class ServiceComponent extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     $('.ui.pointing.two.item.menu .item').tab();
-    $('.ui.accordion').accordion();
     if (prevProps.isFetching) {
       this.refs.scrollbars.scrollTop();
     }
@@ -167,11 +165,13 @@ class ServiceComponent extends React.Component {
   renderImagesTab(service) {
     return (
       <div className='ui tab segment' data-tab='images'>
-        <div className='ui styled fluid accordion'>
-          {service.images && service.images.map(image => {
-            return (<Image key={image.id} image={image} />);
-          })}
-        </div>
+        <table className='ui basic very padded striped table'>
+          <tbody>
+            {service.images && service.images.map(image => {
+              return (<ImageDetails key={image.id} image={image} />);
+            })}
+          </tbody>
+        </table>
       </div>
     );
   }
