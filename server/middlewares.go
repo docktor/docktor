@@ -13,11 +13,15 @@ import (
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
 	"github.com/spf13/viper"
+	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/redis.v3"
 )
 
 // NotAuthorized is a template string used to report an unauthorized access to the API
 var NotAuthorized = "API not authorized for user %q"
+
+// NotValidID is a template string used to report that the id is not valid (i.e. not a valid BSON ID)
+var NotValidID = "ID %q is not valid"
 
 func redisCache(client *redis.Client) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -140,5 +144,21 @@ func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 		// Refuse connection otherwise
 		return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
 
+	}
+}
+
+// isValidID is a middleware checking that the id param is a valid BSON ID that can be handled by MongoDB
+func isValidID(id string) func(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+
+			id := c.Param(id)
+
+			if !bson.IsObjectIdHex(id) {
+				return c.String(http.StatusBadRequest, fmt.Sprintf(NotValidID, id))
+			}
+
+			return next(c)
+		}
 	}
 }

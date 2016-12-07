@@ -85,16 +85,25 @@ func New(version string) {
 
 		tagsAPI := api.Group("/tags")
 		{
-			tagsAPI.DELETE("/:id", tagsC.Delete, isAdmin)
-			tagsAPI.PUT("/:id", tagsC.Save, isAdmin)
 			tagsAPI.GET("", tagsC.GetAll)
+			tagAPI := tagsAPI.Group("/:id")
+			{
+				tagAPI.Use(isValidID("id"), isAdmin)
+				tagAPI.DELETE("", tagsC.Delete)
+				tagAPI.PUT("", tagsC.Save)
+			}
+
 		}
 
 		sitesAPI := api.Group("/sites")
 		{
-			sitesAPI.DELETE("/:id", sitesC.Delete, isAdmin)
-			sitesAPI.PUT("/:id", sitesC.Save, isAdmin)
 			sitesAPI.GET("", sitesC.GetAll)
+			siteAPI := sitesAPI.Group("/:id")
+			{
+				siteAPI.Use(isValidID("id"), isAdmin)
+				siteAPI.DELETE("", sitesC.Delete)
+				siteAPI.PUT("", sitesC.Save)
+			}
 		}
 
 		daemonsAPI := api.Group("/daemons")
@@ -102,6 +111,7 @@ func New(version string) {
 			daemonsAPI.GET("", daemonsC.GetAll, isAdmin)
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
+				daemonAPI.Use(isValidID("daemonID"))
 				daemonAPI.GET("", daemonsC.Get, isReadOnlyAdmin, daemons.RetrieveDaemon)
 				daemonAPI.DELETE("", daemonsC.Delete, isAdmin)
 				daemonAPI.PUT("", daemonsC.Save, isAdmin)
@@ -114,7 +124,7 @@ func New(version string) {
 			servicesAPI.GET("", servicesC.GetAll)
 			serviceAPI := servicesAPI.Group("/:serviceID")
 			{
-				serviceAPI.Use(isAdmin)
+				serviceAPI.Use(isValidID("serviceID"), isAdmin)
 				serviceAPI.GET("", servicesC.Get, services.RetrieveService)
 				serviceAPI.DELETE("", servicesC.Delete)
 				serviceAPI.PUT("", servicesC.Save)
@@ -123,19 +133,27 @@ func New(version string) {
 
 		groupsAPI := api.Group("/groups")
 		{
-			groupsAPI.DELETE(":id", groupsC.Delete, isAdmin)
-			groupsAPI.PUT(":id", groupsC.Save, isAdmin)
 			groupsAPI.GET("", groupsC.GetAll)
+			groupAPI := groupsAPI.Group("/:id")
+			{
+				groupAPI.Use(isValidID("id"), isAdmin)
+				groupAPI.DELETE("", groupsC.Delete)
+				groupAPI.PUT("", groupsC.Save)
+			}
 		}
 
 		usersAPI := api.Group("/users")
 		{
 			// No "isAdmin" middleware on users because users can delete/modify themselves
 			// Rights are implemented in each controller
-			usersAPI.DELETE("/:id", usersC.Delete)
-			usersAPI.PUT("/:id", usersC.Update)
-			usersAPI.PUT("/:id/password", usersC.ChangePassword)
 			usersAPI.GET("", usersC.GetAll)
+			userAPI := usersAPI.Group("/:id")
+			{
+				userAPI.Use(isValidID("id"))
+				userAPI.DELETE("", usersC.Delete)
+				userAPI.PUT("", usersC.Update)
+				userAPI.PUT("/password", usersC.ChangePassword)
+			}
 		}
 
 		exportAPI := api.Group("/export")
