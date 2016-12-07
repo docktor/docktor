@@ -92,7 +92,6 @@ func New(version string) {
 				tagAPI.DELETE("", tagsC.Delete)
 				tagAPI.PUT("", tagsC.Save)
 			}
-
 		}
 
 		sitesAPI := api.Group("/sites")
