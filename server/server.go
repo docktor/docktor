@@ -40,6 +40,7 @@ func New(version string) {
 
 	engine := echo.New()
 	sitesC := controllers.Sites{}
+	tagsC := controllers.Tags{}
 	daemonsC := controllers.Daemons{}
 	servicesC := controllers.Services{}
 	groupsC := controllers.Groups{}
@@ -81,6 +82,13 @@ func New(version string) {
 		api.Use(getAuhenticatedUser)              // Enrich echo context with authenticated user (fetched from JWT token)
 
 		api.GET("/profile", usersC.Profile)
+
+		tagsAPI := api.Group("/tags")
+		{
+			tagsAPI.DELETE("/:id", tagsC.Delete, isAdmin)
+			tagsAPI.PUT("/:id", tagsC.Save, isAdmin)
+			tagsAPI.GET("", tagsC.GetAll)
+		}
 
 		sitesAPI := api.Group("/sites")
 		{

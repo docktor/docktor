@@ -5,6 +5,7 @@ import (
 	"github.com/soprasteria/docktor/model/groups"
 	"github.com/soprasteria/docktor/model/services"
 	"github.com/soprasteria/docktor/model/sites"
+	"github.com/soprasteria/docktor/model/tags"
 	"github.com/soprasteria/docktor/model/users"
 	"gopkg.in/mgo.v2"
 )
@@ -22,5 +23,6 @@ type Client interface {
 	Daemons() daemons.RepoDaemons
 	Users() users.RepoUsers
 	Sites() sites.RepoSites
+	Tags() tags.RepoTags
 	Close()
 }
