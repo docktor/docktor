@@ -23,9 +23,10 @@ class VariablesBox extends React.Component {
 
   render() {
     const form = { fields:[] };
+    const allowEmpty = this.props.allowEmpty;
 
     form.getTitle = (variable) => {
-      return '-e ' + variable.name + '=' + variable.value;
+      return '-e ' + variable.name + '=' + (variable.value || (allowEmpty ? '<Default Value>' : '' ));
     };
 
     form.fields.push({
@@ -38,10 +39,10 @@ class VariablesBox extends React.Component {
 
     form.fields.push({
       name: 'value',
-      label: 'Variable Value',
+      label: allowEmpty ? 'Default Value' : 'Variable Value',
       placeholder: 'The environment variable value',
       sizeClass: 'five wide',
-      isRequired: true
+      isRequired: !allowEmpty
     });
 
     form.fields.push({
@@ -69,6 +70,7 @@ class VariablesBox extends React.Component {
 
 VariablesBox.propTypes = {
   variables: React.PropTypes.array,
+  allowEmpty: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

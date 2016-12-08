@@ -54,6 +54,7 @@ class CommandsBox extends React.Component {
         { value:'admin', name:'Admin Role' },
         { value:'user', name:'User Role' }
       ],
+      default: 'user',
       type: 'select'
     });
 

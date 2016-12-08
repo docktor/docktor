@@ -23,17 +23,20 @@ class VolumesBox extends React.Component {
 
   render() {
     const form = { fields:[] };
+    const allowEmpty = this.props.allowEmpty;
 
     form.getTitle = (volume) => {
-      return '-v ' + volume.external + ':' + volume.internal + ':' + volume.rights;
+      const external = volume.external || (allowEmpty ? '<Default Value>' : '' );
+      const rights = volume.rights || 'rw';
+      return '-v ' + external + ':' + volume.internal + ':' + rights;
     };
 
     form.fields.push({
       name: 'external',
-      label: 'External Volume',
+      label: allowEmpty ? 'Default Value' : 'External Volume',
       placeholder: 'The default volume on host',
       sizeClass: 'five wide',
-      isRequired: true
+      isRequired: !allowEmpty
     });
 
     form.fields.push({
@@ -53,6 +56,7 @@ class VolumesBox extends React.Component {
         { value:'ro', name:'Read-only' },
         { value:'rw', name:'Read-write' }
       ],
+      default: 'rw',
       type: 'select'
     });
 
@@ -81,6 +85,7 @@ class VolumesBox extends React.Component {
 
 VolumesBox.propTypes = {
   volumes: React.PropTypes.array,
+  allowEmpty: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element
