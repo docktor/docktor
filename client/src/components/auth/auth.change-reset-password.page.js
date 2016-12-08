@@ -36,10 +36,10 @@ class ChangeResetPasswordP extends React.Component {
   }
 
   onChangePassword(event) {
-      event.preventDefault();
-      const newPassword = this.refs.newPassword.value.trim();
-      const token = this.props.token.trim();
-      this.props.changePassword(newPassword, token);
+    event.preventDefault();
+    const newPassword = this.refs.newPassword.value.trim();
+    const token = this.props.token.trim();
+    this.props.changePassword(newPassword, token);
   }
 
   render() {
@@ -103,7 +103,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(AuthThunks.changePasswordAfterReset(password, token));
     },
     redirect : (path) => {
-          dispatch(push(path));
+      dispatch(push(path));
     }
   };
 };

@@ -30,7 +30,7 @@ class Settings extends React.Component {
           <div className='ui active inverted dimmer'>
             <div className='ui text loader'>Fetching</div>
           </div>
-       );
+      );
     } else if (isAuthenticated) {
       return (
       <TabForm selected={this._selectTab()}>

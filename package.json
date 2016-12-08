@@ -20,7 +20,8 @@
   "scripts": {
     "postinstall": "bower install",
     "dist": "gulp dist",
-    "lint": "eslint 'client/src/**/*.js' && sass-lint 'client/**/*.scss' "
+    "lint": "eslint 'client/src/**/*.js' && sass-lint 'client/**/*.scss' ",
+    "formatJS": "eslint --fix 'client/src/**/*.js'"
   },
   "devDependencies": {
     "babel-cli": "^6.1.2",

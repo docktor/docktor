@@ -25,7 +25,7 @@ class VariablesBox extends React.Component {
     const form = { fields:[] };
 
     form.getTitle = (variable) => {
-        return '-e ' + variable.name + '=' + variable.value;
+      return '-e ' + variable.name + '=' + variable.value;
     };
 
     form.fields.push({

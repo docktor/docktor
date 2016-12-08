@@ -48,14 +48,14 @@ export const generateEntitiesActions = (entitiesName) => {
 export const generateEntitiesReducer = (state = initialState, action, entitiesName) => {
   const { CONST_REQUEST, CONST_RECEIVE, CONST_INVALID } = getConsts(entitiesName);
   switch (action.type) {
-    case CONST_INVALID:
-      return Object.assign({}, state, initialState);
-    case CONST_REQUEST:
-      return Object.assign({}, state, createRequest());
-    case CONST_RECEIVE:
-      return Object.assign({}, state, createReceive(state, action));
-    default:
-      return state;
+  case CONST_INVALID:
+    return Object.assign({}, state, initialState);
+  case CONST_REQUEST:
+    return Object.assign({}, state, createRequest());
+  case CONST_RECEIVE:
+    return Object.assign({}, state, createReceive(state, action));
+  default:
+    return state;
   }
 };
 

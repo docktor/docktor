@@ -14,38 +14,38 @@ import './modal.component.scss';
 // Modal Component
 class Modal extends React.Component {
 
-    validate(modal, onClose) {
-        return () => {
-            let  settings = {
-                onSuccess: () => {
-                    modal.callback($('#modal-form').form('get values'));
-                    onClose();
-                }
-            };
-            settings.fields = {};
-            modal.form.lines.forEach( line => {
-                line.fields.forEach( field => {
-                    if(field.required) {
-                        settings.fields[field.name] = 'empty';
-                    }
-                });
-            });
-            $('#modal-form').form(settings);
-            $('#modal-form').form('validate form');
-        };
-    }
+  validate(modal, onClose) {
+    return () => {
+      let  settings = {
+        onSuccess: () => {
+          modal.callback($('#modal-form').form('get values'));
+          onClose();
+        }
+      };
+      settings.fields = {};
+      modal.form.lines.forEach( line => {
+        line.fields.forEach( field => {
+          if(field.required) {
+            settings.fields[field.name] = 'empty';
+          }
+        });
+      });
+      $('#modal-form').form(settings);
+      $('#modal-form').form('validate form');
+    };
+  }
 
-    closeModal() {
-      $('#modal-form').find('.ui.error.message ul').remove();
-      $('#modal-form').find('fields .error').removeClass('error').find('.prompt').remove();
-      const onClose = this.props.onClose;
-      onClose();
-    }
+  closeModal() {
+    $('#modal-form').find('.ui.error.message ul').remove();
+    $('#modal-form').find('fields .error').removeClass('error').find('.prompt').remove();
+    const onClose = this.props.onClose;
+    onClose();
+  }
 
-    render() {
-        const modal = this.props.modal;
-        const onClose = () => this.closeModal();
-        return (
+  render() {
+    const modal = this.props.modal;
+    const onClose = () => this.closeModal();
+    return (
             <Rodal visible={modal.isVisible}
                 onClose={onClose}
                 showCloseButton={false}
@@ -84,19 +84,19 @@ class Modal extends React.Component {
                     </div>
                 </div>
             </Rodal>
-        );
-    }
+    );
+  }
 }
 Modal.propTypes = { modal: React.PropTypes.object, onClose:React.PropTypes.func };
 
 // Function to map state to container props
 const mapStateToModalProps = (state) => {
-    return { modal: state.modal };
+  return { modal: state.modal };
 };
 
 // Function to map dispatch to container props
 const mapDispatchToModalProps = (dispatch) => {
-    return { onClose: () => dispatch(ModalActions.closeModal()) };
+  return { onClose: () => dispatch(ModalActions.closeModal()) };
 };
 
 // Redux container to Sites component

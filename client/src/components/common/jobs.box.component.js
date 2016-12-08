@@ -25,7 +25,7 @@ class JobsBox extends React.Component {
     const form = { fields:[] };
 
     form.getTitle = (job) => {
-        return '';
+      return '';
     };
 
     form.fields.push({

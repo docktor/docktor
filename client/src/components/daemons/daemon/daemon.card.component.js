@@ -53,14 +53,14 @@ class DaemonCard extends React.Component {
             <div className='description'>{daemon.description}</div>
           </div>
           {(fetching => {
-              if (fetching) {
-                return (
+            if (fetching) {
+              return (
                   <div className='ui bottom attached mini blue buttons'>
                     <div className='ui button loading'></div>
                   </div>
-                );
-              } else {
-                return (
+              );
+            } else {
+              return (
                   <div className='ui bottom attached mini blue buttons'>
                     <div className='ui button disabled'>{(info && info.nbImages ? info.nbImages : '0') + ' Image(s)'}</div>
                     <div className='ui button disabled'>{(info && info.nbContainers ? info.nbContainers : '0') + ' Container(s)'}</div>
@@ -68,8 +68,8 @@ class DaemonCard extends React.Component {
                       <i className='refresh icon'></i>
                     </div>
                   </div>
-                );
-              }
+              );
+            }
           })(isFetching)}
         </div>
       </div>

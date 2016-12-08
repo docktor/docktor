@@ -74,17 +74,17 @@ const deleteDaemon = (id) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(DaemonActions.daemonDeleted(response));
-          dispatch(push('/daemons'));
+        dispatch(DaemonActions.daemonDeleted(response));
+        dispatch(push('/daemons'));
       })
       .catch(error => {
-          handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
+        handleError(error, DaemonActions.invalidRequestDaemon, dispatch);
       });
   };
 };
 
- export default {
-   fetchDaemon,
-   saveDaemon,
-   deleteDaemon
- };
+export default {
+  fetchDaemon,
+  saveDaemon,
+  deleteDaemon
+};

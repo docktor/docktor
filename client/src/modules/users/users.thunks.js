@@ -29,16 +29,16 @@ const saveUser = (user) => {
     .then(checkHttpStatus)
     .then(parseJSON)
     .then(response => {
-        dispatch(UsersActions.receiveSavedUser(response));
+      dispatch(UsersActions.receiveSavedUser(response));
     })
     .catch(error => {
-        handleError(error, UsersActions.invalidSaveUser(user), dispatch);
+      handleError(error, UsersActions.invalidSaveUser(user), dispatch);
     });
   };
 };
 
 const deleteUser = (user) => {
-    return function (dispatch) {
+  return function (dispatch) {
 
     dispatch(UsersActions.requestDeleteUser(user));
     let request = new Request('/api/users/' + user.id, withAuth({
@@ -53,10 +53,10 @@ const deleteUser = (user) => {
     .then(checkHttpStatus)
     .then(parseJSON)
     .then(response => {
-        dispatch(UsersActions.receiveDeletedUser(response));
+      dispatch(UsersActions.receiveDeletedUser(response));
     })
     .catch(error => {
-        handleError(error, UsersActions.invalidDeleteUser(user), dispatch);
+      handleError(error, UsersActions.invalidDeleteUser(user), dispatch);
     });
   };
 };

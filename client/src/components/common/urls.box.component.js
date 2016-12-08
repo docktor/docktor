@@ -25,7 +25,7 @@ class URLsBox extends React.Component {
     const form = { fields:[] };
 
     form.getTitle = (url) => {
-        return '';
+      return '';
     };
 
     form.fields.push({

@@ -56,11 +56,11 @@ class SigninPane extends React.Component {
   }
 
   handleClick(event) {
-      event.preventDefault();
-      const username = this.refs.username;
-      const password = this.refs.password;
-      const creds = { username: username.value.trim(), password: password.value.trim() };
-      this.props.onLoginClick(creds);
+    event.preventDefault();
+    const username = this.refs.username;
+    const password = this.refs.password;
+    const creds = { username: username.value.trim(), password: password.value.trim() };
+    this.props.onLoginClick(creds);
   }
 };
 

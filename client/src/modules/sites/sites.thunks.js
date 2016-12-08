@@ -23,10 +23,10 @@ const deleteSite = (id) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-          dispatch(SitesActions.receiveSiteDeleted(response));
+        dispatch(SitesActions.receiveSiteDeleted(response));
       })
       .catch(error => {
-          handleError(error, SitesActions.invalidRequestSites, dispatch);
+        handleError(error, SitesActions.invalidRequestSites, dispatch);
       });
   };
 };
@@ -57,10 +57,10 @@ const saveSite = (form) => {
     .then(checkHttpStatus)
     .then(parseJSON)
     .then(response => {
-        dispatch(SitesActions.receiveSiteSaved(response));
+      dispatch(SitesActions.receiveSiteSaved(response));
     })
     .catch(error => {
-        handleError(error, SitesActions.invalidRequestSites, dispatch);
+      handleError(error, SitesActions.invalidRequestSites, dispatch);
     });
   };
 };
