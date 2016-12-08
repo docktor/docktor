@@ -12,9 +12,9 @@ import './service.card.component.scss';
 
 // ServiceCard Component
 class ServiceCard extends React.Component {
-    render() {
-      const service = this.props.service;
-      return (
+  render() {
+    const service = this.props.service;
+    return (
         <div className='ui card service'>
           <div className='content'>
             <Link className='header' to={'/services/' + service.id} title={service.title}><i className='cube icon'></i>{service.title}</Link>
@@ -28,8 +28,8 @@ class ServiceCard extends React.Component {
             {service.images.length + ' image(s)'}
           </div>
         </div>
-      );
-    }
+    );
+  }
 }
 ServiceCard.propTypes = { service: React.PropTypes.object };
 

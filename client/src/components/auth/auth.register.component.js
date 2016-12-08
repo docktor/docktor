@@ -78,20 +78,20 @@ class RegisterPane extends React.Component {
     );
   }
   handleClick(event) {
-      event.preventDefault();
-      const username = this.refs.username;
-      const password = this.refs.password;
-      const email = this.refs.email;
-      const firstname = this.refs.firstname;
-      const lastname = this.refs.lastname;
-      const account = {
-        username: username.value.trim(),
-        password: password.value.trim(),
-        email: email.value.trim(),
-        firstname: firstname.value.trim(),
-        lastname: lastname.value.trim()
-      };
-      this.props.onRegisterClick(account);
+    event.preventDefault();
+    const username = this.refs.username;
+    const password = this.refs.password;
+    const email = this.refs.email;
+    const firstname = this.refs.firstname;
+    const lastname = this.refs.lastname;
+    const account = {
+      username: username.value.trim(),
+      password: password.value.trim(),
+      email: email.value.trim(),
+      firstname: firstname.value.trim(),
+      lastname: lastname.value.trim()
+    };
+    this.props.onRegisterClick(account);
   }
 };
 

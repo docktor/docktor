@@ -69,15 +69,15 @@ class ChangePasswordPane extends React.Component {
     );
   }
   handleClick(event) {
-      event.preventDefault();
-      const oldPassword = this.refs.oldPassword;
-      const newPassword = this.refs.newPassword;
-      const account = {
-        id: this.props.user.id,
-        oldPassword: oldPassword.value.trim(),
-        newPassword: newPassword.value.trim()
-      };
-      this.props.onChangePassword(account);
+    event.preventDefault();
+    const oldPassword = this.refs.oldPassword;
+    const newPassword = this.refs.newPassword;
+    const account = {
+      id: this.props.user.id,
+      oldPassword: oldPassword.value.trim(),
+      newPassword: newPassword.value.trim()
+    };
+    this.props.onChangePassword(account);
   }
 };
 

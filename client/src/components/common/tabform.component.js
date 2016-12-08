@@ -17,11 +17,11 @@ class TabForm extends React.Component {
     };
   }
   _childsAsArray() {
-      if (!Array.isArray(this.props.children)) {
-        return [this.props.children];
-      }
-      return this.props.children;
+    if (!Array.isArray(this.props.children)) {
+      return [this.props.children];
     }
+    return this.props.children;
+  }
   _handleClick(index) {
     this.setState({
       selected: index
@@ -50,10 +50,10 @@ class TabForm extends React.Component {
         return ( <ul className = 'tab-group' > {
                 childs.map(labels.bind(_this))
               } </ul>
-            );
+        );
       }
     }
-   return title(this._childsAsArray(), this);
+    return title(this._childsAsArray(), this);
   }
   _renderContent() {
     return (

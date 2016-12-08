@@ -25,7 +25,7 @@ class VolumesBox extends React.Component {
     const form = { fields:[] };
 
     form.getTitle = (volume) => {
-        return '-v ' + volume.external + ':' + volume.internal + ':' + volume.rights;
+      return '-v ' + volume.external + ':' + volume.internal + ':' + volume.rights;
     };
 
     form.fields.push({

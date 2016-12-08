@@ -19,16 +19,16 @@ export const withAuth = (fetchOptions) => {
 };
 
 export const isRoleAuthorized = (Roles, userRole) => {
-    if (typeof Roles !== 'undefined' && Roles !== null && Roles.length > 0 ) {
-      var index =  Roles.find(x => x === userRole) ;
-      if (typeof index !== 'undefined') {
+  if (typeof Roles !== 'undefined' && Roles !== null && Roles.length > 0 ) {
+    var index =  Roles.find(x => x === userRole) ;
+    if (typeof index !== 'undefined') {
           // And authorized because user has authorized role
-        return true;
-      }
-    } else {
-      // And authorized because no role protection
       return true;
     }
+  } else {
+      // And authorized because no role protection
+    return true;
+  }
     // Not authorized by default
-    return false;
+  return false;
 };

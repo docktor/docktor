@@ -25,14 +25,14 @@ class ResetPwdComponent extends React.Component {
   }
 
   onResetPassword(event) {
-      event.preventDefault();
-      const username = this.refs.username.value.trim();
-      this.props.resetPassword(username);
+    event.preventDefault();
+    const username = this.refs.username.value.trim();
+    this.props.resetPassword(username);
   }
 
   render() {
     const { errorMessage, isFetching } = this.props;
-     return (
+    return (
         <div id='reset-password'>
           <h1>Reset your password</h1>
           <form className='ui form' >
@@ -50,7 +50,7 @@ class ResetPwdComponent extends React.Component {
           </form>
         </div>
 
-        );
+    );
   }
 }
 
@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(AuthThunks.resetPassword(username));
     },
     redirect : (path) => {
-          dispatch(push(path));
+      dispatch(push(path));
     }
   };
 };

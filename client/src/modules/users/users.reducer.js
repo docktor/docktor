@@ -16,12 +16,12 @@ const createRequestSaveUser  = (state, action) => {
 };
 
 const createReceiveSavedUser = (state, action) => {
-    action.user.isFetching = false;
-    action.user.errorMessage = '';
-    state.items[action.user.id] = action.user;
-    return {
-      items: state.items
-    };
+  action.user.isFetching = false;
+  action.user.errorMessage = '';
+  state.items[action.user.id] = action.user;
+  return {
+    items: state.items
+  };
 };
 
 const createInvalidSaveUser = (state, action) => {
@@ -51,10 +51,10 @@ const createRequestDeleteUser  = (state, action) => {
 };
 
 const createReceiveDeletedUser = (state, action) => {
-    let { [action.removedID] : omit,  ...newItems } = state.items;
-    return {
-      items: newItems
-    };
+  let { [action.removedID] : omit,  ...newItems } = state.items;
+  return {
+    items: newItems
+  };
 };
 
 const createInvalidDeleteUser = (state, action) => {
@@ -71,25 +71,25 @@ const createInvalidDeleteUser = (state, action) => {
 };
 
 const usersReducer = (state, action) => {
-    const entitiesState = generateEntitiesReducer(state, action, 'users');
-    switch (action.type) {
-        case UsersConstants.REQUEST_SAVE_USER:
-            return Object.assign({}, entitiesState, createRequestSaveUser(state, action));
-        case UsersConstants.RECEIVE_SAVED_USER:
-            return Object.assign({}, entitiesState, createReceiveSavedUser(state, action));
-        case UsersConstants.INVALID_SAVE_USER:
-            return Object.assign({}, entitiesState, createInvalidSaveUser(state, action));
-        case UsersConstants.REQUEST_DELETE_USER:
-            return Object.assign({}, entitiesState, createRequestDeleteUser(state, action));
-        case UsersConstants.RECEIVE_DELETED_USER:
-            return Object.assign({}, entitiesState, createReceiveDeletedUser(state, action));
-        case UsersConstants.INVALID_DELETE_USER:
-            return Object.assign({}, entitiesState, createInvalidDeleteUser(state, action));
-        case UsersConstants.CHANGE_FILTER:
-          return { ...entitiesState, filterValue: action.filterValue };
-        default:
-            return entitiesState;
-    }
+  const entitiesState = generateEntitiesReducer(state, action, 'users');
+  switch (action.type) {
+  case UsersConstants.REQUEST_SAVE_USER:
+    return Object.assign({}, entitiesState, createRequestSaveUser(state, action));
+  case UsersConstants.RECEIVE_SAVED_USER:
+    return Object.assign({}, entitiesState, createReceiveSavedUser(state, action));
+  case UsersConstants.INVALID_SAVE_USER:
+    return Object.assign({}, entitiesState, createInvalidSaveUser(state, action));
+  case UsersConstants.REQUEST_DELETE_USER:
+    return Object.assign({}, entitiesState, createRequestDeleteUser(state, action));
+  case UsersConstants.RECEIVE_DELETED_USER:
+    return Object.assign({}, entitiesState, createReceiveDeletedUser(state, action));
+  case UsersConstants.INVALID_DELETE_USER:
+    return Object.assign({}, entitiesState, createInvalidDeleteUser(state, action));
+  case UsersConstants.CHANGE_FILTER:
+    return { ...entitiesState, filterValue: action.filterValue };
+  default:
+    return entitiesState;
+  }
 };
 
 export default usersReducer;

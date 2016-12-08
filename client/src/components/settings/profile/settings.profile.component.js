@@ -130,19 +130,19 @@ class ProfilePane extends React.Component {
     );
   }
   handleClick(event) {
-      event.preventDefault();
-      const email = this.refs.email;
-      const firstname = this.refs.firstname;
-      const lastname = this.refs.lastname;
-      const account = {
-        email: email.value.trim(),
-        firstname: firstname.value.trim(),
-        lastname: lastname.value.trim(),
-        displayName: firstname.value.trim() + ' ' + lastname.value.trim()
-      };
+    event.preventDefault();
+    const email = this.refs.email;
+    const firstname = this.refs.firstname;
+    const lastname = this.refs.lastname;
+    const account = {
+      email: email.value.trim(),
+      firstname: firstname.value.trim(),
+      lastname: lastname.value.trim(),
+      displayName: firstname.value.trim() + ' ' + lastname.value.trim()
+    };
       // Override user with values defined by authenticated person
-      const userToSave = Object.assign({}, this.props.user, account);
-      this.props.onSave(userToSave);
+    const userToSave = Object.assign({}, this.props.user, account);
+    this.props.onSave(userToSave);
   }
 };
 

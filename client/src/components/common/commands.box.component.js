@@ -25,7 +25,7 @@ class CommandsBox extends React.Component {
     const form = { fields:[] };
 
     form.getTitle = (command) => {
-        return '';
+      return '';
     };
 
     form.fields.push({

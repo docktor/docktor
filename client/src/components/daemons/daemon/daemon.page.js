@@ -133,15 +133,15 @@ class DaemonComponent extends React.Component {
   }
 
   renderSites(sites, daemon) {
-      if (sites.isFetching || sites.didInvalidate) {
-        return (
+    if (sites.isFetching || sites.didInvalidate) {
+      return (
           <div className='ui loading fluid search selection dropdown'>
             Sites loading...<i className='dropdown icon'></i>
           </div>
-        );
-      } else {
-        const items = Object.values(sites.items);
-        return (
+      );
+    } else {
+      const items = Object.values(sites.items);
+      return (
         <div id='sites-dropdown' className='ui fluid search selection dropdown'>
           <input type='hidden' name='site' defaultValue={daemon.site}/>
           <i className='dropdown icon'></i>
@@ -155,8 +155,8 @@ class DaemonComponent extends React.Component {
   }
 
   renderCertificates(daemon) {
-      if (daemon.protocol === 'https') {
-        return (
+    if (daemon.protocol === 'https') {
+      return (
         <div className='three fields'>
           <div className='field'>
             <label>CA</label>

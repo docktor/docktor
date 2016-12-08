@@ -33,8 +33,8 @@ const loginUser = (creds) => {
       .then(parseJSON)
       .then((user) =>  {
           // When uer is authorized, add the JWT token in the localstorage for authentication purpose
-          localStorage.setItem('id_token', user.id_token);
-          dispatch(AuthActions.receiveLogin(user));
+        localStorage.setItem('id_token', user.id_token);
+        dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
         // When error happens.
         // Dispatch differents actions wether the user is not authorized
@@ -100,8 +100,8 @@ const registerUser = (account) => {
       .then(parseJSON)
       .then((user) =>  {
           // When uer is authorized
-          localStorage.setItem('id_token', user.id_token);
-          dispatch(AuthActions.receiveRegister(user));
+        localStorage.setItem('id_token', user.id_token);
+        dispatch(AuthActions.receiveRegister(user));
       }).catch(error => {
         // When error happens.
         // Dispatch differents actions wether the user is not authorized
@@ -164,9 +164,9 @@ const changePassword = (account) => {
 const resetPassword = (username) => {
 
   let config = {
-      method: 'POST',
-      headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-      body: `username=${username}`
+    method: 'POST',
+    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+    body: `username=${username}`
   };
 
   return dispatch => {
@@ -185,11 +185,11 @@ const resetPassword = (username) => {
               dispatch(AuthActions.resetPasswordNotAuthorized(text));
             } else {
               // Will open an error toast
-               dispatch(AuthActions.resetPasswordInvalidRequest(text));
+              dispatch(AuthActions.resetPasswordInvalidRequest(text));
             }
           });
         } else {
-           dispatch(AuthActions.resetPasswordInvalidRequest(error.message));
+          dispatch(AuthActions.resetPasswordInvalidRequest(error.message));
         }
       });
   };
@@ -200,9 +200,9 @@ const resetPassword = (username) => {
 const changePasswordAfterReset = (newPassword, token) => {
 
   let config = {
-      method: 'POST',
-      headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-      body: `newPassword=${newPassword}&token=${token}`
+    method: 'POST',
+    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+    body: `newPassword=${newPassword}&token=${token}`
   };
 
   return dispatch => {
@@ -215,8 +215,8 @@ const changePasswordAfterReset = (newPassword, token) => {
       .then(parseJSON)
       .then((user) =>  {
           // His password is now changed and he is automatically connected
-          localStorage.setItem('id_token', user.id_token);
-          dispatch(AuthActions.receiveLogin(user));
+        localStorage.setItem('id_token', user.id_token);
+        dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
         // When error happens.
         // Dispatch differents actions wether the user is not authorized
@@ -228,11 +228,11 @@ const changePasswordAfterReset = (newPassword, token) => {
               dispatch(AuthActions.loginNotAuthorized(text));
             } else {
               // Will open an error toast
-               dispatch(AuthActions.loginInvalidRequest(text));
+              dispatch(AuthActions.loginInvalidRequest(text));
             }
           });
         } else {
-           dispatch(AuthActions.loginInvalidRequest(error.message));
+          dispatch(AuthActions.loginInvalidRequest(error.message));
         }
       });
   };
