@@ -28,8 +28,8 @@ $br: 4px;
 
   }
 
-  .ui.styled.accordion div:first-child .title {
-    border-top: none;
+  .nonpadded {
+    padding: 0;
   }
 
   background: rgba($form-bg, .9);

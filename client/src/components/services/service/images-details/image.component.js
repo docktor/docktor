@@ -6,22 +6,49 @@ import './image.component.scss';
 
 // Image
 class ImageDetails extends React.Component {
-  render() {
-    const image = this.props.image;
-    return (
+
+
+  renderImage(image) {
+    return [
       <tr className='image-detail'>
-        <td>{image.name}</td>
         <td>
-          <i className='copy link icon'></i>
-          <i className='trash link icon'></i>
+          <div className='ui fluid input'>
+            <input type='text' name='name' defaultValue={image.name} placeholder='A unique image name' autoComplete='off' />
+          </div>
         </td>
-      </tr>
+        <td className='layout horizontal end-justified'>
+          <button className='ui compact button'>
+            <i className='edit icon'></i>Edit
+          </button>
+          <button className='ui compact button'>
+            <i className='copy icon'></i>Copy
+          </button>
+          <button className='ui compact red button'>
+            <i className='trash icon'></i>Remove
+          </button>
+        </td>
+      </tr>,
+      ''
+    ];
+
+  }
+
+  render() {
+    const images = this.props.images;
+    return (
+      <table className='ui fixed very basic very padded table'>
+        <tbody>
+          {images && images.map(image => {
+            return this.renderImage(image);
+          })}
+        </tbody>
+      </table>
     );
   }
 }
 
 ImageDetails.propTypes = {
-  image: React.PropTypes.object
+  images: React.PropTypes.array
 };
 
 export default ImageDetails;

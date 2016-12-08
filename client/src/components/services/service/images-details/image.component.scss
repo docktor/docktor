@@ -1,8 +1,8 @@
-.image-detail {
-  i {
-    &.link.icon,
-    &.link.icons {
-      opacity: .6;
-    }
+.image-detail, .image-edit {
+  td {
+    padding: 1.5em !important;
+  }
+  &:nth-of-type(2n) {
+    background-color: rgba(0,0,50,.02);
   }
 }

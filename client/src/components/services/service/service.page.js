@@ -164,14 +164,8 @@ class ServiceComponent extends React.Component {
 
   renderImagesTab(service) {
     return (
-      <div className='ui tab segment' data-tab='images'>
-        <table className='ui basic very padded striped table'>
-          <tbody>
-            {service.images && service.images.map(image => {
-              return (<ImageDetails key={image.id} image={image} />);
-            })}
-          </tbody>
-        </table>
+      <div className='ui tab segment nonpadded' data-tab='images'>
+        <ImageDetails images={service.images} />
       </div>
     );
   }
