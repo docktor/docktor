@@ -7,42 +7,44 @@ import './image.component.scss';
 // Image
 class ImageDetails extends React.Component {
 
+  coponentDidMount() {
+    this;
+  }
 
   renderImage(image) {
-    return [
-      <tr className='image-detail'>
-        <td>
-          <div className='ui fluid input'>
+    return (
+      <div key={image.id} className='image-detail layout vertical justified'>
+        <div className='layout horizontal justified'>
+          <div className='flex ui fluid left corner labeled input'>
             <input type='text' name='name' defaultValue={image.name} placeholder='A unique image name' autoComplete='off' />
+            <div className='ui left corner label'>
+              <i className='file outline icon'/>
+            </div>
           </div>
-        </td>
-        <td className='layout horizontal end-justified'>
-          <button className='ui compact button'>
-            <i className='edit icon'></i>Edit
-          </button>
-          <button className='ui compact button'>
-            <i className='copy icon'></i>Copy
-          </button>
-          <button className='ui compact red button'>
-            <i className='trash icon'></i>Remove
-          </button>
-        </td>
-      </tr>,
-      ''
-    ];
-
+          <div className='flex layout horizontal end-justified'>
+            <button className='ui active toggle compact button'>
+              <i className='edit icon'/>Edit
+            </button>
+            <button className='ui compact button'>
+              <i className='copy icon'/>Copy
+            </button>
+            <button className='ui compact red button'>
+              <i className='trash icon'/>Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   render() {
     const images = this.props.images;
     return (
-      <table className='ui fixed very basic very padded table'>
-        <tbody>
+      <div className='docker images padded layout vertical'>
           {images && images.map(image => {
             return this.renderImage(image);
           })}
-        </tbody>
-      </table>
+      </div>
     );
   }
 }

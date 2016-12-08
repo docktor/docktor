@@ -1,8 +1,11 @@
-.image-detail, .image-edit {
-  td {
-    padding: 1.5em !important;
-  }
-  &:nth-of-type(2n) {
-    background-color: rgba(0,0,50,.02);
+.docker.images {
+  .image-detail {
+    & > div {
+        padding: 1em !important;
+    }
+
+    &:nth-of-type(even) {
+      background-color: rgba(0,0,50,.02);
+    }
   }
 }
