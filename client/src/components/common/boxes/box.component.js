@@ -73,7 +73,7 @@ class Box extends React.Component {
     return (
       <div key={field.name + index} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
         <label className='hidden'>{field.label}</label>
-        <select title={popup} value={line[field.name]} className='ui fluid dropdown'
+        <select title={popup} value={line[field.name] || ''} className='ui fluid dropdown'
             onChange={(event) => this.onChangeLine(event, index, field.name)} data-validate={field.name + index}>
           <option value='' disabled>{field.placeholder}</option>
           {field.options.map(option => {

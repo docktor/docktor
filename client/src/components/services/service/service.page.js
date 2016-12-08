@@ -16,8 +16,6 @@ import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 import CommandsBox from '../../common/commands.box.component.js';
 import URLsBox from '../../common/urls.box.component.js';
 import JobsBox from '../../common/jobs.box.component.js';
-import VolumesBox from '../../common/volumes.box.component.js';
-import VariablesBox from '../../common/variables.box.component.js';
 import ImageDetails from './images-details/image.component.js';
 
 // Style
@@ -242,8 +240,8 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchService: (id) => dispatch(ServiceThunks.fetchService(id)),
-    onSave: (service) => dispatch(ServiceThunks.saveService(service)),
+    fetchService: id => dispatch(ServiceThunks.fetchService(id)),
+    onSave: serviceId => dispatch(ServiceThunks.saveService(service)),
     onDelete: service => {
       const callback = () => dispatch(ServiceThunks.deleteService(service.id));
       dispatch(ToastsActions.confirmDeletion(service.title, callback));
