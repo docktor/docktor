@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import UserConstants from '../../../modules/users/users.constants.js';
 
 // Style
-import '../../common/tabform.component.scss';
+import '../../common/tabform/tabform.component.scss';
 
 // ChangePasswordPane containg fields to change password
 class ChangePasswordPane extends React.Component {

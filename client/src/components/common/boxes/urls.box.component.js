@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // URLsBox is a list of docker urls
 class URLsBox extends React.Component {

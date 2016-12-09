@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // JobsBox is a list of jobs
 class JobsBox extends React.Component {

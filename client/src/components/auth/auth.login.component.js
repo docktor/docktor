@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router';
 
 // Style
-import '../common/tabform.component.scss';
+import '../common/tabform/tabform.component.scss';
 
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {

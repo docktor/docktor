@@ -13,9 +13,9 @@ import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 
 // Components
-import CommandsBox from '../../common/commands.box.component.js';
-import URLsBox from '../../common/urls.box.component.js';
-import JobsBox from '../../common/jobs.box.component.js';
+import CommandsBox from '../../common/boxes/commands.box.component.js';
+import URLsBox from '../../common/boxes/urls.box.component.js';
+import JobsBox from '../../common/boxes/jobs.box.component.js';
 import ImageDetails from './images-details/image.component.js';
 
 // Style

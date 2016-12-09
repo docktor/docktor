@@ -3,8 +3,8 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Components
-import VolumesBox from '../../../common/volumes.box.component.js';
-import VariablesBox from '../../../common/variables.box.component.js';
+import VolumesBox from '../../../common/boxes/volumes.box.component.js';
+import VariablesBox from '../../../common/boxes/variables.box.component.js';
 
 
 // Style
@@ -57,12 +57,12 @@ class ImageDetails extends React.Component {
         </div>
         {this.state.openedImages[index] &&
           <div className='flex'>
-            <VolumesBox allowEmpty stacked volumes={image.volumes || []}>
-              <p>docker [...] -v defaultValue:internalVolume</p>
-            </VolumesBox>
             <VariablesBox allowEmpty stacked variables={image.variables || []}>
               <p>docker [...] -e variableName=variableValue</p>
             </VariablesBox>
+            <VolumesBox allowEmpty stacked volumes={image.volumes || []}>
+              <p>docker [...] -v defaultValue:internalVolume</p>
+            </VolumesBox>
           </div>
         }
       </div>

@@ -12,8 +12,8 @@ import DaemonActions from '../../../modules/daemons/daemon/daemon.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
-import VolumesBox from '../../common/volumes.box.component.js';
-import VariablesBox from '../../common/variables.box.component.js';
+import VolumesBox from '../../common/boxes/volumes.box.component.js';
+import VariablesBox from '../../common/boxes/variables.box.component.js';
 
 // Style
 import './daemon.page.scss';

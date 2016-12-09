@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // VariablesBox is a list of docker variables
 class VariablesBox extends React.Component {

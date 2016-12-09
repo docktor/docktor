@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import TabForm from '../common/tabform.component.js';
+import TabForm from '../common/tabform/tabform.component.js';
 import Profile from './profile/settings.profile.component.js';
 import ChangePassword from './profile/settings.password.component.js';
 import UsersThunks from '../../modules/users/users.thunks.js';

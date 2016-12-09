@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Style
-import '../common/tabform.component.scss';
+import '../common/tabform/tabform.component.scss';
 
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {

@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {

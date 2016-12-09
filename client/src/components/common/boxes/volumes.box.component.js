@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // VolumesBox is a list of docker volumes
 class VolumesBox extends React.Component {

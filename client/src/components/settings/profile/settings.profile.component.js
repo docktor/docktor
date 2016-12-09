@@ -8,7 +8,7 @@ import UserConstants from '../../../modules/users/users.constants.js';
 
 
 // Style
-import '../../common/tabform.component.scss';
+import '../../common/tabform/tabform.component.scss';
 
 // ProfilePane containg fields to edit an existing account
 class ProfilePane extends React.Component {
