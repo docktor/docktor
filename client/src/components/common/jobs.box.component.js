@@ -81,6 +81,7 @@ class JobsBox extends React.Component {
         icon='large checked calendar icon'
         title='Jobs' form={form}
         lines={this.props.jobs}
+        stacked={this.props.stacked}
         onChange={jobs => this.onChangeJobs(jobs)}>
         {this.props.children || ''}
       </Box>
@@ -90,6 +91,7 @@ class JobsBox extends React.Component {
 
 JobsBox.propTypes = {
   jobs: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

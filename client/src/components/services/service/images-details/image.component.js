@@ -57,10 +57,10 @@ class ImageDetails extends React.Component {
         </div>
         {this.state.openedImages[index] &&
           <div className='flex'>
-            <VolumesBox allowEmpty volumes={image.volumes || []}>
+            <VolumesBox allowEmpty stacked volumes={image.volumes || []}>
               <p>docker [...] -v defaultValue:internalVolume</p>
             </VolumesBox>
-            <VariablesBox allowEmpty variables={image.variables || []}>
+            <VariablesBox allowEmpty stacked variables={image.variables || []}>
               <p>docker [...] -e variableName=variableValue</p>
             </VariablesBox>
           </div>

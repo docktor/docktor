@@ -51,10 +51,10 @@ class CommandsBox extends React.Component {
       sizeClass: 'three wide',
       isRequired: true,
       options: [
-        { value:'admin', name:'Admin Role' },
-        { value:'user', name:'User Role' }
+        { value:'moderator', name:'Moderators' },
+        { value:'member', name:'Members' }
       ],
-      default: 'user',
+      default: 'member',
       type: 'select'
     });
 
@@ -65,6 +65,7 @@ class CommandsBox extends React.Component {
         icon='large terminal icon'
         title='Commands' form={form}
         lines={this.props.commands}
+        stacked={this.props.stacked}
         onChange={commands => this.onChangeCommands(commands)}>
         {this.props.children || ''}
       </Box>
@@ -74,6 +75,7 @@ class CommandsBox extends React.Component {
 
 CommandsBox.propTypes = {
   commands: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

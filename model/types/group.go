@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	// MemberUserRole is the default role for a simple user in a group
-	MemberUserRole MemberRole = "user"
 	// MemberModeratorRole is the role for user able to administrate their group
 	MemberModeratorRole MemberRole = "moderator"
+	// MemberUserRole is the default role for a simple user in a group
+	MemberUserRole MemberRole = "member"
 )
 
 // MemberRole defines the types of role available for a user as a member of a group

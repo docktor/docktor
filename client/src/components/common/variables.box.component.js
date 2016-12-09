@@ -61,6 +61,7 @@ class VariablesBox extends React.Component {
         icon='large setting icon'
         title='Variables' form={form}
         lines={this.props.variables}
+        stacked={this.props.stacked}
         onChange={variables => this.onChangeVariables(variables)}>
         {this.props.children || ''}
       </Box>
@@ -71,6 +72,7 @@ class VariablesBox extends React.Component {
 VariablesBox.propTypes = {
   variables: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

@@ -129,12 +129,9 @@ class Box extends React.Component {
 
 
   render() {
-    const boxId = this.props.boxId;
-    const title = this.props.title;
-    const icon = this.props.icon;
-    const form = this.props.form;
+    const { boxId, title, icon, form, stacked } = this.props;
     return (
-      <HeadingBox className={boxId + ' box-component ui form'} icon={icon} title={title}>
+      <HeadingBox className={boxId + ' box-component ui form'} icon={icon} title={title} stacked={stacked}>
         {this.props.children || ''}
         {
           this.state.lines.length ?
@@ -168,6 +165,7 @@ Box.propTypes = {
   icon: React.PropTypes.string.isRequired,
   lines: React.PropTypes.array.isRequired,
   form: React.PropTypes.object.isRequired,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

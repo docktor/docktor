@@ -51,6 +51,7 @@ class URLsBox extends React.Component {
         icon='large linkify icon'
         title='URLs' form={form}
         lines={this.props.urls}
+        stacked={this.props.stacked}
         onChange={urls => this.onChangeURLs(urls)}>
         {this.props.children || ''}
       </Box>
@@ -60,6 +61,7 @@ class URLsBox extends React.Component {
 
 URLsBox.propTypes = {
   urls: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

@@ -76,6 +76,7 @@ class VolumesBox extends React.Component {
         icon='large folder open icon'
         title='Volumes' form={form}
         lines={this.props.volumes}
+        stacked={this.props.stacked}
         onChange={volumes => this.onChangeVolumes(volumes)}>
         {this.props.children || ''}
       </Box>
@@ -86,6 +87,7 @@ class VolumesBox extends React.Component {
 VolumesBox.propTypes = {
   volumes: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element
