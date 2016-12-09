@@ -129,8 +129,7 @@ var JobContainerSchema = new Schema({
     },
     lastExecution: {
         type: Date,
-        default: Date.now,
-        required: 'lastExecution cannot be blank'
+        default: Date.now
     }
 });
 

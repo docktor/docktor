@@ -109,13 +109,6 @@
                 <div><i>{{fs.description}}</i></div>
             </div>
         </div>
-        <div class="row">
-            <i class="fa fa-bar-chart"></i>
-            <md-button aria-label="Monitoring All" class="md-accent md-hue-3"
-                       href="{{grafanaUrl}}?groupName={{group.title}}">
-                Monitoring CPU / RAM - All Services
-            </md-button>
-        </div>
     </div>
     <div class="row">
         <h4><i class="fa fa-cloud"></i> Services</h4>
@@ -165,11 +158,6 @@
             <th>
                 <div class="tr-ng-title">
                     Daemon
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Monitoring
                 </div>
             </th>
         </tr>
@@ -315,14 +303,6 @@
                                 {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
                         </span>
                     </div>
-                </div>
-            </td>
-            <td>
-                <div layout-align="center">
-                    <md-button class="md-fab" aria-label="Monitoring Container"
-                               href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">
-                        <i class="fa fa-bar-chart"></i>
-                    </md-button>
                 </div>
             </td>
         </tr>

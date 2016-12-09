@@ -67,9 +67,10 @@ exports.read = function (req, res) {
         });
     };
 
-    var queueDaemon = async.queue(daemonWorker, 4);
-
-    Daemon.find().exec(function (exec, data) {
+    /*
+      var queueDaemon = async.queue(daemonWorker, 4);
+      
+      Daemon.find().exec(function (exec, data) {
         daemons = data;
         if (!service.images || service.images.length === 0 || daemons.length ===0) {
             res.jsonp(service);
@@ -81,11 +82,12 @@ exports.read = function (req, res) {
                 queueDaemon.push(daemon);
             });
         }
-    });
+      });
+    */
 
-    queueDaemon.drain = function () {
+    //queueDaemon.drain = function () {
         res.jsonp(service);
-    };
+    //};
 };
 
 

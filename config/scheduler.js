@@ -37,7 +37,7 @@ module.exports.defineJob = function (jobName) {
                             containerFound(err);
                         }
                         if (!daemon) {
-                            console.log('Failed to load daemon');
+                            console.log('Failed to load daemon' + containerFound.daemonId);
                         }
                         containerFound.daemon = daemon;
                         var daemonDocker = daemon.getDaemonDocker();
