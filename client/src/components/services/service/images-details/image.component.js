@@ -3,6 +3,8 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Components
+import ParametersBox from '../../../common/boxes/parameters.box.component.js';
+import PortsBox from '../../../common/boxes/ports.box.component.js';
 import VolumesBox from '../../../common/boxes/volumes.box.component.js';
 import VariablesBox from '../../../common/boxes/variables.box.component.js';
 
@@ -57,6 +59,12 @@ class ImageDetails extends React.Component {
         </div>
         {this.state.openedImages[index] &&
           <div className='flex'>
+            <ParametersBox allowEmpty stacked parameters={image.parameters || []}>
+              <p>Example of name parameter : CpuShares, CpuSet, Memory, MemorySwap, etc...</p>
+            </ParametersBox>
+            <PortsBox allowEmpty stacked ports={image.ports || []}>
+              <p>docker [...] -p externalPort:internalPort</p>
+            </PortsBox>
             <VariablesBox allowEmpty stacked variables={image.variables || []}>
               <p>docker [...] -e variableName=variableValue</p>
             </VariablesBox>

@@ -127,7 +127,7 @@ class ServiceComponent extends React.Component {
 
   renderGeneralTab(service) {
     return (
-      <div className='ui tab segment active' data-tab='general'>
+      <div className='ui tab segment padded active' data-tab='general'>
         <form className='ui form service-form'>
           <input type='hidden' name='created' ref='created' defaultValue={service.created}/>
           <input type='hidden' name='id' ref='id' defaultValue={service.id}/>

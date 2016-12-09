@@ -15,16 +15,11 @@ $br: 4px;
 
 .daemon-details {
 
-  .ui.form.daemon-form {
-    padding-left: .5em !important;
-    padding-right: .5em !important;
-  }
-
   background: rgba($form-bg, .9);
-  margin: 40px;
+  margin: 2em;
   max-width: 70%;
   min-width: 450px;
-  padding: 40px;
+  padding: 2em 5em;
   width: 70%;
 
   h1 {
@@ -35,7 +30,6 @@ $br: 4px;
 
     .right-floated {
       float: right !important;
-      margin-right: 1em;
     }
   }
 
@@ -49,16 +43,7 @@ $br: 4px;
     }
   }
 
-  .fields {
-    margin-bottom: 1em !important;
-  }
-  .field {
-    padding-left: 1em !important;
-    padding-right: 1em !important;
-  }
-
   .button-form {
-    padding: 0 1em;
     .ui.button {
       -moz-appearance: none; // Firefox
       -webkit-appearance: none; // Safari and Chrome
@@ -110,8 +95,6 @@ $br: 4px;
       }
       margin-right: 2em;
     }
-    margin-left: 1em !important;
-    margin-right: 1em !important;
 
     .ReactTags__tags {
       position: relative;
@@ -145,8 +128,8 @@ $br: 4px;
     }
 
     .ReactTags__selected {
-      margin-bottom: 1em !important;
       width: 100%;
+      margin-bottom: 1em;
 
       .ReactTags__tag {
         border: 1px solid #ddd;

@@ -14,30 +14,30 @@ $bold: 600;
 $br: 4px;
 
 .service-details {
+
+  background: rgba($form-bg, .9);
+  margin: 2em;
+  max-width: 70%;
+  min-width: 450px;
+  padding: 2em 5em;
+  width: 70%;
+
   .tabular-details {
-    padding: 0 1em;
     margin-bottom: 2rem;
+    > .nonpadded {
+      padding: 0;
+    }
+
+    > .padded {
+      padding: 2em;
+    }
   }
   .ui.form.service-form {
-    padding-left: .5em !important;
-    padding-right: .5em !important;
-
     > .fields > .field > label {
       color: rgba(0, 0, 0, .95) !important;
     }
 
   }
-
-  .nonpadded {
-    padding: 0;
-  }
-
-  background: rgba($form-bg, .9);
-  margin: 40px;
-  max-width: 70%;
-  min-width: 450px;
-  padding: 40px;
-  width: 70%;
 
   h1 {
     color: $white;
@@ -47,7 +47,6 @@ $br: 4px;
 
     .right-floated {
       float: right !important;
-      margin-right: 1em;
     }
   }
 
@@ -61,16 +60,7 @@ $br: 4px;
     }
   }
 
-  .fields {
-    margin-bottom: 1em !important;
-  }
-  .field {
-    padding-left: 1em !important;
-    padding-right: 1em !important;
-  }
-
   .button-form {
-    padding: 0 1em;
     .ui.button {
       -moz-appearance: none; // Firefox
       -webkit-appearance: none; // Safari and Chrome
@@ -116,14 +106,12 @@ $br: 4px;
     .ui.label {
       width: calc(12.5% - 1.5em);
       margin-top: 0;
-      margin-bottom: 1em !important;
+      margin-bottom: 0em !important;
       @media only screen and (max-width: 767px) {
         margin-bottom: .5em !important;
       }
       margin-right: 2em;
     }
-    margin-left: 1em !important;
-    margin-right: 1em !important;
 
     .ReactTags__tags {
       position: relative;
@@ -157,7 +145,6 @@ $br: 4px;
     }
 
     .ReactTags__selected {
-      margin-bottom: 1em !important;
       width: 100%;
 
       .ReactTags__tag {
