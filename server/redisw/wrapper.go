@@ -3,6 +3,7 @@ package redisw
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/labstack/echo"
@@ -27,19 +28,18 @@ func Get(client *redis.Client, key string, value interface{}) error {
 }
 
 // Set the value if the client exist
-func Set(client *redis.Client, key string, value interface{}, ttl time.Duration) error {
+func Set(client *redis.Client, key string, value interface{}, ttl time.Duration) {
 	if client == nil {
-		return errors.New("Redis is unavailable")
+		fmt.Println("Redis is unavailable")
 	}
 	bytes, err := json.Marshal(value)
 	if err != nil {
-		return err
+		fmt.Println(fmt.Sprintf("Can't set value in key %q in Redis because it's not valid json: %q", key, err))
 	}
 	err = client.Set(key, bytes, ttl).Err()
 	if err != nil {
-		return err
+		fmt.Println(fmt.Sprintf("Can't set value on key %q in Redis : %q", key, err))
 	}
-	return nil
 }
 
 // GetRedis : retrieve redis from echo context or nil

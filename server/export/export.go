@@ -45,7 +45,10 @@ func (e *Export) ExportAll() (*bytes.Reader, error) {
 
 	// Write the file in-memory and returns is as a readable stream
 	var b bytes.Buffer
-	file.Write(&b)
+	err = file.Write(&b)
+	if err != nil {
+		return nil, err
+	}
 	return bytes.NewReader(b.Bytes()), nil
 }
 

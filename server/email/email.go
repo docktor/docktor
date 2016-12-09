@@ -65,12 +65,6 @@ func recipientsToString(adresses []mail.Address) []string {
 	return recipients
 }
 
-func encodeRFC2047(String string) string {
-	// use mail's rfc2047 to encode any string
-	addr := mail.Address{Name: String, Address: ""}
-	return strings.Trim(addr.String(), " <>")
-}
-
 // SendOptions are options for sending an email
 type SendOptions struct {
 	To      []mail.Address

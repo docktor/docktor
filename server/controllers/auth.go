@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/mail"
@@ -36,6 +37,31 @@ func newAuthAPI(c echo.Context) auth.Authentication {
 	}
 }
 
+func checkParametersRegister(username, password, email, firstname, lastname string) error {
+	// Check form data
+	if username == "" || strings.Contains(username, " ") {
+		return errors.New("Username should not be empty and should not contains any whitespace")
+	}
+
+	if password == "" || len(password) < 6 {
+		return errors.New("Password should not be empty and be at least 6 characters")
+	}
+
+	if _, err := mail.ParseAddress(email); err != nil {
+		return errors.New("Email should not be empty and be valid")
+	}
+
+	if firstname == "" {
+		return errors.New("Firstname should not be empty")
+	}
+
+	if lastname == "" {
+		return errors.New("Lastname should not be empty")
+	}
+
+	return nil
+}
+
 // Register create an account
 func (a *Auth) Register(c echo.Context) error {
 
@@ -47,24 +73,8 @@ func (a *Auth) Register(c echo.Context) error {
 	lastname := c.FormValue("lastname")
 
 	// Check form data
-	if username == "" || strings.Contains(username, " ") {
-		return c.String(http.StatusForbidden, "Username should not be empty and should not contains any whitespace")
-	}
-
-	if password == "" || len(password) < 6 {
-		return c.String(http.StatusForbidden, "Password should not be empty and be at least 6 characters")
-	}
-
-	if _, err := mail.ParseAddress(email); err != nil {
-		return c.String(http.StatusForbidden, "Email should not be empty and be valid")
-	}
-
-	if firstname == "" {
-		return c.String(http.StatusForbidden, "Firstname should not be empty")
-	}
-
-	if lastname == "" {
-		return c.String(http.StatusForbidden, "Lastname should not be empty")
+	if err := checkParametersRegister(username, password, email, firstname, lastname); err != nil {
+		return c.String(http.StatusForbidden, err.Error())
 	}
 
 	// Handle APIs from Echo context

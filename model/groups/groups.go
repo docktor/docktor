@@ -29,76 +29,49 @@ func (r *Repo) Save(group types.Group) (types.Group, error) {
 // Delete a group in database
 func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 	err := r.Coll.RemoveId(id)
-	if err != nil {
-		return id, err
-	}
-	return id, nil
+	return id, err
 }
 
 // Find get the first group with a given name
 func (r *Repo) Find(name string) (types.Group, error) {
 	result := types.Group{}
 	err := r.Coll.Find(bson.M{"title": name}).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // FindByID get the group by its id
 func (r *Repo) FindByID(id string) (types.Group, error) {
 	result := types.Group{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // FindByIDBson get the group by its id (as a bson object)
 func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Group, error) {
 	result := types.Group{}
 	err := r.Coll.FindId(id).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // FindAll get all groups
 func (r *Repo) FindAll() ([]types.Group, error) {
 	results := []types.Group{}
 	err := r.Coll.Find(bson.M{}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	return results, err
 }
 
 // FindAllByName get all groups by the give name
 func (r *Repo) FindAllByName(name string) ([]types.Group, error) {
 	results := []types.Group{}
 	err := r.Coll.Find(bson.M{"title": name}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	return results, err
 }
 
 // FindAllByRegex get all groups by the regex name
 func (r *Repo) FindAllByRegex(nameRegex string) ([]types.Group, error) {
 	results := []types.Group{}
 	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex}}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	return results, err
 }
 
 // FindAllWithContainers get all groups that contains a list of containers
@@ -110,9 +83,5 @@ func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []strin
 			"containers.containerId": &bson.M{"$in": containersID},
 		}).All(&results)
 
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	return results, err
 }

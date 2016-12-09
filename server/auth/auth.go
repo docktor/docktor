@@ -107,8 +107,8 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 
 	// Then search in LDAP, if configured
 	if a.LDAP != nil {
-		user, err := a.LDAP.Search(query.Username)
-		if err == nil && user.Username == query.Username {
+		user, errLDAP := a.LDAP.Search(query.Username)
+		if errLDAP == nil && user.Username == query.Username {
 			return ErrUsernameAlreadyTakenOnLDAP
 		}
 	}
@@ -209,7 +209,7 @@ func (a *Authentication) ResetPasswordUser(username string) (types.User, error) 
 	// Don't check if it fails because password change will be possible even if password is reset in DB.
 	user.Password = ""
 	user.Updated = time.Now()
-	a.Docktor.Users().Save(user)
+	_, _ = a.Docktor.Users().Save(user)
 
 	return user, nil
 }
@@ -339,11 +339,7 @@ func (a *Authentication) authenticateWhenUserNotFound(query *LoginUserQuery) err
 			Updated:     time.Now(),
 		}
 		_, err = a.Docktor.Users().Save(docktorUser)
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	}
 
 	// When user is not found, there is no way to authenticate in application

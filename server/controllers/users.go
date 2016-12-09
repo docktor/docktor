@@ -6,9 +6,9 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
+	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
-	api "github.com/soprasteria/docktor/model"
 	"gopkg.in/mgo.v2/bson"
 )
 

@@ -197,10 +197,10 @@ func (r *Repo) SaveContainer(group types.Group, container types.Container) error
 	var results []interface{}
 	// Check if there's already a container with this _id
 	operations := []bson.M{
-		bson.M{"$match": bson.M{"_id": group.ID}},
-		bson.M{"$unwind": "$containers"},
-		bson.M{"$match": bson.M{"containers._id": container.ID}},
-		bson.M{"$group": bson.M{"_id": "null", "count": bson.M{"$sum": 1}}},
+		{"$match": bson.M{"_id": group.ID}},
+		{"$unwind": "$containers"},
+		{"$match": bson.M{"containers._id": container.ID}},
+		{"$group": bson.M{"_id": "null", "count": bson.M{"$sum": 1}}},
 	}
 	err := r.Coll.Pipe(operations).All(&results)
 	if err != nil {
