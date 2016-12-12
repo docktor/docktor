@@ -24,10 +24,25 @@ class ImageDetails extends React.Component {
     this.setState({ images: this.props.images });
   }
 
-  onOpenEdit(index) {
-    event.preventDefault();
+  onEdit(index) {
     const state = { openedImages: [ ...this.state.openedImages ] };
     state.openedImages[index] = !state.openedImages[index];
+    this.setState(state);
+  }
+
+  onCopy(index) {
+    const image = this.state.images[index] && JSON.parse(JSON.stringify(this.state.images[index]));
+    image.id += 1;
+    image.name += '_copy';
+    const state = { images: [ ...this.state.images ] };
+    state.images.push(image);
+    this.setState(state);
+    this.props.scrollbars.scrollToBottom();
+  }
+
+  onRemove(index) {
+    this.state.images.splice(index, 1);
+    const state = { images: this.state.images };
     this.setState(state);
   }
 
@@ -46,13 +61,13 @@ class ImageDetails extends React.Component {
             </div>
           </div>
           <div className='flex layout horizontal end-justified'>
-            <button className={buttonToggle} onClick={() => this.onOpenEdit(index)}>
+            <button className={buttonToggle} onClick={() => this.onEdit(index)}>
               <i className='edit icon'/>Edit
             </button>
-            <button className='ui compact button'>
+            <button className='ui compact button' onClick={() => this.onCopy(index)}>
               <i className='copy icon'/>Copy
             </button>
-            <button className='ui compact red button'>
+            <button className='ui compact red button' onClick={() => this.onRemove(index)}>
               <i className='trash icon'/>Remove
             </button>
           </div>
@@ -90,7 +105,8 @@ class ImageDetails extends React.Component {
 }
 
 ImageDetails.propTypes = {
-  images: React.PropTypes.array
+  images: React.PropTypes.array,
+  scrollbars: React.PropTypes.object
 };
 
 export default ImageDetails;

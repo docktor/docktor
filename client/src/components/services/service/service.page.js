@@ -163,7 +163,7 @@ class ServiceComponent extends React.Component {
   renderImagesTab(service) {
     return (
       <div className='ui tab segment nonpadded' data-tab='images'>
-        <ImageDetails images={service.images} />
+        <ImageDetails scrollbars={this.refs.scrollbars} images={service.images} />
       </div>
     );
   }
