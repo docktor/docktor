@@ -22,6 +22,7 @@
     "postinstall": "bower install",
     "dist": "gulp dist",
     "lint": "eslint 'client/src/**/*.js' && sass-lint 'client/**/*.scss' ",
+    "golint": "gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .",
     "formatJS": "eslint --fix 'client/src/**/*.js'"
   },
   "devDependencies": {

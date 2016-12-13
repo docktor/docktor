@@ -152,10 +152,10 @@ func isValidID(id string) func(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 
-			id := c.Param(id)
+			idHex := c.Param(id)
 
-			if !bson.IsObjectIdHex(id) {
-				return c.String(http.StatusBadRequest, fmt.Sprintf(NotValidID, id))
+			if !bson.IsObjectIdHex(idHex) {
+				return c.String(http.StatusBadRequest, fmt.Sprintf(NotValidID, idHex))
 			}
 
 			return next(c)

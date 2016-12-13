@@ -7,11 +7,13 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//TagName is the name of a tag, represented by its raw name and its slugified one (Slug is unique)
 type TagName struct {
 	Raw  string `bson:"raw" json:"raw"`
 	Slug string `bson:"slug" json:"slug"`
 }
 
+// NewTagName creates a new tag name from a raw name
 func NewTagName(name string) TagName {
 	return TagName{
 		Raw:  name,
@@ -19,19 +21,23 @@ func NewTagName(name string) TagName {
 	}
 }
 
+// GetRaw gets the raw name of a tag
 func (tn *TagName) GetRaw() string {
 	return tn.Raw
 }
 
+// GetSlug gets the slugified name of a tag
 func (tn *TagName) GetSlug() string {
 	return tn.Slug
 }
 
+//TagCategory is the category of a tag, represented by its raw name and its slugified one (Slug is unique)
 type TagCategory struct {
 	Raw  string `bson:"raw" json:"raw"`
 	Slug string `bson:"slug" json:"slug"`
 }
 
+// NewTagCategory creates a new tag category from a raw category name
 func NewTagCategory(category string) TagCategory {
 	return TagCategory{
 		Raw:  category,
@@ -39,14 +45,17 @@ func NewTagCategory(category string) TagCategory {
 	}
 }
 
+// GetRaw gets the raw category of a tag
 func (tc *TagCategory) GetRaw() string {
 	return tc.Raw
 }
 
+// GetSlug gets the slugified category of a tag
 func (tc *TagCategory) GetSlug() string {
 	return tc.Slug
 }
 
+// Slugifiable is an interface representing something that has a raw representation and a slugified one
 type Slugifiable interface {
 	GetRaw() string  // Get the Raw value
 	GetSlug() string // Get the Slug

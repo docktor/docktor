@@ -41,8 +41,8 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 		resTag.Created = time.Now()
 	} else {
 
-		t, err := r.FindByIDBson(tag.ID)
-		if err != nil {
+		t, errFind := r.FindByIDBson(tag.ID)
+		if errFind != nil {
 			// Can't find tag by id
 			return types.Tag{}, fmt.Errorf(
 				"Can't update tag %q with category %q and id %q because it does not exist",
@@ -76,43 +76,28 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 // Delete a tag in database
 func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 	err := r.Coll.RemoveId(id)
-	if err != nil {
-		return id, err
-	}
-	return id, nil
+	return id, err
 }
 
 // FindByID get the tag by its id
 func (r *Repo) FindByID(id string) (types.Tag, error) {
 	result := types.Tag{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // FindByIDBson get the tag by its id (as a bson object)
 func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Tag, error) {
 	result := types.Tag{}
 	err := r.Coll.FindId(id).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // findBySlug get tag identified by its name slugified
 func (r *Repo) findBySlug(slugName string, slugCategory string) (types.Tag, error) {
 	result := types.Tag{}
 	err := r.Coll.Find(bson.M{"name.slug": slugName, "category.slug": slugCategory}).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 // Find get the first tag with a given name
@@ -126,11 +111,7 @@ func (r *Repo) Find(name string, category string) (types.Tag, error) {
 func (r *Repo) FindAll() ([]types.Tag, error) {
 	results := []types.Tag{}
 	err := r.Coll.Find(bson.M{}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	return results, err
 }
 
 // Drop drops the content of the collection

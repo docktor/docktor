@@ -21,10 +21,7 @@ func Get(client *redis.Client, key string, value interface{}) error {
 		return err
 	}
 	err = json.Unmarshal([]byte(j), value)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 // Set the value if the client exist
