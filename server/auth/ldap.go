@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"gopkg.in/ldap.v2"
 )
 
@@ -53,21 +54,21 @@ func NewLDAP(server *LDAPConf) *LDAP {
 func (a *LDAP) Search(username string) (*LDAPUserInfo, error) {
 	// Reach the ldap server
 	if err := a.dial(); err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).Error("LDAP dialing failed")
 		return nil, err
 	}
 	defer a.conn.Close()
 
 	// perform initial authentication
 	if err := a.initialBind(); err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).Error("LDAP binding failed")
 		return nil, err
 	}
 
 	// find user entry & attributes
 	ldapUser, err := a.searchForUser(username)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("username", username).Error("Error looking for user in AD")
 		return nil, err
 	}
 
@@ -78,21 +79,21 @@ func (a *LDAP) Search(username string) (*LDAPUserInfo, error) {
 func (a *LDAP) Login(query *LoginUserQuery) (*LDAPUserInfo, error) {
 	// Reach the ldap server
 	if err := a.dial(); err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).Error("LDAP dialing failed")
 		return nil, err
 	}
 	defer a.conn.Close()
 
 	// perform initial authentication
 	if err := a.initialBind(); err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).Error("LDAP binding failed")
 		return nil, err
 	}
 
 	// find user entry & attributes
 	ldapUser, err := a.searchForUser(query.Username)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("username", query.Username).Error("Error looking for user in AD")
 		return nil, err
 	}
 
@@ -102,28 +103,22 @@ func (a *LDAP) Login(query *LoginUserQuery) (*LDAPUserInfo, error) {
 }
 
 // Dial dials the LDAP server
-func (a *LDAP) dial() error {
-	var err error
+func (a *LDAP) dial() (err error) {
 	a.conn, err = ldap.Dial("tcp", a.server.LdapServer)
-	if err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-	return nil
+	return err
 }
 
 // initialBind creates the first connexion with readonly user
 func (a *LDAP) initialBind() error {
 
 	if a.server.BindPassword == "" || a.server.BindDN == "" {
-		return fmt.Errorf("Bindpassword(%s) or bindDN(%s) is empty", a.server.BindPassword, a.server.BindDN)
+		return fmt.Errorf("Bindpassword or bindDN (%s) is empty", a.server.BindDN)
 	}
 
 	// LDAP Bind
 	if err := a.conn.Bind(a.server.BindDN, a.server.BindPassword); err != nil {
-		fmt.Println("First bind" + err.Error())
 		if ldapErr, ok := err.(*ldap.Error); ok {
-			if ldapErr.ResultCode == 49 {
+			if ldapErr.ResultCode == ldap.LDAPResultInvalidCredentials {
 				return ErrInvalidCredentials
 			}
 		}
@@ -136,9 +131,9 @@ func (a *LDAP) initialBind() error {
 // secondBind authenticate the user
 func (a *LDAP) secondBind(ldapUser *LDAPUserInfo, userPassword string) error {
 	if err := a.conn.Bind(ldapUser.DN, userPassword); err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("ldapUser", *ldapUser).Error("Failed LDAP secondBind")
 		if ldapErr, ok := err.(*ldap.Error); ok {
-			if ldapErr.ResultCode == 49 {
+			if ldapErr.ResultCode == ldap.LDAPResultInvalidCredentials {
 				return ErrInvalidCredentials
 			}
 		}
@@ -170,12 +165,10 @@ func (a *LDAP) searchForUser(username string) (*LDAPUserInfo, error) {
 
 	searchResult, err = a.conn.Search(&searchReq)
 	if err != nil {
-		fmt.Println(err.Error())
 		return nil, err
 	}
 
 	if len(searchResult.Entries) == 0 {
-		fmt.Println("User not exists on LDAP")
 		return nil, ErrInvalidCredentials
 	}
 
@@ -195,10 +188,8 @@ func (a *LDAP) searchForUser(username string) (*LDAPUserInfo, error) {
 
 func getLdapAttrN(name string, result *ldap.SearchResult, n int) string {
 	for _, attr := range result.Entries[n].Attributes {
-		if attr.Name == name {
-			if len(attr.Values) > 0 {
-				return attr.Values[0]
-			}
+		if attr.Name == name && len(attr.Values) > 0 {
+			return attr.Values[0]
 		}
 	}
 	return ""

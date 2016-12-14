@@ -15,10 +15,13 @@
 package cmd
 
 import (
-	"fmt"
+	"io"
 	"os"
 	"strings"
 
+	"gopkg.in/natefinch/lumberjack.v2"
+
+	log "github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -45,14 +48,38 @@ const (
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		log.Fatal(err)
 	}
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.docktor.yaml)")
+	cobra.OnInitialize(initLogger, initConfig)
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.docktor.yaml)")
+	RootCmd.PersistentFlags().StringP("level", "l", "warning", "Choose the logger level: debug, info, warning, error, fatal, panic")
+	RootCmd.PersistentFlags().Int("log-max-size", 500, "Max log file size in megabytes")
+	RootCmd.PersistentFlags().Int("log-max-age", 30, "Max log file age in days")
+	_ = viper.BindPFlag("level", RootCmd.PersistentFlags().Lookup("level"))
+	_ = viper.BindPFlag("log-max-size", RootCmd.PersistentFlags().Lookup("log-max-size"))
+	_ = viper.BindPFlag("log-max-age", RootCmd.PersistentFlags().Lookup("log-max-age"))
+}
+
+func initLogger() {
+	output := io.MultiWriter(os.Stdout, &lumberjack.Logger{
+		Filename:   "./logs/docktor.log",
+		MaxSize:    viper.GetInt("log-max-size"),
+		MaxBackups: 3,
+		MaxAge:     viper.GetInt("log-max-age"),
+	})
+	log.SetOutput(output)
+
+	level, err := log.ParseLevel(viper.GetString("level"))
+	if err != nil {
+		level = log.WarnLevel
+		log.WithError(err).WithField("defaultLevel", level).Warn("Invalid log level, using default")
+	}
+	log.SetLevel(level)
+
+	log.SetFormatter(&log.TextFormatter{})
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -70,8 +97,8 @@ func initConfig() {
 	// If a config file is found, read it in.
 	err := viper.ReadInConfig()
 	if err == nil {
-		fmt.Println("Using config file:" + viper.ConfigFileUsed())
+		log.WithField("configFile", viper.ConfigFileUsed()).Info("Using provided config file")
 	} else {
-		fmt.Println("Cant read config file:" + viper.ConfigFileUsed())
+		log.WithError(err).Warn("Error with provided config file")
 	}
 }

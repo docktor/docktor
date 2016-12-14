@@ -8,6 +8,7 @@ import (
 	"net/smtp"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -98,10 +99,11 @@ func Send(options SendOptions) error {
 	}
 	message += "\r\n" + base64.StdEncoding.EncodeToString([]byte(options.Body))
 
-	fmt.Println(smtpConfig.Server)
-	fmt.Println(smtpConfig.SMTPAuthentData)
-	fmt.Println(smtpConfig.SenderEmail)
-	fmt.Println(recipientsAddress(options.To))
+	log.WithFields(log.Fields{
+		"server":      smtpConfig.Server,
+		"senderEmail": smtpConfig.SenderEmail,
+		"recipient":   recipientsAddress(options.To),
+	}).Debug("SMTP server configuration")
 
 	err := smtp.SendMail(
 		smtpConfig.Server,

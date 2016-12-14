@@ -7,6 +7,7 @@ import (
 	"net/mail"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/auth"
@@ -80,8 +81,6 @@ func (a *Auth) Register(c echo.Context) error {
 	// Handle APIs from Echo context
 	login := newAuthAPI(c)
 
-	fmt.Printf("%+v", login)
-
 	// Log in the application
 	err := login.RegisterUser(&auth.RegisterUserQuery{
 		Username:  username,
@@ -91,7 +90,7 @@ func (a *Auth) Register(c echo.Context) error {
 		Lastname:  lastname,
 	})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("user", username).Error("User registration failed")
 		if err == auth.ErrUsernameAlreadyTaken {
 			return c.String(http.StatusForbidden, auth.ErrUsernameAlreadyTaken.Error())
 		}
@@ -101,7 +100,7 @@ func (a *Auth) Register(c echo.Context) error {
 	// Generates a valid token
 	token, err := login.CreateLoginToken(username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("user", username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -109,7 +108,7 @@ func (a *Auth) Register(c echo.Context) error {
 	webservice := users.Rest{Docktor: login.Docktor}
 	user, err := webservice.GetUserRest(username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("username", username).Error("User retrieval failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -142,7 +141,7 @@ func (a *Auth) Login(c echo.Context) error {
 		Password: password,
 	})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("user", username).Error("User authentication failed")
 		if err == auth.ErrInvalidCredentials {
 			return c.String(http.StatusForbidden, auth.ErrInvalidCredentials.Error())
 		}
@@ -152,7 +151,7 @@ func (a *Auth) Login(c echo.Context) error {
 	// Generates a valid token
 	token, err := login.CreateLoginToken(username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("user", username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -160,7 +159,7 @@ func (a *Auth) Login(c echo.Context) error {
 	webservice := users.Rest{Docktor: login.Docktor}
 	user, err := webservice.GetUserRest(username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("username", username).Error("User retrieval failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -234,7 +233,7 @@ func (a *Auth) ChangeResetPassword(c echo.Context) error {
 	// Generates a valid token
 	authenticationToken, err := login.CreateLoginToken(user.Username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("user", user.Username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -242,7 +241,7 @@ func (a *Auth) ChangeResetPassword(c echo.Context) error {
 	webservice := users.Rest{Docktor: login.Docktor}
 	userRest, err := webservice.GetUserRest(user.Username)
 	if err != nil {
-		fmt.Println(err)
+		log.WithError(err).WithField("username", user.Username).Error("User retrieval failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
