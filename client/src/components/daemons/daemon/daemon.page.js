@@ -186,7 +186,7 @@ class DaemonComponent extends React.Component {
         <br/>
         cAdvisor is used to retrieve monitoring stats (CPU, RAM, FS) on host where docker's daemon is running.
         <hr/>
-        Docktor recommands to have a cAdvisor instance for each daemon.
+        Docktor recommends to have a cAdvisor instance for each daemon.
       </div>
     `;
     return (

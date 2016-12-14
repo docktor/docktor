@@ -33,6 +33,12 @@ func (s *Services) Save(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding service: %v", err))
 	}
+
+	// If the ID is empty, it's a creation, so generate an object ID
+	if service.ID.Hex() == "" {
+		service.ID = bson.NewObjectId()
+	}
+
 	res, err := docktorAPI.Services().Save(service)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving service: %v", err))

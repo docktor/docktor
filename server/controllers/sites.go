@@ -33,6 +33,12 @@ func (s *Sites) Save(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding site: %v", err))
 	}
+
+	// If the ID is empty, it's a creation, so generate an object ID
+	if site.ID.Hex() == "" {
+		site.ID = bson.NewObjectId()
+	}
+
 	res, err := docktorAPI.Sites().Save(site)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving site: %v", err))

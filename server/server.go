@@ -98,6 +98,7 @@ func New(version string) {
 		sitesAPI := api.Group("/sites")
 		{
 			sitesAPI.GET("", sitesC.GetAll)
+			sitesAPI.POST("/new", sitesC.Save, isAdmin)
 			siteAPI := sitesAPI.Group("/:id")
 			{
 				siteAPI.Use(isValidID("id"), isAdmin)
@@ -109,6 +110,7 @@ func New(version string) {
 		daemonsAPI := api.Group("/daemons")
 		{
 			daemonsAPI.GET("", daemonsC.GetAll, isAdmin)
+			daemonsAPI.POST("/new", daemonsC.Save, isAdmin)
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.Use(isValidID("daemonID"))
@@ -122,6 +124,7 @@ func New(version string) {
 		servicesAPI := api.Group("/services")
 		{
 			servicesAPI.GET("", servicesC.GetAll)
+			servicesAPI.POST("/new", servicesC.Save, isAdmin)
 			serviceAPI := servicesAPI.Group("/:serviceID")
 			{
 				serviceAPI.Use(isValidID("serviceID"), isAdmin)
@@ -134,6 +137,7 @@ func New(version string) {
 		groupsAPI := api.Group("/groups")
 		{
 			groupsAPI.GET("", groupsC.GetAll)
+			groupsAPI.POST("/new", groupsC.Save, isAdmin)
 			groupAPI := groupsAPI.Group("/:id")
 			{
 				groupAPI.Use(isValidID("id"), isAdmin)

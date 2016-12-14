@@ -13,10 +13,6 @@ type Repo struct {
 
 // Save a daemon into a database
 func (r *Repo) Save(daemon types.Daemon) (types.Daemon, error) {
-	if daemon.ID.Hex() == "" {
-		daemon.ID = bson.NewObjectId()
-	}
-
 	_, err := r.Coll.UpsertId(daemon.ID, bson.M{"$set": daemon})
 	return daemon, err
 }
