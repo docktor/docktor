@@ -86,7 +86,7 @@ func New(version string) {
 		tagsAPI := api.Group("/tags")
 		{
 			tagsAPI.GET("", tagsC.GetAll)
-			tagsAPI.POST("", tagsC.Save)
+			tagsAPI.POST("", tagsC.Save, isAdmin)
 			tagAPI := tagsAPI.Group("/:id")
 			{
 				tagAPI.Use(isValidID("id"), isAdmin)
