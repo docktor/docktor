@@ -56,19 +56,21 @@ func init() {
 	cobra.OnInitialize(initLogger, initConfig)
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.docktor.yaml)")
 	RootCmd.PersistentFlags().StringP("level", "l", "warning", "Choose the logger level: debug, info, warning, error, fatal, panic")
-	RootCmd.PersistentFlags().Int("log-max-size", 500, "Max log file size in megabytes")
+	RootCmd.PersistentFlags().Int("log-max-size", 100, "Max log file size in megabytes")
 	RootCmd.PersistentFlags().Int("log-max-age", 30, "Max log file age in days")
+	RootCmd.PersistentFlags().Int("log-max-backups", 3, "Max backup files to keep")
 	_ = viper.BindPFlag("level", RootCmd.PersistentFlags().Lookup("level"))
-	_ = viper.BindPFlag("log-max-size", RootCmd.PersistentFlags().Lookup("log-max-size"))
-	_ = viper.BindPFlag("log-max-age", RootCmd.PersistentFlags().Lookup("log-max-age"))
+	_ = viper.BindPFlag("log.max-size", RootCmd.PersistentFlags().Lookup("log-max-size"))
+	_ = viper.BindPFlag("log.max-age", RootCmd.PersistentFlags().Lookup("log-max-age"))
+	_ = viper.BindPFlag("log.max-backups", RootCmd.PersistentFlags().Lookup("log-max-backups"))
 }
 
 func initLogger() {
 	output := io.MultiWriter(os.Stdout, &lumberjack.Logger{
 		Filename:   "./logs/docktor.log",
-		MaxSize:    viper.GetInt("log-max-size"),
-		MaxBackups: 3,
-		MaxAge:     viper.GetInt("log-max-age"),
+		MaxSize:    viper.GetInt("log.max-size"),
+		MaxBackups: viper.GetInt("log.max-backups"),
+		MaxAge:     viper.GetInt("log.max-age"),
 	})
 	log.SetOutput(output)
 

@@ -90,7 +90,7 @@ func (a *Auth) Register(c echo.Context) error {
 		Lastname:  lastname,
 	})
 	if err != nil {
-		log.WithError(err).WithField("user", username).Error("User registration failed")
+		log.WithError(err).WithField("username", username).Error("User registration failed")
 		if err == auth.ErrUsernameAlreadyTaken {
 			return c.String(http.StatusForbidden, auth.ErrUsernameAlreadyTaken.Error())
 		}
@@ -100,7 +100,7 @@ func (a *Auth) Register(c echo.Context) error {
 	// Generates a valid token
 	token, err := login.CreateLoginToken(username)
 	if err != nil {
-		log.WithError(err).WithField("user", username).Error("Login token creation failed")
+		log.WithError(err).WithField("username", username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -141,7 +141,7 @@ func (a *Auth) Login(c echo.Context) error {
 		Password: password,
 	})
 	if err != nil {
-		log.WithError(err).WithField("user", username).Error("User authentication failed")
+		log.WithError(err).WithField("username", username).Error("User authentication failed")
 		if err == auth.ErrInvalidCredentials {
 			return c.String(http.StatusForbidden, auth.ErrInvalidCredentials.Error())
 		}
@@ -151,7 +151,7 @@ func (a *Auth) Login(c echo.Context) error {
 	// Generates a valid token
 	token, err := login.CreateLoginToken(username)
 	if err != nil {
-		log.WithError(err).WithField("user", username).Error("Login token creation failed")
+		log.WithError(err).WithField("username", username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
@@ -233,7 +233,7 @@ func (a *Auth) ChangeResetPassword(c echo.Context) error {
 	// Generates a valid token
 	authenticationToken, err := login.CreateLoginToken(user.Username)
 	if err != nil {
-		log.WithError(err).WithField("user", user.Username).Error("Login token creation failed")
+		log.WithError(err).WithField("username", user.Username).Error("Login token creation failed")
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 

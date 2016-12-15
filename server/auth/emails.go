@@ -20,7 +20,7 @@ func SendWelcomeEmail(user types.User) {
 	})
 
 	if err != nil {
-		log.WithError(err).WithField("user", user.Username).Error("Failed to send welcome email")
+		log.WithError(err).WithField("username", user.Username).Error("Failed to send welcome email")
 	}
 }
 
@@ -35,6 +35,6 @@ func SendResetPasswordEmail(user types.User, url string) {
 	})
 
 	if err != nil {
-		log.WithError(err).WithField("user", user.Username).Error("Failed to send reset password email")
+		log.WithError(err).WithField("username", user.Username).Error("Failed to send reset password email")
 	}
 }

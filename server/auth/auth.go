@@ -269,25 +269,24 @@ func (a *Authentication) AuthenticateUser(query *LoginUserQuery) error {
 
 	user, err := a.Docktor.Users().Find(query.Username)
 	if err != nil || user.ID.Hex() == "" {
-		log.WithError(err).WithField("user", query.Username).Error("Cannot authenticate user, username not found in DB")
+		log.WithError(err).WithField("username", query.Username).Error("Cannot authenticate user, username not found in DB")
 		return a.authenticateWhenUserNotFound(query)
 	}
-	log.WithField("user", query.Username).Debug("User found in DB")
+	log.WithField("username", query.Username).Debug("User found in DB")
 	return a.authenticateWhenUserFound(user, query)
-
 }
 
 func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query *LoginUserQuery) error {
 	log.WithFields(log.Fields{
 		"provider": docktorUser.Provider,
-		"user":     query.Username,
-	})
+		"username": query.Username,
+	}).Debug("Authentication")
 	if docktorUser.Provider == "LDAP" {
 		// User is from LDAP
 		if a.LDAP != nil {
 			ldapUser, err := a.LDAP.Login(query)
 			if err != nil {
-				log.WithError(err).WithField("user", docktorUser.Username).Error("LDAP authentication failed")
+				log.WithError(err).WithField("username", docktorUser.Username).Error("LDAP authentication failed")
 				return ErrInvalidCredentials
 			}
 
@@ -300,7 +299,7 @@ func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query
 
 			_, err = a.Docktor.Users().Save(docktorUser)
 			if err != nil {
-				log.WithError(err).WithField("user", docktorUser).Error("Failed to save LDAP user in DB")
+				log.WithError(err).WithField("username", docktorUser).Error("Failed to save LDAP user in DB")
 				return err
 			}
 
