@@ -33,9 +33,6 @@ class Tags extends React.Component {
     });
   }
 
-    return new_categories;
-  }
-
   render() {
     const { isFetching, filterValue, tags, availableCategories } = this.props;
     const { onCreate, onEdit, onDelete, onChangeFilter } = this.props;
