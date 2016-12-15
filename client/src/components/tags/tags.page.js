@@ -86,6 +86,7 @@ class Tags extends React.Component {
           </div>
         </Scrollbars>
       </div >
+
     );
 
   }
