@@ -233,7 +233,7 @@ class DaemonComponent extends React.Component {
                           <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
                             value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off' />
                           <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
-                            <i className='help circle link icon'  />
+                            <i className='help circle link icon' />
                           </div>
                         </div>
                       </div>
