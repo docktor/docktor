@@ -8,6 +8,7 @@ import UUID from 'uuid-js';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
+import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import DaemonThunks from '../../../modules/daemons/daemon/daemon.thunks.js';
 import DaemonActions from '../../../modules/daemons/daemon/daemon.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
@@ -15,6 +16,7 @@ import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 // Components
 import VolumesBox from '../../common/boxes/volumes.box.component.js';
 import VariablesBox from '../../common/boxes/variables.box.component.js';
+import TagsSelector from '../../common/tags.selector.component.js';
 
 // Style
 import './daemon.page.scss';
@@ -24,41 +26,37 @@ class DaemonComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { ...props.daemon, tags: [] };
+    this.state = { ...props.daemon };
   }
 
   componentWillReceiveProps(nextProps) {
-    const tags = [];
-    if (nextProps.daemon.tags) {
-      nextProps.daemon.tags.forEach((tag, index) => {
-        tags.push({
-          id: index,
-          text: tag
-        });
-      });
-    }
-    this.state = { ...nextProps.daemon, tags };
+    this.state = { ...nextProps.daemon };
     this.forceUpdate();
   }
 
   componentDidMount() {
     const daemonId = this.props.daemonId;
     this.props.fetchSites();
+    this.props.fetchTags();
     if (daemonId) {
       // Fetch when known daemon
       this.props.fetchDaemon(daemonId);
     } else {
       // New daemon
       $('.ui.form.daemon-form').form('clear');
+      const volumesBox = this.refs.volumes;
+      volumesBox.setState({ volumes: [] });
+      const variablesBox = this.refs.variables;
+      variablesBox.setState({ variables: [] });
+      const tagsSelector = this.refs.tags;
+      tagsSelector.setState({ tags: [] });
       this.refs.scrollbars.scrollTop();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     $('#sites-dropdown').dropdown({
-      onChange: (value) => {
-        this.onChangeProperty(value, 'site');
-      }
+      onChange: value => this.onChangeProperty(value, 'site')
     });
     $('#protocol-dropdown').dropdown();
     $('.ui.corner.label').popup();
@@ -69,30 +67,6 @@ class DaemonComponent extends React.Component {
 
   onChangeProperty(value, property) {
     this.setState({ [property]: value });
-  }
-
-  handleDeleteTag(i) {
-    let tags = this.state.tags;
-    tags.splice(i, 1);
-    this.setState({ tags });
-  }
-  handleAddTag(tag) {
-    let tags = this.state.tags;
-    tags.push({
-      id: tags.length + 1,
-      text: tag
-    });
-    this.setState({ tags });
-  }
-  handleDragTag(tag, currPos, newPos) {
-    let tags = this.state.tags;
-
-    // mutate array
-    tags.splice(currPos, 1);
-    tags.splice(newPos, 0, tag);
-
-    // re-render
-    this.setState({ tags });
   }
 
   isFormValid() {
@@ -116,14 +90,14 @@ class DaemonComponent extends React.Component {
     event.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
+    const tagsSelector = this.refs.tags;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
     let formValid = volumesBox.isFormValid() & variablesBox.isFormValid() & this.isFormValid();
     if (formValid) {
-      const tags = this.state.tags.map(tag => tag.text);
       const daemon = { ...this.state };
-      daemon.tags = tags;
       daemon.volumes = volumesBox.state.volumes;
       daemon.variables = variablesBox.state.variables;
+      daemon.tags = tagsSelector.state.tags;
       this.props.onSave(daemon);
     }
   }
@@ -131,9 +105,9 @@ class DaemonComponent extends React.Component {
   renderSites(sites, daemon) {
     if (sites.isFetching || sites.didInvalidate) {
       return (
-          <div className='ui loading fluid search selection dropdown'>
-            Sites loading...<i className='dropdown icon' />
-          </div>
+        <div className='ui loading fluid search selection dropdown'>
+          Sites loading…<i className='dropdown icon'></i>
+        </div>
       );
     } else {
       const items = Object.values(sites.items);
@@ -157,17 +131,17 @@ class DaemonComponent extends React.Component {
           <div className='field'>
             <label>CA</label>
             <textarea rows='10' name='ca' value={daemon.ca || ''} onChange={event => this.onChangeProperty(event.target.value, 'ca')}
-              placeholder='The Certification Authority key Pem file' autoComplete='off'/>
+              placeholder='The Certification Authority key Pem file' autoComplete='off' />
           </div>
           <div className='field'>
             <label>Cert</label>
             <textarea rows='10' name='cert' value={daemon.cert || ''} onChange={event => this.onChangeProperty(event.target.value, 'cert')}
-              placeholder='The certificate Pem file' autoComplete='off'/>
+              placeholder='The certificate Pem file' autoComplete='off' />
           </div>
           <div className='field'>
             <label>Key</label>
             <textarea rows='10' name='key' value={daemon.key || ''} onChange={event => this.onChangeProperty(event.target.value, 'key')}
-              placeholder='The private key file' autoComplete='off'/>
+              placeholder='The private key file' autoComplete='off' />
           </div>
         </div>
       );
@@ -180,6 +154,7 @@ class DaemonComponent extends React.Component {
     const daemon = this.state;
     const isFetching = this.props.isFetching;
     const sites = this.props.sites;
+    const tags = this.props.tags;
     const popup = `
       <div>
         Example: <strong>http://host:port/api/v1.x</strong>
@@ -199,106 +174,116 @@ class DaemonComponent extends React.Component {
                   <div className='ui text loader'>Fetching</div>
                 </div>
                 :
-                  <div className='flex layout vertical start-justified daemon-details'>
-                    <h1>
-                      <Link to={'/daemons'}>
-                        <i className='arrow left icon' />
-                      </Link>
-                      {this.props.daemon.name || 'New Daemon'}
-                      <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
-                        <i className='trash icon' />Remove
-                      </button>
-                    </h1>
-                    <form className='ui form daemon-form'>
-                      <input type='hidden' name='created' value={daemon.created || ''} onChange={event => this.onChangeProperty(event.target.value, 'created')}/>
-                      <input type='hidden' name='id' value={daemon.id || ''} onChange={event => this.onChangeProperty(event.target.value, 'id')}/>
-                      <div className='two fields'>
-                        <div className='field required'>
-                          <label>Name</label>
-                          <input type='text' name='name' value={daemon.name || ''} onChange={event => this.onChangeProperty(event.target.value, 'name')}
-                            placeholder='A unique name' autoComplete='off' />
-                        </div>
-                        <div className='field'>
-                          <label>Description</label>
-                          <textarea rows='4' name='description' value={daemon.description || ''} onChange={event => this.onChangeProperty(event.target.value, 'description')}
-                            placeholder='A description of the daemon' autoComplete='off'/>
-                        </div>
-                      </div>
-                      <div className='two fields'>
-                        <div className='field required'>
-                          <label>Site</label>
-                          {this.renderSites(sites, daemon)}
-                        </div>
-                        <div className='field required'>
-                          <label>Default data mounting point</label>
-                          <input type='text' name='mountingPoint' value={daemon.mountingPoint || ''} onChange={event => this.onChangeProperty(event.target.value, 'mountingPoint')}
-                            placeholder='/data' autoComplete='off'/>
-                        </div>
-                      </div>
-                      <div className='fields'>
-                        <div className='two wide field'>
-                          <div className='large ui label form-label'>cAdvisor</div>
-                        </div>
-                        <div className='fourteen wide field'>
+                <div className='flex layout vertical start-justified daemon-details'>
+                  <h1>
+                    <Link to={'/daemons'}>
+                      <i className='arrow left icon'/>
+                    </Link>
+                    {this.props.daemon.name || 'New Daemon'}
+                    <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
+                      <i className='trash icon'/>Remove
+                    </button>
+                  </h1>
+                  <form className='ui form daemon-form'>
+                    <input type='hidden' name='created' value={daemon.created || ''} onChange={event => this.onChangeProperty(event.target.value, 'created')} />
+                    <input type='hidden' name='id' value={daemon.id || ''} onChange={event => this.onChangeProperty(event.target.value, 'id')} />
 
-                          <label>cAdvisor Api Url</label>
-                          <div className='ui corner labeled input'>
-                            <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
-                               value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off'/>
-                            <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
-                              <i className='help circle link icon'  />
-                            </div>
+                    <div className='two fields'>
+                      <div className='field required'>
+                        <label>Name</label>
+                        <input type='text' name='name' value={daemon.name || ''} onChange={event => this.onChangeProperty(event.target.value, 'name')}
+                          placeholder='A unique name' autoComplete='off' />
+                      </div>
+                      <div className='field'>
+                        <label>Description</label>
+                        <textarea rows='4' name='description' value={daemon.description || ''} onChange={event => this.onChangeProperty(event.target.value, 'description')}
+                          placeholder='A description of the daemon' autoComplete='off' />
+                      </div>
+                    </div>
+
+                    <div className='fields'>
+                      <div className='two wide field'>
+                        <div className='large ui label form-label'>Tags</div>
+                      </div>
+                      <div className='fourteen wide field'>
+                        <label>Tags of the daemon</label>
+                        <TagsSelector selectedTags={daemon.tags || []} tags={tags} ref='tags' />
+                      </div>
+                    </div>
+
+                    <div className='two fields'>
+                      <div className='field required'>
+                        <label>Site</label>
+                        {this.renderSites(sites, daemon)}
+                      </div>
+                      <div className='field required'>
+                        <label>Default data mounting point</label>
+                        <input type='text' name='mountingPoint' value={daemon.mountingPoint || ''} onChange={event => this.onChangeProperty(event.target.value, 'mountingPoint')}
+                          placeholder='/data' autoComplete='off' />
+                      </div>
+                    </div>
+
+                    <div className='fields'>
+                      <div className='two wide field'>
+                        <div className='large ui label form-label'>cAdvisor</div>
+                      </div>
+                      <div className='fourteen wide field'>
+
+                        <label>cAdvisor API URL</label>
+                        <div className='ui corner labeled input'>
+                          <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
+                            value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off' />
+                          <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
+                            <i className='help circle link icon' ></i>
                           </div>
                         </div>
                       </div>
-                      <div className='fields'>
-                        <div className='two wide field'>
-                          <div className='large ui label form-label'>Docker</div>
-                        </div>
-                        <div className='three wide field required'>
-                          <label>Protocol</label>
-                          <select id='protocol-dropdown' name='protocol' value={daemon.protocol || ''} onChange={event => this.onChangeProperty(event.target.value, 'protocol')}
-                            className='ui fluid dropdown'>
-                            <option value=''>Protocol</option>
-                            <option value='http'>HTTP</option>
-                            <option value='https'>HTTPS</option>
-                          </select>
-                        </div>
-                        <div className='five wide field required'>
-                          <label>Hostname</label>
-                          <input type='text' name='host' value={daemon.host || ''} onChange={event => this.onChangeProperty(event.target.value, 'host')}
-                            placeholder='Hostname or IP' autoComplete='off'/>
-                        </div>
-                        <div className='three wide field required'>
-                          <label>Port</label>
-                          <input type='number' name='port' min='0' value={daemon.port || ''} onChange={event => this.onChangeProperty(event.target.value, 'port')}
-                            placeholder='Port' autoComplete='off'/>
-                        </div>
-                        <div className='three wide field required'>
-                          <label>Timeout</label>
-                          <input type='number' name='timeout' min='0' value={daemon.timeout || ''} onChange={event => this.onChangeProperty(event.target.value, 'timeout')}
-                            placeholder='Timeout' autoComplete='off'/>
-                        </div>
+                    </div>
+
+                    <div className='fields'>
+                      <div className='two wide field'>
+                        <div className='large ui label form-label'>Docker</div>
                       </div>
-                      {this.renderCertificates(daemon)}
-                    </form>
-                    <VolumesBox volumes={daemon.volumes} ref='volumes' boxId={UUID.create(4).hex}>
-                      <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
-                    </VolumesBox>
-                    <VariablesBox variables={daemon.variables} ref='variables' boxId={UUID.create(4).hex}>
-                      <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
-                    </VariablesBox>
-                    <div className='tags'>
-                      <div className='large ui label form-label'>Tags</div>
-                      <ReactTags tags={this.state.tags}
-                        handleDelete={(i) => this.handleDeleteTag(i)}
-                        handleAddition={(tag) => this.handleAddTag(tag)}
-                        handleDrag={(tag, currPos, newPos) => this.handleDragTag(tag, currPos, newPos)} />
+                      <div className='three wide field required'>
+                        <label>Protocol</label>
+                        <select id='protocol-dropdown' name='protocol' value={daemon.protocol || ''} onChange={event => this.onChangeProperty(event.target.value, 'protocol')}
+                          className='ui fluid dropdown'>
+                          <option value=''>Protocol</option>
+                          <option value='http'>HTTP</option>
+                          <option value='https'>HTTPS</option>
+                        </select>
+                      </div>
+                      <div className='five wide field required'>
+                        <label>Hostname</label>
+                        <input type='text' name='host' value={daemon.host || ''} onChange={event => this.onChangeProperty(event.target.value, 'host')}
+                          placeholder='Hostname or IP' autoComplete='off' />
+                      </div>
+                      <div className='three wide field required'>
+                        <label>Port</label>
+                        <input type='number' name='port' min='0' value={daemon.port || ''} onChange={event => this.onChangeProperty(event.target.value, 'port')}
+                          placeholder='Port' autoComplete='off' />
+                      </div>
+                      <div className='three wide field required'>
+                        <label>Timeout</label>
+                        <input type='number' name='timeout' min='0' value={daemon.timeout || ''} onChange={event => this.onChangeProperty(event.target.value, 'timeout')}
+                          placeholder='Timeout' autoComplete='off' />
+                      </div>
                     </div>
-                    <div className='flex button-form'>
-                      <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
-                    </div>
+                    {this.renderCertificates(daemon)}
+                  </form>
+
+                  <VolumesBox volumes={daemon.volumes} ref='volumes' boxId={UUID.create(4).hex}>
+                    <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
+                  </VolumesBox>
+
+                  <VariablesBox variables={daemon.variables} ref='variables' boxId={UUID.create(4).hex}>
+                    <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
+                  </VariablesBox>
+
+                  <div className='flex button-form'>
+                    <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
                   </div>
+                </div>
             }
           </div>
         </Scrollbars>
@@ -311,8 +296,11 @@ DaemonComponent.propTypes = {
   isFetching: React.PropTypes.bool,
   daemonId: React.PropTypes.string,
   sites: React.PropTypes.object,
+  tags: React.PropTypes.object,
+  newDaemon: React.PropTypes.func.isRequired,
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
+  fetchTags: React.PropTypes.func.isRequired,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
 };
@@ -321,12 +309,13 @@ DaemonComponent.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
   const daemon = state.daemon;
-  const emptyDaemon = { volumes:[], variables:[] };
+  const emptyDaemon = { volumes: [], variables: [] };
   return {
     daemon: paramId ? daemon.item : emptyDaemon,
     isFetching: daemon.isFetching,
     daemonId: paramId,
-    sites: state.sites
+    sites: state.sites,
+    tags: state.tags
   };
 };
 
@@ -335,6 +324,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchDaemon: (id) => dispatch(DaemonThunks.fetchDaemon(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
+    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
     onSave: (daemon) => dispatch(DaemonThunks.saveDaemon(daemon)),
     onDelete: daemon => {
       const callback = () => dispatch(DaemonThunks.deleteDaemon(daemon.id));
