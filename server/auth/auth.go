@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/dgrijalva/jwt-go"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/model/types"
@@ -84,7 +85,7 @@ func (a *Authentication) ChangePassword(id, oldPassword, newPassword string) err
 
 	hashedPassword, err := protect(newPassword)
 	if err != nil {
-		fmt.Println("Cant hash password : " + err.Error())
+		log.WithError(err).Error("Password hashing failed")
 		return fmt.Errorf("Password can't be stored")
 	}
 
@@ -115,7 +116,7 @@ func (a *Authentication) RegisterUser(query *RegisterUserQuery) error {
 
 	hashedPassword, err := protect(query.Password)
 	if err != nil {
-		fmt.Println("Cant hash password : " + err.Error())
+		log.WithError(err).Error("Password hashing failed")
 		return fmt.Errorf("Password can't be stored")
 	}
 
@@ -249,7 +250,6 @@ func (a *Authentication) ChangeResetPasswordUser(token, newPassword string) (typ
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		fmt.Printf("%+v\n", viper.GetString("auth.reset-pwd-secret"))
 		return []byte(viper.GetString("auth.reset-pwd-secret")), nil
 	})
 	if err != nil {
@@ -269,23 +269,24 @@ func (a *Authentication) AuthenticateUser(query *LoginUserQuery) error {
 
 	user, err := a.Docktor.Users().Find(query.Username)
 	if err != nil || user.ID.Hex() == "" {
-		fmt.Printf("User %s not found\n", query.Username)
-		fmt.Println(err.Error())
+		log.WithError(err).WithField("username", query.Username).Error("Cannot authenticate user, username not found in DB")
 		return a.authenticateWhenUserNotFound(query)
 	}
-	fmt.Println("User found")
+	log.WithField("username", query.Username).Debug("User found in DB")
 	return a.authenticateWhenUserFound(user, query)
-
 }
 
 func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query *LoginUserQuery) error {
+	log.WithFields(log.Fields{
+		"provider": docktorUser.Provider,
+		"username": query.Username,
+	}).Debug("Authentication")
 	if docktorUser.Provider == "LDAP" {
-		fmt.Println("User is LDAP")
 		// User is from LDAP
 		if a.LDAP != nil {
 			ldapUser, err := a.LDAP.Login(query)
 			if err != nil {
-				fmt.Println(err.Error())
+				log.WithError(err).WithField("username", docktorUser.Username).Error("LDAP authentication failed")
 				return ErrInvalidCredentials
 			}
 
@@ -298,14 +299,13 @@ func (a *Authentication) authenticateWhenUserFound(docktorUser types.User, query
 
 			_, err = a.Docktor.Users().Save(docktorUser)
 			if err != nil {
-				fmt.Println(err.Error())
+				log.WithError(err).WithField("username", docktorUser).Error("Failed to save LDAP user in DB")
 				return err
 			}
 
 			return nil
 		}
 	} else {
-		fmt.Println("User is local")
 		err := bcrypt.CompareHashAndPassword(
 			[]byte(docktorUser.Password),
 			[]byte(passwordWithPepper(query.Password)),
@@ -322,7 +322,6 @@ func (a *Authentication) authenticateWhenUserNotFound(query *LoginUserQuery) err
 	if a.LDAP != nil {
 		// Authenticating with LDAP
 		ldapUser, err := a.LDAP.Login(query)
-		fmt.Printf("%+v\n", ldapUser)
 		if err != nil {
 			return ErrInvalidCredentials
 		}

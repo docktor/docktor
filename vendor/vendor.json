@@ -27,8 +27,8 @@
 			"checksumSHA1": "CujWu7+PWlZSX5+zAPJH91O5AVQ=",
 			"origin": "github.com/docker/docker/vendor/github.com/Sirupsen/logrus",
 			"path": "github.com/Sirupsen/logrus",
-			"revision": "673c5ee559b05adb9ef6e0e1d6135ff83522e38d",
-			"revisionTime": "2016-11-16T16:47:31Z"
+			"revision": "f1736dfa335b84a5b441308df5ffec08c2cb6e3c",
+			"revisionTime": "2016-12-12T14:02:32Z"
 		},
 		{
 			"checksumSHA1": "2Fy1Y6Z3lRRX1891WF/+HT4XS2I=",
@@ -550,6 +550,12 @@
 			"path": "gopkg.in/mgo.v2/internal/scram",
 			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
 			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "Glsug+ZroyZo2Ucr8VZJFYatmjQ=",
+			"path": "gopkg.in/natefinch/lumberjack.v2",
+			"revision": "dd45e6a67c53f673bb49ca8a001fd3a63ceb640e",
+			"revisionTime": "2016-11-04T13:48:45Z"
 		},
 		{
 			"checksumSHA1": "/EL/UuzIPObHgESjkBMaD4gaXOw=",

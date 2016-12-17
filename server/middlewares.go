@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/model/types"
@@ -55,14 +56,12 @@ func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if address == "" {
 			// Don't use LDAP, no problem
-			fmt.Println("Init route without LDAP connection")
-			c.Logger().Info("Init route without LDAP connection")
+			log.Info("No LDAP configured")
 			return next(c)
 		}
 
 		// Enrich the echo context with LDAP configuration
-		fmt.Println("Init route with LDAP connection")
-		c.Logger().Info("Init route with LDAP connection")
+		log.Info("LDAP configured")
 
 		ldap := auth.NewLDAP(&auth.LDAPConf{
 			LdapServer:   address,

@@ -3,9 +3,9 @@ package redisw
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 
 	"gopkg.in/redis.v3"
@@ -30,15 +30,22 @@ func Get(client *redis.Client, key string, value interface{}) error {
 // Set the value if the client exist
 func Set(client *redis.Client, key string, value interface{}, ttl time.Duration) {
 	if client == nil {
-		fmt.Println("Redis is unavailable")
+		log.Warning("Redis is unavailable")
+		return
 	}
 	bytes, err := json.Marshal(value)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Can't set value in key %q in Redis because it's not valid json: %q", key, err))
+		log.WithError(err).WithFields(log.Fields{
+			"value": value,
+		}).Error("Invalid JSON")
+		return
 	}
-	err = client.Set(key, bytes, ttl).Err()
-	if err != nil {
-		fmt.Println(fmt.Sprintf("Can't set value on key %q in Redis : %q", key, err))
+	if err = client.Set(key, bytes, ttl).Err(); err != nil {
+		log.WithError(err).WithFields(log.Fields{
+			"key":   key,
+			"value": string(bytes),
+		}).Error("Cannot set value in Redis")
+		return
 	}
 }
 

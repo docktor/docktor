@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/mail"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/email"
 )
@@ -19,7 +20,7 @@ func SendWelcomeEmail(user types.User) {
 	})
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Failed to send welcome mail to %q : %q", user.Username, err.Error()))
+		log.WithError(err).WithField("username", user.Username).Error("Failed to send welcome email")
 	}
 }
 
@@ -34,6 +35,6 @@ func SendResetPasswordEmail(user types.User, url string) {
 	})
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Failed to send reset password mail to %q : %q", user.Username, err.Error()))
+		log.WithError(err).WithField("username", user.Username).Error("Failed to send reset password email")
 	}
 }

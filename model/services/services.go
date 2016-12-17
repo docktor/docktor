@@ -1,8 +1,7 @@
 package services
 
 import (
-	"fmt"
-
+	log "github.com/Sirupsen/logrus"
 	"github.com/soprasteria/docktor/model/types"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -54,7 +53,7 @@ func (r *Repo) FindAll() ([]types.Service, error) {
 func (r *Repo) FindAllByRegex(nameRegex string) ([]types.Service, error) {
 	results := []types.Service{}
 	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex, Options: "i"}}).All(&results)
-	fmt.Println(nameRegex)
+	log.WithField("nameRegex", nameRegex).Info("Finding services by regex")
 	return results, err
 }
 
