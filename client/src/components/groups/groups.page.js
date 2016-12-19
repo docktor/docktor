@@ -33,8 +33,8 @@ class Groups extends React.Component {
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal center-center groups-bar'>
           <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon'></i></div>
-            <i className='remove link icon' onClick={() => changeFilter('')}></i>
+            <div className='ui left corner label'><i className='search icon' /></div>
+            <i className='remove link icon' onClick={() => changeFilter('')} />
             <DebounceInput
               minLength={1}
               debounceTimeout={300}
@@ -42,7 +42,7 @@ class Groups extends React.Component {
               onChange={(event) => changeFilter(event.target.value)}
               value={filterValue}/>
           </div>
-          <div className='flex-2'></div>
+          <div className='flex-2' />
         </div>
         <Scrollbars className='flex ui dimmable'>
           <div className='flex layout horizontal center-center groups-list wrap'>

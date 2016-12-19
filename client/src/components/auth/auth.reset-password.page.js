@@ -45,7 +45,7 @@ class ResetPwdComponent extends React.Component {
             {errorMessage &&
                 <p className='error api'>{errorMessage}</p>
             }
-            <div className='ui error message'></div>
+            <div className='ui error message' />
             <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Reset it!</button>
           </form>
         </div>

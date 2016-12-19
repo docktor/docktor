@@ -56,7 +56,7 @@ class UserCardComponent extends React.Component {
           <div className={rolesDropdownClasses}>
             <input type='hidden' name='role' />
             <div className='default text'>
-              <i className={classNames(getRoleIcon(user.role), 'icon')}></i>
+              <i className={classNames(getRoleIcon(user.role), 'icon')} />
               {getRoleLabel(user.role)}
             </div>
             <div className='menu'>
@@ -65,7 +65,7 @@ class UserCardComponent extends React.Component {
                   'active selected': role === user.role
                 });
                 return (<div key={role} className={itemClasses} data-value={role}>
-                  <i className={classNames(getRoleIcon(role), 'icon')}></i>
+                  <i className={classNames(getRoleIcon(role), 'icon')} />
                   {getRoleLabel(role)}
                 </div>);
               })}
@@ -77,7 +77,7 @@ class UserCardComponent extends React.Component {
             {user.provider.toUpperCase()}
           </div>
           <div className='email' title={user.email}>
-            <i className='mail icon'></i> <a href={`mailto:${user.email}`}>{user.email}</a>
+            <i className='mail icon' /> <a href={`mailto:${user.email}`}>{user.email}</a>
           </div>
         </div>
       </div>

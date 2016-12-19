@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 // Actions for redux container
 import ModalActions from '../../../modules/modal/modal.actions.js';
@@ -38,52 +39,56 @@ class Modal extends React.Component {
   closeModal() {
     $('#modal-form').find('.ui.error.message ul').remove();
     $('#modal-form').find('fields .error').removeClass('error').find('.prompt').remove();
-    const onClose = this.props.onClose;
-    onClose();
+    this.props.onClose();
   }
 
   render() {
     const modal = this.props.modal;
     const onClose = () => this.closeModal();
+    const modalClasses = classNames(
+      'ui',
+      { active: modal.isVisible },
+      'small modal'
+    );
     return (
-            <Rodal visible={modal.isVisible}
-                onClose={onClose}
-                showCloseButton={false}
-                animation={modal.animation}>
-                <div className='ui active small modal'>
-                    <i className='close circle icon' onClick={onClose}></i>
-                    <div className='header'>{modal.title}</div>
-                    <div className='content'>
-                        <div id='modal-form' className='ui form' ref='form'>
-                            {modal.form.hidden.map( input => (
-                                <input key={input.name} type='hidden' name={input.name} defaultValue={input.value}/>
-                            ))}
-                            {modal.form.lines.map( (line, index) => (
-                                <div key={index} className={line.class + ' fields'}>
-                                {line.fields.map(field => (
-                                    <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
-                                        <label>{field.label ? field.label : field.name}</label>
-                                        <div className='ui fluid input'>
-                                            <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value}/>
-                                        </div>
-                                    </div>
-                                ))}
-                                </div>
-                            ))}
-                            <div className='ui error message'></div>
-                        </div>
+      <Rodal visible={modal.isVisible}
+          onClose={onClose}
+          showCloseButton={false}
+          animation={modal.animation}>
+        <div className={modalClasses}>
+          <i className='close circle icon' onClick={onClose} />
+          <div className='header'>{modal.title}</div>
+          <div className='content'>
+            <div id='modal-form' className='ui form' ref='form'>
+              {modal.form.hidden.map( input => (
+                <input key={input.name} type='hidden' name={input.name} defaultValue={input.value}/>
+              ))}
+              {modal.form.lines.map( (line, index) => (
+                <div key={index} className={line.class + ' fields'}>
+                {line.fields.map(field => (
+                  <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
+                    <label>{field.label ? field.label : field.name}</label>
+                    <div className='ui fluid input'>
+                      <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value}/>
                     </div>
-                    <div className='actions'>
-                        <div className='ui black button' onClick={onClose}>
-                            Cancel
-                        </div>
-                        <div className='ui teal right labeled icon button' onClick={this.validate(modal, onClose)}>
-                            Validate
-                            <i className='checkmark icon'></i>
-                        </div>
-                    </div>
+                  </div>
+                ))}
                 </div>
-            </Rodal>
+              ))}
+              <div className='ui error message' />
+            </div>
+          </div>
+          <div className='actions'>
+            <div className='ui black button' onClick={onClose}>
+              Cancel
+            </div>
+            <div className='ui teal right labeled icon button' onClick={this.validate(modal, onClose)}>
+              Validate
+              <i className='checkmark icon' />
+            </div>
+          </div>
+        </div>
+      </Rodal>
     );
   }
 }

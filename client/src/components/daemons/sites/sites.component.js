@@ -54,9 +54,9 @@ class SitesComponent extends React.Component {
                   <div>
                     {site.title}
                     <span className='popup-actions'>
-                      <i onClick={() => changeFilter('site: ' + site.title)} className='teal search link icon'></i>
-                      <i onClick={() => onEdit(site, () => this.closePopup())} className='blue write link icon'></i>
-                      <i onClick={() => onDelete(site)} className='red trash link icon'></i>
+                      <i onClick={() => changeFilter('site: ' + site.title)} className='teal search link icon' />
+                      <i onClick={() => onEdit(site, () => this.closePopup())} className='blue write link icon' />
+                      <i onClick={() => onDelete(site)} className='red trash link icon' />
                     </span>
                   </div>
                 </Popup>

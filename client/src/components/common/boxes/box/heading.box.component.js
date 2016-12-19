@@ -33,10 +33,10 @@ class HeadingBox extends React.Component {
       <div className='box'>
         <div className='ui attached message box-header' onClick={() => this.toggle()}>
           <div className='header'>
-            <i className={icon}></i>
+            <i className={icon} />
             <span className='title'>{title}</span>
             <div className='ui right floated header'>
-                <i className={headerClasses}></i>
+                <i className={headerClasses} />
             </div>
           </div>
         </div>

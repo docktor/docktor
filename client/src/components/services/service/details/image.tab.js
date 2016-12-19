@@ -80,7 +80,7 @@ class ImageTab extends React.Component {
             );
           })}
           <div className='image-detail new layout horizontal justified'>
-            <div className='ui green small labeled icon button' onClick={() => this.onAdd()}><i className='plus icon'></i>Add Image</div>
+            <div className='ui green small labeled icon button' onClick={() => this.onAdd()}><i className='plus icon' />Add Image</div>
           </div>
       </div>
     );

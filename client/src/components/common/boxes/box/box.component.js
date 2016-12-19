@@ -120,7 +120,7 @@ class Box extends React.Component {
         })}
         <div className='button field'>
           <button className='ui red icon button' onClick={(event) => this.onRemoveLine(event, index)}>
-            <i className='trash icon'></i>
+            <i className='trash icon' />
           </button>
         </div>
       </div>
@@ -144,7 +144,7 @@ class Box extends React.Component {
                 );
               })}
               <div className='one wide field'>
-                <label></label>
+                <label />
               </div>
             </div>
           :
@@ -153,7 +153,7 @@ class Box extends React.Component {
         {this.state.lines.map((line, index) => {
           return this.renderLine(boxId, line, index);
         })}
-        <div className='ui green small labeled icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon'></i>{'Add ' + title}</div>
+        <div className='ui green small labeled icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon' />{'Add ' + title}</div>
       </HeadingBox>
     );
   }

@@ -45,7 +45,7 @@ export function requireAuthorization(Component, Roles) {
         return <Component {...this.props}/>;
       }
 
-      return <div></div>;
+      return <div />;
     }
     }
   AuthenticatedComponent.propTypes = {

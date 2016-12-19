@@ -59,7 +59,7 @@ class ChangeResetPasswordP extends React.Component {
                 {errorMessage &&
                     <p className='error api'>{errorMessage}</p>
                 }
-                <div className='ui error message'></div>
+                <div className='ui error message' />
                 <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Change password</button>
               </form>
           </div>

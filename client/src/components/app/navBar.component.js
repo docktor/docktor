@@ -41,7 +41,7 @@ class NavBarComponent extends React.Component {
     return (
       <div className='ui inverted fluid menu navbar'>
         <IndexLink to='/' className='item brand'>
-          <i className='large fitted doctor icon'></i>{' '}Docktor
+          <i className='large fitted doctor icon' />{' '}Docktor
         </IndexLink>
         {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
         {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
@@ -49,13 +49,13 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
-          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'></i></div> : ''}
+          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading' /></div> : ''}
           <div className='ui dropdown item'>
-            <i className='inverted large user icon'></i>{' ' + this.props.auth.user.displayName}
+            <i className='inverted large user icon' />{' ' + this.props.auth.user.displayName}
             <div className='menu'>
-              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className={'item ' + (isExportFetching ? 'disabled' : '')}><i className='download icon'></i>Export</a>}
-              <Link to='/settings' className='item'><i className='settings icon'></i>Settings</Link>
-              <a className='item' onClick={logout} ><i className='sign out icon'></i>Logout</a>
+              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className={'item ' + (isExportFetching ? 'disabled' : '')}><i className='download icon' />Export</a>}
+              <Link to='/settings' className='item'><i className='settings icon' />Settings</Link>
+              <a className='item' onClick={logout} ><i className='sign out icon' />Logout</a>
             </div>
           </div>
         </div>}

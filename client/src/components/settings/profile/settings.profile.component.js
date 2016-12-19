@@ -92,12 +92,12 @@ class ProfilePane extends React.Component {
             disabled={this._isDisabled(user) ? 'true' : ''}/>
           </div>
           <div className={'ui red labeled icon button button-block' + (user.isDeleting ? ' loading' : '')} tabIndex='0' onClick={() => this._removeAccount()}>
-            <i className='trash icon'></i>Remove your account
+            <i className='trash icon' />Remove your account
           </div>
           {!user.isFetching && user.errorMessage &&
               <p className='error api'>{user.errorMessage}</p>
           }
-          <div className='ui error message'></div>
+          <div className='ui error message' />
           {this._isDisabled(user) &&
               <p className='info api'>You can't edit your personal data because it's own by a LDAP provider</p>
           }
@@ -109,8 +109,8 @@ class ProfilePane extends React.Component {
         <Rodal visible={this.state.isRemovalModalVisible}
             onClose={() => this._closeRemoveAccountModal()}>
             <div className='ui active small modal'>
-                <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()}></i>
-                <div className='header'><i className='large trash icon'></i> Remove your account</div>
+                <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
+                <div className='header'><i className='large trash icon' /> Remove your account</div>
                 <div className='content'>
                     <h2>Are you sure to delete your account ?</h2>
                     <p>This action is irreversible and you will lose all your data</p>
@@ -121,7 +121,7 @@ class ProfilePane extends React.Component {
                     </div>
                     <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
                         Yes
-                        <i className='trash icon'></i>
+                        <i className='trash icon' />
                     </div>
                 </div>
             </div>

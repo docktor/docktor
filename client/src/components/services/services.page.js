@@ -34,8 +34,8 @@ class Services extends React.Component {
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal justified services-bar'>
           <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon'></i></div>
-            <i className='remove link icon' onClick={() => changeFilter('')}></i>
+            <div className='ui left corner label'><i className='search icon' /></div>
+            <i className='remove link icon' onClick={() => changeFilter('')} />
             <DebounceInput
               minLength={1}
               debounceTimeout={300}
@@ -45,7 +45,7 @@ class Services extends React.Component {
           </div>
           <div className='flex-2 layout horizontal end-justified'>
             <Link className='ui teal labeled icon button' to={'/services/new'}>
-              <i className='plus icon'></i>New Service
+              <i className='plus icon' />New Service
             </Link>
           </div>
         </div>

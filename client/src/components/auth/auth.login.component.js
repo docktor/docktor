@@ -47,7 +47,7 @@ class SigninPane extends React.Component {
           {errorMessage &&
               <p className='error api'>{errorMessage}</p>
           }
-          <div className='ui error message'></div>
+          <div className='ui error message' />
           <p className='forgot'><Link to='/reset_password'>Forgot Password?</Link></p>
           <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
         </form>

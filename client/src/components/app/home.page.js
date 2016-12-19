@@ -11,7 +11,7 @@ class HomeComponent extends React.Component {
     const { isAuthenticated } = this.props;
     var content;
     if (isAuthenticated) {
-      content = (<div></div>);
+      content = (<div />);
     } else {
       content = (<AuthPage/>);
     }

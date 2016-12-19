@@ -199,11 +199,11 @@ class ServiceComponent extends React.Component {
                   <div className='flex layout vertical start-justified service-details'>
                     <h1>
                       <Link to={'/services'}>
-                        <i className='arrow left icon'></i>
+                        <i className='arrow left icon' />
                       </Link>
                       {this.props.service.title || 'New Service'}
                       <button disabled={!service.id} onClick={() => this.props.onDelete(service)} className='ui red labeled icon button right-floated'>
-                        <i className='trash icon'></i>Remove
+                        <i className='trash icon' />Remove
                       </button>
                     </h1>
                     {this.renderTabular(service)}

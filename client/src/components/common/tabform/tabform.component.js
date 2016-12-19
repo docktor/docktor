@@ -45,7 +45,7 @@ class TabForm extends React.Component {
     }
     function title(childs, _this) {
       if (childs.length <= 1) {
-        return (<div></div>);
+        return (<div />);
       } else {
         return ( <ul className = 'tab-group' > {
                 childs.map(labels.bind(_this))

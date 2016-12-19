@@ -62,7 +62,7 @@ class ChangePasswordPane extends React.Component {
           {this._isDisabled(user) &&
               <p className='info api'>You can't change your password here because your user comes from a LDAP provider</p>
           }
-          <div className='ui error message'></div>
+          <div className='ui error message' />
           <button type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')} disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}</button>
         </form>
       </div>

@@ -43,7 +43,7 @@ class DaemonCard extends React.Component {
           <div className='content'>
             <div className='header'>
               <Link className='header' to={'/daemons/' + daemon.id}>
-                <i className='server icon'></i>{daemon.name}
+                <i className='server icon' />{daemon.name}
               </Link>
             </div>
             <div title={info ? info.message : ''} className={'ui top right attached' + (isFetching ? ' disabled' : '') + ' label ' + this.getColor(info)}>
@@ -56,7 +56,7 @@ class DaemonCard extends React.Component {
             if (fetching) {
               return (
                   <div className='ui bottom attached mini blue buttons'>
-                    <div className='ui button loading'></div>
+                    <div className='ui button loading' />
                   </div>
               );
             } else {
@@ -65,7 +65,7 @@ class DaemonCard extends React.Component {
                     <div className='ui button disabled'>{(info && info.nbImages ? info.nbImages : '0') + ' Image(s)'}</div>
                     <div className='ui button disabled'>{(info && info.nbContainers ? info.nbContainers : '0') + ' Container(s)'}</div>
                     <div className='ui icon button' onClick={fetchInfo(daemon, true)}>
-                      <i className='refresh icon'></i>
+                      <i className='refresh icon' />
                     </div>
                   </div>
               );

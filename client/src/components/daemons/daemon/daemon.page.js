@@ -132,7 +132,7 @@ class DaemonComponent extends React.Component {
     if (sites.isFetching || sites.didInvalidate) {
       return (
           <div className='ui loading fluid search selection dropdown'>
-            Sites loading...<i className='dropdown icon'></i>
+            Sites loading...<i className='dropdown icon' />
           </div>
       );
     } else {
@@ -140,7 +140,7 @@ class DaemonComponent extends React.Component {
       return (
         <div id='sites-dropdown' className='ui fluid search selection dropdown'>
           <input type='hidden' name='site' defaultValue={daemon.site}/>
-          <i className='dropdown icon'></i>
+          <i className='dropdown icon' />
           <div className='default text'>Select Site</div>
           <div className='menu'>
             {items.map(site => <div className='item' key={site.id} data-value={site.id}>{site.title}</div>)}
@@ -202,11 +202,11 @@ class DaemonComponent extends React.Component {
                   <div className='flex layout vertical start-justified daemon-details'>
                     <h1>
                       <Link to={'/daemons'}>
-                        <i className='arrow left icon'></i>
+                        <i className='arrow left icon' />
                       </Link>
                       {this.props.daemon.name || 'New Daemon'}
                       <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
-                        <i className='trash icon'></i>Remove
+                        <i className='trash icon' />Remove
                       </button>
                     </h1>
                     <form className='ui form daemon-form'>
@@ -246,7 +246,7 @@ class DaemonComponent extends React.Component {
                             <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
                                value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off'/>
                             <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
-                              <i className='help circle link icon' ></i>
+                              <i className='help circle link icon'  />
                             </div>
                           </div>
                         </div>
