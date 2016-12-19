@@ -105,7 +105,7 @@ class DaemonComponent extends React.Component {
     if (sites.isFetching || sites.didInvalidate) {
       return (
         <div className='ui loading fluid search selection dropdown'>
-          Sites loading…<i className='dropdown icon'></i>
+          Sites loading…<i className='dropdown icon' />
         </div>
       );
     } else {
@@ -233,7 +233,7 @@ class DaemonComponent extends React.Component {
                           <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
                             value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off' />
                           <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
-                            <i className='help circle link icon' ></i>
+                            <i className='help circle link icon'  />
                           </div>
                         </div>
                       </div>

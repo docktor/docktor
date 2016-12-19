@@ -8,7 +8,6 @@ import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 import TagsActions from './tags.actions.js';
 
 // Thunk to save a tag
-<<<<<<< HEAD
 const createTag = (form) => {
 
   let tag = Object.assign({}, form);
@@ -41,8 +40,6 @@ const createTag = (form) => {
 };
 
 // Thunk to save tag
-=======
->>>>>>> 430ffaf... wip
 const saveTag = (form) => {
 
   let tag = Object.assign({}, form);
@@ -54,13 +51,7 @@ const saveTag = (form) => {
 
     dispatch(TagsActions.requestSaveTag(tag));
 
-<<<<<<< HEAD
     let request = new Request(`/api/tags/${tag.id}`, withAuth({
-=======
-    const id = tag.id ? tag.id : '-1';
-
-    let request = new Request(`/api/tags/${id}`, withAuth({
->>>>>>> 430ffaf... wip
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -75,7 +66,6 @@ const saveTag = (form) => {
         dispatch(TagsActions.receiveTagSaved(response));
       })
       .catch(error => {
-<<<<<<< HEAD
         handleError(error, TagsActions.saveTagInvalid(tag), dispatch);
       });
   };
@@ -99,20 +89,13 @@ const deleteTag = (tag) => {
       })
       .catch(error => {
         handleError(error, TagsActions.deleteTagInvalid(tag), dispatch);
-=======
-        handleError(error, TagsActions.invalidRequestTags, dispatch);
->>>>>>> 430ffaf... wip
       });
   };
 };
 
 export default {
   ...generateEntitiesThunks('tags'),
-<<<<<<< HEAD
   createTag,
   saveTag,
   deleteTag
-=======
-  saveTag
->>>>>>> 430ffaf... wip
 };

@@ -108,7 +108,7 @@ class Modal extends React.Component {
       return (
           <div id={field.name} className='ui fluid selection dropdown'>
             <input type='hidden' name={field.name} />
-            <i className='dropdown icon'></i>
+            <i className='dropdown icon' />
             <div className='default text'>
               {field.desc}
             </div>

@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { WithContext as ReactTags } from 'react-tag-input';
 import UUID from 'uuid-js';
 
 // Thunks / Actions
@@ -151,13 +150,6 @@ class ServiceComponent extends React.Component {
         <CommandsBox commands={service.commands || []} ref='commands' boxId={UUID.create(4).hex}>
           <p>These commands will be available for this service to the users/admins of a group.</p>
         </CommandsBox>
-        <div className='tags'>
-          <div className='large ui label form-label'>Tags</div>
-          <ReactTags tags={this.state.tags}
-            handleDelete={(i) => this.handleDeleteTag(i)}
-            handleAddition={(tag) => this.handleAddTag(tag)}
-            handleDrag={(tag, currPos, newPos) => this.handleDragTag(tag, currPos, newPos)} />
-        </div>
       </div>
     );
   }
