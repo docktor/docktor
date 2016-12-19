@@ -114,3 +114,7 @@ input {
    pointer-events: none;
    cursor: default;
 }
+
+.dropdown.optgroup .divider {
+    border-top: none !important;
+}

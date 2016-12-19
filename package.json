@@ -70,6 +70,8 @@
     "classnames": "^2.2.5",
     "isomorphic-fetch": "^2.2.1",
     "leaflet": "^1.0.2",
+    "lodash.groupby": "^4.6.0",
+    "lodash.sortby": "^4.7.0",
     "md5": "^2.2.1",
     "moment": "^2.14.1",
     "react": "^15.3.2",

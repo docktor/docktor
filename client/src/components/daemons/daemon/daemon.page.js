@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { WithContext as ReactTags } from 'react-tag-input';
 import UUID from 'uuid-js';
 
 // Thunks / Actions
@@ -207,7 +206,7 @@ class DaemonComponent extends React.Component {
                       </div>
                       <div className='fourteen wide field'>
                         <label>Tags of the daemon</label>
-                        <TagsSelector selectedTags={daemon.tags || []} tags={tags} ref='tags' />
+                        <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={daemon.tags || []} tags={tags} ref='tags' />
                       </div>
                     </div>
 
@@ -297,7 +296,6 @@ DaemonComponent.propTypes = {
   daemonId: React.PropTypes.string,
   sites: React.PropTypes.object,
   tags: React.PropTypes.object,
-  newDaemon: React.PropTypes.func.isRequired,
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
