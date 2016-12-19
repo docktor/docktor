@@ -1,6 +1,8 @@
 import React from 'react';
 
 import classNames from 'classnames';
+import groupBy from 'lodash.groupby';
+import sortBy from 'lodash.sortby';
 
 class TagsSelector extends React.Component {
 
@@ -11,8 +13,7 @@ class TagsSelector extends React.Component {
   }
 
   componentDidMount() {
-    // FIXME: use a more specific selector
-    $('.ui.dropdown').dropdown({
+    $(`.${this.props.tagsSelectorId}.ui.dropdown`).dropdown({
       forceSelection: false,
       onAdd: this.onAddTag.bind(this),
       onRemove: this.onRemoveTag.bind(this)
@@ -38,23 +39,41 @@ class TagsSelector extends React.Component {
   // TODO: add isFormValid method
 
   render() {
-    // TODO: sorting
-    const tags = this.props.tags;
+    const { tags, selectedTags, tagsSelectorId } = this.props;
+
+    // Create an object indexing the tags by their category
+    // This allows to easily add a divider with the name of the category in the dropdown
+    const tagsItems = Object.values(tags.items) || [];
+    const sortedTagsItems = sortBy(tagsItems, t => t.name.raw);
+    const groupedTagItems = groupBy(sortedTagsItems, (t => t.category.raw));
+
+    const dropdownItems = [];
+    Object.keys(groupedTagItems).forEach(category => {
+      dropdownItems.push(
+        <div key={category} className='ui horizontal divider'>
+          {category}
+        </div>
+      );
+
+      groupedTagItems[category].forEach(tag => {
+        dropdownItems.push(
+          <div key={tag.id} className='item' data-value={tag.id}>
+            {tag.name.raw}
+          </div>
+        );
+      });
+    });
+
     const loading = tags.isFetching || tags.didInvalidate;
-    const classes = classNames('ui fluid multiple search selection dropdown', { loading });
+    const classes = classNames('ui fluid multiple search selection dropdown optgroup', tagsSelectorId, { loading });
 
     return (
       <div className={classes}>
-        <input name='tags' type='hidden' defaultValue={this.props.selectedTags.join(',')} />
+        <input name='tags' type='hidden' defaultValue={selectedTags.join(',')} />
         <i className='dropdown icon'></i>
         <div className='default text'>{loading ? 'Loading tags…' : 'Tags'}</div>
         <div className='menu'>
-          {
-            loading || Object.values(tags.items).map(tag => (
-            <div key={tag.id} className='item' data-value={tag.id}>
-              {tag.category.raw} &mdash; {tag.name.raw}
-            </div>
-          ))}
+          {loading || dropdownItems}
         </div>
       </div>
     );
@@ -62,6 +81,7 @@ class TagsSelector extends React.Component {
 }
 
 TagsSelector.propTypes = {
+  tagsSelectorId: React.PropTypes.string.isRequired,
   tags: React.PropTypes.object,
   selectedTags: React.PropTypes.array
 };
