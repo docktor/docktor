@@ -1,9 +1,10 @@
 // React
 import React from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { goBack } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
+import UUID from 'uuid-js';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
@@ -12,8 +13,8 @@ import DaemonActions from '../../../modules/daemons/daemon/daemon.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
-import VolumesBox from '../../common/volumes.box.component.js';
-import VariablesBox from '../../common/variables.box.component.js';
+import VolumesBox from '../../common/boxes/volumes.box.component.js';
+import VariablesBox from '../../common/boxes/variables.box.component.js';
 
 // Style
 import './daemon.page.scss';
@@ -48,12 +49,7 @@ class DaemonComponent extends React.Component {
       this.props.fetchDaemon(daemonId);
     } else {
       // New daemon
-      this.props.newDaemon();
       $('.ui.form.daemon-form').form('clear');
-      const volumesBox = this.refs.volumes;
-      volumesBox.setState({ volumes: [] });
-      const variablesBox = this.refs.variables;
-      variablesBox.setState({ variables: [] });
       this.refs.scrollbars.scrollTop();
     }
   }
@@ -205,11 +201,11 @@ class DaemonComponent extends React.Component {
                 :
                   <div className='flex layout vertical start-justified daemon-details'>
                     <h1>
-                      <a onClick={()=> this.props.backTo()}>
+                      <Link to={'/daemons'}>
                         <i className='arrow left icon'></i>
-                      </a>
+                      </Link>
                       {this.props.daemon.name || 'New Daemon'}
-                      <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red button right-floated'>
+                      <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
                         <i className='trash icon'></i>Remove
                       </button>
                     </h1>
@@ -259,7 +255,7 @@ class DaemonComponent extends React.Component {
                         <div className='two wide field'>
                           <div className='large ui label form-label'>Docker</div>
                         </div>
-                        <div className='two wide field required'>
+                        <div className='three wide field required'>
                           <label>Protocol</label>
                           <select id='protocol-dropdown' name='protocol' value={daemon.protocol || ''} onChange={event => this.onChangeProperty(event.target.value, 'protocol')}
                             className='ui fluid dropdown'>
@@ -268,7 +264,7 @@ class DaemonComponent extends React.Component {
                             <option value='https'>HTTPS</option>
                           </select>
                         </div>
-                        <div className='six wide field required'>
+                        <div className='five wide field required'>
                           <label>Hostname</label>
                           <input type='text' name='host' value={daemon.host || ''} onChange={event => this.onChangeProperty(event.target.value, 'host')}
                             placeholder='Hostname or IP' autoComplete='off'/>
@@ -286,10 +282,10 @@ class DaemonComponent extends React.Component {
                       </div>
                       {this.renderCertificates(daemon)}
                     </form>
-                    <VolumesBox volumes={daemon.volumes} ref='volumes'>
+                    <VolumesBox volumes={daemon.volumes} ref='volumes' boxId={UUID.create(4).hex}>
                       <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
                     </VolumesBox>
-                    <VariablesBox variables={daemon.variables} ref='variables'>
+                    <VariablesBox variables={daemon.variables} ref='variables' boxId={UUID.create(4).hex}>
                       <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
                     </VariablesBox>
                     <div className='tags'>
@@ -315,20 +311,21 @@ DaemonComponent.propTypes = {
   isFetching: React.PropTypes.bool,
   daemonId: React.PropTypes.string,
   sites: React.PropTypes.object,
-  newDaemon: React.PropTypes.func.isRequired,
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
-  backTo: React.PropTypes.func,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
+  const paramId = ownProps.params.id;
+  const daemon = state.daemon;
+  const emptyDaemon = { volumes:[], variables:[] };
   return {
-    daemon: state.daemon.item,
-    isFetching: state.daemon.isFetching,
-    daemonId: ownProps.params.id,
+    daemon: paramId ? daemon.item : emptyDaemon,
+    isFetching: daemon.isFetching,
+    daemonId: paramId,
     sites: state.sites
   };
 };
@@ -337,9 +334,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchDaemon: (id) => dispatch(DaemonThunks.fetchDaemon(id)),
-    newDaemon: () => dispatch(DaemonActions.newDaemon()),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
-    backTo: () => dispatch(goBack()),
     onSave: (daemon) => dispatch(DaemonThunks.saveDaemon(daemon)),
     onDelete: daemon => {
       const callback = () => dispatch(DaemonThunks.deleteDaemon(daemon.id));

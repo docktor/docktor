@@ -17,7 +17,6 @@ func (r *Repo) Save(service types.Service) (types.Service, error) {
 	if service.ID.Hex() == "" {
 		service.ID = bson.NewObjectId()
 	}
-
 	_, err := r.Coll.UpsertId(service.ID, bson.M{"$set": service})
 	return service, err
 }

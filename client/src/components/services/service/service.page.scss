@@ -13,7 +13,7 @@ $normal: 400;
 $bold: 600;
 $br: 4px;
 
-.daemon-details {
+.service-details {
 
   background: rgba($form-bg, .9);
   margin: 2em;
@@ -22,10 +22,27 @@ $br: 4px;
   padding: 2em 5em;
   width: 70%;
 
+  .tabular-details {
+    margin-bottom: 2rem;
+    > .nonpadded {
+      padding: 0;
+    }
+
+    > .padded {
+      padding: 2em;
+    }
+  }
+  .ui.form.service-form {
+    > .fields > .field > label {
+      color: rgba(0, 0, 0, .95) !important;
+    }
+
+  }
+
   h1 {
     color: $white;
     font-weight: $thin;
-    margin: 0 0 30px;
+    margin-bottom: 2rem;
     text-transform: uppercase;
 
     .right-floated {
@@ -89,7 +106,7 @@ $br: 4px;
     .ui.label {
       width: calc(12.5% - 1.5em);
       margin-top: 0;
-      margin-bottom: 1em !important;
+      margin-bottom: 0em !important;
       @media only screen and (max-width: 767px) {
         margin-bottom: .5em !important;
       }
@@ -129,7 +146,6 @@ $br: 4px;
 
     .ReactTags__selected {
       width: 100%;
-      margin-bottom: 1em;
 
       .ReactTags__tag {
         border: 1px solid #ddd;
@@ -154,7 +170,7 @@ $br: 4px;
 
       ul {
         list-style-type: none;
-        box-shadow: 0.05em .01em .5em rgba(0, 0, 0, .2);
+        box-shadow: .05em .01em .5em rgba(0, 0, 0, .2);
         background: white;
         width: 200px;
 

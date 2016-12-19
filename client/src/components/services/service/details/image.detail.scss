@@ -1,0 +1,15 @@
+.docker.images {
+  .image-detail {
+    & > div {
+        padding: 1em !important;
+    }
+
+    &:nth-of-type(even) {
+      background-color: rgba(0,0,50,.05);
+    }
+
+    .images-boxes.hidden {
+      display: none;
+    }
+  }
+}

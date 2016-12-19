@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // VariablesBox is a list of docker variables
 class VariablesBox extends React.Component {
@@ -23,9 +23,10 @@ class VariablesBox extends React.Component {
 
   render() {
     const form = { fields:[] };
+    const allowEmpty = this.props.allowEmpty;
 
     form.getTitle = (variable) => {
-      return '-e ' + variable.name + '=' + variable.value;
+      return '-e ' + variable.name + '=' + (variable.value || (allowEmpty ? '<Default Value>' : '' ));
     };
 
     form.fields.push({
@@ -38,10 +39,10 @@ class VariablesBox extends React.Component {
 
     form.fields.push({
       name: 'value',
-      label: 'Variable Value',
+      label: allowEmpty ? 'Default Value' : 'Variable Value',
       placeholder: 'The environment variable value',
       sizeClass: 'five wide',
-      isRequired: true
+      isRequired: !allowEmpty
     });
 
     form.fields.push({
@@ -56,10 +57,11 @@ class VariablesBox extends React.Component {
     return (
       <Box
         ref='variablesBox'
-        boxId='Variables'
+        boxId={this.props.boxId}
         icon='large setting icon'
         title='Variables' form={form}
         lines={this.props.variables}
+        stacked={this.props.stacked}
         onChange={variables => this.onChangeVariables(variables)}>
         {this.props.children || ''}
       </Box>
@@ -68,7 +70,10 @@ class VariablesBox extends React.Component {
 }
 
 VariablesBox.propTypes = {
+  boxId: React.PropTypes.string,
   variables: React.PropTypes.array,
+  allowEmpty: React.PropTypes.bool,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

@@ -18,7 +18,6 @@ type Service struct {
 	Commands Commands      `bson:"commands" json:"commands"`
 	URLs     URLs          `bson:"urls" json:"urls"`
 	Jobs     Jobs          `bson:"jobs" json:"jobs"`
-	User     bson.ObjectId `bson:"user" json:"user"`
 }
 
 // AddImage adds an Image to the Service

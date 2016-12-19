@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // VolumesBox is a list of docker volumes
 class VolumesBox extends React.Component {
@@ -23,17 +23,20 @@ class VolumesBox extends React.Component {
 
   render() {
     const form = { fields:[] };
+    const allowEmpty = this.props.allowEmpty;
 
     form.getTitle = (volume) => {
-      return '-v ' + volume.external + ':' + volume.internal + ':' + volume.rights;
+      const external = volume.external || (allowEmpty ? '<Default Value>' : '' );
+      const rights = volume.rights || 'rw';
+      return '-v ' + external + ':' + volume.internal + ':' + rights;
     };
 
     form.fields.push({
       name: 'external',
-      label: 'External Volume',
+      label: allowEmpty ? 'Default Value' : 'External Volume',
       placeholder: 'The default volume on host',
       sizeClass: 'five wide',
-      isRequired: true
+      isRequired: !allowEmpty
     });
 
     form.fields.push({
@@ -53,6 +56,7 @@ class VolumesBox extends React.Component {
         { value:'ro', name:'Read-only' },
         { value:'rw', name:'Read-write' }
       ],
+      default: 'rw',
       type: 'select'
     });
 
@@ -68,10 +72,11 @@ class VolumesBox extends React.Component {
     return (
       <Box
         ref='volumesBox'
-        boxId='Volumes'
+        boxId={this.props.boxId}
         icon='large folder open icon'
         title='Volumes' form={form}
         lines={this.props.volumes}
+        stacked={this.props.stacked}
         onChange={volumes => this.onChangeVolumes(volumes)}>
         {this.props.children || ''}
       </Box>
@@ -80,7 +85,10 @@ class VolumesBox extends React.Component {
 };
 
 VolumesBox.propTypes = {
+  boxId: React.PropTypes.string,
   volumes: React.PropTypes.array,
+  allowEmpty: React.PropTypes.bool,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

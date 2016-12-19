@@ -13,6 +13,7 @@ import daemons from './modules/daemons/daemons.reducer.js';
 import daemon from './modules/daemons/daemon/daemon.reducer.js';
 import groups from './modules/groups/groups.reducer.js';
 import services from './modules/services/services.reducer.js';
+import service from './modules/services/service/service.reducer.js';
 import users from './modules/users/users.reducer.js';
 import toasts from './modules/toasts/toasts.reducer.js';
 import modal from './modules/modal/modal.reducer.js';
@@ -26,6 +27,7 @@ import DaemonsPage from './components/daemons/daemons.page.js';
 import DaemonPage from './components/daemons/daemon/daemon.page.js';
 import GroupsPage from './components/groups/groups.page.js';
 import ServicesPage from './components/services/services.page.js';
+import ServicePage from './components/services/service/service.page.js';
 
 import SettingsPage from './components/settings/settings.page.js';
 import UsersPage from './components/users/users.page.js';
@@ -52,6 +54,7 @@ const store = createStore(
       daemon,
       groups,
       services,
+      service,
       users,
       toasts,
       modal,
@@ -83,7 +86,11 @@ ReactDOM.render(
           <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
         </Route>
         <Route path='groups' component={requireAuthorization(GroupsPage)}/>
-        <Route path='services' component={requireAuthorization(ServicesPage)} />
+        <Route path='services'>
+          <IndexRoute component={requireAuthorization(ServicesPage)}/>
+          <Route path='new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])}/>
+          <Route path=':id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])}/>
+        </Route>
         <Route path='users' component={requireAuthorization(UsersPage)} />
         <Route path='settings' component={requireAuthorization(SettingsPage)} />
         <Route path='login' component={AuthPage} />

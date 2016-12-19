@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
 
-import TabForm from '../common/tabform.component.js';
+import TabForm from '../common/tabform/tabform.component.js';
 import Signin from './auth.login.component.js';
 import Register from './auth.register.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';

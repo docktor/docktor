@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {
@@ -51,19 +51,21 @@ class CommandsBox extends React.Component {
       sizeClass: 'three wide',
       isRequired: true,
       options: [
-        { value:'admin', name:'Admin Role' },
-        { value:'user', name:'User Role' }
+        { value:'moderator', name:'Moderators' },
+        { value:'member', name:'Members' }
       ],
+      default: 'member',
       type: 'select'
     });
 
     return (
       <Box
         ref='commandsBox'
-        boxId='Commands'
+        boxId={this.props.boxId}
         icon='large terminal icon'
         title='Commands' form={form}
         lines={this.props.commands}
+        stacked={this.props.stacked}
         onChange={commands => this.onChangeCommands(commands)}>
         {this.props.children || ''}
       </Box>
@@ -72,7 +74,9 @@ class CommandsBox extends React.Component {
 }
 
 CommandsBox.propTypes = {
+  boxId: React.PropTypes.string,
   commands: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // URLsBox is a list of docker urls
 class URLsBox extends React.Component {
@@ -47,10 +47,11 @@ class URLsBox extends React.Component {
     return (
       <Box
         ref='urlsBox'
-        boxId='URLs'
+        boxId={this.props.boxId}
         icon='large linkify icon'
         title='URLs' form={form}
         lines={this.props.urls}
+        stacked={this.props.stacked}
         onChange={urls => this.onChangeURLs(urls)}>
         {this.props.children || ''}
       </Box>
@@ -59,7 +60,9 @@ class URLsBox extends React.Component {
 }
 
 URLsBox.propTypes = {
+  boxId: React.PropTypes.string,
   urls: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

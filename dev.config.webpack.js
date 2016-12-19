@@ -45,10 +45,10 @@ var devConfig = {
       { test: /\.js$/, loader: 'source-map' },
   ],
   resolve: {
-      alias: {
-        jquery: bowerComponents + '/jquery/dist/jquery.js'
-      },
-      modulesDirectories: ['node_modules', 'bower_components']
+    alias: {
+      jquery: bowerComponents + '/jquery/dist/jquery.js'
+    },
+    modulesDirectories: ['node_modules', 'bower_components']
   },
   plugins: [
     new webpack.ProvidePlugin({

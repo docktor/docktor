@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 
-import Box from './boxes/box.component.js';
+import Box from './box/box.component.js';
 
 // JobsBox is a list of jobs
 class JobsBox extends React.Component {
@@ -77,10 +77,11 @@ class JobsBox extends React.Component {
     return (
       <Box
         ref='jobsBox'
-        boxId='Jobs'
+        boxId={this.props.boxId}
         icon='large checked calendar icon'
         title='Jobs' form={form}
         lines={this.props.jobs}
+        stacked={this.props.stacked}
         onChange={jobs => this.onChangeJobs(jobs)}>
         {this.props.children || ''}
       </Box>
@@ -89,7 +90,9 @@ class JobsBox extends React.Component {
 }
 
 JobsBox.propTypes = {
+  boxId: React.PropTypes.string,
   jobs: React.PropTypes.array,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element

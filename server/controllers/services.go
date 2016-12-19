@@ -43,7 +43,7 @@ func (s *Services) Save(c echo.Context) error {
 //Delete service into docktor
 func (s *Services) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
-	id := c.Param("id")
+	id := c.Param("serviceID")
 	res, err := docktorAPI.Services().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove service: %v", err))

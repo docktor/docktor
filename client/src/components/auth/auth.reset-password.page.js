@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import TabForm from '../common/tabform.component.js';
+import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class ResetPwdComponent extends React.Component {

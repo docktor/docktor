@@ -1,10 +1,7 @@
 .box-component {
-  margin: 0 0 1em !important;
 
-  .fields {
-    .field {
-      padding: .25 !important;
-    }
+  &.ui.form > p {
+    margin: 0em 0em 1em;
   }
 
   .fields,

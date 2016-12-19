@@ -1,4 +1,4 @@
-import DaemonConstants from './daemon.constants.js';
+import ServiceConstants from './service.constants.js';
 
 const initialState = {
   isFetching: false,
@@ -6,39 +6,39 @@ const initialState = {
   item: { volumes:[], variables:[] }
 };
 
-const daemonReducer = (state = initialState, action) => {
+const serviceReducer = (state = initialState, action) => {
   switch (action.type) {
-  case DaemonConstants.INVALID_REQUEST_DAEMON:
+  case ServiceConstants.INVALID_REQUEST_SERVICE:
     return Object.assign({}, state, {
       isFetching: false,
       didInvalidate: true
     });
-  case DaemonConstants.REQUEST_DAEMON:
+  case ServiceConstants.REQUEST_SERVICE:
     return Object.assign({}, state, {
       isFetching: true,
       didInvalidate: false,
       item: {}
     });
-  case DaemonConstants.RECEIVE_DAEMON:
+  case ServiceConstants.RECEIVE_SERVICE:
     return Object.assign({}, state, {
       isFetching: false,
-      item: action.daemon
+      item: action.service
     });
-  case DaemonConstants.REQUEST_SAVE_DAEMON:
+  case ServiceConstants.REQUEST_SAVE_SERVICE:
     return Object.assign({}, state, {
       isFetching: true,
       didInvalidate: false
     });
-  case DaemonConstants.DAEMON_SAVED:
-    let newDaemonState = Object.assign({}, state, {
+  case ServiceConstants.SERVICE_SAVED:
+    let newServiceState = Object.assign({}, state, {
       isFetching: false,
       didInvalidate: false,
-      item : action.daemon
+      item : action.service
     });
-    return newDaemonState;
+    return newServiceState;
   default:
     return state;
   }
 };
 
-export default daemonReducer;
+export default serviceReducer;

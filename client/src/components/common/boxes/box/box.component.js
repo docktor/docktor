@@ -73,7 +73,7 @@ class Box extends React.Component {
     return (
       <div key={field.name + index} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
         <label className='hidden'>{field.label}</label>
-        <select title={popup} value={line[field.name]} className='ui fluid dropdown'
+        <select title={popup} value={line[field.name] || field.default || ''} className='ui fluid dropdown'
             onChange={(event) => this.onChangeLine(event, index, field.name)} data-validate={field.name + index}>
           <option value='' disabled>{field.placeholder}</option>
           {field.options.map(option => {
@@ -129,12 +129,9 @@ class Box extends React.Component {
 
 
   render() {
-    const boxId = this.props.boxId;
-    const title = this.props.title;
-    const icon = this.props.icon;
-    const form = this.props.form;
+    const { boxId, title, icon, form, stacked } = this.props;
     return (
-      <HeadingBox className={boxId + ' box-component ui form'} icon={icon} title={title}>
+      <HeadingBox className={boxId + ' box-component ui form'} icon={icon} title={title} stacked={stacked}>
         {this.props.children || ''}
         {
           this.state.lines.length ?
@@ -156,7 +153,7 @@ class Box extends React.Component {
         {this.state.lines.map((line, index) => {
           return this.renderLine(boxId, line, index);
         })}
-        <div className='ui green small right folder open icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon'></i>{'Add ' + title}</div>
+        <div className='ui green small labeled icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon'></i>{'Add ' + title}</div>
       </HeadingBox>
     );
   }
@@ -168,6 +165,7 @@ Box.propTypes = {
   icon: React.PropTypes.string.isRequired,
   lines: React.PropTypes.array.isRequired,
   form: React.PropTypes.object.isRequired,
+  stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.element
