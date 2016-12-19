@@ -43,8 +43,25 @@ const openEditSiteModal = (site, callback) => {
   };
 };
 
+// New Tag Modal
+const openNewTagModal = (availableRights, availableCategories, callback) => {
+  let form = { lines: [], hidden: [] };
+  let line = { class: 'three', fields: [] };
+  line.fields.push({ label: 'Name', name: 'name', desc: 'xxx', type: 'text', required: true });
+  line.fields.push({ label: 'Category', name: 'category', desc: 'xx', type: 'text', required: true });
+  line.fields.push({ label: 'Rights', name: 'rights', desc: 'xx', type: 'dropdown', options: availableRights, required: true });
+  form.lines.push(line);
+  return {
+    type: ModalConstants.OPEN_MODAL,
+    title: 'New Tag',
+    form,
+    callback
+  };
+};
+
 export default {
   closeModal,
   openNewSiteModal,
-  openEditSiteModal
+  openEditSiteModal,
+  openNewTagModal
 };

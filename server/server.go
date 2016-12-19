@@ -86,11 +86,11 @@ func New(version string) {
 		tagsAPI := api.Group("/tags")
 		{
 			tagsAPI.GET("", tagsC.GetAll)
+			tagsAPI.POST("", tagsC.Save)
 			tagAPI := tagsAPI.Group("/:id")
 			{
 				tagAPI.Use(isValidID("id"), isAdmin)
 				tagAPI.DELETE("", tagsC.Delete)
-				tagAPI.PUT("", tagsC.Save)
 			}
 		}
 
