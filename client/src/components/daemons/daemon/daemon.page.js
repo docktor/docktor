@@ -307,7 +307,7 @@ DaemonComponent.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
   const daemon = state.daemon;
-  const emptyDaemon = { volumes: [], variables: [] };
+  const emptyDaemon = { volumes: [], variables: [], tags: [] };
   return {
     daemon: paramId ? daemon.item : emptyDaemon,
     isFetching: daemon.isFetching,

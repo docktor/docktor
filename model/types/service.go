@@ -11,13 +11,14 @@ import (
 
 // Service defines a CDK service
 type Service struct {
-	ID       bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
-	Created  time.Time     `bson:"created" json:"created"`
-	Title    string        `bson:"title" json:"title"`
-	Images   Images        `bson:"images" json:"images"`
-	Commands Commands      `bson:"commands" json:"commands"`
-	URLs     URLs          `bson:"urls" json:"urls"`
-	Jobs     Jobs          `bson:"jobs" json:"jobs"`
+	ID       bson.ObjectId   `bson:"_id,omitempty" json:"id,omitempty"`
+	Created  time.Time       `bson:"created" json:"created"`
+	Title    string          `bson:"title" json:"title"`
+	Images   Images          `bson:"images" json:"images"`
+	Commands Commands        `bson:"commands" json:"commands"`
+	URLs     URLs            `bson:"urls" json:"urls"`
+	Jobs     Jobs            `bson:"jobs" json:"jobs"`
+	Tags     []bson.ObjectId `bson:"tags" json:"tags"`
 }
 
 // AddImage adds an Image to the Service
