@@ -14,6 +14,7 @@ import './service.card.component.scss';
 class ServiceCard extends React.Component {
   render() {
     const service = this.props.service;
+    const nbImages = service.images.length;
     return (
         <div className='ui card service'>
           <div className='content'>
@@ -25,7 +26,7 @@ class ServiceCard extends React.Component {
               {moment(service.created).fromNow()}
             </span>
             <i className='file archive outline icon' />
-            {service.images.length + ' image(s)'}
+            {`${nbImages} ${nbImages > 1 ? 'Images' : 'Image'}`}
           </div>
         </div>
     );
