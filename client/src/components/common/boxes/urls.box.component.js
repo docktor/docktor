@@ -47,7 +47,7 @@ class URLsBox extends React.Component {
     return (
       <Box
         ref='urlsBox'
-        boxId='URLs'
+        boxId={this.props.boxId}
         icon='large linkify icon'
         title='URLs' form={form}
         lines={this.props.urls}
@@ -60,6 +60,7 @@ class URLsBox extends React.Component {
 }
 
 URLsBox.propTypes = {
+  boxId: React.PropTypes.string,
   urls: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

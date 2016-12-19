@@ -63,7 +63,7 @@ class PortsBox extends React.Component {
     return (
       <Box
         ref='portsBox'
-        boxId='Ports'
+        boxId={this.props.boxId}
         icon='large sitemap icon'
         title='Ports' form={form}
         lines={this.props.ports}
@@ -76,6 +76,7 @@ class PortsBox extends React.Component {
 }
 
 PortsBox.propTypes = {
+  boxId: React.PropTypes.string,
   ports: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

@@ -77,7 +77,7 @@ class JobsBox extends React.Component {
     return (
       <Box
         ref='jobsBox'
-        boxId='Jobs'
+        boxId={this.props.boxId}
         icon='large checked calendar icon'
         title='Jobs' form={form}
         lines={this.props.jobs}
@@ -90,6 +90,7 @@ class JobsBox extends React.Component {
 }
 
 JobsBox.propTypes = {
+  boxId: React.PropTypes.string,
   jobs: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

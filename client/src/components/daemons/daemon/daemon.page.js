@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
+import UUID from 'uuid-js';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
@@ -204,7 +205,7 @@ class DaemonComponent extends React.Component {
                         <i className='arrow left icon'></i>
                       </Link>
                       {this.props.daemon.name || 'New Daemon'}
-                      <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red button right-floated'>
+                      <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
                         <i className='trash icon'></i>Remove
                       </button>
                     </h1>
@@ -281,10 +282,10 @@ class DaemonComponent extends React.Component {
                       </div>
                       {this.renderCertificates(daemon)}
                     </form>
-                    <VolumesBox volumes={daemon.volumes} ref='volumes'>
+                    <VolumesBox volumes={daemon.volumes} ref='volumes' boxId={UUID.create(4).hex}>
                       <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
                     </VolumesBox>
-                    <VariablesBox variables={daemon.variables} ref='variables'>
+                    <VariablesBox variables={daemon.variables} ref='variables' boxId={UUID.create(4).hex}>
                       <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
                     </VariablesBox>
                     <div className='tags'>

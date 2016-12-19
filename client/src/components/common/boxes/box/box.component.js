@@ -153,7 +153,7 @@ class Box extends React.Component {
         {this.state.lines.map((line, index) => {
           return this.renderLine(boxId, line, index);
         })}
-        <div className='ui green small right folder open icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon'></i>{'Add ' + title}</div>
+        <div className='ui green small labeled icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon'></i>{'Add ' + title}</div>
       </HeadingBox>
     );
   }

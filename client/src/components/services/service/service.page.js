@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { WithContext as ReactTags } from 'react-tag-input';
+import UUID from 'uuid-js';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
@@ -16,7 +17,7 @@ import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 import CommandsBox from '../../common/boxes/commands.box.component.js';
 import URLsBox from '../../common/boxes/urls.box.component.js';
 import JobsBox from '../../common/boxes/jobs.box.component.js';
-import ImageDetails from './images-details/image.component.js';
+import ImageTab from './details/image.tab.js';
 
 // Style
 import './service.page.scss';
@@ -107,8 +108,9 @@ class ServiceComponent extends React.Component {
     const commandsBox = this.refs.commands;
     const urlsBox = this.refs.urls;
     const jobsBox = this.refs.jobs;
+    const imagesBoxes = this.refs.images;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
-    let formValid = commandsBox.isFormValid() & urlsBox.isFormValid() & jobsBox.isFormValid() & this.isFormValid();
+    let formValid = commandsBox.isFormValid() & urlsBox.isFormValid() & jobsBox.isFormValid() & imagesBoxes.isFormValid() & this.isFormValid();
     if (formValid) {
       const tags = this.state.tags.map(tag => tag.text);
       const service = {
@@ -119,9 +121,9 @@ class ServiceComponent extends React.Component {
         jobs: jobsBox.state.jobs,
         commands: commandsBox.state.commands,
         tags: tags,
+        images: imagesBoxes.getImages()
       };
-      console.log(service);
-      //this.props.onSave(service);
+      this.props.onSave(service);
     }
   }
 
@@ -140,13 +142,13 @@ class ServiceComponent extends React.Component {
           </div>
           </div>
         </form>
-        <URLsBox urls={service.urls || []} ref='urls'>
+        <URLsBox urls={service.urls || []} ref='urls' boxId={UUID.create(4).hex}>
           <p>These URLs are used to generate quick access to a service on a group.</p>
         </URLsBox>
-        <JobsBox jobs={service.jobs || []} ref='jobs'>
+        <JobsBox jobs={service.jobs || []} ref='jobs' boxId={UUID.create(4).hex}>
           <p>These Jobs are used to make checks on the service asynchronously.</p>
         </JobsBox>
-        <CommandsBox commands={service.commands || []} ref='commands'>
+        <CommandsBox commands={service.commands || []} ref='commands' boxId={UUID.create(4).hex}>
           <p>These commands will be available for this service to the users/admins of a group.</p>
         </CommandsBox>
         <div className='tags'>
@@ -163,7 +165,7 @@ class ServiceComponent extends React.Component {
   renderImagesTab(service) {
     return (
       <div className='ui tab segment nonpadded' data-tab='images'>
-        <ImageDetails scrollbars={this.refs.scrollbars} images={service.images} />
+        <ImageTab scrollbars={this.refs.scrollbars} images={service.images} ref='images' />
       </div>
     );
   }
@@ -200,7 +202,7 @@ class ServiceComponent extends React.Component {
                         <i className='arrow left icon'></i>
                       </Link>
                       {this.props.service.title || 'New Service'}
-                      <button disabled={!service.id} onClick={() => this.props.onDelete(service)} className='ui red button right-floated'>
+                      <button disabled={!service.id} onClick={() => this.props.onDelete(service)} className='ui red labeled icon button right-floated'>
                         <i className='trash icon'></i>Remove
                       </button>
                     </h1>
@@ -241,7 +243,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchService: id => dispatch(ServiceThunks.fetchService(id)),
-    onSave: serviceId => dispatch(ServiceThunks.saveService(service)),
+    onSave: service => dispatch(ServiceThunks.saveService(service)),
     onDelete: service => {
       const callback = () => dispatch(ServiceThunks.deleteService(service.id));
       dispatch(ToastsActions.confirmDeletion(service.title, callback));

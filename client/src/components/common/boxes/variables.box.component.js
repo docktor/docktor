@@ -57,7 +57,7 @@ class VariablesBox extends React.Component {
     return (
       <Box
         ref='variablesBox'
-        boxId='Variables'
+        boxId={this.props.boxId}
         icon='large setting icon'
         title='Variables' form={form}
         lines={this.props.variables}
@@ -70,6 +70,7 @@ class VariablesBox extends React.Component {
 }
 
 VariablesBox.propTypes = {
+  boxId: React.PropTypes.string,
   variables: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
   stacked: React.PropTypes.bool,

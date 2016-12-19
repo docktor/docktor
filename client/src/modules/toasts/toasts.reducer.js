@@ -80,7 +80,7 @@ const toastsReducer = (state = initialState, action) => {
 
 const createInvalidReqLoginToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot login because of technical error',
     message: action.error,
@@ -93,7 +93,7 @@ const createInvalidReqLoginToast = (state, action) => {
 
 const createInvalidReqRegisterToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot register because of technical error',
     message: action.error,
@@ -107,7 +107,7 @@ const createInvalidReqRegisterToast = (state, action) => {
 
 const createInvalidReqExportToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot generate an export because of technical error',
     message: action.error,
@@ -120,7 +120,7 @@ const createInvalidReqExportToast = (state, action) => {
 
 const createInvalidReqToast = (state, action, api) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: `Error on ${api} API`,
     message: action.error,
@@ -133,7 +133,7 @@ const createInvalidReqToast = (state, action, api) => {
 
 const createinvalidDeleteUserToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: `Can not delete user ${action.user.username}`,
     message: action.error,
@@ -146,7 +146,7 @@ const createinvalidDeleteUserToast = (state, action) => {
 
 const createInvalidSaveUserToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot save user ' + action.user.username,
     message: action.error,
@@ -159,7 +159,7 @@ const createInvalidSaveUserToast = (state, action) => {
 
 const createInvalidReqResetPasswordToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot reset password because technical error happened',
     message: action.error,
@@ -172,7 +172,7 @@ const createInvalidReqResetPasswordToast = (state, action) => {
 
 const createSuccessfulResetPasswordToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Password successfuly reset',
     message: 'Your password has been successfully reset. You should see an email coming with details to set a new one',
@@ -185,7 +185,7 @@ const createSuccessfulResetPasswordToast = (state, action) => {
 
 const createInvalidReqChangePasswordToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot change password',
     message: action.error,
@@ -198,7 +198,7 @@ const createInvalidReqChangePasswordToast = (state, action) => {
 
 const createSuccessfulChangePasswordToast = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Password change',
     message: 'Your password has been changed successfully',
@@ -211,7 +211,7 @@ const createSuccessfulChangePasswordToast = (state, action) => {
 
 const createInvalidDaemonInfo = (state, action) => {
   let res = {};
-  const uuid = UUID.create(4);
+  const uuid = UUID.create(4).hex;
   res[uuid] = {
     title: 'Cannot retreiving daemon info for ' + action.daemon.name,
     message: action.error,
