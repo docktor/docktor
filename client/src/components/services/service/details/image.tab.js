@@ -53,7 +53,7 @@ class ImageTab extends React.Component {
   isFormValid() {
     let formValid = true;
     this._images.forEach(imageRef => {
-      formValid = imageRef && formValid && imageRef.isFormValid();
+      imageRef && (formValid = imageRef.isFormValid() && formValid);
     });
     return formValid;
   }
