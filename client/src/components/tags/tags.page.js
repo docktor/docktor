@@ -33,8 +33,7 @@ class Tags extends React.Component {
     });
   }
 
-  componentWillMount() {
-    this.props.fetchTags();
+    return new_categories;
   }
 
   render() {

@@ -49,7 +49,7 @@ const createTags = (form) => {
   };
 };
 
-// Thunk to save tag
+// Thunk to save a tag
 const saveTag = (form) => {
 
   let tag = Object.assign({}, form);

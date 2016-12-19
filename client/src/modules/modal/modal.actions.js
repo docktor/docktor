@@ -96,5 +96,5 @@ export default {
   openNewSiteModal,
   openEditSiteModal,
   openNewTagsModal,
-  openEditTagModal,
+  openEditTagModal
 };
