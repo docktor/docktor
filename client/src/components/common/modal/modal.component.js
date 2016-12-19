@@ -93,6 +93,42 @@ class Modal extends React.Component {
     }
   }
 
+  printInputField(field) {
+    // Default input field for text/email/numbers/...
+
+    const def =
+      (
+        <div className='ui fluid input'>
+          <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value} />
+        </div>
+      );
+
+    switch (field.type) {
+    case 'dropdown':
+      return (
+          <div id={field.name} className='ui fluid selection dropdown'>
+            <input type='hidden' name={field.name} />
+            <i className='dropdown icon'></i>
+            <div className='default text'>
+              {field.desc}
+            </div>
+            <div className='menu'>
+              {field.options.map(option => {
+                const itemClasses = classNames('item', {
+                  'active selected': option.id === field.value
+                });
+                return (<div key={option.id} className={itemClasses} data-value={option.id}>
+                  {option.value}
+                </div>);
+              })}
+            </div>
+          </div>
+      );
+    default:
+      return def;
+    }
+  }
+
   render() {
     const modal = this.props.modal;
     const onClose = () => this.closeModal();

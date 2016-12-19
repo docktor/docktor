@@ -91,7 +91,6 @@ func New(version string) {
 			{
 				tagAPI.Use(isValidID("id"), isAdmin)
 				tagAPI.DELETE("", tagsC.Delete)
-				tagAPI.PUT("", tagsC.Save)
 			}
 		}
 
