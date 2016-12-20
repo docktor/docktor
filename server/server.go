@@ -9,6 +9,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
@@ -87,21 +88,25 @@ func New(version string) {
 		tagsAPI := api.Group("/tags")
 		{
 			tagsAPI.GET("", tagsC.GetAll)
-			tagsAPI.POST("", tagsC.Save, isAdmin)
+			tagsAPI.POST("", tagsC.Save, hasRole(types.AdminRole))
 			tagAPI := tagsAPI.Group("/:id")
 			{
-				tagAPI.Use(isValidID("id"), isAdmin)
+				tagAPI.Use(isValidID("id"), hasRole(types.AdminRole))
 				tagAPI.DELETE("", tagsC.Delete)
+<<<<<<< HEAD
+=======
+				tagAPI.PUT("", tagsC.Save, hasRole(types.AdminRole))
+>>>>>>> f17d7d6... refactor: create moregeneric "hasRole" middleware
 			}
 		}
 
 		sitesAPI := api.Group("/sites")
 		{
 			sitesAPI.GET("", sitesC.GetAll)
-			sitesAPI.POST("/new", sitesC.Save, isAdmin)
+			sitesAPI.POST("/new", sitesC.Save, hasRole(types.AdminRole))
 			siteAPI := sitesAPI.Group("/:id")
 			{
-				siteAPI.Use(isValidID("id"), isAdmin)
+				siteAPI.Use(isValidID("id"), hasRole(types.AdminRole))
 				siteAPI.DELETE("", sitesC.Delete)
 				siteAPI.PUT("", sitesC.Save)
 			}
@@ -109,25 +114,25 @@ func New(version string) {
 
 		daemonsAPI := api.Group("/daemons")
 		{
-			daemonsAPI.GET("", daemonsC.GetAll, isAdmin)
-			daemonsAPI.POST("/new", daemonsC.Save, isAdmin)
+			daemonsAPI.GET("", daemonsC.GetAll, hasRole(types.AdminRole))
+			daemonsAPI.POST("/new", daemonsC.Save, hasRole(types.AdminRole))
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.Use(isValidID("daemonID"))
-				daemonAPI.GET("", daemonsC.Get, isReadOnlyAdmin, daemons.RetrieveDaemon)
-				daemonAPI.DELETE("", daemonsC.Delete, isAdmin)
-				daemonAPI.PUT("", daemonsC.Save, isAdmin)
-				daemonAPI.GET("/info", daemonsC.GetInfo, isReadOnlyAdmin, redisCache(redisClient), daemons.RetrieveDaemon)
+				daemonAPI.GET("", daemonsC.Get, hasRole(types.SupervisorRole), daemons.RetrieveDaemon)
+				daemonAPI.DELETE("", daemonsC.Delete, hasRole(types.AdminRole))
+				daemonAPI.PUT("", daemonsC.Save, hasRole(types.AdminRole))
+				daemonAPI.GET("/info", daemonsC.GetInfo, hasRole(types.SupervisorRole), redisCache(redisClient), daemons.RetrieveDaemon)
 			}
 		}
 
 		servicesAPI := api.Group("/services")
 		{
 			servicesAPI.GET("", servicesC.GetAll)
-			servicesAPI.POST("/new", servicesC.Save, isAdmin)
+			servicesAPI.POST("/new", servicesC.Save, hasRole(types.AdminRole))
 			serviceAPI := servicesAPI.Group("/:serviceID")
 			{
-				serviceAPI.Use(isValidID("serviceID"), isAdmin)
+				serviceAPI.Use(isValidID("serviceID"), hasRole(types.AdminRole))
 				serviceAPI.GET("", servicesC.Get, services.RetrieveService)
 				serviceAPI.DELETE("", servicesC.Delete)
 				serviceAPI.PUT("", servicesC.Save)
@@ -137,11 +142,10 @@ func New(version string) {
 		groupsAPI := api.Group("/groups")
 		{
 			groupsAPI.GET("", groupsC.GetAll)
-			groupsAPI.POST("/new", groupsC.Save, isAdmin)
-			groupAPI := groupsAPI.Group("/:groupID")
+			groupsAPI.POST("/new", groupsC.Save, hasRole(types.AdminRole))
+			groupAPI := groupsAPI.Group("/:id")
 			{
-				groupAPI.Use(isValidID("groupID"), isAdmin)
-				groupAPI.GET("", groupsC.Get, groups.RetrieveGroup)
+				groupAPI.Use(isValidID("id"), hasRole(types.AdminRole))
 				groupAPI.DELETE("", groupsC.Delete)
 				groupAPI.PUT("", groupsC.Save)
 			}
@@ -163,7 +167,7 @@ func New(version string) {
 
 		exportAPI := api.Group("/export")
 		{
-			exportAPI.GET("", exportC.ExportAll, isAdmin)
+			exportAPI.GET("", exportC.ExportAll, hasRole(types.AdminRole))
 		}
 	}
 
