@@ -58,6 +58,7 @@ func (s *Tags) Save(c echo.Context) error {
 
 //Delete tag into docktor
 func (s *Tags) Delete(c echo.Context) error {
+
 	docktorAPI := c.Get("api").(*api.Docktor)
 	id := c.Param("id")
 	res, err := docktorAPI.Tags().Delete(bson.ObjectIdHex(id))

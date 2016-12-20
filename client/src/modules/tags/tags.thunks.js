@@ -8,7 +8,7 @@ import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 import TagsActions from './tags.actions.js';
 
 // Thunk to save a tag
-const saveTag = (form) => {
+const createTag = (form) => {
 
   let tag = Object.assign({}, form);
   tag.name = { raw: tag.name };
@@ -17,12 +17,10 @@ const saveTag = (form) => {
 
   return function (dispatch) {
 
-    dispatch(TagsActions.requestSaveTag(tag));
+    dispatch(TagsActions.requestCreateTag(tag));
 
-    const id = tag.id ? tag.id : '-1';
-
-    let request = new Request(`/api/tags/${id}`, withAuth({
-      method: 'PUT',
+    let request = new Request('/api/tags', withAuth({
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -33,15 +31,38 @@ const saveTag = (form) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(TagsActions.receiveTagSaved(response));
+        dispatch(TagsActions.receiveTagCreated(response));
       })
       .catch(error => {
-        handleError(error, TagsActions.invalidRequestTags, dispatch);
+        handleError(error, TagsActions.createTagInvalid, dispatch);
+      });
+  };
+};
+
+// Thunk to save a tag
+const deleteTag = (tag) => {
+
+  return function (dispatch) {
+
+    dispatch(TagsActions.requestDeleteTag(tag));
+
+    let request = new Request(`/api/tags/${tag.id}`, withAuth({
+      method: 'DELETE',
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(TagsActions.receiveTagDeleted(response));
+      })
+      .catch(error => {
+        handleError(error, TagsActions.deleteTagInvalid(tag), dispatch);
       });
   };
 };
 
 export default {
   ...generateEntitiesThunks('tags'),
-  saveTag
+  createTag,
+  deleteTag
 };

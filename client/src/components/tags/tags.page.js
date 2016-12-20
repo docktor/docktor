@@ -53,12 +53,35 @@ class Tags extends React.Component {
     return new_categories;
   }
 
+  // Get the available categories in a generic format
+  // Removes duplicates
+  availableCategories() {
+    const tags = this.props.tags;
+    var categories = {};
+    var new_categories = [];
+
+    for (var i in tags) {
+      const tag = tags[i];
+      const category = tag.category;
+      var cat = categories[category.slug] || { id: category.slug, value: category.raw };
+      categories[category.slug] = cat;
+    }
+
+    for (i in categories) {
+      new_categories.push(categories[i]);
+    }
+
+    return new_categories;
+  }
+
   render() {
     const tags = this.props.tags;
     const fetching = this.props.isFetching;
     const onAddTag = this.props.onCreate;
+    const onDelete = this.props.onDelete;
     const availableUsageRights = this.usageRoles;
     const categories = this.groupByCategory();
+    const availableCategories = this.availableCategories();
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal justified tags-bar'>
@@ -67,7 +90,7 @@ class Tags extends React.Component {
             <i className='remove link icon'></i>
           </div>
           <div className='flex-2 layout horizontal end-justified'>
-            <a className='ui teal labeled icon button' onClick={() => onAddTag(availableUsageRights, categories)}>
+            <a className='ui teal labeled icon button' onClick={() => onAddTag(availableUsageRights, availableCategories)}>
               <i className='plus icon'></i>New Tag
             </a>
           </div>
@@ -85,7 +108,7 @@ class Tags extends React.Component {
             })(fetching)}
             {categories.map(cat => {
               return (
-                <CategoryCard category={cat} key={cat.slug} />
+                <CategoryCard category={cat} key={cat.slug} onDelete={(tag) => onDelete(tag)} />
               );
             })}
           </div>
@@ -99,7 +122,8 @@ Tags.propTypes = {
   tags: React.PropTypes.array,
   isFetching: React.PropTypes.bool,
   fetchTags: React.PropTypes.func.isRequired,
-  onCreate: React.PropTypes.func.isRequired
+  onCreate: React.PropTypes.func.isRequired,
+  onDelete: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
@@ -116,9 +140,12 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(TagsThunks.fetchIfNeeded());
     },
     onCreate: (availableRights, availableCategories) => {
-      const callback = (tagForm) => dispatch(TagsThunks.saveTag(tagForm));
+      const callback = (tagForm) => dispatch(TagsThunks.createTag(tagForm));
       dispatch(ModalActions.openNewTagModal(availableRights, availableCategories, callback));
     },
+    onDelete: (id) => {
+      dispatch(TagsThunks.deleteTag(id));
+    }
   };
 };
 

@@ -41,18 +41,8 @@ class Modal extends React.Component {
   }
 
   initializeDropdownComponents() {
-    const modal = this.props.modal;
-    const onChangeDropdown = this.onChangeDropdown;
-    var _this = this;
-
-    modal.form.lines.map((line, index) => {
-      line.fields.map(field => {
-        if (field.type === 'dropdown') {
-          const dropdownComponents = `#modal-form #${field.name}`;
-          $(dropdownComponents).dropdown();
-        }
-      });
-    });
+    $('#modal-form .classic.selection.dropdown').dropdown();
+    $('#modal-form .search.selection.dropdown').dropdown({ allowAdditions: true });
   }
 
   closeModal() {
@@ -61,39 +51,44 @@ class Modal extends React.Component {
     this.props.onClose();
   }
 
-  printInputField(field) {
-    // Default input field for text/email/numbers/...
+  // Render the input field, depending on the type (ex: text, dropdown, etc.)
+  renderInputField(field) {
 
-    const def =
-      (
+    switch (field.type) {
+    case 'dropdown':
+    case 'autocomplete':
+      // Classic dropdown and autocomplete are the same component in Semantic, but with different classes
+      const itemClasses = classNames(
+        'ui fluid',
+        { 'search': field.type === 'autocomplete' },
+        { 'classic': field.type === 'dropdown' },
+        'selection dropdown');
+      return (
+        <div id={field.name} className={itemClasses}>
+          <input type='hidden' name={field.name} />
+          <i className='dropdown icon'></i>
+          <div className='default text'>
+            {field.desc}
+          </div>
+          <div className='menu'>
+            {field.options.map(option => {
+              const itemClasses = classNames('item', {
+                'active selected': option.id === field.value
+              });
+              return (<div key={option.id} className={itemClasses} data-value={option.id}>
+                {option.value}
+              </div>);
+            })}
+          </div>
+        </div>
+      );
+    default:
+      // Default component for text/email/numbers...
+      return (
         <div className='ui fluid input'>
           <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value} />
         </div>
       );
-
-    switch (field.type) {
-    case 'dropdown':
-      return (
-          <div id={field.name} className='ui fluid selection dropdown'>
-            <input type='hidden' name={field.name} />
-            <i className='dropdown icon'></i>
-            <div className='default text'>
-              {field.desc}
-            </div>
-            <div className='menu'>
-              {field.options.map(option => {
-                const itemClasses = classNames('item', {
-                  'active selected': option.id === field.value
-                });
-                return (<div key={option.id} className={itemClasses} data-value={option.id}>
-                  {option.value}
-                </div>);
-              })}
-            </div>
-          </div>
-      );
-    default:
-      return def;
     }
   }
 
@@ -123,7 +118,7 @@ class Modal extends React.Component {
                   {line.fields.map(field => (
                     <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
                       <label>{field.label ? field.label : field.name}</label>
-                      {this.printInputField(field)}
+                      {this.renderInputField(field)}
                     </div>
                   ))}
                 </div>

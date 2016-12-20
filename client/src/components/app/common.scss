@@ -109,3 +109,8 @@ input {
 .ui.yellow.buttons .button, .ui.yellow.button {
   background-color: #f1c40f; // yellow from https://flatuicolors.com/
 }
+
+.not-active {
+   pointer-events: none;
+   cursor: default;
+}

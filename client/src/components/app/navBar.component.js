@@ -47,7 +47,7 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
         {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
         {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
-        {this.isAuthorized() && <Link to='/tags' className={'item' + this.isActiveURL('/tags')}>Tags</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/tags' className={'item' + this.isActiveURL('/tags')}>Tags</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
           {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'></i></div> : ''}

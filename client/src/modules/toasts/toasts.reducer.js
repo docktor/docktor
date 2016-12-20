@@ -12,6 +12,7 @@ import ServicesConstants from '../services/services.constants.js';
 import AuthConstants from '../auth/auth.constants.js';
 import ExportConstants from '../export/export.constants.js';
 import ToastsConstants from './toasts.constants.js';
+import TagsConstants from '../tags/tags.constants.js';
 
 const initialState = {};
 
@@ -22,6 +23,13 @@ const toastsReducer = (state = initialState, action) => {
   case SitesConstants.INVALID_REQUEST_SITES:
     const invalidReqToastSites = createInvalidReqToast(state, action, 'Sites');
     return Object.assign({}, { ...state }, invalidReqToastSites);
+  case TagsConstants.INVALID_REQUEST_TAGS:
+  case TagsConstants.CREATE_TAG_INVALID:
+    const invalidReqToastTags = createInvalidReqToast(state, action, 'Tags');
+    return Object.assign({}, { ...state }, invalidReqToastTags);
+  case TagsConstants.DELETE_TAG_INVALID:
+    const invalidDelToastTags = createInvalidReqToast(state, action, 'Tags');
+    return Object.assign({}, { ...state }, invalidDelToastTags);
   case DaemonsConstants.INVALID_REQUEST_DAEMONS:
     const invalidReqToastDaemons = createInvalidReqToast(state, action, 'Daemons');
     return Object.assign({}, { ...state }, invalidReqToastDaemons);
