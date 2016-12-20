@@ -14,6 +14,7 @@ class CategoryCard extends React.Component {
   render() {
     const category = this.props.category;
     const onDelete = this.props.onDelete;
+    const onEdit = this.props.onEdit;
     const { tags } = category;
 
     return (
@@ -23,11 +24,21 @@ class CategoryCard extends React.Component {
         </div>
         <div className='content'>
           {tags.map(tag => {
+
+            let usageRightsClasses = classNames(
+              {
+                [getRoleIcon(tag.usageRights)]: !tag.isEditing,
+                [getRoleColor(tag.usageRights)]: !tag.isEditing,
+                'notched circle loading' : tag.isEditing
+              },
+              'icon'
+            );
+
             return (
               <div key={tag.name.slug} className={classNames('ui label', { 'disabled not-active': tag.isDeleting })}>
-                <i className={classNames(getRoleIcon(tag.usageRights), getRoleColor(tag.usageRights), 'icon')}></i>
-                <a className={classNames({ 'disabled not-active': tag.isDeleting })} onClick={() => console.log('test')}>{tag.name.raw}</a>
-                <i className={classNames('delete', { 'loading disabled not-active': tag.isDeleting }, 'icon')} onClick={() => onDelete(tag)}></i>
+                <i className={usageRightsClasses}/>
+                <a className={classNames({ 'disabled not-active': tag.isDeleting || tag.isEditing })} onClick={() => onEdit(tag)}>{tag.name.raw}</a>
+                <i className={classNames('delete', { 'loading disabled not-active': tag.isDeleting }, 'icon')} onClick={() => onDelete(tag)}/>
               </div>
             );
           })}
@@ -39,7 +50,8 @@ class CategoryCard extends React.Component {
 
 CategoryCard.propTypes = {
   category: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.func.isRequired
+  onDelete: React.PropTypes.func.isRequired,
+  onEdit: React.PropTypes.func.isRequired
 };
 
 export default CategoryCard;

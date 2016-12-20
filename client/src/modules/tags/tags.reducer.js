@@ -10,17 +10,14 @@ const createRequestCreateTag = () => {
 };
 
 const createRequestDeleteTag = (state, action) => {
-  if (action.tag.id !== -1) {
-    let newItem = { ...state.items[action.tag.id] };
-    let newItems = { ...state.items };
-    newItem.isDeleting = true;
-    newItem.errorMessage = '';
-    newItems[action.tag.id] = newItem;
-    return {
-      items: newItems
-    };
-  }
-  return {};
+  let newItem = { ...state.items[action.tag.id] };
+  let newItems = { ...state.items };
+  newItem.isDeleting = true;
+  newItem.errorMessage = '';
+  newItems[action.tag.id] = newItem;
+  return {
+    items: newItems
+  };
 };
 
 const createReceiveDeletedTag = (state, action) => {
@@ -31,17 +28,50 @@ const createReceiveDeletedTag = (state, action) => {
 };
 
 const createInvalidDeleteTag = (state, action) => {
-  if (action.tag.id !== -1) {
-    let newItem = { ...state.items[action.tag.id] };
-    newItem.isDeleting = false;
-    newItem.errorMessage = action.error;
+  let newItem = { ...state.items[action.tag.id] };
+  let newItems = { ...state.items };
+  newItem.isDeleting = false;
+  newItem.errorMessage = action.error;
 
-    state.items[action.tag.id] = newItem;
-    return {
-      items: state.items
-    };
-  }
-  return {};
+  newItems[action.tag.id] = newItem;
+  return {
+    items: newItems
+  };
+};
+
+// Save tag reducer function
+
+const createRequestSaveTag = (state, action) => {
+  let newItem = { ...state.items[action.tag.id] };
+  let newItems = { ...state.items };
+  newItem.isEditing = true;
+  newItem.errorMessage = '';
+  newItems[action.tag.id] = newItem;
+  return {
+    items: newItems
+  };
+};
+
+const createReceiveSavedTag = (state, action) => {
+  let newItem = { ...action.tag };
+  let newItems = { ...state.items };
+  newItem.isEditing = false;
+  newItem.errorMessage = '';
+  newItems[action.tag.id] = newItem;
+  return {
+    items: newItems
+  };
+};
+
+const createInvalidSaveTag = (state, action) => {
+  let newItem = { ...state.items[action.tag.id] };
+  let newItems = { ...state.items };
+  newItem.isEditing = false;
+  newItem.errorMessage = action.error;
+  newItems[action.tag.id] = newItem;
+  return {
+    items: newItems
+  };
 };
 
 const tagsReducer = (state, action) => {
@@ -70,6 +100,12 @@ const tagsReducer = (state, action) => {
     return Object.assign({}, entitiesState, createReceiveDeletedTag(state, action) );
   case TagsConstants.DELETE_TAG_INVALID:
     return Object.assign({}, entitiesState, createInvalidDeleteTag(state, action) );
+  case TagsConstants.REQUEST_SAVE_TAG:
+    return Object.assign({}, entitiesState, createRequestSaveTag(state, action));
+  case TagsConstants.RECEIVE_TAG_SAVED:
+    return Object.assign({}, entitiesState, createReceiveSavedTag(state, action) );
+  case TagsConstants.SAVE_TAG_INVALID:
+    return Object.assign({}, entitiesState, createInvalidSaveTag(state, action) );
   default:
     return entitiesState;
   }

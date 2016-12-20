@@ -22,8 +22,8 @@ class Tags extends React.Component {
 
     // Formatter and editor for usage rights dropdown
     this.usageRoles = [
-      { id: 'supervisor', value: 'Supervisor' },
       { id: 'admin', value: 'Admin' },
+      { id: 'supervisor', value: 'Supervisor' },
       { id: 'user', value: 'User' }
     ];
   }
@@ -79,6 +79,7 @@ class Tags extends React.Component {
     const fetching = this.props.isFetching;
     const onAddTag = this.props.onCreate;
     const onDelete = this.props.onDelete;
+    const onEdit = this.props.onEdit;
     const availableUsageRights = this.usageRoles;
     const categories = this.groupByCategory();
     const availableCategories = this.availableCategories();
@@ -108,7 +109,11 @@ class Tags extends React.Component {
             })(fetching)}
             {categories.map(cat => {
               return (
-                <CategoryCard category={cat} key={cat.slug} onDelete={(tag) => onDelete(tag)} />
+                <CategoryCard
+                category={cat}
+                key={cat.slug}
+                onDelete={(tag) => onDelete(tag)}
+                onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
               );
             })}
           </div>
@@ -123,7 +128,8 @@ Tags.propTypes = {
   isFetching: React.PropTypes.bool,
   fetchTags: React.PropTypes.func.isRequired,
   onCreate: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func.isRequired
+  onDelete: React.PropTypes.func.isRequired,
+  onEdit: React.PropTypes.func.isRequired
 };
 
 // Function to map state to container props
@@ -143,9 +149,13 @@ const mapDispatchToProps = (dispatch) => {
       const callback = (tagForm) => dispatch(TagsThunks.createTag(tagForm));
       dispatch(ModalActions.openNewTagModal(availableRights, availableCategories, callback));
     },
-    onDelete: (id) => {
-      dispatch(TagsThunks.deleteTag(id));
-    }
+    onDelete: (tag) => {
+      dispatch(TagsThunks.deleteTag(tag));
+    },
+    onEdit: (tag, availableRights, availableCategories) => {
+      const callback = (tagForm) => dispatch(TagsThunks.saveTag(tagForm));
+      dispatch(ModalActions.openEditTagModal(tag, availableRights, availableCategories, callback));
+    },
   };
 };
 

@@ -39,6 +39,38 @@ const createTag = (form) => {
   };
 };
 
+// Thunk to save tag
+const saveTag = (form) => {
+
+  let tag = Object.assign({}, form);
+  tag.name = { raw: tag.name };
+  tag.category = { raw: tag.category };
+  tag.usageRights = tag.rights;
+
+  return function (dispatch) {
+
+    dispatch(TagsActions.requestSaveTag(tag));
+
+    let request = new Request(`/api/tags/${tag.id}`, withAuth({
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(tag)
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(TagsActions.receiveTagSaved(response));
+      })
+      .catch(error => {
+        handleError(error, TagsActions.saveTagInvalid(tag), dispatch);
+      });
+  };
+};
+
 // Thunk to save a tag
 const deleteTag = (tag) => {
 
@@ -64,5 +96,6 @@ const deleteTag = (tag) => {
 export default {
   ...generateEntitiesThunks('tags'),
   createTag,
+  saveTag,
   deleteTag
 };

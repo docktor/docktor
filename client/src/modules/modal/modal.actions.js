@@ -59,9 +59,28 @@ const openNewTagModal = (availableRights, availableCategories, callback) => {
   };
 };
 
+const openEditTagModal = (tag, availableRights, availableCategories, callback) => {
+  let form = { lines: [], hidden: [] };
+  let line = { class: 'three', fields: [] };
+  line.fields.push({ label: 'Name', name: 'name', desc: 'Fill a name', value: tag.name.raw, type: 'text', required: true });
+  line.fields.push({ label: 'Category', name: 'category', desc: 'Set a category', value: tag.category.slug, type: 'autocomplete', options: availableCategories, required: true });
+  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', value: tag.usageRights, type: 'dropdown', options: availableRights, required: true });
+  form.lines.push(line);
+
+  form.hidden.push({ name: 'id', value: tag.id });
+  form.hidden.push({ name: 'created', value: tag.created });
+  return {
+    type: ModalConstants.OPEN_MODAL,
+    title: 'Edit Tag',
+    form,
+    callback
+  };
+};
+
 export default {
   closeModal,
   openNewSiteModal,
   openEditSiteModal,
-  openNewTagModal
+  openNewTagModal,
+  openEditTagModal
 };

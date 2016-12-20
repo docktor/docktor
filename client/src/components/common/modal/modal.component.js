@@ -65,7 +65,7 @@ class Modal extends React.Component {
         'selection dropdown');
       return (
         <div id={field.name} className={itemClasses}>
-          <input type='hidden' name={field.name} />
+          <input type='hidden' name={field.name} defaultValue={field.value}/>
           <i className='dropdown icon'></i>
           <div className='default text'>
             {field.desc}

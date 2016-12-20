@@ -53,6 +53,35 @@ const deleteTagInvalid = (tag) => {
   };
 };
 
+// Save tag actions
+
+// Request saving tag
+const requestSaveTag = (tag) => {
+  return {
+    type: TagsConstants.REQUEST_SAVE_TAG,
+    tag
+  };
+};
+
+// Tag is saved
+const receiveTagSaved = (tag) => {
+  return {
+    type: TagsConstants.RECEIVE_TAG_SAVED,
+    tag
+  };
+};
+
+// Problem during saving
+const saveTagInvalid = (tag) => {
+  return function(error) {
+    return {
+      type: TagsConstants.SAVE_TAG_INVALID,
+      tag,
+      error
+    };
+  };
+};
+
 export default {
   ...generateEntitiesActions('tags'),
   requestCreateTag,
@@ -60,5 +89,8 @@ export default {
   createTagInvalid,
   requestDeleteTag,
   receiveTagDeleted,
-  deleteTagInvalid
+  deleteTagInvalid,
+  requestSaveTag,
+  receiveTagSaved,
+  saveTagInvalid
 };

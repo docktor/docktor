@@ -25,11 +25,10 @@ const toastsReducer = (state = initialState, action) => {
     return Object.assign({}, { ...state }, invalidReqToastSites);
   case TagsConstants.INVALID_REQUEST_TAGS:
   case TagsConstants.CREATE_TAG_INVALID:
+  case TagsConstants.DELETE_TAG_INVALID:
+  case TagsConstants.SAVE_TAG_INVALID:
     const invalidReqToastTags = createInvalidReqToast(state, action, 'Tags');
     return Object.assign({}, { ...state }, invalidReqToastTags);
-  case TagsConstants.DELETE_TAG_INVALID:
-    const invalidDelToastTags = createInvalidReqToast(state, action, 'Tags');
-    return Object.assign({}, { ...state }, invalidDelToastTags);
   case DaemonsConstants.INVALID_REQUEST_DAEMONS:
     const invalidReqToastDaemons = createInvalidReqToast(state, action, 'Daemons');
     return Object.assign({}, { ...state }, invalidReqToastDaemons);
