@@ -28,7 +28,9 @@ install:
 script:
   - go build
   - go test ./cmd/... ./model/... ./server/...
-  - travis_wait 60 gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
+  - npm test
 
+  - travis_wait 60 gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
   - npm run lint
+
   - npm run dist
