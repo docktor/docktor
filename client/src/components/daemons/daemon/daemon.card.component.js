@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import classNames from 'classnames';
 
 // Components
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
@@ -29,14 +30,17 @@ class DaemonCard extends React.Component {
   }
 
   render() {
-    const daemon = this.props.daemon;
-    const fetchInfo = this.props.fetchInfo;
-    const isFetching = daemon.isFetching;
-    const info = daemon.info;
+    const { daemon, fetchInfo } = this.props;
+    const { isFetching, info } = daemon;
     let site = this.props.site;
     if (!site) {
       site = { title: 'Unknown Site' };
     }
+
+    const daemonStatusClasses = classNames('ui top right attached label', this.getColor(info), {
+      disabled: isFetching
+    });
+
     return (
       <div className='daemon'>
         <div className='ui card'>
@@ -46,7 +50,7 @@ class DaemonCard extends React.Component {
                 <i className='server icon' />{daemon.name}
               </Link>
             </div>
-            <div title={info ? info.message : ''} className={'ui top right attached' + (isFetching ? ' disabled' : '') + ' label ' + this.getColor(info)}>
+            <div title={info ? info.message : ''} className={daemonStatusClasses}>
               {(info ? info.status : 'UNKNOWN')}
             </div>
             <div className='meta'>{site.title}</div>
@@ -68,6 +72,7 @@ class DaemonCard extends React.Component {
                       <i className='refresh icon' />
                     </div>
                   </div>
+                </div>
               );
             }
           })(isFetching)}
@@ -100,4 +105,5 @@ const CardDaemon = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DaemonCard);
+
 export default CardDaemon;

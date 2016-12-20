@@ -10,15 +10,14 @@ import { isRoleAuthorized } from '../../modules/auth/auth.wrappers.js';
 // Constants
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../../modules/auth/auth.constants.js';
 
-
 // Style
 import './navBar.component.scss';
 
 // NavBar Component
 class NavBarComponent extends React.Component {
 
-  isAuthorized(Roles) {
-    return this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
+  isAuthorized(roles) {
+    return this.props.auth.isAuthenticated && isRoleAuthorized(roles, this.props.auth.user.role);
   }
 
   componentDidMount() {
@@ -65,6 +64,7 @@ class NavBarComponent extends React.Component {
     );
   }
 }
+
 NavBarComponent.propTypes = {
   logout: React.PropTypes.func.isRequired,
   exportDocktor: React.PropTypes.func.isRequired,

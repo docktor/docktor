@@ -64,10 +64,12 @@ class UserCardComponent extends React.Component {
                 const itemClasses = classNames('item', {
                   'active selected': role === user.role
                 });
-                return (<div key={role} className={itemClasses} data-value={role}>
+                return (
+                  <div key={role} className={itemClasses} data-value={role}>
                   <i className={classNames(getRoleIcon(role), 'icon')} />
                   {getRoleLabel(role)}
-                </div>);
+                  </div>
+                );
               })}
             </div>
           </div>

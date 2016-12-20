@@ -19,7 +19,7 @@ import modal from './modules/modal/modal.reducer.js';
 import auth from './modules/auth/auth.reducer.js';
 import exportReducer from './modules/export/export.reducer.js';
 
-//Components
+// Components
 import App from './components/app/app.layout.js';
 import Home from './components/app/home.page.js';
 import DaemonsPage from './components/daemons/daemons.page.js';
@@ -28,7 +28,6 @@ import GroupsPage from './components/groups/groups.page.js';
 import GroupPage from './components/groups/group/group.page.js';
 import ServicesPage from './components/services/services.page.js';
 import ServicePage from './components/services/service/service.page.js';
-
 import SettingsPage from './components/settings/settings.page.js';
 import UsersPage from './components/users/users.page.js';
 import TagsPage from './components/tags/tags.page.js';
@@ -37,7 +36,7 @@ import ChangeResetPasswordPage from './components/auth/auth.change-reset-passwor
 import ResetPasswordPage from './components/auth/auth.reset-password.page.js';
 import { requireAuthorization } from './components/auth/auth.isAuthorized.js';
 
-// thunks
+// Thunks
 import AuthThunks from './modules/auth/auth.thunk.js';
 
 // Constants

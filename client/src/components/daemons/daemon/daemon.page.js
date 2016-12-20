@@ -157,9 +157,7 @@ class DaemonComponent extends React.Component {
 
   render() {
     const daemon = this.state;
-    const isFetching = this.props.isFetching;
-    const sites = this.props.sites;
-    const tags = this.props.tags;
+    const { isFetching, sites, tags } = this.props;
     const popup = `
       <div>
         Example: <strong>http://host:port/api/v1.x</strong>
@@ -328,10 +326,10 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon: (id) => dispatch(DaemonsThunks.fetchDaemon(id)),
+    fetchDaemon: id => dispatch(DaemonsThunks.fetchDaemon(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: (daemon) => dispatch(DaemonsThunks.saveDaemon(daemon)),
+    onSave: daemon => dispatch(DaemonsThunks.saveDaemon(daemon)),
     onDelete: daemon => {
       const callback = () => dispatch(DaemonsThunks.deleteDaemon(daemon.id));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
