@@ -43,11 +43,7 @@ func (s *Tags) Save(c echo.Context) error {
 		tag.ID = bson.ObjectIdHex(id)
 	}
 
-	fmt.Printf("%+v\n", tag)
-
 	res, err := docktorAPI.Tags().Save(tag)
-
-	fmt.Printf("%+v\n", res)
 
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving tag: %v", err))

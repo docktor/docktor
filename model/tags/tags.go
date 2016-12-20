@@ -69,6 +69,19 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 	resTag.Updated = time.Now()
 	resTag.UsageRights = tag.UsageRights
 
+	// Default values
+	if resTag.UsageRights == "" {
+		resTag.UsageRights = types.AdminRole
+	}
+
+	// Syntaxic Checks
+	if resTag.Name.GetSlug() == "" {
+		return types.Tag{}, fmt.Errorf("Name should not be empty : %q (slug:%q)", resTag.Name.GetRaw(), resTag.Name.GetSlug())
+	}
+	if resTag.Category.GetSlug() == "" {
+		return types.Tag{}, fmt.Errorf("Category should not be empty : %q (slug:%q)", resTag.Category.GetRaw(), resTag.Category.GetSlug())
+	}
+
 	_, err = r.Coll.UpsertId(resTag.ID, bson.M{"$set": resTag})
 	return resTag, err
 }
