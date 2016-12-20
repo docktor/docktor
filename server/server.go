@@ -15,6 +15,7 @@ import (
 	"github.com/soprasteria/docktor/server/daemons"
 	"github.com/soprasteria/docktor/server/groups"
 	"github.com/soprasteria/docktor/server/services"
+	"github.com/soprasteria/docktor/server/users"
 	"github.com/spf13/viper"
 )
 
@@ -159,6 +160,7 @@ func New(version string) {
 			userAPI := usersAPI.Group("/:id")
 			{
 				userAPI.Use(isValidID("id"))
+				userAPI.GET("", usersC.Get, users.RetrieveUser)
 				userAPI.DELETE("", usersC.Delete)
 				userAPI.PUT("", usersC.Update)
 				userAPI.PUT("/password", usersC.ChangePassword)

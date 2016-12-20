@@ -139,6 +139,13 @@ func (u *Users) Profile(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
+//Get user from docktor
+func (u *Users) Get(c echo.Context) error {
+	// No access control on purpose
+	user := c.Get("user").(users.UserRest)
+	return c.JSON(http.StatusOK, user)
+}
+
 func (u *Users) getUserFromToken(c echo.Context) (users.UserRest, error) {
 	docktorAPI := c.Get("api").(*api.Docktor)
 	userToken := c.Get("user-token").(*jwt.Token)
