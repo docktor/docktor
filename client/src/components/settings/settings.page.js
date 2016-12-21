@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import Profile from './profile/settings.profile.component.js';
+import Details from './profile/settings.details.component.js';
 import ChangePassword from './profile/settings.password.component.js';
 import UsersThunks from '../../modules/users/users.thunks.js';
 import AuthTunks from '../../modules/auth/auth.thunk.js';
@@ -37,6 +38,9 @@ class Settings extends React.Component {
           <Profile
             link='profile' label='Profile' title='Edit your profile' submit='Save'
             user={user} onSave={saveProfile} onDelete={deleteAccount}
+            />
+          <Details
+            link='details' label='Details' title='View your details'
             />
           <ChangePassword
             link='change-password' label='Password' title='Change your password' submit='Change password'

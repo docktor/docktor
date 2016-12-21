@@ -25,8 +25,47 @@ const fetchUser = id => {
   };
 };
 
-// TODO: add saveUser and deleteUser
+// Thunk to save users
+// It's used to modify an existing user, not to create one
+const saveUser = form => {
+  console.log(form);
+  const user = {
+    ...form,
+    created: new Date(form.created)
+  };
+  const endpoint = form.id;
+  const method = 'PUT';
+  return dispatch => {
+
+    console.log(user);
+
+    dispatch(UserActions.requestSaveUser(user));
+
+    const request = new Request(`/api/users/${endpoint}`, withAuth({
+      method: method,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    }));
+
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(UserActions.userSaved(response));
+        dispatch(push('/users'));
+      })
+      .catch(error => {
+        handleError(error, UserActions.invalidRequestUser, dispatch);
+      });
+  };
+};
+
+// TODO: add deleteUser
 
 export default {
   fetchUser,
+  saveUser
 };

@@ -4,11 +4,16 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import classNames from 'classnames';
+import UUID from 'uuid-js';
 
 import { AUTH_ADMIN_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 
 // Thunks / Actions
 import UserThunks from '../../../modules/users/user/user.thunks.js';
+import TagsThunks from '../../../modules/tags/tags.thunks.js';
+
+// Components
+import TagsSelector from '../../common/tags.selector.component.js';
 
 // Style
 import './user.page.scss';
@@ -21,11 +26,16 @@ class UserComponent extends React.Component {
     this.state = { ...props.user };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.state = { ...nextProps.user };
+    this.forceUpdate();
+  }
+
   componentDidMount() {
     const { userId } = this.props;
-    if (userId) {
-      this.props.fetchUser(userId);
-    }
+
+    this.props.fetchTags();
+    this.props.fetchUser(userId);
     this.initializeRoleDropdown();
   }
 
@@ -51,13 +61,24 @@ class UserComponent extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...nextProps.user });
+  onSave(event) {
+    event.preventDefault();
+    const tagsSelector = this.refs.tags;
+    if (this.isFormValid()) {
+      const user = {
+        ...this.state,
+        tags: [...tagsSelector.state.tags]
+      };
+      this.props.onSave(user);
+    }
+  }
+
+  isFormValid() {
+    return true;
   }
 
   renderRoleDropdown() {
-    const user = this.state;
-    const { isFetching } = this.props;
+    const { user, isFetching } = this.props;
 
     const rolesDropdownClasses = classNames(
       'role ui dropdown button form-label',
@@ -90,8 +111,7 @@ class UserComponent extends React.Component {
   }
 
   render() {
-    const { isFetching } = this.props;
-    const user = this.state;
+    const { user, isFetching, tags } = this.props;
 
     return (
       <div className='flex layout vertical start-justified'>
@@ -107,7 +127,7 @@ class UserComponent extends React.Component {
                 <div className='flex layout vertical start-justified user-details'>
                   <h1>
                     <Link to={'/users'}>
-                      <i className='arrow left icon'></i>
+                      <i className='arrow left icon' />
                     </Link>
                     {`${user.displayName} (${user.username})`}
                   </h1>
@@ -126,30 +146,40 @@ class UserComponent extends React.Component {
                     <div className='two fields'>
                       <div className='required field'>
                         <label>Username</label>
-                        <input type='text' defaultValue={user.username || ''} disabled />
+                        <input type='text' defaultValue={user.username || ''} readOnly />
                       </div>
 
                       <div className='required field'>
                         <label>Email Address</label>
-                        <input type='text' defaultValue={user.email || ''} disabled />
+                        <input type='text' defaultValue={user.email || ''} readOnly />
                       </div>
                     </div>
 
                     <div className='two fields'>
                       <div className='required field'>
                         <label>First Name</label>
-                        <input type='text' defaultValue={user.firstName || ''} disabled />
+                        <input type='text' defaultValue={user.firstName || ''} readOnly />
                       </div>
 
                       <div className='required field'>
                         <label>Last Name</label>
-                        <input type='text' defaultValue={user.lastName || ''} disabled />
+                        <input type='text' defaultValue={user.lastName || ''} readOnly />
+                      </div>
+                    </div>
+
+                    <div className='fields'>
+                      <div className='two wide field'>
+                        <div className='large ui label form-label'>Tags</div>
+                      </div>
+                      <div className='fourteen wide field'>
+                        <label>Tags of the user</label>
+                        <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={user.tags || []} tags={tags || []} ref='tags' />
                       </div>
                     </div>
 
                     <div className='flex button-form'>
-                        <a className='ui fluid button'>Save</a>
-                      </div>
+                      <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
+                    </div>
                   </form>
                 </div>
             }
@@ -164,7 +194,10 @@ UserComponent.propTypes = {
   user: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   userId: React.PropTypes.string.isRequired,
-  fetchUser: React.PropTypes.func.isRequired
+  tags: React.PropTypes.object,
+  fetchUser: React.PropTypes.func.isRequired,
+  fetchTags: React.PropTypes.func.isRequired,
+  onSave: React.PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -173,12 +206,15 @@ const mapStateToProps = (state, ownProps) => {
   return {
     user: user.item,
     isFetching: user.isFetching,
-    userId: paramId
+    userId: paramId,
+    tags: state.tags
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: id => dispatch(UserThunks.fetchUser(id))
+  fetchUser: id => dispatch(UserThunks.fetchUser(id)),
+  fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+  onSave: user => dispatch(UserThunks.saveUser(user))
 });
 
 const UserPage = connect(

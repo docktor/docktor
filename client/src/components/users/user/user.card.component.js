@@ -69,7 +69,8 @@ class UserCardComponent extends React.Component {
                 });
                 return (
                   <div key={role} className={itemClasses} data-value={role}>
-                  <i className={classNames(getRoleIcon(role), 'icon')} />
+                    <i className={classNames(getRoleIcon(role), 'icon')} />
+                    {getRoleLabel(role)}
                   </div>
                 );
               })}

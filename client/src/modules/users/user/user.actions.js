@@ -14,9 +14,9 @@ const receiveUser = user => ({
 });
 
 // Request to save a user
-const requestSaveUser = (user => {
-  type: UserConstants.REQUEST_SAVE_USER,
-  user;
+const requestSaveUser = user => ({
+  type: UserConstants.REQUEST_UPDATE_USER,
+  user
 });
 
 // User is saved

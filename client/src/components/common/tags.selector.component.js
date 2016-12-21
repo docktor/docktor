@@ -69,8 +69,8 @@ class TagsSelector extends React.Component {
 
     return (
       <div className={classes}>
-        <input name='tags' type='hidden' defaultValue={selectedTags.join(',')} />
-        <i className='dropdown icon'></i>
+        <input name='tags' type='hidden' value={selectedTags.join(',')} />
+        <i className='dropdown icon' />
         <div className='default text'>{loading ? 'Loading tags…' : 'Tags'}</div>
         <div className='menu'>
           {loading || dropdownItems}

@@ -118,3 +118,7 @@ input {
 .dropdown.optgroup .divider {
     border-top: none !important;
 }
+
+[readonly] {
+  cursor: not-allowed;
+}

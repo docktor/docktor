@@ -27,7 +27,7 @@ const userReducer = (state = initialState, action) => {
       isFetching: false,
       item: action.user
     };
-  case UserConstants.REQUEST_SAVE_USER:
+  case UserConstants.REQUEST_UPDATE_USER:
     return {
       ...state,
       isFetching: true,
