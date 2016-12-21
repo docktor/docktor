@@ -38,6 +38,7 @@ class Modal extends React.Component {
 
   componentDidUpdate() {
     this.initializeDropdownComponents();
+    $('.with-title').popup();
   }
 
   initializeDropdownComponents() {
@@ -117,6 +118,7 @@ class Modal extends React.Component {
                 <div key={index} className={line.class + ' fields'}>
                   {line.fields.map(field => (
                     <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
+                      {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide'></i> : ''}
                       <label>{field.label ? field.label : field.name}</label>
                       {this.renderInputField(field)}
                     </div>

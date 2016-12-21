@@ -11,6 +11,15 @@ import './category.card.scss';
 // CategoryCard Component
 class CategoryCard extends React.Component {
 
+  componentDidMount() {
+    $('.with-title').popup({
+      delay: {
+        show: 300,
+        hide: 0
+      }
+    });
+  }
+
   render() {
     const category = this.props.category;
     const onDelete = this.props.onDelete;
@@ -31,12 +40,12 @@ class CategoryCard extends React.Component {
                 [getRoleColor(tag.usageRights)]: !tag.isEditing,
                 'notched circle loading' : tag.isEditing
               },
-              'icon'
+              'with-title icon'
             );
 
             return (
               <div key={tag.name.slug} className={classNames('ui label', { 'disabled not-active': tag.isDeleting })}>
-                <i className={usageRightsClasses}/>
+                <i className={usageRightsClasses} data-content={'Tag can be added or removed by role : ' + getRoleLabel(tag.usageRights)} data-position='left center' data-variation='inverted very wide'/>
                 <a className={classNames({ 'disabled not-active': tag.isDeleting || tag.isEditing })} onClick={() => onEdit(tag)}>{tag.name.raw}</a>
                 <i className={classNames('delete', { 'loading disabled not-active': tag.isDeleting }, 'icon')} onClick={() => onDelete(tag)}/>
               </div>

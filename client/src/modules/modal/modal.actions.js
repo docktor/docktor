@@ -43,13 +43,26 @@ const openEditSiteModal = (site, callback) => {
   };
 };
 
+// ## Tag modal actions
+
+const tagRightsHelp = `<div>
+    Rights defines who is able to add or remove the tag <b>from groups or containers</b>, depending on his role. Be aware that only admins are able to create or delete tags on Docktor.
+    <hr>
+    For example :
+    <ul>
+    <li>a user who is classical user can only add or remove a tag with 'user' role</li>
+    <li>a user who is supervisor can only add or remove a tag with 'user' or 'supervisor' role</li>
+    <li>a user who is admin can add or remove every type of tag</li>
+    </ul>
+    </div>`;
+
 // New Tag Modal
 const openNewTagModal = (availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
   line.fields.push({ label: 'Name', name: 'name', desc: 'Fill a name', type: 'text', required: true });
   line.fields.push({ label: 'Category', name: 'category', desc: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
-  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', type: 'dropdown', options: availableRights, required: true });
+  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
   form.lines.push(line);
   return {
     type: ModalConstants.OPEN_MODAL,
@@ -64,7 +77,7 @@ const openEditTagModal = (tag, availableRights, availableCategories, callback) =
   let line = { class: 'three', fields: [] };
   line.fields.push({ label: 'Name', name: 'name', desc: 'Fill a name', value: tag.name.raw, type: 'text', required: true });
   line.fields.push({ label: 'Category', name: 'category', desc: 'Set a category', value: tag.category.slug, type: 'autocomplete', options: availableCategories, required: true });
-  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', value: tag.usageRights, type: 'dropdown', options: availableRights, required: true });
+  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, value: tag.usageRights, type: 'dropdown', options: availableRights, required: true });
   form.lines.push(line);
 
   form.hidden.push({ name: 'id', value: tag.id });
