@@ -97,7 +97,7 @@ class Tags extends React.Component {
           </div>
         </div>
         <Scrollbars className='flex ui dimmable'>
-          <div className='flex layout horizontal center-center wrap'>
+          <div className='flex layout horizontal wrap'>
             {(fetching => {
               if (fetching) {
                 return (

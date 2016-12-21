@@ -1,31 +1,22 @@
 .ui.card.category {
   margin: 1em !important;
-  max-height: 100px;
-  .extra.content {
-    font-size: .9em;
+
+  .ui.label {
+    margin-left:0em;
+    margin-bottom: .2em;
+    max-width: 100%;
+    word-wrap: break-word;
   }
-  .email {
-    max-width: 200px;
+
+  .content:first-of-type {
+    height: 3.5em;
+    max-height: 3.5em;
+  }
+
+  .content .header {
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
     white-space: nowrap;
-  }
-  .ui.button.toggle.active {
-    background-color: #00948d !important;
-  }
-
-  .ui.top.right.attached.button {
-    left: auto;
-    margin: 0;
-    padding: .75em 1em;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
-  }
-  .ui.provider.label {
-    background-color: #3a6191;
-
-    color: white;
   }
 }

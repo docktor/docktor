@@ -29,7 +29,7 @@ class CategoryCard extends React.Component {
     return (
       <div className='ui card category'>
         <div className='content'>
-          <div className='header'>{category.raw}</div>
+          <div className='header with-title' data-content={category.raw} data-variation='inverted very wide'>{category.raw}</div>
         </div>
         <div className='content'>
           {tags.map(tag => {
