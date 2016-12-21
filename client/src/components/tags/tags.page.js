@@ -87,12 +87,12 @@ class Tags extends React.Component {
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal justified tags-bar'>
           <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon'></i></div>
-            <i className='remove link icon'></i>
+            <div className='ui left corner label'><i className='search icon' /></div>
+            <i className='remove link icon'/>
           </div>
           <div className='flex-2 layout horizontal end-justified'>
             <a className='ui teal labeled icon button' onClick={() => onAddTag(availableUsageRights, availableCategories)}>
-              <i className='plus icon'></i>New Tag
+              <i className='plus icon' />New Tag
             </a>
           </div>
         </div>

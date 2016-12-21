@@ -67,7 +67,7 @@ class Modal extends React.Component {
       return (
         <div id={field.name} className={itemClasses}>
           <input type='hidden' name={field.name} defaultValue={field.value}/>
-          <i className='dropdown icon'></i>
+          <i className='dropdown icon'/>
           <div className='default text'>
             {field.desc}
           </div>
@@ -118,14 +118,14 @@ class Modal extends React.Component {
                 <div key={index} className={line.class + ' fields'}>
                   {line.fields.map(field => (
                     <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
-                      {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide'></i> : ''}
+                      {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide' /> : ''}
                       <label>{field.label ? field.label : field.name}</label>
                       {this.renderInputField(field)}
                     </div>
                   ))}
                 </div>
               ))}
-              <div className='ui error message'></div>
+              <div className='ui error message' />
             </div>
           </div>
           <div className='actions'>
