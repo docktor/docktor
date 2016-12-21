@@ -43,34 +43,31 @@ const createInvalidDeleteTag = (state, action) => {
 
 const createRequestSaveTag = (state, action) => {
   let newItem = { ...state.items[action.tag.id] };
-  let newItems = { ...state.items };
   newItem.isEditing = true;
   newItem.errorMessage = '';
-  newItems[action.tag.id] = newItem;
+  state.items[action.tag.id] = newItem;
   return {
-    items: newItems
+    items: state.items
   };
 };
 
 const createReceiveSavedTag = (state, action) => {
   let newItem = { ...action.tag };
-  let newItems = { ...state.items };
   newItem.isEditing = false;
   newItem.errorMessage = '';
-  newItems[action.tag.id] = newItem;
+  state.items[action.tag.id] = newItem;
   return {
-    items: newItems
+    items: state.items
   };
 };
 
 const createInvalidSaveTag = (state, action) => {
   let newItem = { ...state.items[action.tag.id] };
-  let newItems = { ...state.items };
   newItem.isEditing = false;
   newItem.errorMessage = action.error;
-  newItems[action.tag.id] = newItem;
+  state.items[action.tag.id] = newItem;
   return {
-    items: newItems
+    items: state.items
   };
 };
 
