@@ -76,7 +76,7 @@ class Modal extends React.Component {
               const itemClasses = classNames('item', {
                 'active selected': option.id === field.value
               });
-              return (<div key={option.id} className={itemClasses} data-value={option.id}>
+              return (<div key={option.id} className={itemClasses} data-value={field.type === 'autocomplete' ? option.value : option.id}>
                 {option.value}
               </div>);
             })}
