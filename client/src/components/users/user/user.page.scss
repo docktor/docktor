@@ -1,0 +1,90 @@
+$form-bg: #2c3e50;
+$white: #fff;
+
+$main: #00948d;
+$main-light: lighten($main, 5%);
+$main-dark: darken($main, 5%);
+
+$gray-light: #a0b3b0;
+$gray: #ddd;
+
+$thin: 300;
+$normal: 400;
+$bold: 600;
+$br: 4px;
+
+.user-details {
+
+  background: rgba($form-bg, .9);
+  margin: 2em;
+  max-width: 70%;
+  min-width: 450px;
+  padding: 2em 5em;
+  width: 70%;
+
+  h1 {
+    color: $white;
+    font-weight: $thin;
+    margin: 0 0 30px;
+    text-transform: uppercase;
+
+    .right-floated {
+      float: right !important;
+    }
+  }
+
+  a {
+    color: $main;
+    text-decoration: none;
+    transition: .5s ease;
+    &:hover {
+      color: $main-dark;
+      cursor: pointer;
+    }
+  }
+
+  .button-form {
+    .ui.button {
+      -moz-appearance: none; // Firefox
+      -webkit-appearance: none; // Safari and Chrome
+      appearance: none;
+      background: $main;
+      border: none;
+      border-radius: 0;
+      color: $white;
+      font-size: 1.5rem;
+      font-weight: $bold;
+      letter-spacing: .1em;
+      outline: none;
+      padding: 15px 0;
+      text-transform: uppercase;
+      transition: all.5s ease;
+      &:hover,
+      &:focus {
+        background: $main-dark;
+        color: $white;
+      }
+    }
+  }
+
+  .form-label {
+    border-radius: 0;
+    height: 38px;
+    line-height: 38px;
+    margin-top: 24px;
+    padding-bottom: 0;
+    padding-top: 0;
+    width: 100%;
+    @media only screen and (max-width: 767px) {
+      margin-left: 25%;
+      margin-top: 0;
+      width: 50% !important;
+    }
+  }
+
+  .ui.label.form-label {
+    background-color: #3a6191;
+    color: white;
+    text-align: center;
+  }
+}

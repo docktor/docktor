@@ -13,6 +13,7 @@ import daemons from './modules/daemons/daemons.reducer.js';
 import groups from './modules/groups/groups.reducer.js';
 import services from './modules/services/services.reducer.js';
 import users from './modules/users/users.reducer.js';
+import user from './modules/users/user/user.reducer.js';
 import tags from './modules/tags/tags.reducer.js';
 import toasts from './modules/toasts/toasts.reducer.js';
 import modal from './modules/modal/modal.reducer.js';
@@ -30,6 +31,7 @@ import ServicesPage from './components/services/services.page.js';
 import ServicePage from './components/services/service/service.page.js';
 import SettingsPage from './components/settings/settings.page.js';
 import UsersPage from './components/users/users.page.js';
+import UserPage from './components/users/user/user.page.js';
 import TagsPage from './components/tags/tags.page.js';
 import AuthPage from './components/auth/auth.page.js';
 import ChangeResetPasswordPage from './components/auth/auth.change-reset-password.page.js';
@@ -54,6 +56,7 @@ const store = createStore(
       groups,
       services,
       users,
+      user,
       tags,
       toasts,
       modal,
@@ -94,7 +97,10 @@ ReactDOM.render(
           <Route path='new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
           <Route path=':id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
         </Route>
-        <Route path='users' component={requireAuthorization(UsersPage)} />
+        <Route path='users'>
+          <IndexRoute component={requireAuthorization(UsersPage)} />
+          <Route path=':id' component={requireAuthorization(UserPage, [AUTH_ADMIN_ROLE])} />
+        </Route>
         <Route path='tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
         <Route path='settings' component={requireAuthorization(SettingsPage)} />
         <Route path='login' component={AuthPage} />

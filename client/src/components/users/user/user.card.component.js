@@ -52,7 +52,10 @@ class UserCardComponent extends React.Component {
     return (
       <div id={user.id} className='ui card user'>
         <div className='content'>
-          <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />{user.displayName}
+          <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />
+          <Link to={`/users/${user.id}`}>
+            {user.displayName}
+          </Link>
           <div className={rolesDropdownClasses}>
             <input type='hidden' name='role' />
             <div className='default text'>
@@ -67,7 +70,6 @@ class UserCardComponent extends React.Component {
                 return (
                   <div key={role} className={itemClasses} data-value={role}>
                   <i className={classNames(getRoleIcon(role), 'icon')} />
-                  {getRoleLabel(role)}
                   </div>
                 );
               })}
