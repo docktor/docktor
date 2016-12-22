@@ -74,6 +74,8 @@ const createInvalidSaveTag = (state, action) => {
 const tagsReducer = (state, action) => {
   const entitiesState = generateEntitiesReducer(state, action, 'tags');
   switch (action.type) {
+  case TagsConstants.CHANGE_FILTER:
+    return { ...entitiesState, filterValue: action.filterValue };
   case TagsConstants.REQUEST_CREATE_TAG:
     return { ...entitiesState, ...createRequestCreateTag() };
   case TagsConstants.RECEIVE_TAG_CREATED:

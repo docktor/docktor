@@ -2,6 +2,7 @@ import { generateEntitiesConstants } from '../utils/entities.js';
 
 export default {
   ...generateEntitiesConstants('tags'),
+  CHANGE_FILTER: 'CHANGE_FILTER_TAGS',
   REQUEST_CREATE_TAG: 'REQUEST_CREATE_TAG',
   RECEIVE_TAG_CREATED: 'RECEIVE_TAG_CREATED',
   CREATE_TAG_INVALID: 'CREATE_TAG_INVALID',

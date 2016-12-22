@@ -2,6 +2,14 @@
 import TagsConstants from './tags.constants.js';
 import { generateEntitiesActions } from '../utils/entities.js';
 
+// Change filter
+const changeFilter = (filterValue) => {
+  return {
+    type: TagsConstants.CHANGE_FILTER,
+    filterValue
+  };
+};
+
 // Request save tag
 const requestCreateTag = (tag) => {
   return {
@@ -84,6 +92,7 @@ const saveTagInvalid = (tag) => {
 
 export default {
   ...generateEntitiesActions('tags'),
+  changeFilter,
   requestCreateTag,
   receiveTagCreated,
   createTagInvalid,
