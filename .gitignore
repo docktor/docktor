@@ -5,6 +5,7 @@ dist/
 client/dist/
 .idea/
 docktor
+docktor.zip
 bower_components/
 .vscode/
 vendor/*/

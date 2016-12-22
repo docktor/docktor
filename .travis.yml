@@ -34,3 +34,12 @@ script:
   - npm run lint
 
   - npm run dist
+
+before_deploy: "zip -r9 docktor.zip dist docktor"
+deploy:
+  provider: releases
+  api_key: "d9625f99ae90bf1e6727a1a29d44f52b7045fbf5"
+  file: "docktor.zip"
+  skip_cleanup: true
+  on:
+    tags: true
