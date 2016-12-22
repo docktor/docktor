@@ -34,8 +34,10 @@ class UserComponent extends React.Component {
   componentDidMount() {
     const { userId } = this.props;
 
-    this.props.fetchTags();
-    this.props.fetchUser(userId);
+    // We need to fetch the tagd before the user info
+    this.props.fetchTags()
+      .then(() => this.props.fetchUser(userId));
+
     this.initializeRoleDropdown();
   }
 
