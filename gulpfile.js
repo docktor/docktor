@@ -81,7 +81,7 @@ gulp.task('go-fmt', function() {
 });
 
 gulp.task('go-run', function() {
-  go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379'], {
+  go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379', '--level', 'debug'], {
     cwd: __dirname,
     stdio: 'inherit'
   });

@@ -12,6 +12,11 @@ type Repo struct {
 	Coll *mgo.Collection
 }
 
+// GetCollectionName gets the name of the collection
+func (r *Repo) GetCollectionName() string {
+	return r.Coll.FullName
+}
+
 // Save a service into a database
 func (r *Repo) Save(service types.Service) (types.Service, error) {
 	_, err := r.Coll.UpsertId(service.ID, bson.M{"$set": service})
@@ -62,4 +67,12 @@ func (r *Repo) IsExist(title string) bool {
 // Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
+}
+
+// RemoveTag removes given tag from all services
+func (r *Repo) RemoveTag(id bson.ObjectId) (*mgo.ChangeInfo, error) {
+	return r.Coll.UpdateAll(
+		bson.M{"tags": bson.M{"$in": []bson.ObjectId{id}}},
+		bson.M{"$pull": bson.M{"tags": id}},
+	)
 }

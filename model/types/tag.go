@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Machiel/slugify"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -73,3 +74,9 @@ type Tag struct {
 
 // Tags is a slice of tags
 type Tags []Tag
+
+// UseTags is an interface to set on a struct containing tags that can be removed or added
+type UseTags interface {
+	RemoveTag(id bson.ObjectId) (*mgo.ChangeInfo, error)
+	GetCollectionName() string
+}

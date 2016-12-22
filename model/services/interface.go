@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/soprasteria/docktor/model/types"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -23,4 +24,8 @@ type RepoServices interface {
 	IsExist(title string) bool
 	// Drop drops the content of the collection
 	Drop() error
+	// RemoveTag remove a tag from a service
+	RemoveTag(id bson.ObjectId) (*mgo.ChangeInfo, error)
+	// GetCollectionName returns the name of the collection
+	GetCollectionName() string
 }
