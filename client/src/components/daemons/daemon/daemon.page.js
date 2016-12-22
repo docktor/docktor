@@ -15,7 +15,7 @@ import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 // Components
 import VolumesBox from '../../common/boxes/volumes.box.component.js';
 import VariablesBox from '../../common/boxes/variables.box.component.js';
-import TagsSelector from '../../common/tags.selector.component.js';
+import TagsSelector from '../../tags/tags.selector.component.js';
 
 // Style
 import './daemon.page.scss';
