@@ -34,13 +34,14 @@ const saveService = (form) => {
   service.port = parseInt(service.port);
   service.timeout = parseInt(service.timeout);
   service.created = service.created ? new Date(service.created) : new Date();
-  const id = form.id || -1;
+  const endpoint = form.id || 'new';
+  const method = form.id ? 'PUT' : 'POST';
   return function (dispatch) {
 
     dispatch(ServiceActions.requestSaveService(service));
 
-    let request = new Request('/api/services/' + id, withAuth({
-      method: 'PUT',
+    let request = new Request('/api/services/' + endpoint, withAuth({
+      method: method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

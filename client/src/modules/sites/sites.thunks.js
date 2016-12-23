@@ -39,14 +39,15 @@ const saveSite = (form) => {
   site.longitude = parseFloat(site.longitude.replace(',', '.'));
   site.created = site.created ? site.created : new Date();
 
-  const id = site.id ? site.id : -1;
+  const endpoint = site.id || 'new';
+  const method = site.id ? 'PUT' : 'POST';
 
   return function (dispatch) {
 
     dispatch(SitesActions.requestSaveSite(site));
 
-    let request = new Request('/api/sites/' + id, withAuth({
-      method: 'PUT',
+    let request = new Request('/api/sites/' + endpoint, withAuth({
+      method: method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

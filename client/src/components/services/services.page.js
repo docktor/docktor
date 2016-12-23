@@ -81,7 +81,7 @@ Services.propTypes = {
 
 // Function to map state to container props
 const mapStateToServicesProps = (state) => {
-  const filterValue = state.services.filterValue;
+  const filterValue = state.services.filterValue || '';
   const services = getFilteredServices(state.services.items, filterValue);
   const isFetching = state.services.isFetching;
   return { filterValue, services, isFetching };

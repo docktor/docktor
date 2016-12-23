@@ -6,17 +6,21 @@ var gulp = require('gulp'),
   webpack = require('webpack'),
   concat = require('gulp-concat'),
   inject = require('gulp-inject-string'),
+  zip = require('gulp-zip'),
+  docktor = require('./package.json'),
+  git = require('git-rev'),
+  dateFormat = require('dateformat'),
   WebpackDevServer = require('webpack-dev-server');
 
 var devConfigWebpack = require('./dev.config.webpack.js'),
   prodConfigWebpack = require('./prod.config.webpack.js');
 
 var watchFiles = {
-  server: ['./main.go', './server/**/*.go', './model/**/*.go']
+  server: ['./main.go', './server/**/*.go', 'cmd/**/*.go', 'model/**/*.go']
 };
 
 var dependenciesPath = {
-  templates : [
+  templates: [
     './client/src/index.tmpl'
   ],
   fonts: [
@@ -37,7 +41,12 @@ var injectedPath = {
 var distPath = {
   binary: './docktor',
   client: './client/dist/**/*',
-  dist: './dist'
+  dist: './dist',
+  zipname: `docktor-${docktor.version}.zip`
+};
+
+const now = () => {
+  return dateFormat(new Date(), 'isoDateTime');
 };
 
 /*===================== DEV =====================*/
@@ -54,7 +63,7 @@ gulp.task('bundle-html-dev', function() {
 });
 
 
-gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images' ], function(callback) {
+gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images'], function(callback) {
   var compiler = webpack(devConfigWebpack);
   new WebpackDevServer(compiler, {
     publicPath: '/js/',
@@ -68,34 +77,11 @@ gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 
 });
 
 /*====== Server ======*/
-gulp.task('go-fmt', function() {
-  return gulp.src(watchFiles.server)
-        .pipe(tap(function(file, t) {
-          console.log(file.path);
-          exec('go fmt ' + file.path, function (err, stdout, stderr) {
-            if (err) {
-              throw err;
-            }
-          });
-        }));
-});
 
 gulp.task('go-run', function() {
-  go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379'], {
+  go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379', '--level', 'debug'], {
     cwd: __dirname,
     stdio: 'inherit'
-  });
-});
-
-gulp.task('dist-server', ['go-fmt'], function() {
-  exec('go build', function (err, stdout, stderr) {
-    if (!err) {
-      console.log('Docktor backend Build successfull');
-      gulp.src('./docktor')
-                .pipe(gulp.dest(distPath.dist));
-    } else {
-      console.log(err);
-    }
   });
 });
 
@@ -129,19 +115,47 @@ gulp.task('bundle-client', function(doneCallBack) {
 
 gulp.task('bundle', ['clean-js', 'bundle-html', 'bundle-fonts', 'bundle-images', 'bundle-client']);
 
-
-gulp.task('clean', function() {
-  return gulp.src([distPath.dist + '/*', distPath.client], {
-    read: false
-  }).pipe(clean());
-});
-
 gulp.task('dist-client', ['bundle'], function() {
   return gulp.src(distPath.client).pipe(gulp.dest(distPath.dist + '/client/dist'));
+});
+
+/*====== Server =========*/
+
+gulp.task('dist-server', ['clean-dist'], function() {
+  git.long(function (gitHash) {
+    const flags = `
+      -X github.com/soprasteria/docktor/cmd.Version=${docktor.version}
+      -X github.com/soprasteria/docktor/cmd.BuildDate=${now()}
+      -X github.com/soprasteria/docktor/cmd.GitHash=${gitHash}
+    `;
+    const distServer = `go build -ldflags "${flags}"`;
+    console.log(distServer);
+    exec(distServer, function(err, stdout, stderr) {
+      if (!err) {
+        console.log('Docktor backend Build successfull');
+        return gulp.src(distPath.binary)
+                .pipe(gulp.dest(distPath.dist));
+      } else {
+        console.log(err);
+      }
+    });
+  });
+});
+
+gulp.task('clean-dist', function() {
+  return gulp.src([distPath.dist + '/*', distPath.binary], {
+    read: false
+  }).pipe(clean());
 });
 
 /*===================== TASKS =====================*/
 
 gulp.task('start-dev', ['webpack-dev-server', 'watch-server', 'go-run']);
 gulp.task('dist', ['dist-server', 'dist-client']);
+gulp.task('archive', ['dist'], function() {
+  console.log('Archiving docktor in zip : ' + distPath.zipname);
+  return gulp.src([distPath.dist + '/**/*'])
+    .pipe(zip(distPath.zipname))
+    .pipe(gulp.dest('dist'));
+});
 gulp.task('default', ['start-dev']);

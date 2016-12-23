@@ -34,13 +34,14 @@ const saveDaemon = (form) => {
   daemon.port = parseInt(daemon.port);
   daemon.timeout = parseInt(daemon.timeout);
   daemon.created = daemon.created ? new Date(daemon.created) : new Date();
-  const id = form.id || -1;
+  const endpoint = form.id || 'new';
+  const method = form.id ? 'PUT' : 'POST';
   return function (dispatch) {
 
     dispatch(DaemonActions.requestSaveDaemon(daemon));
 
-    let request = new Request('/api/daemons/' + id, withAuth({
-      method: 'PUT',
+    let request = new Request('/api/daemons/' + endpoint, withAuth({
+      method: method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

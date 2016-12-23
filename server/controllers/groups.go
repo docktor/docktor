@@ -33,6 +33,12 @@ func (g *Groups) Save(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding group: %v", err))
 	}
+
+	// If the ID is empty, it's a creation, so generate an object ID
+	if group.ID.Hex() == "" {
+		group.ID = bson.NewObjectId()
+	}
+
 	res, err := docktorAPI.Groups().Save(group)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving group: %v", err))

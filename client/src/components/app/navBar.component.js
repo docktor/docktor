@@ -47,9 +47,10 @@ class NavBarComponent extends React.Component {
         {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
         {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
         {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/tags' className={'item' + this.isActiveURL('/tags')}>Tags</Link>}
         {this.isAuthorized() &&
         <div className='right menu'>
-          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading' /></div> : ''}
+          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'/></div> : ''}
           <div className='ui dropdown item'>
             <i className='inverted large user icon' />{' ' + this.props.auth.user.displayName}
             <div className='menu'>
@@ -58,7 +59,8 @@ class NavBarComponent extends React.Component {
               <a className='item' onClick={logout} ><i className='sign out icon' />Logout</a>
             </div>
           </div>
-        </div>}
+        </div>
+        }
       </div>
     );
   }

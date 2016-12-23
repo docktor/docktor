@@ -16,8 +16,8 @@
     background-color: inherit !important;
     color: inherit !important;
     max-height: 60vh;
-    overflow-y: auto;
     width: initial !important;
+    overflow-y: inherit !important;
     .field input,
     .form {
       .label,
@@ -43,6 +43,10 @@
   }
   .ui.teal.button:active {
     background-color: #00827c !important;
+  }
+  .help {
+    float : right;
+    margin: 0;
   }
 }
 .rodal-dialog {

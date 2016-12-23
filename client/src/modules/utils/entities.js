@@ -16,7 +16,6 @@ const getConsts = (entitiesName) => {
   };
 };
 
-
 export const generateEntitiesConstants = (entitiesName) => {
   const { CONST_REQUEST, CONST_RECEIVE, CONST_INVALID } = getConsts(entitiesName);
   const constants = {};
@@ -105,8 +104,6 @@ const fetchIfNeeded = (entitiesName, fetchFunc) => {
     }
   };
 };
-
-
 
 export const generateEntitiesThunks = (entitiesName) => {
   const Actions = generateEntitiesActions(entitiesName);

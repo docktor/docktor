@@ -7,6 +7,7 @@ import (
 	"github.com/soprasteria/docktor/model/groups"
 	"github.com/soprasteria/docktor/model/services"
 	"github.com/soprasteria/docktor/model/sites"
+	"github.com/soprasteria/docktor/model/tags"
 	"github.com/soprasteria/docktor/model/users"
 )
 
@@ -24,6 +25,7 @@ func Open(docktorMongoHost string) (*Docktor, error) {
 	daemons := &daemons.Repo{Coll: context.db.C("daemons")}
 	users := &users.Repo{Coll: context.db.C("users")}
 	sites := &sites.Repo{Coll: context.db.C("sites")}
+	tags := &tags.Repo{Coll: context.db.C("tags")}
 
 	return &Docktor{
 		services: services,
@@ -31,6 +33,7 @@ func Open(docktorMongoHost string) (*Docktor, error) {
 		daemons:  daemons,
 		users:    users,
 		sites:    sites,
+		tags:     tags,
 		session:  session,
 	}, nil
 }
@@ -63,4 +66,9 @@ func (dock *Docktor) Users() users.RepoUsers {
 // Sites is the entrypoint for Sites API
 func (dock *Docktor) Sites() sites.RepoSites {
 	return dock.sites
+}
+
+// Tags is the entrypoint for Tags API
+func (dock *Docktor) Tags() tags.RepoTags {
+	return dock.tags
 }

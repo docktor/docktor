@@ -15,6 +15,7 @@ import groups from './modules/groups/groups.reducer.js';
 import services from './modules/services/services.reducer.js';
 import service from './modules/services/service/service.reducer.js';
 import users from './modules/users/users.reducer.js';
+import tags from './modules/tags/tags.reducer.js';
 import toasts from './modules/toasts/toasts.reducer.js';
 import modal from './modules/modal/modal.reducer.js';
 import auth from './modules/auth/auth.reducer.js';
@@ -31,6 +32,7 @@ import ServicePage from './components/services/service/service.page.js';
 
 import SettingsPage from './components/settings/settings.page.js';
 import UsersPage from './components/users/users.page.js';
+import TagsPage from './components/tags/tags.page.js';
 import AuthPage from './components/auth/auth.page.js';
 import ChangeResetPasswordPage from './components/auth/auth.change-reset-password.page.js';
 import ResetPasswordPage from './components/auth/auth.reset-password.page.js';
@@ -56,6 +58,7 @@ const store = createStore(
       services,
       service,
       users,
+      tags,
       toasts,
       modal,
       auth,
@@ -81,17 +84,18 @@ ReactDOM.render(
       <Route path='/' component={App}>
         <IndexRoute component={Home} />
         <Route path='daemons'>
-          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
-          <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])}/>
-          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])}/>
+          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+          <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
+          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
         </Route>
-        <Route path='groups' component={requireAuthorization(GroupsPage)}/>
+        <Route path='groups' component={requireAuthorization(GroupsPage)} />
         <Route path='services'>
-          <IndexRoute component={requireAuthorization(ServicesPage)}/>
-          <Route path='new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])}/>
-          <Route path=':id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])}/>
+          <IndexRoute component={requireAuthorization(ServicesPage)} />
+          <Route path='new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
+          <Route path=':id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
         </Route>
         <Route path='users' component={requireAuthorization(UsersPage)} />
+        <Route path='tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
         <Route path='settings' component={requireAuthorization(SettingsPage)} />
         <Route path='login' component={AuthPage} />
         <Route path='change_reset_password' component={ChangeResetPasswordPage} />

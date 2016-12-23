@@ -29,16 +29,14 @@ script:
 - go build
 - go test ./cmd/... ./model/... ./server/...
 - npm test
-- travis_wait 60 gometalinter --vendor --deadline=60m --config=./gometalinter.json
-  ./server/... ./model/... ./cmd/... .
+- travis_wait 60 npm run golint
 - npm run lint
-- npm run dist
+- npm run archive
 
-before_deploy: zip -r9 docktor.zip dist docktor
 deploy:
   provider: releases
   api_key:
     secure: k51K9vGcO8TL9RlrePYbOqXCqsPK1ugVSL9pVHLqn8IfvhbUoL83dXEUdQ8CZpeKVm5LF8IhW6s12ut97ieWCPnSjc01h946mm0U3H2R6WL2z5LjsNRE6BIGIUnPlHOlGl0f602MXAGKJhlv2VmJ0w3Y8Q9RjtqxTKYJ1mFlohN6frdsSfbWmA6FAf2bd3uP5850eXzbfpuDdnvJNBfMwUG1gWKavyNO525Q0rA4z/fcqnwTvX+I8h4FT+5+Yt/bX912VfahHz/8DVvQek8yU/8VF7A4sClXCd23j4p6Pirb0ESk/UldULRHoGc0Q9Yr59ancX3+IM/HyJA+0X1Nta2FCzldYcxMaADi2MEEf0jA1R1MOeXL+Su5nBG1LDR9igSZ0uH5PieecgrSy9nCZldVwoLs1gjD8nfWvvuk4VFr8A6o9JQEdLwlyqf+weW1RignkAkCIakqSXs4tpyct52ybey6k5lVXMcNVhf+XDmWN55htvZYoP01zXunbc9cgtm+R/+psYsUJlgXhU9cTIpOCjcOiq23oz1Y06QNrVC33PQdJ7PeDSboU+t+OjTSAjAE6vKZnr7HSfwX7F13wJN/5wS2+UH7mlfPw+o9NuvGBbLS8HC28qBe3fGx7J6b+WgCXkjRO71hKr1VBsn26kGWYohaGNeJOGwDQDTsz/4=
-  file: docktor.zip
+  file: "docktor*.zip"
   on:
     tags: true

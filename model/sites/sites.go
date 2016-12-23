@@ -13,10 +13,6 @@ type Repo struct {
 
 // Save a site into a database
 func (r *Repo) Save(site types.Site) (types.Site, error) {
-	if site.ID.Hex() == "" {
-		site.ID = bson.NewObjectId()
-	}
-
 	_, err := r.Coll.UpsertId(site.ID, bson.M{"$set": site})
 	return site, err
 }

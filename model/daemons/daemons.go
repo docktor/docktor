@@ -11,12 +11,13 @@ type Repo struct {
 	Coll *mgo.Collection
 }
 
+// GetCollectionName gets the name of the collection
+func (r *Repo) GetCollectionName() string {
+	return r.Coll.FullName
+}
+
 // Save a daemon into a database
 func (r *Repo) Save(daemon types.Daemon) (types.Daemon, error) {
-	if daemon.ID.Hex() == "" {
-		daemon.ID = bson.NewObjectId()
-	}
-
 	_, err := r.Coll.UpsertId(daemon.ID, bson.M{"$set": daemon})
 	return daemon, err
 }
@@ -72,4 +73,12 @@ func (r *Repo) FindAll() ([]types.Daemon, error) {
 // Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
+}
+
+// RemoveTag removes given tag from all daemons
+func (r *Repo) RemoveTag(id bson.ObjectId) (*mgo.ChangeInfo, error) {
+	return r.Coll.UpdateAll(
+		bson.M{"tags": bson.M{"$in": []bson.ObjectId{id}}},
+		bson.M{"$pull": bson.M{"tags": id}},
+	)
 }

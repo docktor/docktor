@@ -5,6 +5,7 @@ import (
 	"github.com/soprasteria/docktor/model/groups"
 	"github.com/soprasteria/docktor/model/services"
 	"github.com/soprasteria/docktor/model/sites"
+	"github.com/soprasteria/docktor/model/tags"
 	"github.com/soprasteria/docktor/model/users"
 	"gopkg.in/mgo.v2"
 )
@@ -18,6 +19,7 @@ type Docktor struct {
 	daemons  daemons.RepoDaemons
 	users    users.RepoUsers
 	sites    sites.RepoSites
+	tags     tags.RepoTags
 }
 
 type appContext struct {

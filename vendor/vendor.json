@@ -17,6 +17,12 @@
 			"revisionTime": "2016-11-16T16:47:31Z"
 		},
 		{
+			"checksumSHA1": "EEZoMEMzCsQJXEp6o2jbznX8DyU=",
+			"path": "github.com/Machiel/slugify",
+			"revision": "9c8f186ad6ea352ad2709ad0ec08f2ecc8a1b424",
+			"revisionTime": "2015-06-22T08:52:03Z"
+		},
+		{
 			"checksumSHA1": "SgMa9iM1pf0gPCJ4YsV8UkXyp20=",
 			"origin": "github.com/docker/docker/vendor/github.com/Microsoft/go-winio",
 			"path": "github.com/Microsoft/go-winio",

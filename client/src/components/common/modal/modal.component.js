@@ -17,16 +17,16 @@ class Modal extends React.Component {
 
   validate(modal, onClose) {
     return () => {
-      let  settings = {
+      let settings = {
         onSuccess: () => {
           modal.callback($('#modal-form').form('get values'));
           onClose();
         }
       };
       settings.fields = {};
-      modal.form.lines.forEach( line => {
-        line.fields.forEach( field => {
-          if(field.required) {
+      modal.form.lines.forEach(line => {
+        line.fields.forEach(field => {
+          if (field.required) {
             settings.fields[field.name] = 'empty';
           }
         });
@@ -36,10 +36,67 @@ class Modal extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    this.initializeDropdownComponents();
+    $('#modal-form .with-title').popup();
+  }
+
+  initializeDropdownComponents() {
+    $('#modal-form .classic.selection.dropdown').dropdown({ forceSelection: false,  });
+    $('#modal-form .search.selection.dropdown').dropdown({ allowAdditions: true, forceSelection: false });
+  }
+
   closeModal() {
     $('#modal-form').find('.ui.error.message ul').remove();
     $('#modal-form').find('fields .error').removeClass('error').find('.prompt').remove();
     this.props.onClose();
+  }
+
+  // Render the input field, depending on the type (ex: text, dropdown, etc.)
+  renderInputField(field) {
+
+    switch (field.type) {
+    case 'dropdown':
+    case 'autocomplete':
+      // Classic dropdown and autocomplete are the same component in Semantic, but with different classes
+      const itemClasses = classNames(
+        'ui fluid',
+        { 'search': field.type === 'autocomplete' },
+        { 'classic': field.type === 'dropdown' },
+        'selection dropdown');
+      return (
+        <div id={field.name} className={itemClasses}>
+          <input type='hidden' name={field.name} defaultValue={field.value}/>
+          <i className='dropdown icon'/>
+          <div className='default text'>
+            {field.desc}
+          </div>
+          <div className='menu'>
+            {field.options.map(option => {
+              const itemClasses = classNames('item', {
+                'active selected': option.id === field.value
+              });
+              return (
+                <div key={option.id} className={itemClasses} data-value={field.type === 'autocomplete' ? option.value : option.id}>
+                  {option.icon ?
+                  <i className={classNames([option.icon], [option.color], 'icon')}/>
+                    : ''
+                  }
+                  {option.value}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    default:
+      // Default component for text/email/numbers...
+      return (
+        <div className='ui fluid input'>
+          <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value} />
+        </div>
+      );
+    }
   }
 
   render() {
@@ -52,27 +109,26 @@ class Modal extends React.Component {
     );
     return (
       <Rodal visible={modal.isVisible}
-          onClose={onClose}
-          showCloseButton={false}
-          animation={modal.animation}>
+        onClose={onClose}
+        showCloseButton={false}
+        animation={modal.animation}>
         <div className={modalClasses}>
           <i className='close circle icon' onClick={onClose} />
           <div className='header'>{modal.title}</div>
           <div className='content'>
             <div id='modal-form' className='ui form' ref='form'>
-              {modal.form.hidden.map( input => (
-                <input key={input.name} type='hidden' name={input.name} defaultValue={input.value}/>
+              {modal.form.hidden.map(input => (
+                <input key={input.name} type='hidden' name={input.name} defaultValue={input.value} />
               ))}
-              {modal.form.lines.map( (line, index) => (
+              {modal.form.lines.map((line, index) => (
                 <div key={index} className={line.class + ' fields'}>
-                {line.fields.map(field => (
-                  <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
-                    <label>{field.label ? field.label : field.name}</label>
-                    <div className='ui fluid input'>
-                      <input type={field.type} name={field.name} placeholder={field.desc} defaultValue={field.value}/>
+                  {line.fields.map(field => (
+                    <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
+                      {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide' /> : ''}
+                      <label>{field.label ? field.label : field.name}</label>
+                      {this.renderInputField(field)}
                     </div>
-                  </div>
-                ))}
+                  ))}
                 </div>
               ))}
               <div className='ui error message' />
@@ -92,7 +148,7 @@ class Modal extends React.Component {
     );
   }
 }
-Modal.propTypes = { modal: React.PropTypes.object, onClose:React.PropTypes.func };
+Modal.propTypes = { modal: React.PropTypes.object, onClose: React.PropTypes.func };
 
 // Function to map state to container props
 const mapStateToModalProps = (state) => {
@@ -106,8 +162,8 @@ const mapDispatchToModalProps = (dispatch) => {
 
 // Redux container to Sites component
 const ModalContainer = connect(
-    mapStateToModalProps,
-    mapDispatchToModalProps
+  mapStateToModalProps,
+  mapDispatchToModalProps
 )(Modal);
 
 export default ModalContainer;

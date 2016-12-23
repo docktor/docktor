@@ -18,10 +18,6 @@ func (r *Repo) Drop() error {
 
 // Save a group into a database
 func (r *Repo) Save(group types.Group) (types.Group, error) {
-	if group.ID.Hex() == "" {
-		group.ID = bson.NewObjectId()
-	}
-
 	_, err := r.Coll.UpsertId(group.ID, bson.M{"$set": group})
 	return group, err
 }
