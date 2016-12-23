@@ -7,9 +7,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// VERSION of Docktor
-const VERSION = "0.1"
-
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
@@ -17,7 +14,7 @@ var serveCmd = &cobra.Command{
 	Long:  `Docktor server will listen on 0.0.0.0:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
 		email.InitSMTPConfiguration()
-		server.New(VERSION)
+		server.New(Version)
 	},
 }
 
