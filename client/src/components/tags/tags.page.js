@@ -5,6 +5,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
 import DebounceInput from 'react-debounce-input';
 
+// Roles
+import { ALL_ROLES, getRoleData } from '../../modules/auth/auth.constants.js';
+
 // API Fetching
 import TagsThunks from '../../modules/tags/tags.thunks.js';
 import TagsActions from '../../modules/tags/tags.actions.js';
@@ -21,12 +24,13 @@ class Tags extends React.Component {
   constructor() {
     super();
 
-    // Formatter and editor for usage rights dropdown
-    this.usageRoles = [
-      { id: 'admin', value: 'Admin' },
-      { id: 'supervisor', value: 'Supervisor' },
-      { id: 'user', value: 'User' }
-    ];
+    // Get roles with label, icon, colors...
+    this.usageRoles = ALL_ROLES.map(role => {
+      return {
+        id: role,
+        ...getRoleData(role)
+      };
+    });
   }
 
   componentWillMount() {
@@ -34,15 +38,9 @@ class Tags extends React.Component {
   }
 
   render() {
-    const categories = this.props.categories;
-    const fetching = this.props.isFetching;
-    const filterValue = this.props.filterValue;
-    const onAddTag = this.props.onCreate;
-    const onDelete = this.props.onDelete;
-    const onEdit = this.props.onEdit;
-    const onChangeFilter = this.props.onChangeFilter;
+    const { isFetching, filterValue, tags, availableCategories } = this.props;
+    const { onCreate, onEdit, onDelete, onChangeFilter } = this.props;
     const availableUsageRights = this.usageRoles;
-    const availableCategories = this.props.availableCategories;
 
     return (
       <div className='flex layout vertical start-justified'>
@@ -58,27 +56,28 @@ class Tags extends React.Component {
               value={filterValue}/>
           </div>
           <div className='flex-2 layout horizontal end-justified'>
-            <a className='ui teal labeled icon button' onClick={() => onAddTag(availableUsageRights, availableCategories)}>
+            <a className='ui teal labeled icon button' onClick={() => onCreate(availableUsageRights, availableCategories)}>
               <i className='plus icon' />New Tag
             </a>
           </div>
         </div>
         <Scrollbars className='flex ui dimmable'>
           <div className='flex layout horizontal wrap'>
-            {(fetching => {
-              if (fetching) {
+            {(isFetching => {
+              if (isFetching) {
                 return (
                   <div className='ui active inverted dimmer'>
-                    <div className='ui text loader'>Fetching</div>
+                    <div className='ui text loader'>Fetching...</div>
                   </div>
                 );
               }
-            })(fetching)}
-            {categories.map(cat => {
+            })(isFetching)}
+            {availableCategories.map(cat => {
               return (
                 <CategoryCard
                 category={cat}
-                key={cat.slug}
+                tags={tags.filter(tag => tag.category.slug === cat.id)}
+                key={cat.id}
                 onDelete={(tag) => onDelete(tag)}
                 onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
               );
@@ -92,7 +91,7 @@ class Tags extends React.Component {
   }
 }
 Tags.propTypes = {
-  categories: React.PropTypes.array,
+  tags: React.PropTypes.array,
   availableCategories: React.PropTypes.array,
   filterValue: React.PropTypes.string,
   isFetching: React.PropTypes.bool,
@@ -106,12 +105,10 @@ Tags.propTypes = {
 // Function to map state to container props
 const mapStateToProps = (state) => {
   const filterValue = state.tags.filterValue ;
-  const tags = Object.values(state.tags.items);
-  const rawCategories = TagsSelectors.groupByCategory(tags);
-  const categories = TagsSelectors.getFilteredTags(rawCategories, filterValue);
+  const tags = TagsSelectors.getFilteredTags(state.tags.items, filterValue);
   const availableCategories = TagsSelectors.availableCategories(tags);
   const isFetching = state.tags.isFetching;
-  return { categories, availableCategories, isFetching, filterValue };
+  return { tags, availableCategories, isFetching, filterValue };
 };
 
 // Function to map dispatch to container props

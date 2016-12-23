@@ -15,8 +15,8 @@ class TagsSelector extends React.Component {
   componentDidMount() {
     $(`.${this.props.tagsSelectorId}.ui.dropdown`).dropdown({
       forceSelection: false,
-      onAdd: this.onAddTag.bind(this),
-      onRemove: this.onRemoveTag.bind(this)
+      onAdd: () => this.onAddTag(),
+      onRemove: () => this.onRemoveTag()
     });
   }
 

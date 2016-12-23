@@ -42,6 +42,14 @@ export const getRoleIcon = role => {
   }
 };
 
+export const getRoleData = role => {
+  return{
+    'value': getRoleLabel(role),
+    'color': getRoleColor(role),
+    'icon': getRoleIcon(role)
+  };
+};
+
 export default {
   REGISTER_REQUEST : 'REGISTER_REQUEST',
   REGISTER_SUCCESS : 'REGISTER_SUCCESS',

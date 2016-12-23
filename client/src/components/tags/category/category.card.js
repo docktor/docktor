@@ -12,7 +12,8 @@ import './category.card.scss';
 class CategoryCard extends React.Component {
 
   componentDidMount() {
-    $('.with-title').popup({
+    const category = this.props.category;
+    $(`id-cat-${category.id} .with-title`).popup({
       delay: {
         show: 300,
         hide: 0
@@ -24,12 +25,15 @@ class CategoryCard extends React.Component {
     const category = this.props.category;
     const onDelete = this.props.onDelete;
     const onEdit = this.props.onEdit;
-    const { tags } = category;
-
+    const tags = this.props.tags;
+    const cardClasses = classNames(
+        'ui card category',
+        [`id-cat-${category.id}`]
+      );
     return (
-      <div className='ui card category'>
+      <div className={cardClasses}>
         <div className='content'>
-          <div className='header with-title' data-content={category.raw} data-variation='inverted very wide'>{category.raw}</div>
+          <div className='header with-title' data-content={category.value} data-variation='inverted very wide'>{category.value}</div>
         </div>
         <div className='content'>
           {tags.map(tag => {
@@ -59,6 +63,7 @@ class CategoryCard extends React.Component {
 
 CategoryCard.propTypes = {
   category: React.PropTypes.object.isRequired,
+  tags: React.PropTypes.array.isRequired,
   onDelete: React.PropTypes.func.isRequired,
   onEdit: React.PropTypes.func.isRequired
 };

@@ -1,22 +1,22 @@
 import { transformFilterToObject } from '../utils/search.js';
 import { containsWithoutAccents } from '../utils/strings.js';
 
-const getFilteredTags = (tagsByCategory, filterValue) => {
+const getFilteredTags = (tags, filterValue) => {
   if (!filterValue || filterValue === '') {
-    return Object.values(tagsByCategory);
+    return Object.values(tags);
   } else {
-    return Object.values(tagsByCategory).filter(category => {
+    return Object.values(tags).filter(tag => {
       let match = true;
       const query = transformFilterToObject(filterValue);
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
         case 'text':
-          match &= containsWithoutAccents(JSON.stringify(Object.values(category)), value);
+          match &= containsWithoutAccents(JSON.stringify(Object.values(tag)), value);
           return;
         case 'name':
         case 'title':
-          match &= containsWithoutAccents(category.slug, value);
+          match &= containsWithoutAccents(tag.name, value);
           return;
         default:
           match = false;
@@ -28,48 +28,27 @@ const getFilteredTags = (tagsByCategory, filterValue) => {
   }
 };
 
-// Group by the tags by category
-const groupByCategory = (tags) => {
-  var categories = {};
-  var new_categories = [];
-
-  for (var i in tags) {
-    const tag = tags[i];
-    const category = tag.category;
-    var cat = categories[category.slug] || { raw: category.raw, slug: category.slug, tags: [] };
-    cat.tags.push(tag);
-    categories[category.slug] = cat;
-  }
-
-  for (i in categories) {
-    new_categories.push(categories[i]);
-  }
-
-  return new_categories;
-};
-
-  // Get the available categories in a generic format
-  // Removes duplicates
+// Get the available categories in a generic format
+// Removes duplicates
 const availableCategories = (tags) => {
   var categories = {};
   var new_categories = [];
 
-  for (var i in tags) {
-    const tag = tags[i];
+  tags.forEach( tag => {
     const category = tag.category;
     var cat = categories[category.slug] || { id: category.slug, value: category.raw };
     categories[category.slug] = cat;
-  }
+  });
 
-  for (i in categories) {
-    new_categories.push(categories[i]);
-  }
+
+  Object.keys(categories).forEach(rawName => {
+    new_categories.push(categories[rawName]);
+  });
 
   return new_categories;
 };
 
 export default {
   getFilteredTags,
-  groupByCategory,
   availableCategories
 };
