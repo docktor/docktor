@@ -35,12 +35,19 @@ class DaemonComponent extends React.Component {
 
   componentDidMount() {
     const daemonId = this.props.daemonId;
-    this.props.fetchSites();
-    this.props.fetchTags();
-    if (daemonId) {
-      // Fetch when known daemon
-      this.props.fetchDaemon(daemonId);
-    } else {
+
+    // Tags must be fetched before the daemon for the UI to render correctly
+    Promise.all([
+      this.props.fetchSites(),
+      this.props.fetchTags()
+    ]).then(() => {
+      if (daemonId) {
+        // Fetch when known daemon
+        this.props.fetchDaemon(daemonId);
+      }
+    });
+
+    if (!daemonId) {
       // New daemon
       $('.ui.form.daemon-form').form('clear');
       const volumesBox = this.refs.volumes;

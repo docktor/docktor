@@ -38,11 +38,16 @@ class ServiceComponent extends React.Component {
   componentDidMount() {
     $('.ui.pointing.two.item.menu .item').tab();
     const serviceId = this.props.serviceId;
-    this.props.fetchTags();
-    if (serviceId) {
-      // Fetch when known service
-      this.props.fetchService(serviceId);
-    } else {
+
+    // Tags must be fetched before the service for the UI to render correctly
+    this.props.fetchTags().then(() => {
+      if (serviceId) {
+        // Fetch when known service
+        this.props.fetchService(serviceId);
+      }
+    });
+
+    if (!serviceId) {
       // New service
       $('.ui.form.service-form').form('clear');
       const tagsSelector = this.refs.tags;
