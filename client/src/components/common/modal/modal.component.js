@@ -38,12 +38,12 @@ class Modal extends React.Component {
 
   componentDidUpdate() {
     this.initializeDropdownComponents();
-    $('.with-title').popup();
+    $('#modal-form .with-title').popup();
   }
 
   initializeDropdownComponents() {
-    $('#modal-form .classic.selection.dropdown').dropdown();
-    $('#modal-form .search.selection.dropdown').dropdown({ allowAdditions: true });
+    $('#modal-form .classic.selection.dropdown').dropdown({ forceSelection: false,  });
+    $('#modal-form .search.selection.dropdown').dropdown({ allowAdditions: true, forceSelection: false });
   }
 
   closeModal() {
@@ -76,9 +76,15 @@ class Modal extends React.Component {
               const itemClasses = classNames('item', {
                 'active selected': option.id === field.value
               });
-              return (<div key={option.id} className={itemClasses} data-value={field.type === 'autocomplete' ? option.value : option.id}>
-                {option.value}
-              </div>);
+              return (
+                <div key={option.id} className={itemClasses} data-value={field.type === 'autocomplete' ? option.value : option.id}>
+                  {option.icon ?
+                  <i className={classNames([option.icon], [option.color], 'icon')}/>
+                    : ''
+                  }
+                  {option.value}
+                </div>
+              );
             })}
           </div>
         </div>
