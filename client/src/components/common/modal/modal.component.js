@@ -44,6 +44,7 @@ class Modal extends React.Component {
   initializeDropdownComponents() {
     $('#modal-form .classic.selection.dropdown').dropdown({ forceSelection: false,  });
     $('#modal-form .search.selection.dropdown').dropdown({ allowAdditions: true, forceSelection: false });
+    $('#modal-form .multiple.selection.dropdown').dropdown({ allowAdditions: true, forceSelection: false });
   }
 
   closeModal() {
@@ -54,15 +55,17 @@ class Modal extends React.Component {
 
   // Render the input field, depending on the type (ex: text, dropdown, etc.)
   renderInputField(field) {
-
+    const options = field.options || [];
     switch (field.type) {
     case 'dropdown':
     case 'autocomplete':
+    case 'tags':
       // Classic dropdown and autocomplete are the same component in Semantic, but with different classes
       const itemClasses = classNames(
         'ui fluid',
         { 'search': field.type === 'autocomplete' },
         { 'classic': field.type === 'dropdown' },
+        { 'multiple search': field.type === 'tags' },
         'selection dropdown');
       return (
         <div id={field.name} className={itemClasses}>
@@ -72,12 +75,12 @@ class Modal extends React.Component {
             {field.desc}
           </div>
           <div className='menu'>
-            {field.options.map(option => {
+            {options.map(option => {
               const itemClasses = classNames('item', {
                 'active selected': option.id === field.value
               });
               return (
-                <div key={option.id} className={itemClasses} data-value={field.type === 'autocomplete' ? option.value : option.id}>
+                <div key={option.id} className={itemClasses} data-value={field.type == 'dropdown' ? option.id : option.value}>
                   {option.icon ?
                   <i className={classNames([option.icon], [option.color], 'icon')}/>
                     : ''

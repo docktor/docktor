@@ -7,27 +7,31 @@ import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 // Tags Actions
 import TagsActions from './tags.actions.js';
 
-// Thunk to save a tag
-const createTag = (form) => {
+// Thunk to create new category containing tags
+const createTags = (form) => {
 
-  let tag = Object.assign({}, form);
-  tag.name = { raw: tag.name };
-  tag.category = { raw: tag.category };
-  tag.usageRights = tag.rights;
+  let tags = form.tags.split(',').map(tag =>{
+    return {
+      'name': { 'raw' : tag },
+      'category': { 'raw' : form.category },
+      'usageRights' : form.rights
+    };
+  });
 
   return function (dispatch) {
 
-    dispatch(TagsActions.requestCreateTag(tag));
+    const createTag = (tag) => {
+      dispatch(TagsActions.requestCreateTag(tag));
 
-    let request = new Request('/api/tags', withAuth({
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(tag)
-    }));
-    return fetch(request)
+      let request = new Request('/api/tags', withAuth({
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tag)
+      }));
+      return fetch(request)
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
@@ -36,6 +40,12 @@ const createTag = (form) => {
       .catch(error => {
         handleError(error, TagsActions.createTagInvalid, dispatch);
       });
+    };
+
+    return Promise.all(
+      tags.map(tag => createTag(tag))
+    );
+
   };
 };
 
@@ -95,7 +105,7 @@ const deleteTag = (tag) => {
 
 export default {
   ...generateEntitiesThunks('tags'),
-  createTag,
+  createTags,
   saveTag,
   deleteTag
 };
