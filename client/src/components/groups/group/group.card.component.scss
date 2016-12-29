@@ -1,3 +1,7 @@
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
+
 .ui.card.group {
   margin: 1em !important;
   max-height: 200px;
@@ -24,5 +28,25 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .ui.top.right.attached.button {
+    left: auto;
+    margin: 0;
+    padding: .75em 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+  .ui.teal.button {
+    background-color: $teal-button-color !important;
+
+  }
+  .ui.teal.button:hover {
+    background-color: $teal-button-color-hover !important;
+  }
+  .ui.teal.button:active {
+    background-color: $teal-button-color-active !important;
   }
 }
