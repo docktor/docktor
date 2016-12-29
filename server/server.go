@@ -12,6 +12,7 @@ import (
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
+	"github.com/soprasteria/docktor/server/groups"
 	"github.com/soprasteria/docktor/server/services"
 	"github.com/spf13/viper"
 )
@@ -138,9 +139,10 @@ func New(version string) {
 		{
 			groupsAPI.GET("", groupsC.GetAll)
 			groupsAPI.POST("/new", groupsC.Save, isAdmin)
-			groupAPI := groupsAPI.Group("/:id")
+			groupAPI := groupsAPI.Group("/:groupID")
 			{
-				groupAPI.Use(isValidID("id"), isAdmin)
+				groupAPI.Use(isValidID("groupID"), isAdmin)
+				groupAPI.GET("", groupsC.Get, groups.RetrieveGroup)
 				groupAPI.DELETE("", groupsC.Delete)
 				groupAPI.PUT("", groupsC.Save)
 			}

@@ -117,7 +117,13 @@ describe('Utilities for entities', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {}
+        items: {},
+        selected: {
+          isFetching: false,
+          didInvalidate: true,
+          id: ''
+        },
+        lastUpdated: undefined
       };
 
       it('should not be empty', () => {

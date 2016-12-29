@@ -29,14 +29,15 @@ type FileSystems []FileSystem
 
 // Group is a entity (like a project) that gather services instances as containers
 type Group struct {
-	ID           bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
-	Created      time.Time     `bson:"created" json:"created"`
-	Title        string        `bson:"title" json:"title"`
-	Description  string        `bson:"description" json:"description"`
-	PortMinRange int           `bson:"portminrange" json:"portminrange"`
-	PortMaxRange int           `bson:"portmaxrange" json:"portmaxrange"`
-	FileSystems  FileSystems   `bson:"filesystems" json:"filesystems"`
-	Containers   Containers    `bson:"containers" json:"containers"`
+	ID           bson.ObjectId   `bson:"_id,omitempty" json:"id,omitempty"`
+	Created      time.Time       `bson:"created" json:"created"`
+	Title        string          `bson:"title" json:"title"`
+	Description  string          `bson:"description" json:"description"`
+	PortMinRange int             `bson:"portminrange" json:"portminrange"`
+	PortMaxRange int             `bson:"portmaxrange" json:"portmaxrange"`
+	FileSystems  FileSystems     `bson:"filesystems" json:"filesystems"`
+	Containers   Containers      `bson:"containers" json:"containers"`
+	Tags         []bson.ObjectId `bson:"tags" json:"tags"`
 }
 
 // AddFileSystem adds a FileSystem to the Group
