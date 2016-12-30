@@ -7,12 +7,17 @@ import UUID from 'uuid-js';
 
 // Thunks / Actions
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
+import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
 import GroupsThunks from '../../../modules/groups/groups.thunks.js';
 import GroupsActions from '../../../modules/groups/groups.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
+import FilesystemsBox from '../../common/boxes/filesystems.box.component.js';
 import TagsSelector from '../../tags/tags.selector.component.js';
+
+// Selectors
+import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors.js';
 
 // Style
 import './group.page.scss';
@@ -34,7 +39,8 @@ class GroupComponent extends React.Component {
 
     // Tags must be fetched before the group for the UI to render correctly
     Promise.all([
-      this.props.fetchTags()
+      this.props.fetchTags(),
+      this.props.fetchDaemons()
     ]).then(() => {
       if (groupId) {
         // Fetch when known group
@@ -90,6 +96,7 @@ class GroupComponent extends React.Component {
   render() {
     const group = this.state;
     const isFetching = this.props.isFetching;
+    const daemons = this.props.daemons;
     const tags = this.props.tags;
     return (
       <div className='flex layout vertical start-justified'>
@@ -134,6 +141,9 @@ class GroupComponent extends React.Component {
                       </div>
                     </div>
                   </form>
+                  <FilesystemsBox filesystems={group.filesystems} daemons={daemons} ref='filesystems' boxId={UUID.create(4).hex}>
+                    <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
+                  </FilesystemsBox>
                   <div className='flex button-form'>
                     <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
                   </div>
@@ -149,8 +159,10 @@ GroupComponent.propTypes = {
   group: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   groupId: React.PropTypes.string,
+  daemons: React.PropTypes.array,
   tags: React.PropTypes.object,
   fetchGroup: React.PropTypes.func.isRequired,
+  fetchDaemons: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
@@ -162,11 +174,13 @@ const mapStateToProps = (state, ownProps) => {
   const groups = state.groups;
   const group = groups.selected;
   const emptyGroup = { tags: [] };
+  const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
   return {
     group: groups.items[group.id] || emptyGroup,
     isFetching: group.id ? group.isFetching : true,
     groupId: paramId,
-    tags: state.tags
+    tags: state.tags,
+    daemons
   };
 };
 
@@ -174,6 +188,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
+    fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
     onSave: (group) => dispatch(GroupsThunks.saveGroup(group)),
     onDelete: group => {

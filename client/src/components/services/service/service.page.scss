@@ -13,183 +13,109 @@ $normal: 400;
 $bold: 600;
 $br: 4px;
 
-.service-details {
-
-  background: rgba($form-bg, .9);
-  margin: 2em;
-  max-width: 70%;
-  min-width: 450px;
-  padding: 2em 5em;
-  width: 70%;
-
-  .tabular-details {
-    margin-bottom: 2rem;
-    > .nonpadded {
-      padding: 0;
-    }
-
-    > .padded {
-      padding: 2em;
-    }
-  }
-  .ui.form.service-form {
-    > .fields > .field > label {
-      color: rgba(0, 0, 0, .95) !important;
-    }
-
+.service-page {
+  .ui.active.dimmer {
+      background-color: transparent;
   }
 
-  h1 {
-    color: $white;
-    font-weight: $thin;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
+  .service-details {
 
-    .right-floated {
-      float: right !important;
+    background: rgba($form-bg, .9);
+    margin: 2em;
+    max-width: 70%;
+    min-width: 450px;
+    padding: 2em 5em;
+    width: 70%;
+
+    .tabular-details {
+      margin-bottom: 2rem;
+      > .nonpadded {
+        padding: 0;
+      }
+
+      > .padded {
+        padding: 2em;
+      }
     }
-  }
+    .ui.form.service-form {
+      > .fields > .field > label {
+        color: rgba(0, 0, 0, .95) !important;
+      }
 
-  a {
-    color: $main;
-    text-decoration: none;
-    transition: .5s ease;
-    &:hover {
-      color: $main-dark;
-      cursor: pointer;
     }
-  }
 
-  .button-form {
-    .ui.button {
-      -moz-appearance: none; // Firefox
-      -webkit-appearance: none; // Safari and Chrome
-      appearance: none;
-      background: $main;
-      border: none;
-      border-radius: 0;
+    h1 {
       color: $white;
-      font-size: 1.5rem;
-      font-weight: $bold;
-      letter-spacing: .1em;
-      outline: none;
-      padding: 15px 0;
+      font-weight: $thin;
+      margin-bottom: 2rem;
       text-transform: uppercase;
-      transition: all.5s ease;
-      &:hover,
-      &:focus {
-        background: $main-dark;
-        color: $white;
-      }
-    }
-  }
 
-  .ui.label.form-label {
-    background-color: #3a6191;
-    border-radius: 0;
-    color: white;
-    height: 38px;
-    line-height: 38px;
-    margin-top: 24px;
-    padding-bottom: 0;
-    padding-top: 0;
-    text-align: center;
-    width: 100%;
-    @media only screen and (max-width: 767px) {
-      margin-left: 25%;
-      margin-top: 0;
-      width: 50% !important;
-    }
-  }
-
-  .tags {
-    .ui.label {
-      width: calc(12.5% - 1.5em);
-      margin-top: 0;
-      margin-bottom: 0em !important;
-      @media only screen and (max-width: 767px) {
-        margin-bottom: .5em !important;
-      }
-      margin-right: 2em;
-    }
-
-    .ReactTags__tags {
-      position: relative;
-      display: inline-block;
-      @media only screen and (max-width: 767px) {
-        display: block;
+      .right-floated {
+        float: right !important;
       }
     }
 
-    .ReactTags__tagInput {
-      border-radius: 0;
-      margin-bottom: 5px;
-      display: inline-block;
-
-      input {
-        margin: 0;
-        width: 100%;
-        padding: .68em 1em;
-        font-size: 1em;
-        border: 1px solid rgba(34, 36, 38, .15);
-        color: rgba(0, 0, 0, .87);
-
-        &:focus {
-          color: rgba(0, 0, 0, .95);
-          border-color: #85b7d9;
-          border-radius: .28571429rem;
-          background: #fff;
-          box-shadow: 0 0 0 0 rgba(34, 36, 38, .35) inset;
-        }
-      }
-    }
-
-    .ReactTags__selected {
-      width: 100%;
-
-      .ReactTags__tag {
-        border: 1px solid #ddd;
-        background: #f8f8f9;
-        font-size: 12px;
-        display: inline-block;
-        padding: .5em 1em;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        cursor: move;
-      }
-
-      .ReactTags__remove {
-        color: #aaa;
-        margin-left: 5px;
+    a {
+      color: $main;
+      text-decoration: none;
+      transition: .5s ease;
+      &:hover {
+        color: $main-dark;
         cursor: pointer;
       }
     }
 
-    .ReactTags__suggestions {
-      position: absolute;
-
-      ul {
-        list-style-type: none;
-        box-shadow: .05em .01em .5em rgba(0, 0, 0, .2);
-        background: white;
-        width: 200px;
-
-        .active {
-          background: #b7cfe0;
-          cursor: pointer;
+    .button-form {
+      .ui.button {
+        -moz-appearance: none; // Firefox
+        -webkit-appearance: none; // Safari and Chrome
+        appearance: none;
+        background: $main;
+        border: none;
+        border-radius: 0;
+        color: $white;
+        font-size: 1.5rem;
+        font-weight: $bold;
+        letter-spacing: .1em;
+        outline: none;
+        padding: 15px 0;
+        text-transform: uppercase;
+        transition: all.5s ease;
+        &:hover,
+        &:focus {
+          background: $main-dark;
+          color: $white;
         }
       }
+    }
 
-      li {
-        border-bottom: 1px solid #ddd;
-        padding: 5px 10px;
-        margin: 0;
+    .ui.label.form-label {
+      background-color: #3a6191;
+      border-radius: 0;
+      color: white;
+      height: 38px;
+      line-height: 38px;
+      margin-top: 24px;
+      padding-bottom: 0;
+      padding-top: 0;
+      text-align: center;
+      width: 100%;
+      @media only screen and (max-width: 767px) {
+        margin-left: 25%;
+        margin-top: 0;
+        width: 50% !important;
+      }
+    }
 
-        mark {
-          text-decoration: underline;
-          background: none;
-          font-weight: 600;
+    .tags {
+      .ui.label {
+        width: calc(12.5% - 1.5em);
+        margin-top: 0;
+        margin-bottom: 0em !important;
+        @media only screen and (max-width: 767px) {
+          margin-bottom: .5em !important;
         }
+        margin-right: 2em;
       }
     }
   }
