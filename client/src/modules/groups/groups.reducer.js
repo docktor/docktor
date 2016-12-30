@@ -63,7 +63,7 @@ const groupsReducer = (state, action) => {
         ...entitiesState.selected,
         isFetching: false,
         didInvalidate: false,
-        id: newSavedGroup.id
+        id: ''
       }
     };
     return newGroupState;

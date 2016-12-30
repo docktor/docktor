@@ -8,8 +8,7 @@ import UUID from 'uuid-js';
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
-import ServiceThunks from '../../../modules/services/service/service.thunks.js';
-import ServiceActions from '../../../modules/services/service/service.actions.js';
+import ServicesThunks from '../../../modules/services/services.thunks.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
@@ -213,11 +212,13 @@ ServiceComponent.propTypes = {
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
-  const service = state.service;
+  const services = state.services;
+  const service = services.selected;
   const emptyService = { commands: [], urls: [], jobs: [], images: [], tags: [] };
+  const isFetching = paramId && (paramId !== service.id || (service.id ? service.isFetching : true));
   return {
-    service: paramId ? service.item : emptyService,
-    isFetching: paramId && paramId !== service.item.id || service.isFetching,
+    service: services.items[paramId] || emptyService,
+    isFetching,
     serviceId: paramId,
     tags: state.tags
   };
@@ -226,11 +227,11 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchService: id => dispatch(ServiceThunks.fetchService(id)),
+    fetchService: id => dispatch(ServicesThunks.fetchService(id)),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: service => dispatch(ServiceThunks.saveService(service)),
+    onSave: service => dispatch(ServicesThunks.saveService(service)),
     onDelete: service => {
-      const callback = () => dispatch(ServiceThunks.deleteService(service.id));
+      const callback = () => dispatch(ServicesThunks.deleteService(service.id));
       dispatch(ToastsActions.confirmDeletion(service.title, callback));
     }
   };

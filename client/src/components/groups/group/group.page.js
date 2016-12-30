@@ -9,7 +9,6 @@ import UUID from 'uuid-js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
 import GroupsThunks from '../../../modules/groups/groups.thunks.js';
-import GroupsActions from '../../../modules/groups/groups.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
@@ -52,7 +51,7 @@ class GroupComponent extends React.Component {
       // New group
       $('.ui.form.group-form').form('clear');
       const tagsSelector = this.refs.tags;
-      tagsSelector && tagsSelector.setState({ tags: [] });
+      tagsSelector.setState({ tags: [] });
       this.refs.scrollbars.scrollTop();
     }
   }

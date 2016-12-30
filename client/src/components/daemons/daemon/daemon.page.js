@@ -9,7 +9,6 @@ import UUID from 'uuid-js';
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
-import DaemonsActions from '../../../modules/daemons/daemons.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
