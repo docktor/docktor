@@ -10,7 +10,6 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 // Reducers
 import sites from './modules/sites/sites.reducer.js';
 import daemons from './modules/daemons/daemons.reducer.js';
-import daemon from './modules/daemons/daemon/daemon.reducer.js';
 import groups from './modules/groups/groups.reducer.js';
 import services from './modules/services/services.reducer.js';
 import service from './modules/services/service/service.reducer.js';
@@ -54,7 +53,6 @@ const store = createStore(
     {
       sites,
       daemons,
-      daemon,
       groups,
       services,
       service,

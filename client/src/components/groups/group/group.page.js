@@ -52,7 +52,7 @@ class GroupComponent extends React.Component {
       // New group
       $('.ui.form.group-form').form('clear');
       const tagsSelector = this.refs.tags;
-      tagsSelector.setState({ tags: [] });
+      tagsSelector && tagsSelector.setState({ tags: [] });
       this.refs.scrollbars.scrollTop();
     }
   }
@@ -99,7 +99,7 @@ class GroupComponent extends React.Component {
     const daemons = this.props.daemons;
     const tags = this.props.tags;
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified group-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
             {
@@ -173,11 +173,12 @@ const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
   const groups = state.groups;
   const group = groups.selected;
-  const emptyGroup = { tags: [] };
+  const emptyGroup = { tags: [], filesystems: [] };
   const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
+  const isFetching = paramId && (paramId !== group.id || (group.id ? group.isFetching : true));
   return {
-    group: groups.items[group.id] || emptyGroup,
-    isFetching: group.id ? group.isFetching : true,
+    group: groups.items[paramId] || emptyGroup,
+    isFetching,
     groupId: paramId,
     tags: state.tags,
     daemons

@@ -10,7 +10,6 @@ const requestDaemonInfo = (daemon) => {
   };
 };
 
-
 // Daemon info are received
 const receiveDaemonInfo = (daemon, info) => {
   return {
@@ -39,10 +38,75 @@ const changeFilter = (filterValue) => {
   };
 };
 
+// Request a daemons
+const requestDaemon = (id) => {
+  return {
+    type: DaemonsConstants.REQUEST_DAEMON,
+    id
+  };
+};
+
+// Daemon is received
+const receiveDaemon = (daemon) => {
+  return {
+    type: DaemonsConstants.RECEIVE_DAEMON,
+    daemon
+  };
+};
+
+// Request to save a daemon
+const requestSaveDaemon = (daemon) => {
+  return {
+    type: DaemonsConstants.REQUEST_SAVE_DAEMON,
+    daemon
+  };
+};
+
+// Daemon is saved
+const daemonSaved = (daemon) => {
+  return {
+    type: DaemonsConstants.DAEMON_SAVED,
+    daemon
+  };
+};
+
+// Request site deletion
+const requestDeleteDaemon = (id) => {
+  return {
+    type: DaemonsConstants.REQUEST_DELETE_DAEMON,
+    id
+  };
+};
+
+// Daemon is deleted
+const daemonDeleted = (response) => {
+  return {
+    type: DaemonsConstants.DAEMON_DELETED,
+    id: response.id,
+    receivedAt: Date.now()
+  };
+};
+
+
+// Daemon API returns an Error
+const invalidRequestDaemon = (error) => {
+  return {
+    type: DaemonsConstants.INVALID_REQUEST_DAEMON,
+    error
+  };
+};
+
 export default {
   ...generateEntitiesActions('daemons'),
   requestDaemonInfo,
   receiveDaemonInfo,
   invalidRequestDaemonInfo,
-  changeFilter
+  changeFilter,
+  requestDaemon,
+  receiveDaemon,
+  requestSaveDaemon,
+  daemonSaved,
+  requestDeleteDaemon,
+  daemonDeleted,
+  invalidRequestDaemon
 };
