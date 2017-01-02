@@ -56,17 +56,16 @@ const tagRightsHelp = `<div>
     </ul>
     </div>`;
 
-// New Tag Modal
-const openNewTagModal = (availableRights, availableCategories, callback) => {
+const openNewTagsModal = (availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
-  line.fields.push({ label: 'Name', name: 'name', desc: 'Fill a name', type: 'text', required: true });
+  line.fields.push({ label: 'Tag names', name: 'tags', desc: 'Add some tags', type: 'tags', required: true });
   line.fields.push({ label: 'Category', name: 'category', desc: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
-  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
+  line.fields.push({ label: 'Default rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
   form.lines.push(line);
   return {
     type: ModalConstants.OPEN_MODAL,
-    title: 'New Tag',
+    title: 'New Tags',
     form,
     callback
   };
@@ -94,6 +93,6 @@ export default {
   closeModal,
   openNewSiteModal,
   openEditSiteModal,
-  openNewTagModal,
-  openEditTagModal
+  openNewTagsModal,
+  openEditTagModal,
 };

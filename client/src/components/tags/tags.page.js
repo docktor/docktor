@@ -57,7 +57,7 @@ class Tags extends React.Component {
           </div>
           <div className='flex-2 layout horizontal end-justified'>
             <a className='ui teal labeled icon button' onClick={() => onCreate(availableUsageRights, availableCategories)}>
-              <i className='plus icon' />New Tag
+              <i className='plus icon' />New Tags
             </a>
           </div>
         </div>
@@ -118,8 +118,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(TagsThunks.fetchIfNeeded());
     },
     onCreate: (availableRights, availableCategories) => {
-      const callback = (tagForm) => dispatch(TagsThunks.createTag(tagForm));
-      dispatch(ModalActions.openNewTagModal(availableRights, availableCategories, callback));
+      const callback = (tagForm) => dispatch(TagsThunks.createTags(tagForm));
+      dispatch(ModalActions.openNewTagsModal(availableRights, availableCategories, callback));
     },
     onDelete: (tag) => {
       dispatch(TagsThunks.deleteTag(tag));
