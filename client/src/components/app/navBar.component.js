@@ -2,6 +2,7 @@
 import React from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Menu, Icon, Loader, Dimmer, Dropdown } from 'semantic-ui-react';
 
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 import ExportThunks from '../../modules/export/export.thunk.js';
@@ -20,14 +21,6 @@ class NavBarComponent extends React.Component {
     return this.props.auth.isAuthenticated && isRoleAuthorized(roles, this.props.auth.user.role);
   }
 
-  componentDidMount() {
-    $('.navbar .ui.dropdown').dropdown();
-  }
-
-  componentDidUpdate() {
-    $('.navbar .ui.dropdown').dropdown();
-  }
-
   isActiveURL(url) {
     if (!this.props.location || !this.props.location.pathname) {
       return '';
@@ -35,32 +28,37 @@ class NavBarComponent extends React.Component {
     return this.props.location.pathname.startsWith(url) ? ' active' : '';
   }
 
+  renderDropdown(loading) {
+    const item = [];
+    item.push(<Icon key='icon' name={loading ? 'circle notched' : 'user'} loading={loading} size='large'/>);
+    item.push(this.props.auth.user.displayName);
+    return item;
+  }
+
   render() {
     const { logout, exportDocktor, isExportFetching } = this.props;
     return (
-      <div className='ui inverted fluid menu navbar'>
-        <IndexLink to='/' className='item brand'>
-          <i className='large fitted doctor icon' />{' '}Docktor
-        </IndexLink>
-        {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
-        {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
-        {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
-        {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
-        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/tags' className={'item' + this.isActiveURL('/tags')}>Tags</Link>}
+      <Menu inverted className='navbar'>
+        <Menu.Item  as={IndexLink} to='/' className='brand'>
+          <Icon fitted name='doctor' size='large'/>{' Docktor'}
+        </Menu.Item>
+        {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]) && <Menu.Item as={Link} to='/daemons'>Daemons</Menu.Item>}
+        {this.isAuthorized() && <Menu.Item as={Link} to='/services'>Services</Menu.Item>}
+        {this.isAuthorized() && <Menu.Item as={Link} to='/groups'>Groups</Menu.Item>}
+        {this.isAuthorized() && <Menu.Item as={Link} to='/users'>Users</Menu.Item>}
+        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Menu.Item as={Link} to='/tags'>Tags</Menu.Item>}
         {this.isAuthorized() &&
-        <div className='right menu'>
-          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'/></div> : ''}
-          <div className='ui dropdown item'>
-            <i className='inverted large user icon' />{' ' + this.props.auth.user.displayName}
-            <div className='menu'>
-              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className={'item ' + (isExportFetching ? 'disabled' : '')}><i className='download icon' />Export</a>}
-              <Link to='/settings' className='item'><i className='settings icon' />Settings</Link>
-              <a className='item' onClick={logout} ><i className='sign out icon' />Logout</a>
-            </div>
-          </div>
-        </div>
+        <Menu.Menu position='right'>
+          <Menu.Item as={Dropdown} trigger={this.renderDropdown(isExportFetching)}>
+            <Dropdown.Menu>
+              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Dropdown.Item onClick={exportDocktor} disabled={isExportFetching}><Icon name='download' />Export</Dropdown.Item>}
+              <Dropdown.Item as={Link} to='/settings'><Icon name='settings' />Settings</Dropdown.Item>
+              <Dropdown.Item onClick={logout} ><Icon name='sign out' />Logout</Dropdown.Item>
+            </Dropdown.Menu>
+          </Menu.Item>
+        </Menu.Menu>
         }
-      </div>
+      </Menu>
     );
   }
 }

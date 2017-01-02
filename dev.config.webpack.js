@@ -2,7 +2,6 @@ var webpack = require('webpack'),
   path = require('path');
 
 var nodeModules = path.resolve(__dirname, 'node_modules'),
-  bowerComponents = path.resolve(__dirname, 'bower_components'),
   build = path.resolve(__dirname, './client/dist/js'),
   src = path.resolve(__dirname, './client/src/main.js');
 
@@ -25,7 +24,7 @@ var devConfig = {
       query: {
         presets: ['react', 'es2015']
       },
-      exclude: [nodeModules, bowerComponents]
+      exclude: [nodeModules]
     }, {
       test: /\.scss$/,
       loaders: ['style', 'css', 'sass']
@@ -45,17 +44,9 @@ var devConfig = {
       { test: /\.js$/, loader: 'source-map' },
   ],
   resolve: {
-    alias: {
-      jquery: bowerComponents + '/jquery/dist/jquery.js'
-    },
-    modulesDirectories: ['node_modules', 'bower_components']
+    modulesDirectories: ['node_modules']
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    }),
     new webpack.HotModuleReplacementPlugin()
   ]
 };

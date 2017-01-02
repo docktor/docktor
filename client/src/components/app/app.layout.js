@@ -1,11 +1,6 @@
 // React
 import React from 'react';
 
-// JS dependancies
-import 'jquery';
-import form from 'semantic/dist/semantic.js';
-$.form = form;
-
 // Components
 import NavBar from './navBar.component.js';
 import Footer from './footer.component.js';
@@ -14,7 +9,7 @@ import Modal from '../common/modal/modal.component.js';
 
 
 // Style
-import 'semantic/dist/semantic.css';
+import 'semantic-ui-css/semantic.min.css';
 import './common.scss';
 import './flex.scss';
 

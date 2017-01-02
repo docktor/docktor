@@ -4,7 +4,6 @@ var webpack = require('webpack'),
   OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 
 var nodeModules = path.resolve(__dirname, 'node_modules'),
-  bowerComponents = path.resolve(__dirname, 'bower_components'),
   build = path.resolve(__dirname, './client/dist/js'),
   src = path.resolve(__dirname, './client/src/main.js');
 
@@ -23,7 +22,7 @@ var prodConfig = {
       query: {
         presets: ['react', 'es2015']
       },
-      exclude: [nodeModules, bowerComponents]
+      exclude: [nodeModules]
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('css!sass')
@@ -39,17 +38,9 @@ var prodConfig = {
     }]
   },
   resolve: {
-      alias: {
-        jquery: bowerComponents + '/jquery/dist/jquery.js'
-      },
-      modulesDirectories: ['node_modules', 'bower_components']
+    modulesDirectories: ['node_modules']
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    }),
     new ExtractTextPlugin('../css/style.css', {
       allChunks: true
     }),
