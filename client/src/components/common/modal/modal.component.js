@@ -125,13 +125,16 @@ class Modal extends React.Component {
               ))}
               {modal.form.lines.map((line, index) => (
                 <div key={index} className={line.class + ' fields'}>
-                  {line.fields.map(field => (
-                    <div className={(field.required ? 'required' : '') + ' field'} key={field.name}>
-                      {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide' /> : ''}
-                      <label>{field.label ? field.label : field.name}</label>
-                      {this.renderInputField(field)}
-                    </div>
-                  ))}
+                  {line.fields.map(field => {
+                    const classes = classNames(field.class, { required: field.required }, 'field');
+                    return (
+                      <div className={classes} key={field.name}>
+                        {field.help ? <i className='with-title help circle link icon' data-html={field.help} data-position='left center' data-variation='inverted very wide' /> : ''}
+                        <label>{field.label ? field.label : field.name}</label>
+                        {this.renderInputField(field)}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
               <div className='ui error message' />

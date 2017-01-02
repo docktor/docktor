@@ -58,11 +58,13 @@ const tagRightsHelp = `<div>
 
 const openNewTagsModal = (availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
-  let line = { class: 'three', fields: [] };
-  line.fields.push({ label: 'Tag names', name: 'tags', desc: 'Add some tags', type: 'tags', required: true });
-  line.fields.push({ label: 'Category', name: 'category', desc: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
-  line.fields.push({ label: 'Default rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
-  form.lines.push(line);
+  let firstLine = { fields: [] };
+  firstLine.fields.push({ label: 'Tag names', name: 'tags', desc: 'Add some tags', type: 'tags', required: true, class: 'sixteen wide' });
+  form.lines.push(firstLine);
+  let secondLine = { class: 'two', fields: [] };
+  secondLine.fields.push({ label: 'Category', name: 'category', desc: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
+  secondLine.fields.push({ label: 'Default rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
+  form.lines.push(secondLine);
   return {
     type: ModalConstants.OPEN_MODAL,
     title: 'New Tags',
