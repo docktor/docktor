@@ -18,10 +18,7 @@ var prodConfig = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015']
-      },
+      loader: 'babel',
       exclude: [nodeModules]
     }, {
       test: /\.scss$/,
@@ -31,10 +28,16 @@ var prodConfig = {
       loader: ExtractTextPlugin.extract('css')
     }, {
       test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
-      loader: 'file-loader?name=../fonts/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../fonts/[name].[ext]'
+      }
     }, {
       test: /\.png?$|\.jpe?g$|\.ico$/,
-      loader: 'file-loader?name=../images/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../images/[name].[ext]'
+      }
     }]
   },
   resolve: {

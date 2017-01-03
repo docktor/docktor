@@ -1,67 +1,68 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { push } from 'react-router-redux';
+import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class ChangeResetPasswordP extends React.Component {
 
-  componentDidMount() {
-    $('#change-password > .ui.form').form({
-      fields: {
-        newPassword : ['minLength[6]', 'empty', 'doesntContain[ ]']
-      },
-      onSuccess: (event, fields) => {
-        this.onChangePassword(event);
-      },
-      onFailure: (event, fields) => {
-        return false;
-      }
-    });
+  state = {
+    schema: Joi.object().keys({
+      newPassword: Joi.string().min(6).required()
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
+    const errorMessage = nextProps.errorMessage;
+    if(nextProps.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
+    }
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
     }
   }
 
   componentWillMount() {
-    if(this.props.isAuthenticated && !this.props.errorMessage) {
+    const errorMessage = this.props.errorMessage;
+    if(this.props.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
+    }
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
     }
   }
 
-  onChangePassword(event) {
-    event.preventDefault();
-    const newPassword = this.refs.newPassword.value.trim();
-    const token = this.props.token.trim();
-    this.props.changePassword(newPassword, token);
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.state.schema, { abortEarly: false });
+    if (error) {
+      this.setState({ errors:error.details });
+    } else {
+      const token = this.props.token.trim();
+      this.props.changePassword(formData.newPassword, token);
+    }
   }
 
   render() {
     const { errorMessage, isFetching, token } = this.props;
+    const { errors } = this.state;
     if (token) {
       return (
         <TabForm>
           <div id='change-password'>
-              <h1>Set a new password</h1>
-              <form className='ui form' >
-                <div className='required field'>
-                  <label>
-                    New password
-                  </label>
-                  <input type='password' ref='newPassword' name='newPassword'  placeholder='Set a new password' autoComplete='off'/>
-                </div>
-                {errorMessage &&
-                    <p className='error api'>{errorMessage}</p>
-                }
-                <div className='ui error message' />
-                <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Change password</button>
-              </form>
+            <Header as='h1'>Set a new password</Header>
+            <Form error={!!errors} onSubmit={this.handleSubmit}>
+              <Form.Input required label='New Password' type='password' name='newPassword' autoComplete='off' placeholder='Set a new password'/>
+              <Message error>
+                <Message.List>
+                  {errors && errors.map(error => <Message.Item key={error.path}>{error.message}</Message.Item>)}
+                </Message.List>
+              </Message>
+              <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Change password</Button>
+            </Form>
           </div>
         </TabForm>
       );

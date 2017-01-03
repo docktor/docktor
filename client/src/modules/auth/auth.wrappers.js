@@ -1,6 +1,3 @@
-// Imports for fetch API
-import 'babel-polyfill';
-
 // Wraps fetch options with authentication parameters
 export const withAuth = (fetchOptions) => {
 

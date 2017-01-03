@@ -20,10 +20,7 @@ var devConfig = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015']
-      },
+      loader: 'babel',
       exclude: [nodeModules]
     }, {
       test: /\.scss$/,
@@ -33,15 +30,21 @@ var devConfig = {
       loaders: ['style', 'css']
     }, {
       test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
-      loader: 'file-loader?name=../fonts/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../fonts/[name].[ext]'
+      }
     }, {
       test: /\.png?$|\.jpe?g$|\.ico$/,
-      loader: 'file-loader?name=../images/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../images/[name].[ext]'
+      }
     }]
   },
   preLoaders: [
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      { test: /\.js$/, loader: 'source-map' },
+      { test: /\.jsx?$/, loader: 'source-map' },
   ],
   resolve: {
     modulesDirectories: ['node_modules']
