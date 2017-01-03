@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
+import { isEmpty } from '../../modules/utils/objects.js';
+import Joi from 'joi-browser';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
@@ -10,22 +12,23 @@ import AuthThunks from '../../modules/auth/auth.thunk.js';
 class ResetPwdComponent extends React.Component {
 
   state = {
-    schema: Joi.object().keys({
-      username: Joi.string().required()
-    })
   }
+
+  schema = Joi.object().keys({
+    username: Joi.string().trim().alphanum().required()
+  })
 
   componentWillReceiveProps(nextProps) {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+      this.setState({ errors: { error: errorMessage } });
     }
   }
 
   componentWillMount() {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+      this.setState({ errors: { error: errorMessage } });
     }
   }
 
@@ -33,7 +36,9 @@ class ResetPwdComponent extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.state.schema, { abortEarly: false });
     if (error) {
-      this.setState({ errors:error.details });
+      const errors = {};
+      error.details.forEach(err => errors[err.path] = err.message);
+      this.setState({ errors });
     } else {
       this.props.resetPassword(formData.username);
     }
@@ -45,11 +50,11 @@ class ResetPwdComponent extends React.Component {
     return (
         <div id='reset-password'>
           <Header as='h1'>Reset your password</Header>
-          <Form error={!!errors} onSubmit={this.handleSubmit}>
-            <Form.Input required label='Username' type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'/>
+          <Form error={!isEmpty(errors)} onSubmit={this.handleSubmit}>
+            <Form.Input required error={!!errors['username']} label='Username' type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'/>
             <Message error>
               <Message.List>
-                {errors && errors.map(error => <Message.Item key={error.path}>{error.message}</Message.Item>)}
+                {errors && Object.keys(errors).map(error => <Message.Item key={error}>{errors[error]}</Message.Item>)}
               </Message.List>
             </Message>
             <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Reset it!</Button>
