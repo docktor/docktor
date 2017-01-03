@@ -12,7 +12,6 @@ import sites from './modules/sites/sites.reducer.js';
 import daemons from './modules/daemons/daemons.reducer.js';
 import groups from './modules/groups/groups.reducer.js';
 import services from './modules/services/services.reducer.js';
-import service from './modules/services/service/service.reducer.js';
 import users from './modules/users/users.reducer.js';
 import tags from './modules/tags/tags.reducer.js';
 import toasts from './modules/toasts/toasts.reducer.js';
@@ -55,7 +54,6 @@ const store = createStore(
       daemons,
       groups,
       services,
-      service,
       users,
       tags,
       toasts,

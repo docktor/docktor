@@ -106,7 +106,7 @@ const daemonsReducer = (state, action) => {
         ...entitiesState.selected,
         isFetching: false,
         didInvalidate: false,
-        id: newSavedDaemon.id
+        id: ''
       }
     };
     return newDaemonState;
