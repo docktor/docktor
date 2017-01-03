@@ -8,8 +8,8 @@ import UUID from 'uuid-js';
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
-import DaemonThunks from '../../../modules/daemons/daemon/daemon.thunks.js';
-import DaemonActions from '../../../modules/daemons/daemon/daemon.actions.js';
+import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
+import DaemonsActions from '../../../modules/daemons/daemons.actions.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Components
@@ -171,7 +171,7 @@ class DaemonComponent extends React.Component {
       </div>
     `;
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified daemon-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
             {
@@ -313,11 +313,13 @@ DaemonComponent.propTypes = {
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
-  const daemon = state.daemon;
+  const daemons = state.daemons;
+  const daemon = daemons.selected;
   const emptyDaemon = { volumes: [], variables: [], tags: [] };
+  const isFetching = paramId && (paramId !== daemon.id || (daemon.id ? daemon.isFetching : true));
   return {
-    daemon: paramId ? daemon.item : emptyDaemon,
-    isFetching: daemon.isFetching,
+    daemon: daemons.items[paramId] || emptyDaemon,
+    isFetching,
     daemonId: paramId,
     sites: state.sites,
     tags: state.tags
@@ -327,12 +329,12 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon: (id) => dispatch(DaemonThunks.fetchDaemon(id)),
+    fetchDaemon: (id) => dispatch(DaemonsThunks.fetchDaemon(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: (daemon) => dispatch(DaemonThunks.saveDaemon(daemon)),
+    onSave: (daemon) => dispatch(DaemonsThunks.saveDaemon(daemon)),
     onDelete: daemon => {
-      const callback = () => dispatch(DaemonThunks.deleteDaemon(daemon.id));
+      const callback = () => dispatch(DaemonsThunks.deleteDaemon(daemon.id));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
     }
   };
