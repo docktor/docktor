@@ -2,52 +2,58 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class ResetPwdComponent extends React.Component {
 
-  componentDidMount() {
-    $('#reset-password > .ui.form')
-      .form({
-        fields: {
-          username : ['empty', 'doesntContain[ ]']
-        },
-        onSuccess: (event, fields) => {
-          this.onResetPassword(event);
-        },
-        onFailure: (event, fields) => {
-          return false;
-        }
-      })
-    ;
+  state = {
+    schema: Joi.object().keys({
+      username: Joi.string().required()
+    })
   }
 
-  onResetPassword(event) {
-    event.preventDefault();
-    const username = this.refs.username.value.trim();
-    this.props.resetPassword(username);
+  componentWillReceiveProps(nextProps) {
+    const errorMessage = nextProps.errorMessage;
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+    }
+  }
+
+  componentWillMount() {
+    const errorMessage = this.props.errorMessage;
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+    }
+  }
+
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.state.schema, { abortEarly: false });
+    if (error) {
+      this.setState({ errors:error.details });
+    } else {
+      this.props.resetPassword(formData.username);
+    }
   }
 
   render() {
     const { errorMessage, isFetching } = this.props;
+    const { errors } = this.state;
     return (
         <div id='reset-password'>
-          <h1>Reset your password</h1>
-          <form className='ui form' >
-            <div className='required field'>
-              <label>
-                Username
-              </label>
-              <input type='text' ref='username' name='username' placeholder='Username of user with forgotten password' autoComplete='off'/>
-            </div>
-            {errorMessage &&
-                <p className='error api'>{errorMessage}</p>
-            }
-            <div className='ui error message' />
-            <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Reset it!</button>
-          </form>
+          <Header as='h1'>Reset your password</Header>
+          <Form error={!!errors} onSubmit={this.handleSubmit}>
+            <Form.Input required label='Username' type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'/>
+            <Message error>
+              <Message.List>
+                {errors && errors.map(error => <Message.Item key={error.path}>{error.message}</Message.Item>)}
+              </Message.List>
+            </Message>
+            <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Reset it!</Button>
+          </Form>
         </div>
 
     );
@@ -78,9 +84,9 @@ class ResetPasswordP extends React.Component {
   render() {
     const { errorMessage, isFetching } = this.props;
     return (
-        <TabForm>
-          <ResetPwdComponent errorMessage={errorMessage} resetPassword={this.props.resetPassword} isFetching={isFetching}/>
-        </TabForm>
+      <TabForm>
+        <ResetPwdComponent errorMessage={errorMessage} resetPassword={this.props.resetPassword} isFetching={isFetching}/>
+      </TabForm>
     );
   }
 };

@@ -1,6 +1,8 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
+import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 // Style
 import '../common/tabform/tabform.component.scss';
@@ -8,90 +10,65 @@ import '../common/tabform/tabform.component.scss';
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {
 
-  componentDidMount() {
-    $('#register > .ui.form')
-      .form({
-        fields: {
-          username : ['empty', 'doesntContain[ ]'],
-          password : ['minLength[6]', 'empty', 'doesntContain[ ]'],
-          email : ['email', 'empty', 'doesntContain[ ]'],
-          firstname: ['empty'],
-          lastname: ['empty']
-        },
-        onSuccess: (event, fields) => {
-          this.handleClick(event);
-        },
-        onFailure: (event, fields) => {
-          return false;
-        }
-      })
-    ;
+  state = {
+    schema: Joi.object().keys({
+      username: Joi.string().required(),
+      password: Joi.string().min(6).required(),
+      email: Joi.string().email().required(),
+      firstname: Joi.string().required(),
+      lastname: Joi.string().required(),
+    })
+  }
+
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.state.schema, { abortEarly: false });
+    if (error) {
+      this.setState({ errors:error.details });
+    } else {
+      this.props.onRegisterClick(formData);
+    }
+  }
+
+  componentWillMount() {
+    const errorMessage = this.props.errorMessage;
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const errorMessage = nextProps.errorMessage;
+    if (errorMessage) {
+      this.setState({ errors: [{ path:'error', message: errorMessage }] });
+    }
   }
 
   render() {
-    const { errorMessage, isFetching } = this.props;
+    const { errorMessage, isFetching, submit } = this.props;
+    const { errors } = this.state;
     return (
       <div id='register'>
-        <h1>{this.props.title}</h1>
-        <form className='ui form' >
-          <div className='top-row'>
-            <div className='required field'>
-              <label htmlFor='username'>
-                Username
-              </label>
-              <input type='text' id='username' ref='username' name='username' placeholder='A unique username' autoComplete='off'/>
-            </div>
-            <div className='required field'>
-              <label htmlFor='password'>
-                Password
-              </label>
-              <input type='password' id='password' ref='password' name='password'  placeholder='Set a password' autoComplete='off'/>
-            </div>
-          </div>
-          <div className='top-row'>
-            <div className='required field'>
-              <label htmlFor='firstname'>
-                First Name
-              </label>
-              <input type='text' id='firstname' ref='firstname' name='firstname' placeholder='First Name' autoComplete='off' />
-            </div>
-            <div className='required field'>
-              <label htmlFor='lastname'>
-                Last Name
-              </label>
-              <input type='text' id='lastname' ref='lastname' name='lastname' placeholder='Last Name' autoComplete='off'/>
-            </div>
-          </div>
-          <div className='required field'>
-            <label htmlFor='email'>
-              Email Address
-            </label>
-            <input type='email' id='email' ref='email' name='email' placeholder='A valid email address' autoComplete='off'/>
-          </div>
-          {errorMessage &&
-              <p className='error api'>{errorMessage}</p>
-          }
-          <div className='ui error message' />
-          <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{this.props.submit}</button>
-        </form>
+        <Header as='h1'>{this.props.title}</Header>
+        <Form error={!!errors} onSubmit={this.handleSubmit}>
+          <Form.Group widths='equal'>
+            <Form.Input required label='Username' type='text' name='username' autoComplete='off' placeholder='A unique username'/>
+            <Form.Input required label='Password' type='password' name='password' autoComplete='off' placeholder='Set a password'/>
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <Form.Input required label='First Name' type='text' name='firstname' autoComplete='off' placeholder='First Name'/>
+            <Form.Input required label='Last Name' type='text' name='lastname' autoComplete='off' placeholder='Last Name'/>
+          </Form.Group>
+          <Form.Input required label='Email' type='text' name='email' autoComplete='off' placeholder='A valid email address'/>
+          <Message error>
+            <Message.List>
+              {errors && errors.map(error => <Message.Item key={error.path}>{error.message}</Message.Item>)}
+            </Message.List>
+          </Message>
+          <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{submit}</Button>
+        </Form>
       </div>
     );
-  }
-  handleClick(event) {
-    event.preventDefault();
-    const username = this.refs.username;
-    const password = this.refs.password;
-    const email = this.refs.email;
-    const firstname = this.refs.firstname;
-    const lastname = this.refs.lastname;
-    const account = {
-      username: username.value.trim(),
-      password: password.value.trim(),
-      email: email.value.trim(),
-      firstname: firstname.value.trim(),
-      lastname: lastname.value.trim()
-    };
-    this.props.onRegisterClick(account);
   }
 };
 
