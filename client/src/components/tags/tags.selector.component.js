@@ -13,10 +13,10 @@ class TagsSelector extends React.Component {
   }
 
   componentDidMount() {
-    $(`.${this.props.tagsSelectorId}.ui.dropdown`).dropdown({
+    $(`#${this.props.tagsSelectorId}.ui.dropdown`).dropdown({
       forceSelection: false,
-      onAdd: () => this.onAddTag(),
-      onRemove: () => this.onRemoveTag()
+      onAdd: (value) => this.onAddTag(value),
+      onRemove: (value) => this.onRemoveTag(value)
     });
   }
 
@@ -65,10 +65,10 @@ class TagsSelector extends React.Component {
     });
 
     const loading = tags.isFetching || tags.didInvalidate;
-    const classes = classNames('ui fluid multiple search selection dropdown optgroup', tagsSelectorId, { loading });
+    const classes = classNames('ui fluid multiple search selection dropdown optgroup', { loading });
 
     return (
-      <div className={classes}>
+      <div id={tagsSelectorId} className={classes}>
         <input name='tags' type='hidden' defaultValue={selectedTags.join(',')} />
         <i className='dropdown icon' />
         <div className='default text'>{loading ? 'Loading tags…' : 'Tags'}</div>

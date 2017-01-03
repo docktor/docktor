@@ -22,7 +22,7 @@ class UserCardComponent extends React.Component {
   }
 
   initializeDropdownComponents() {
-    const userCardSelector = `.card.id-${this.props.user.id} .ui.dropdown`;
+    const userCardSelector = `#${this.props.user.id} .ui.dropdown`;
     $(userCardSelector).dropdown({
       action: 'select', // necessary to avoid refresh conflicts between jQuery and React
       onChange: value => {
@@ -50,7 +50,7 @@ class UserCardComponent extends React.Component {
     );
 
     return (
-      <div className={`ui card user id-${user.id}`}>
+      <div id={user.id} className='ui card user'>
         <div className='content'>
           <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />{user.displayName}
           <div className={rolesDropdownClasses}>

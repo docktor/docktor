@@ -168,7 +168,7 @@ class ServiceComponent extends React.Component {
     const service = this.state;
     const isFetching = this.props.isFetching;
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified service-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
             {
@@ -217,7 +217,7 @@ const mapStateToProps = (state, ownProps) => {
   const emptyService = { commands: [], urls: [], jobs: [], images: [], tags: [] };
   return {
     service: paramId ? service.item : emptyService,
-    isFetching: service.isFetching,
+    isFetching: paramId && paramId !== service.item.id || service.isFetching,
     serviceId: paramId,
     tags: state.tags
   };

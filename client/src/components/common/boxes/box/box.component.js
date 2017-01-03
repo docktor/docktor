@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import classNames from 'classnames';
 
 import HeadingBox from './heading.box.component.js';
 
@@ -70,15 +71,21 @@ class Box extends React.Component {
   }
 
   renderDropdown(line, index, field, popup) {
+    const onChange = (event) => {
+      this.onChangeLine(event, index, field.name);
+    };
+
+    const options = field.options || [];
+    const classes = classNames(field.sizeClass, 'field', { required: field.isRequired, loading: !options });
     return (
-      <div key={field.name + index} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
+      <div key={field.name + index} className={classes}>
         <label className='hidden'>{field.label}</label>
         <select title={popup} value={line[field.name] || field.default || ''} className='ui fluid dropdown'
-            onChange={(event) => this.onChangeLine(event, index, field.name)} data-validate={field.name + index}>
+            onChange={onChange} data-validate={field.name + index}>
           <option value='' disabled>{field.placeholder}</option>
-          {field.options.map(option => {
-            return (<option key={'option-' + option.value} value={option.value}>{option.name}</option>);
-          })}
+          {
+            options.map(option => {return (<option key={'option-' + option.value} value={option.value}>{option.name}</option>);})
+          }
         </select>
       </div>
     );

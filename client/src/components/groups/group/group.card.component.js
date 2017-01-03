@@ -18,16 +18,19 @@ class GroupCard extends React.Component {
       <div className='ui card group'>
         <div className='content'>
           <div className='ui left floated link header'>
-            <Link to={'/group/' + group.id} title={group.title}>
+            <Link to={'/view/' + group.id} title={group.title}>
               <i className='travel icon' />{group.title}
             </Link>
           </div>
-          <div className='ui right floated meta'>{moment(group.created).fromNow()}</div>
+          <Link to={'/groups/' + group.id} title={'Edit ' + group.title} className='ui tiny compact top right attached right labeled icon teal button'>
+            <i className='edit icon'/> Edit
+          </Link>
           <div className='description' title={group.description}>{group.description}</div>
         </div>
         <div className='extra content'>
           <i className='cube icon' />
           {(group.containers ? group.containers.length : 0) + ' container(s)'}
+          <div className='ui right floated'>{moment(group.created).fromNow()}</div>
         </div>
       </div>
     );

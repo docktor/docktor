@@ -49,10 +49,16 @@ func (g *Groups) Save(c echo.Context) error {
 //Delete group into docktor
 func (g *Groups) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*api.Docktor)
-	id := c.Param("id")
+	id := c.Param("groupID")
 	res, err := docktorAPI.Groups().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove group: %v", err))
 	}
 	return c.JSON(http.StatusOK, res)
+}
+
+//Get group from docktor
+func (g *Groups) Get(c echo.Context) error {
+	group := c.Get("group").(types.Group)
+	return c.JSON(http.StatusOK, group)
 }

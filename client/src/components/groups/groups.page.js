@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Link } from 'react-router';
 import DebounceInput from 'react-debounce-input';
 
 // Thunks / Actions
@@ -42,7 +43,11 @@ class Groups extends React.Component {
               onChange={(event) => changeFilter(event.target.value)}
               value={filterValue}/>
           </div>
-          <div className='flex-2' />
+          <div className='flex-2 layout horizontal end-justified'>
+            <Link className='ui teal labeled icon button' to={'/groups/new'}>
+              <i className='plus icon' />New Group
+            </Link>
+          </div>
         </div>
         <Scrollbars className='flex ui dimmable'>
           <div className='flex layout horizontal center-center groups-list wrap'>

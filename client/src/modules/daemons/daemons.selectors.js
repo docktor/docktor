@@ -36,3 +36,11 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
     });
   }
 };
+
+export const getDaemonsAsFSOptions = (daemons) => {
+  return Object.values(daemons).map(daemon => {
+    if (daemon.cadvisorApi) {
+      return { value: daemon.id, name: daemon.name } ;
+    }
+  });
+};

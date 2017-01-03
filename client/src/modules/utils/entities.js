@@ -61,7 +61,13 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
 const initialState = {
   isFetching: false,
   didInvalidate: true,
-  items: {}
+  items: {},
+  selected: {
+    isFetching: false,
+    didInvalidate: true,
+    id: ''
+  },
+  lastUpdated: undefined
 };
 
 const createRequest = () => {
