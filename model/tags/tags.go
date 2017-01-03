@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/soprasteria/docktor/model/types"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // TagAlreadyExistErrMessage is an error message when a tag alread exists
-const TagAlreadyExistErrMessage string = "Tag %q with category %q already exist with slug name %q and slug category %q"
+const TagAlreadyExistErrMessage string = "Tag %q already exists in category %q"
 
 // Repo is the repository for projects
 type Repo struct {
@@ -31,10 +32,12 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 		// New tag to create.
 		if err == nil {
 			// Tag cannot created when we found another tag with same info
+			log.WithField("newtag_name", tag.Name).WithField("newtag_category", tag.Category).
+				WithField("existingtag_name", tagByNameAndCat.Name).WithField("existingtag_category", tagByNameAndCat.Category).
+				Warning("Can't create tag because it already exists...")
 			return types.Tag{}, fmt.Errorf(
 				TagAlreadyExistErrMessage,
 				tag.Name.GetRaw(), tag.Category.GetRaw(),
-				tagByNameAndCat.Name.GetSlug(), tagByNameAndCat.Category.GetSlug(),
 			)
 		}
 		resTag.ID = bson.NewObjectId()
@@ -51,10 +54,12 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 		}
 		if tagByNameAndCat.ID.Hex() != "" && t.ID != tagByNameAndCat.ID {
 			// Tag not updatable when another tag already uses same Name and Category
+			log.WithField("newtag_name", tag.Name).WithField("newtag_category", tag.Category).
+				WithField("existingtag_name", tagByNameAndCat.Name).WithField("existingtag_category", tagByNameAndCat.Category).
+				Warning("Can't update tag because it already exists...")
 			return types.Tag{}, fmt.Errorf(
 				TagAlreadyExistErrMessage,
 				tagByNameAndCat.Name.GetRaw(), tagByNameAndCat.Category.GetRaw(),
-				tagByNameAndCat.Name.GetSlug(), tagByNameAndCat.Category.GetSlug(),
 			)
 		}
 
