@@ -79,7 +79,8 @@ gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 
 /*====== Server ======*/
 
 gulp.task('go-run', function() {
-  go = gulpgo.run('main.go', ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379', '--level', 'debug'], {
+  const flags = `-X github.com/soprasteria/docktor/cmd.Version=${docktor.version}`;
+  go = gulpgo.run(['-ldflags', `${flags}`, 'main.go'], ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379', '--level', 'debug'], {
     cwd: __dirname,
     stdio: 'inherit'
   });
