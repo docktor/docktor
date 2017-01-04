@@ -5,7 +5,6 @@ go:
 
 env:
 - GO_VENDOR=1
-- NODE_ENV=production
 
 cache:
   directories:

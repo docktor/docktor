@@ -7,6 +7,11 @@ ENV DOCKTOR_VERSION="0.0.1"
 
 WORKDIR /opt/docktor
 
+# TODO : add docktor user instead of root
+# TODO : add link to mongo
+# TODO : create docker-compose with mongo
+# TODO : handle env variables like DOCKTOR_MONGO_URL for example.
+
 # Install docktor binary from released version
 RUN apt-get update && apt-get -y install curl unzip && \
     curl -sL "https://github.com/soprasteria/docktor/releases/download/${DOCKTOR_VERSION}/docktor-${DOCKTOR_VERSION}.zip" -o docktor.zip && \
