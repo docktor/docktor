@@ -7,6 +7,7 @@ import Joi from 'joi-browser';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
+import { parseError } from '../../modules/utils/forms.js';
 
 class ChangeResetPasswordP extends React.Component {
 
@@ -40,13 +41,7 @@ class ChangeResetPasswordP extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const fields = {};
-      const details = [];
-      error.details.forEach(err => {
-        fields[err.path] = true;
-        details.push(err.message);
-      });
-      this.setState({ errors: { fields, details } });
+      this.setState({ errors: parseError(error) });
     } else {
       const token = this.props.token.trim();
       this.props.changePassword(formData.newPassword, token);

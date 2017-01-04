@@ -7,6 +7,7 @@ import Joi from 'joi-browser';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
+import { parseError } from '../../modules/utils/forms.js';
 
 class ResetPwdComponent extends React.Component {
 
@@ -34,13 +35,7 @@ class ResetPwdComponent extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const fields = {};
-      const details = [];
-      error.details.forEach(err => {
-        fields[err.path] = true;
-        details.push(err.message);
-      });
-      this.setState({ errors: { fields, details } });
+      this.setState({ errors: parseError(error) });
     } else {
       this.props.resetPassword(formData.username);
     }

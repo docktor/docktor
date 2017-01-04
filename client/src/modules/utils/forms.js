@@ -28,7 +28,7 @@ export const createSchema = (modal) => {
 export const parseError = (error) => {
   const fields = {};
   const details = [];
-  error.details.forEach(err => {
+  error && error.details.forEach(err => {
     fields[err.path] = true;
     details.push(err.message);
   });

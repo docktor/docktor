@@ -7,6 +7,7 @@ import Joi from 'joi-browser';
 import Rodal from 'rodal';
 
 import UserConstants from '../../../modules/users/users.constants.js';
+import { parseError } from '../../../modules/utils/forms.js';
 
 // Style
 import '../../common/tabform/tabform.component.scss';
@@ -48,13 +49,7 @@ class ProfilePane extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const fields = {};
-      const details = [];
-      error.details.forEach(err => {
-        fields[err.path] = true;
-        details.push(err.message);
-      });
-      this.setState({ errors: { fields, details } });
+      this.setState({ errors: parseError(error) });
     } else {
       const account = {
         email: formData.email,

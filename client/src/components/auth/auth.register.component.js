@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
+import { parseError } from '../../modules/utils/forms.js';
+
 // Style
 import '../common/tabform/tabform.component.scss';
 
@@ -38,13 +40,7 @@ class RegisterPane extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const fields = {};
-      const details = [];
-      error.details.forEach(err => {
-        fields[err.path] = true;
-        details.push(err.message);
-      });
-      this.setState({ errors: { fields, details } });
+      this.setState({ errors: parseError(error) });
     } else {
       this.props.onRegisterClick(formData);
     }
