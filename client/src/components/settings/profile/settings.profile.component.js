@@ -105,7 +105,7 @@ class ProfilePane extends React.Component {
         <Rodal visible={this.state.isRemovalModalVisible}
             onClose={this.closeRemoveAccountModal}>
           <div className={modalClasses}>
-            <i className='close icon' onClick={this.closeRemoveAccountModal} />
+            <Icon name='close' onClick={this.closeRemoveAccountModal} />
             <Header icon='trash' content='Remove your account' />
             <Modal.Content>
               <h2>Are you sure to delete your account ?</h2>
