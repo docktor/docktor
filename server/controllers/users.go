@@ -79,7 +79,7 @@ func (u *Users) Delete(c echo.Context) error {
 		return c.String(http.StatusForbidden, "You do not have rights to delete this user")
 	}
 
-	// Delelete the mem
+	// Delete the user
 	res, err := docktorAPI.Users().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove user: %v", err))
