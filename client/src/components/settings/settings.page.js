@@ -15,7 +15,7 @@ import './settings.page.scss';
 class Settings extends React.Component {
 
   // Get the index of the right tab depending on the route (the anchor)
-  _selectTab() {
+  selectTab() {
     const location = this.props.location;
     if (location && location.hash === '#change-password') {
       return 1;
@@ -34,7 +34,7 @@ class Settings extends React.Component {
       );
     } else if (isAuthenticated) {
       return (
-      <TabForm selected={this._selectTab()}>
+      <TabForm selected={this.selectTab()}>
           <Profile
             link='profile' label='Profile' title='Edit your profile' submit='Save'
             user={user} onSave={saveProfile} onDelete={deleteAccount}

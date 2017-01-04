@@ -40,13 +40,18 @@ $yellow-button-color-active: #ad8000 !default;
   }
 
   .ui.top.right.attached.button {
+    box-shadow: none !important;
     left: auto;
     margin: 0;
-    padding: .75em 1em;
+    padding: 0;
     position: absolute;
     right: 0;
     top: 0;
-    width: auto;
+    width: 111px;
+    .ui.button {
+      margin: 0;
+      width: 111px;
+    }
   }
   .ui.provider.label {
     background-color: #3a6191;

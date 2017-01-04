@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
-import { Header, Form, Message, Button, Icon } from 'semantic-ui-react';
+import { Header, Form, Message, Button, Icon, Modal } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 import Rodal from 'rodal';
@@ -100,7 +100,7 @@ class ProfilePane extends React.Component {
           />
           <Message warning content="You can't edit your personal data because it's own by a LDAP provider" />
           {!user.isFetching && user.passwordErrorMessage &&
-            <Message error content={user.passwordErrorMessage} visible/>
+            <Message error list={[user.passwordErrorMessage]} visible/>
           }
           <Message error list={details}/>
           <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>
@@ -108,7 +108,7 @@ class ProfilePane extends React.Component {
         <Rodal visible={this.state.isRemovalModalVisible}
             onClose={() => this.closeRemoveAccountModal()}>
           <div className={modalClasses}>
-            <i className='close circle icon' onClick={() =>this.closeRemoveAccountModal()} />
+            <i className='close icon' onClick={() =>this.closeRemoveAccountModal()} />
             <div className='header'><i className='large trash icon' /> Remove your account</div>
             <div className='content'>
               <h2>Are you sure to delete your account ?</h2>

@@ -41,6 +41,7 @@ class ChangePasswordPane extends React.Component {
         newPassword: formData.newPassword
       };
       this.props.onChangePassword(account);
+      this.setState({ errors: { details: [], fields: {} } });
     }
   }
 
@@ -64,7 +65,7 @@ class ChangePasswordPane extends React.Component {
           />
           <Message warning content="You can't change your password here because your user comes from a LDAP provider" />
           {!user.isFetching && user.passwordErrorMessage &&
-            <Message error content={user.passwordErrorMessage} visible/>
+            <Message error list={[user.passwordErrorMessage]} visible/>
           }
           <Message error list={details}/>
           <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>

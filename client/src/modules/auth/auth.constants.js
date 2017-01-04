@@ -23,7 +23,7 @@ export const getRoleColor = role => {
   case AUTH_SUPERVISOR_ROLE:
     return 'yellow';
   case AUTH_USER_ROLE:
-    return '';
+    return null;
   default:
     return 'red'; // aggressive color because it should not happen
   }
