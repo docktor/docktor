@@ -11,24 +11,15 @@ import './toasts.component.scss';
 
 // Notifications Component
 class Toasts extends React.Component {
-  constructor() {
-    super();
-    this.notificationSystem = null;
-    this.toastsToRemove = [];
-  }
 
-  addNotification(notification) {
-    let toast = notification;
-    toast.onRemove = () => this.props.onClose(notification.uid);
-    toast = this.notificationSystem.addNotification(toast);
-    this.toastsToRemove.push(toast);
-  }
+  notificationSystem = null;
+  toastsToRemove = [];
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.notificationSystem = this.refs.notificationSystem;
   }
 
-  componentDidUpdate() {
+  componentDidUpdate = () => {
     const toasts = this.props.toasts;
     this.toastsToRemove.forEach((toastToRemove, index) => {
       const find = toasts[toastToRemove.uid];
@@ -37,10 +28,17 @@ class Toasts extends React.Component {
         this.toastsToRemove.splice(index, 1);
       }
     });
-    Object.keys(toasts).forEach(id => this.addNotification(toasts[id]));
+    Object.values(toasts).forEach(toast => this.addNotification(toast));
   }
 
-  render() {
+  addNotification = (notification) => {
+    let toast = notification;
+    toast.onRemove = () => this.props.onClose(notification.uid);
+    toast = this.notificationSystem.addNotification(toast);
+    this.toastsToRemove.push(toast);
+  }
+
+  render = () => {
     const style = {
       ActionWrapper: {
         DefaultStyle: {
@@ -49,10 +47,11 @@ class Toasts extends React.Component {
       }
     };
     return (
-            <NotificationSystem ref='notificationSystem' style={style} />
+      <NotificationSystem ref='notificationSystem' style={style} />
     );
   }
 }
+
 Toasts.propTypes = { toasts: React.PropTypes.object, onClose:React.PropTypes.func };
 
 // Function to map state to container props

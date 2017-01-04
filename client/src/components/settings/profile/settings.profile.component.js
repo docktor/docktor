@@ -30,7 +30,8 @@ class ProfilePane extends React.Component {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
-  removeAccount = () => {
+  removeAccount = (e) => {
+    e.preventDefault();
     this.setState({ isRemovalModalVisible: true });
   }
 
@@ -72,11 +73,7 @@ class ProfilePane extends React.Component {
     const { user, submit } = this.props;
     const { fields, details } = this.state.errors;
     const isDisabled = this.isDisabled(user);
-    const modalClasses = classNames(
-      'ui',
-      { active: this.state.isRemovalModalVisible },
-      'small modal'
-    );
+    const modalClasses = classNames('ui', { active: this.state.isRemovalModalVisible }, 'small modal');
     return (
       <div id='profile'>
         <Header as='h1'>{this.props.title}</Header>
@@ -109,20 +106,15 @@ class ProfilePane extends React.Component {
             onClose={this.closeRemoveAccountModal}>
           <div className={modalClasses}>
             <i className='close icon' onClick={this.closeRemoveAccountModal} />
-            <div className='header'><i className='large trash icon' /> Remove your account</div>
-            <div className='content'>
+            <Header icon='trash' content='Remove your account' />
+            <Modal.Content>
               <h2>Are you sure to delete your account ?</h2>
               <p>This action is irreversible and you will lose all your data</p>
-            </div>
-            <div className='actions'>
-              <div className='ui black button' onClick={this.closeRemoveAccountModal}>
-                No
-              </div>
-              <div className='ui teal right labeled icon button' onClick={this.validateRemoval}>
-                Yes
-                <i className='trash icon' />
-              </div>
-            </div>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button content='No' color='black' onClick={this.closeRemoveAccountModal} />
+              <Button content='Yes' icon='trash' labelPosition='right' color='teal' onClick={this.validateRemoval} />
+            </Modal.Actions>
           </div>
         </Rodal>
       </div>
