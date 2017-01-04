@@ -44,10 +44,10 @@ export function requireAuthorization(Component, Roles) {
       if (isAuthenticated && isRoleAuthorized(Roles, role)) {
         return <Component {...this.props} />;
       }
-
       return <div />;
     }
   }
+
   AuthenticatedComponent.propTypes = {
     redirect: React.PropTypes.func.isRequired,
     auth: React.PropTypes.object,

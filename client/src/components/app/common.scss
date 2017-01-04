@@ -59,6 +59,10 @@ input {
     }
   }
 
+  .fields {
+    margin-bottom: 0;
+  }
+
   .field {
     label {
       color: rgba(255, 255, 255, .5) !important;
@@ -114,12 +118,12 @@ input {
 }
 
 .not-active {
-   pointer-events: none;
-   cursor: default;
+  cursor: default;
+  pointer-events: none;
 }
 
 .dropdown.optgroup .divider {
-    border-top: none !important;
+  border-top: none !important;
 }
 
 [readonly] {

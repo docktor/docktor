@@ -1,8 +1,7 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
-import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
-import { isEmpty } from '../../modules/utils/objects.js';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 // Style
@@ -11,29 +10,27 @@ import '../common/tabform/tabform.component.scss';
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {
 
-  state = {
-    errors: {}
-  }
+  state = { errors: { details: [], fields: {} } }
 
   schema = Joi.object().keys({
-    username: Joi.string().trim().alphanum().required(),
-    password: Joi.string().trim().regex(/^[\s]+$/, { name: 'whitespaces', invert: true }).min(6).required(),
-    email: Joi.string().email().trim().required(),
-    firstname: Joi.string().trim().required(),
-    lastname: Joi.string().trim().required(),
+    username: Joi.string().trim().alphanum().required().label('Username'),
+    password: Joi.string().trim().min(6).required().label('Password'),
+    email: Joi.string().email().trim().required().label('Email'),
+    firstname: Joi.string().trim().required().label('Firstname'),
+    lastname: Joi.string().trim().required().label('Lastname'),
   })
 
   componentWillMount() {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const errorMessage = this.props.errorMessage;
+    const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
@@ -41,36 +38,46 @@ class RegisterPane extends React.Component {
     e.preventDefault();
     const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const errors = {};
-      error.details.forEach(err => errors[err.path] = err.message);
-      this.setState({ errors });
+      const fields = {};
+      const details = [];
+      error.details.forEach(err => {
+        fields[err.path] = true;
+        details.push(err.message);
+      });
+      this.setState({ errors: { fields, details } });
     } else {
       this.props.onRegisterClick(formData);
     }
   }
 
   render() {
-    const { errorMessage, isFetching, submit } = this.props;
-    const { errors } = this.state;
+    const { isFetching, submit } = this.props;
+    const { fields, details } = this.state.errors;
     return (
       <div id='register'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!isEmpty(errors)} onSubmit={this.handleSubmit}>
+        <Form error={!!details.length} onSubmit={this.handleSubmit}>
           <Form.Group widths='equal'>
-            <Form.Input required error={!!errors['username']} label='Username' type='text' name='username' autoComplete='off' placeholder='A unique username'/>
-            <Form.Input required error={!!errors['password']} label='Password' type='password' name='password' autoComplete='off' placeholder='Set a password'/>
+            <Form.Input required error={fields['username']} label='Username'
+              type='text' name='username' autoComplete='off' placeholder='A unique username'
+            />
+            <Form.Input required error={fields['password']} label='Password'
+              type='password' name='password' autoComplete='off' placeholder='Set a password'
+            />
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.Input required error={!!errors['firstname']} label='First Name' type='text' name='firstname' autoComplete='off' placeholder='First Name'/>
-            <Form.Input required error={!!errors['lastname']} label='Last Name' type='text' name='lastname' autoComplete='off' placeholder='Last Name'/>
+            <Form.Input required error={fields['firstname']} label='First Name'
+              type='text' name='firstname' autoComplete='off' placeholder='First Name'
+            />
+            <Form.Input required error={fields['lastname']} label='Last Name'
+              type='text' name='lastname' autoComplete='off' placeholder='Last Name'
+            />
           </Form.Group>
-          <Form.Input required error={!!errors['email']} label='Email' type='text' name='email' autoComplete='off' placeholder='A valid email address'/>
-          <Message error>
-            <Message.List>
-              {errors && Object.keys(errors).map(error => <Message.Item key={error}>{errors[error]}</Message.Item>)}
-            </Message.List>
-          </Message>
-          <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{submit}</Button>
+          <Form.Input required error={fields['email']} label='Email'
+            type='text' name='email' autoComplete='off' placeholder='A valid email address'
+          />
+          <Message error list={details}/>
+          <Button className={'button-block submit'} loading={isFetching}>{submit}</Button>
         </Form>
       </div>
     );

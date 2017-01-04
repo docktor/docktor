@@ -2,8 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router';
-import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
-import { isEmpty } from '../../modules/utils/objects.js';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 // Style
@@ -12,57 +11,59 @@ import '../common/tabform/tabform.component.scss';
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {
 
-  state = {
-    errors: {}
-  }
+  state = { errors: { details: [], fields: {} } }
 
   schema = Joi.object().keys({
-    username: Joi.string().trim().alphanum().required(),
-    password: Joi.string().trim().regex(/^[\s]+$/, { name: 'whitespaces', invert: true }).min(6).required(),
+    username: Joi.string().trim().alphanum().required().label('Username'),
+    password: Joi.string().trim().min(6).required().label('Password')
   })
-
-  handleSubmit = (e, { formData }) => {
-    e.preventDefault();
-    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
-    if (error) {
-      const errors = {};
-      error.details.forEach(err => errors[err.path] = err.message);
-      this.setState({ errors });
-    } else {
-      this.props.onLoginClick(formData);
-    }
-  }
 
   componentWillMount() {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
+    }
+  }
+
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    if (error) {
+      const fields = {};
+      const details = [];
+      error.details.forEach(err => {
+        fields[err.path] = true;
+        details.push(err.message);
+      });
+      this.setState({ errors: { fields, details } });
+    } else {
+      this.props.onLoginClick(formData);
     }
   }
 
   render() {
     const { isFetching, submit } = this.props;
-    const { errors } = this.state;
+    const { fields, details } = this.state.errors;
     return (
       <div id='login'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!isEmpty(errors)} onSubmit={this.handleSubmit}>
-          <Form.Input required error={!!errors['username']} label='Username' type='text' name='username' autoComplete='off' placeholder='Registered/LDAP username'/>
-          <Form.Input required error={!!errors['password']} label='Password' type='password' name='password' autoComplete='off' placeholder='Password'/>
-          <Message error>
-            <Message.List>
-              {errors && Object.keys(errors).map(error => <Message.Item key={error}>{errors[error]}</Message.Item>)}
-            </Message.List>
-          </Message>
+        <Form error={!!details.length} onSubmit={this.handleSubmit}>
+          <Form.Input required error={fields['username']} label='Username'
+            type='text' name='username' autoComplete='off' placeholder='Registered/LDAP username'
+          />
+          <Form.Input required error={fields['password']} label='Password'
+            type='password' name='password' autoComplete='off' placeholder='Password'
+          />
+          <Message error list={details}/>
           <p className='forgot'><Link to='/reset_password'>Forgot Password?</Link></p>
-          <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>{submit}</Button>
+          <Button className={'button-block submit'} loading={isFetching}>{submit}</Button>
         </Form>
       </div>
     );

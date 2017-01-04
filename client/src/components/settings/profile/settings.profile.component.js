@@ -1,11 +1,12 @@
 // React
 import React from 'react';
 import classNames from 'classnames';
+import { Header, Form, Message, Button, Icon } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 import Rodal from 'rodal';
 
 import UserConstants from '../../../modules/users/users.constants.js';
-
 
 // Style
 import '../../common/tabform/tabform.component.scss';
@@ -13,135 +14,119 @@ import '../../common/tabform/tabform.component.scss';
 // ProfilePane containg fields to edit an existing account
 class ProfilePane extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { isRemovalModalVisible: false };
-  }
+  state = {
+    isRemovalModalVisible: false,
+    errors: { details: [], fields: {} }
+  };
 
-  _isDisabled(user) {
+  schema = Joi.object().keys({
+    username: Joi.string().trim().alphanum().required().label('Username'),
+    email: Joi.string().email().trim().required().label('Email'),
+    firstname: Joi.string().trim().required().label('Firstname'),
+    lastname: Joi.string().trim().required().label('Lastname')
+  })
+
+  isDisabled(user) {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
-  _removeAccount() {
+  removeAccount() {
     this.setState({ isRemovalModalVisible: true });
   }
 
-  _closeRemoveAccountModal() {
+  closeRemoveAccountModal() {
     this.setState({ isRemovalModalVisible: false });
   }
 
-  _validateRemoval() {
+  validateRemoval() {
     this.props.onDelete(this.props.user);
-    this._closeRemoveAccountModal();
+    this.closeRemoveAccountModal();
   }
 
-  componentDidMount() {
-    $('#profile > .ui.form')
-      .form({
-        fields: {
-          email: ['email', 'empty', 'doesntContain[ ]'],
-          firstname: ['empty'],
-          lastname: ['empty']
-        },
-        onSuccess: (event, fields) => {
-          this.handleClick(event);
-        },
-        onFailure: (event, fields) => {
-          return false;
-        }
-      })
-      ;
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    if (error) {
+      const fields = {};
+      const details = [];
+      error.details.forEach(err => {
+        fields[err.path] = true;
+        details.push(err.message);
+      });
+      this.setState({ errors: { fields, details } });
+    } else {
+      const account = {
+        email: formData.email,
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        displayName: formData.firstname + ' ' + formData.lastname
+      };
+      // Override user with values defined by authenticated person
+      const userToSave = { ...this.props.user, ...account };
+      this.props.onSave(userToSave);
+      this.setState({ errors: { details: [], fields: {} } });
+    }
   }
 
   render() {
-    const { user } = this.props;
+    const { user, submit } = this.props;
+    const { fields, details } = this.state.errors;
+    const isDisabled = this.isDisabled(user);
+    const modalClasses = classNames(
+      'ui',
+      { active: this.state.isRemovalModalVisible },
+      'small modal'
+    );
     return (
       <div id='profile'>
-        <h1>{this.props.title}</h1>
-        <form className='ui form' >
-          <div className='required field'>
-            <label>
-              Username
-              </label>
-            <input type='text' defaultValue={user.username} placeholder='A unique username' autoComplete='off' disabled />
-          </div>
-          <div className='top-row'>
-            <div className='required field'>
-              <label>
-                First Name
-              </label>
-              <input type='text' ref='firstname' name='firstname' defaultValue={user.firstName}
-                placeholder='First Name' autoComplete='off'
-                disabled={this._isDisabled(user) ? 'true' : ''} />
-            </div>
-            <div className='required field'>
-              <label>
-                Last Name
-              </label>
-              <input type='text' ref='lastname' name='lastname' defaultValue={user.lastName}
-                placeholder='Last Name' autoComplete='off'
-                disabled={this._isDisabled(user) ? 'true' : ''} />
-            </div>
-          </div>
-          <div className='required field'>
-            <label>
-              Email Address
-            </label>
-            <input type='email' ref='email' name='email' defaultValue={user.email}
-              placeholder='A valid email address' autoComplete='off'
-              disabled={this._isDisabled(user) ? 'true' : ''} />
-          </div>
-          <div className={'ui red labeled icon button button-block' + (user.isDeleting ? ' loading' : '')} tabIndex='0' onClick={() => this._removeAccount()}>
-            <i className='trash icon' />Remove your account
-          </div>
-          {!user.isFetching && user.errorMessage &&
-            <p className='error api'>{user.errorMessage}</p>
+        <Header as='h1'>{this.props.title}</Header>
+        <Form error={!!details.length} onSubmit={this.handleSubmit} warning={isDisabled}>
+          <Form.Input required disabled label='Username' defaultValue={user.username}
+              type='text' name='username' autoComplete='off' placeholder='Username'
+            />
+          <Form.Group widths='equal'>
+            <Form.Input required error={fields['firstname']} label='Firstname' defaultValue={user.firstName}
+              type='text' name='firstname' autoComplete='off' placeholder='First Name' disabled={isDisabled}
+            />
+            <Form.Input required error={fields['lastname']} label='Lastname' defaultValue={user.lastName}
+              type='text' name='lastname' autoComplete='off' placeholder='Last Name' disabled={isDisabled}
+            />
+          </Form.Group>
+          <Form.Input required error={fields['email']} label='Email Address' defaultValue={user.email}
+              type='text' name='email' autoComplete='off' placeholder='A valid email address' disabled={isDisabled}
+          />
+          <Button fluid color='red' content='Remove your account' loading={user.isDeleting}
+            icon='trash' labelPosition='left' tabIndex='0' onClick={() => this.removeAccount()}
+          />
+          <Message warning content="You can't edit your personal data because it's own by a LDAP provider" />
+          {!user.isFetching && user.passwordErrorMessage &&
+            <Message error content={user.passwordErrorMessage} visible/>
           }
-          <div className='ui error message' />
-          {this._isDisabled(user) &&
-            <p className='info api'>You can't edit your personal data because it's own by a LDAP provider</p>
-          }
-          <button
-            type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')}
-            disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}
-          </button>
-        </form>
-        <Rodal visible={this.state.isRemovalModalVisible} onClose={() => this._closeRemoveAccountModal()}>
-          <div className='ui active small modal'>
-              <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
-              <div className='header'><i className='large trash icon' /> Remove your account</div>
-              <div className='content'>
-                  <h2>Are you sure to delete your account ?</h2>
-                  <p>This action is irreversible and you will lose all your data</p>
+          <Message error list={details}/>
+          <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>
+        </Form>
+        <Rodal visible={this.state.isRemovalModalVisible}
+            onClose={() => this.closeRemoveAccountModal()}>
+          <div className={modalClasses}>
+            <i className='close circle icon' onClick={() =>this.closeRemoveAccountModal()} />
+            <div className='header'><i className='large trash icon' /> Remove your account</div>
+            <div className='content'>
+              <h2>Are you sure to delete your account ?</h2>
+              <p>This action is irreversible and you will lose all your data</p>
+            </div>
+            <div className='actions'>
+              <div className='ui black button' onClick={() => this.closeRemoveAccountModal()}>
+                No
               </div>
-              <div className='actions'>
-                  <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
-                      No
-                  </div>
-                  <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
-                      Yes
-                      <i className='trash icon' />
-                  </div>
+              <div className='ui teal right labeled icon button' onClick={() => this.validateRemoval()}>
+                Yes
+                <i className='trash icon' />
               </div>
+            </div>
           </div>
         </Rodal>
       </div>
     );
-  }
-  handleClick(event) {
-    event.preventDefault();
-    const email = this.refs.email;
-    const firstname = this.refs.firstname;
-    const lastname = this.refs.lastname;
-    const account = {
-      email: email.value.trim(),
-      firstname: firstname.value.trim(),
-      lastname: lastname.value.trim(),
-      displayName: firstname.value.trim() + ' ' + lastname.value.trim()
-    };
-    // Override user with values defined by authenticated person
-    const userToSave = Object.assign({}, this.props.user, account);
-    this.props.onSave(userToSave);
   }
 };
 

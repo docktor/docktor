@@ -11,7 +11,7 @@ import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class LoginP extends React.Component {
 
-  _selectTab() {
+  selectTab() {
     const location = this.props.location;
     if (location && location.hash === '#register') {
       return 1;
@@ -34,10 +34,14 @@ class LoginP extends React.Component {
   render() {
     const { logUser, regUser, onSwitch, errorMessage, isAuthenticated, isFetching } = this.props;
     return (
-        <TabForm selected={this._selectTab()} onSwitch={onSwitch}>
-          <Signin link='sign-in' label='Log in' title='Welcome back!' submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}/>
-          <Register link='register' label='Register' title='Create an account' submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching}/>
-        </TabForm>
+      <TabForm selected={this.selectTab()} onSwitch={onSwitch}>
+        <Signin link='sign-in' label='Log in' title='Welcome back!'
+          submit='Log in' errorMessage={errorMessage} onLoginClick={logUser} isFetching={isFetching}
+        />
+        <Register link='register' label='Register' title='Create an account'
+          submit='Get started' errorMessage={errorMessage} onRegisterClick={regUser} isFetching={isFetching}
+        />
+      </TabForm>
     );
   }
 };

@@ -2,8 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Header, Form, Message, Button, Input } from 'semantic-ui-react';
-import { isEmpty } from '../../modules/utils/objects.js';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 import TabForm from '../common/tabform/tabform.component.js';
@@ -11,56 +10,56 @@ import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class ResetPwdComponent extends React.Component {
 
-  state = {
-  }
+  state = { errors: { details: [], fields: {} } }
 
   schema = Joi.object().keys({
-    username: Joi.string().trim().alphanum().required()
+    username: Joi.string().trim().alphanum().required().label('Username')
   })
-
-  componentWillReceiveProps(nextProps) {
-    const errorMessage = nextProps.errorMessage;
-    if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
-    }
-  }
 
   componentWillMount() {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { error: errorMessage } });
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const errorMessage = nextProps.errorMessage;
+    if (errorMessage) {
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
   handleSubmit = (e, { formData }) => {
     e.preventDefault();
-    const { error } = Joi.validate(formData, this.state.schema, { abortEarly: false });
+    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
     if (error) {
-      const errors = {};
-      error.details.forEach(err => errors[err.path] = err.message);
-      this.setState({ errors });
+      const fields = {};
+      const details = [];
+      error.details.forEach(err => {
+        fields[err.path] = true;
+        details.push(err.message);
+      });
+      this.setState({ errors: { fields, details } });
     } else {
       this.props.resetPassword(formData.username);
     }
   }
 
   render() {
-    const { errorMessage, isFetching } = this.props;
-    const { errors } = this.state;
+    const { isFetching } = this.props;
+    const { fields, details } = this.state.errors;
     return (
-        <div id='reset-password'>
-          <Header as='h1'>Reset your password</Header>
-          <Form error={!isEmpty(errors)} onSubmit={this.handleSubmit}>
-            <Form.Input required error={!!errors['username']} label='Username' type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'/>
-            <Message error>
-              <Message.List>
-                {errors && Object.keys(errors).map(error => <Message.Item key={error}>{errors[error]}</Message.Item>)}
-              </Message.List>
-            </Message>
-            <Button className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Reset it!</Button>
-          </Form>
-        </div>
-
+      <div id='reset-password'>
+        <Header as='h1'>Reset your password</Header>
+        <Form error={!!details.length} onSubmit={this.handleSubmit}>
+          <Form.Input required error={fields['username']} label='Username'
+            type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'
+          />
+          <Message error list={details}/>
+          <Button className={'button-block submit'} loading={isFetching}>Reset it!</Button>
+        </Form>
+      </div>
     );
   }
 }
@@ -69,7 +68,7 @@ ResetPwdComponent.propTypes = {
   resetPassword: React.PropTypes.func.isRequired,
   errorMessage: React.PropTypes.string,
   isFetching: React.PropTypes.bool.isRequired,
-  isAuthenticated: React.PropTypes.bool.isRequired
+  isAuthenticated: React.PropTypes.bool
 };
 
 class ResetPasswordP extends React.Component {
@@ -100,7 +99,7 @@ ResetPasswordP.propTypes = {
   resetPassword: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   errorMessage: React.PropTypes.string,
-  isAuthenticated: React.PropTypes.bool.isRequired,
+  isAuthenticated: React.PropTypes.bool,
   redirect: React.PropTypes.func
 };
 
