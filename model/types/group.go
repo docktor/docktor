@@ -16,6 +16,15 @@ const (
 // MemberRole defines the types of role available for a user as a member of a group
 type MemberRole string
 
+// Member is user whois subscribed to the groupe. His role in this group defines what he is able to do.
+type Member struct {
+	User bson.ObjectId `bson:"user" json:"user"`
+	Role MemberRole    `bson:"role" json:"role"`
+}
+
+// Members is a slice of multiple Member entities
+type Members []Member
+
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
@@ -37,6 +46,7 @@ type Group struct {
 	PortMaxRange int             `bson:"portmaxrange" json:"portmaxrange"`
 	FileSystems  FileSystems     `bson:"filesystems" json:"filesystems"`
 	Containers   Containers      `bson:"containers" json:"containers"`
+	Members      Members         `bson:"members" json:"members"`
 	Tags         []bson.ObjectId `bson:"tags" json:"tags"`
 }
 

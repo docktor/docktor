@@ -17,12 +17,12 @@ class Box extends React.Component {
   }
 
   componentDidMount() {
-    $('.' + this.props.boxId + ' .ui.dropdown').dropdown();
+    $('.' + this.props.boxId + ' .selection.ui.dropdown').dropdown({ forceSelection: false });
     this.refreshForm();
   }
 
   componentDidUpdate() {
-    $('.' + this.props.boxId + ' .ui.dropdown').dropdown();
+    $('.' + this.props.boxId + ' .selection.ui.dropdown').dropdown({ forceSelection: false });
     this.refreshForm();
     this.props.onChange(this.state.lines);
   }
@@ -77,10 +77,16 @@ class Box extends React.Component {
 
     const options = field.options || [];
     const classes = classNames(field.sizeClass, 'field', { required: field.isRequired, loading: !options });
+    const dropdownClasses = classNames(
+        'ui fluid',
+        { 'search': field.type === 'autocomplete' },
+        { 'classic': field.type === 'select' },
+        'selection dropdown'
+    );
     return (
       <div key={field.name + index} className={classes}>
         <label className='hidden'>{field.label}</label>
-        <select title={popup} value={line[field.name] || field.default || ''} className='ui fluid dropdown'
+        <select title={popup} value={line[field.name] || field.default || ''} className={dropdownClasses}
             onChange={onChange} data-validate={field.name + index}>
           <option value='' disabled>{field.placeholder}</option>
           {
@@ -111,20 +117,28 @@ class Box extends React.Component {
     );
   }
 
+  renderFieldType(form, line, index, popup) {
+    return form.fields.map(field => {
+      if (field.type === 'select' || field.type === 'autocomplete') {
+        // Set to default value when value is not found in options
+        if (field.options.filter((option) => option.value === line[field.name]).length === 0) {
+          line[field.name] = field.default || '';
+        }
+        return this.renderDropdown(line, index, field, popup);
+      } else if (field.type === 'textarea') {
+        return this.renderTextArea(line, index, field, popup);
+      } else {
+        return this.renderField(line, index, field, popup);
+      }
+    });
+  }
+
   renderLine(boxId, line, index) {
     const form = this.props.form;
     const popup = this.props.form.getTitle(line);
     return (
       <div key={boxId + index} className='fields'>
-        {form.fields.map(field => {
-          if (field.type === 'select') {
-            return this.renderDropdown(line, index, field, popup);
-          } else if (field.type === 'textarea') {
-            return this.renderTextArea(line, index, field, popup);
-          } else {
-            return this.renderField(line, index, field, popup);
-          }
-        })}
+        {this.renderFieldType(form, line, index, popup)}
         <div className='button field'>
           <button className='ui red icon button' onClick={(event) => this.onRemoveLine(event, index)}>
             <i className='trash icon' />

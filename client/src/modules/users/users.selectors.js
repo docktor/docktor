@@ -40,3 +40,10 @@ export const getFilteredUsers = (users, filterValue) => {
     });
   }
 };
+
+export const getUsersAsOptions = (users) => {
+  return Object.values(users).map(user => {
+    return { value: user.id, name: user.displayName } ;
+  });
+};
+
