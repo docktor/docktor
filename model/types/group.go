@@ -25,6 +25,39 @@ type Member struct {
 // Members is a slice of multiple Member entities
 type Members []Member
 
+func removeDuplicatesMember(members Members) Members {
+	var result Members
+	seen := map[bson.ObjectId]bool{}
+	for _, member := range members {
+		if _, ok := seen[member.User]; !ok {
+			result = append(result, member)
+			seen[member.User] = true
+		}
+	}
+	return result
+}
+
+//GetUsers gets ids of members
+func (members *Members) GetUsers() []bson.ObjectId {
+	ids := []bson.ObjectId{}
+	for _, m := range *members {
+		ids = append(ids, m.User)
+	}
+	return ids
+}
+
+func removeDuplicatesTags(tags []bson.ObjectId) []bson.ObjectId {
+	var result []bson.ObjectId
+	seen := map[bson.ObjectId]bool{}
+	for _, tag := range tags {
+		if _, ok := seen[tag]; !ok {
+			result = append(result, tag)
+			seen[tag] = true
+		}
+	}
+	return result
+}
+
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
@@ -48,6 +81,15 @@ type Group struct {
 	Containers   Containers      `bson:"containers" json:"containers"`
 	Members      Members         `bson:"members" json:"members"`
 	Tags         []bson.ObjectId `bson:"tags" json:"tags"`
+}
+
+// NewGroup creates new group for another one.
+// It helps setting default values, and cleaning duplicates
+func NewGroup(g Group) Group {
+	newGroup := g
+	newGroup.Members = removeDuplicatesMember(g.Members)
+	newGroup.Tags = removeDuplicatesTags(g.Tags)
+	return newGroup
 }
 
 // AddFileSystem adds a FileSystem to the Group

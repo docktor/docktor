@@ -18,8 +18,9 @@ func (r *Repo) Drop() error {
 
 // Save a group into a database
 func (r *Repo) Save(group types.Group) (types.Group, error) {
-	_, err := r.Coll.UpsertId(group.ID, bson.M{"$set": group})
-	return group, err
+	newGroup := types.NewGroup(group)
+	_, err := r.Coll.UpsertId(group.ID, bson.M{"$set": types.NewGroup(group)})
+	return newGroup, err
 }
 
 // Delete a group in database
@@ -80,4 +81,12 @@ func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []strin
 		}).All(&results)
 
 	return results, err
+}
+
+// RemoveMemberFromAllGroups remove a member from a group
+func (r *Repo) RemoveMemberFromAllGroups(userID bson.ObjectId) (*mgo.ChangeInfo, error) {
+	return r.Coll.UpdateAll(
+		bson.M{},
+		bson.M{"$pull": bson.M{"members": bson.M{"user": userID}}},
+	)
 }

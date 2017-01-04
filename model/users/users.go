@@ -55,6 +55,13 @@ func (r *Repo) FindAll() ([]types.User, error) {
 	return results, err
 }
 
+// FindAllByIds get all users from a list of ids
+func (r *Repo) FindAllByIds(ids []bson.ObjectId) ([]types.User, error) {
+	results := []types.User{}
+	err := r.Coll.Find(bson.M{"_id": bson.M{"$in": ids}}).All(&results)
+	return results, err
+}
+
 // FindAllByGroupID get all users by group
 func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]types.User, error) {
 	results := []types.User{}

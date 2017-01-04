@@ -39,11 +39,38 @@ func (g *Groups) Save(c echo.Context) error {
 		group.ID = bson.NewObjectId()
 	}
 
+	// Filters the members by existing users
+	// This way, group will autofix when user is deleted
+	existingMembers := existingMembers(docktorAPI, group.Members)
+	group.Members = existingMembers
+
 	res, err := docktorAPI.Groups().Save(group)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving group: %v", err))
 	}
 	return c.JSON(http.StatusOK, res)
+}
+
+// existingMembers return members filters by existing ones
+// Checks wether the user actually exists in database
+func existingMembers(docktorAPI *api.Docktor, members types.Members) types.Members {
+
+	var existingMembers types.Members
+
+	// Get all real users from members.
+	existingUsers, _ := docktorAPI.Users().FindAllByIds(members.GetUsers())
+
+	// x*x Cardinality because no need to overoptimize with maps
+	// as we will not have millions of members in a group
+	for _, user := range existingUsers {
+		for _, member := range members {
+			if user.ID == member.User {
+				existingMembers = append(existingMembers, member)
+			}
+		}
+	}
+
+	return existingMembers
 }
 
 //Delete group into docktor
