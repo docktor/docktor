@@ -15,18 +15,16 @@ import './flex.scss';
 
 // App Component
 class App extends React.Component {
-  render() {
-    return (
-      <div className='layout vertical start-justified fill'>
-        <NavBar />
-        <div className='flex main layout vertical'>
-          {this.props.children}
-        </div>
-         <Toasts />
-        <Modal />
+  render = () => (
+    <div className='layout vertical start-justified fill'>
+      <NavBar />
+      <div className='flex main layout vertical'>
+        {this.props.children}
       </div>
-    );
-  }
+      <Toasts />
+      <Modal />
+    </div>
+  );
 }
 App.propTypes = { children: React.PropTypes.object };
 

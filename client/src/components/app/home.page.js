@@ -7,7 +7,7 @@ import AuthPage from '../auth/auth.page.js';
 // HomeComponent displaying either the register/login component or information about Docktor when authenticated
 class HomeComponent extends React.Component {
 
-  render() {
+  render = () => {
     const { isAuthenticated } = this.props;
     var content;
     if (isAuthenticated) {

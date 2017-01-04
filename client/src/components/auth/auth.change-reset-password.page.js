@@ -16,7 +16,7 @@ class ChangeResetPasswordP extends React.Component {
     newPassword: Joi.string().trim().min(6).required().label('New Password')
   })
 
-  componentWillMount() {
+  componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if(this.props.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
@@ -26,7 +26,7 @@ class ChangeResetPasswordP extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if(nextProps.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
@@ -53,7 +53,7 @@ class ChangeResetPasswordP extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { isFetching, token } = this.props;
     const { fields, details } = this.state.errors;
     if (token) {

@@ -19,7 +19,7 @@ class ChangePasswordPane extends React.Component {
     newPassword: Joi.string().trim().min(6).required().label('New Password'),
   })
 
-  isDisabled(user) {
+  isDisabled = (user) => {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
@@ -45,7 +45,7 @@ class ChangePasswordPane extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { user, submit } = this.props;
     const { fields, details } = this.state.errors;
     const isDisabled = this.isDisabled(user);

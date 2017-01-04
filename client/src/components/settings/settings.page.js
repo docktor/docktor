@@ -15,7 +15,7 @@ import './settings.page.scss';
 class Settings extends React.Component {
 
   // Get the index of the right tab depending on the route (the anchor)
-  selectTab() {
+  selectTab = () => {
     const location = this.props.location;
     if (location && location.hash === '#change-password') {
       return 1;
@@ -24,7 +24,7 @@ class Settings extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { user, isAuthenticated, isFetching, saveProfile, changePassword, deleteAccount } = this.props;
     if (isFetching) {
       return (

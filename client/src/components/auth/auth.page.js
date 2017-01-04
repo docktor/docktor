@@ -11,7 +11,19 @@ import AuthThunks from '../../modules/auth/auth.thunk.js';
 
 class LoginP extends React.Component {
 
-  selectTab() {
+  componentWillMount = () => {
+    if(this.props.isAuthenticated && !this.props.errorMessage) {
+      this.props.redirect(this.props.redirectTo);
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
+      this.props.redirect(this.props.redirectTo);
+    }
+  }
+
+  selectTab = () => {
     const location = this.props.location;
     if (location && location.hash === '#register') {
       return 1;
@@ -20,18 +32,7 @@ class LoginP extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
-      this.props.redirect(this.props.redirectTo);
-    }
-  }
-
-  componentWillMount() {
-    if(this.props.isAuthenticated && !this.props.errorMessage) {
-      this.props.redirect(this.props.redirectTo);
-    }
-  }
-  render() {
+  render = () => {
     const { logUser, regUser, onSwitch, errorMessage, isAuthenticated, isFetching } = this.props;
     return (
       <TabForm selected={this.selectTab()} onSwitch={onSwitch}>
@@ -45,6 +46,7 @@ class LoginP extends React.Component {
     );
   }
 };
+
 LoginP.propTypes = {
   isAuthenticated: React.PropTypes.bool.isRequired,
   isFetching: React.PropTypes.bool.isRequired,

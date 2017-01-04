@@ -18,14 +18,14 @@ class SigninPane extends React.Component {
     password: Joi.string().trim().min(6).required().label('Password')
   })
 
-  componentWillMount() {
+  componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
@@ -48,7 +48,7 @@ class SigninPane extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { isFetching, submit } = this.props;
     const { fields, details } = this.state.errors;
     return (

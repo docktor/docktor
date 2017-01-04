@@ -20,14 +20,14 @@ class RegisterPane extends React.Component {
     lastname: Joi.string().trim().required().label('Lastname'),
   })
 
-  componentWillMount() {
+  componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
@@ -50,7 +50,7 @@ class RegisterPane extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { isFetching, submit } = this.props;
     const { fields, details } = this.state.errors;
     return (

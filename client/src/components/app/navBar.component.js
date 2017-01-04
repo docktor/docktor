@@ -17,25 +17,25 @@ import './navBar.component.scss';
 // NavBar Component
 class NavBarComponent extends React.Component {
 
-  isAuthorized(roles) {
-    return this.props.auth.isAuthenticated && isRoleAuthorized(roles, this.props.auth.user.role);
+  isAuthorized = (Roles) => {
+    return this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
   }
 
-  isActiveURL(url) {
+  isActiveURL = (url) => {
     if (!this.props.location || !this.props.location.pathname) {
       return '';
     }
     return this.props.location.pathname.startsWith(url) ? ' active' : '';
   }
 
-  renderDropdown(loading) {
+  renderDropdown = (loading) => {
     const item = [];
     item.push(<Icon key='icon' name={loading ? 'circle notched' : 'user'} loading={loading} size='large'/>);
     item.push(this.props.auth.user.displayName);
     return item;
   }
 
-  render() {
+  render = () => {
     const { logout, exportDocktor, isExportFetching } = this.props;
     return (
       <Menu inverted className='navbar'>

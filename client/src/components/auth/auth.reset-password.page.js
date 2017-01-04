@@ -16,14 +16,14 @@ class ResetPwdComponent extends React.Component {
     username: Joi.string().trim().alphanum().required().label('Username')
   })
 
-  componentWillMount() {
+  componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
       this.setState({ errors: { details: [errorMessage], fields:{} } });
@@ -46,7 +46,7 @@ class ResetPwdComponent extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { isFetching } = this.props;
     const { fields, details } = this.state.errors;
     return (
@@ -73,19 +73,19 @@ ResetPwdComponent.propTypes = {
 
 class ResetPasswordP extends React.Component {
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
-      this.props.redirect('/');
-    }
-  }
-
-  componentWillMount() {
+  componentWillMount = () => {
     if(this.props.isAuthenticated && !this.props.errorMessage) {
       this.props.redirect('/');
     }
   }
 
-  render() {
+  componentWillReceiveProps = (nextProps) => {
+    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
+      this.props.redirect('/');
+    }
+  }
+
+  render = () => {
     const { errorMessage, isFetching } = this.props;
     return (
       <TabForm>

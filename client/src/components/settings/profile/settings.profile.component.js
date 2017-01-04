@@ -26,19 +26,19 @@ class ProfilePane extends React.Component {
     lastname: Joi.string().trim().required().label('Lastname')
   })
 
-  isDisabled(user) {
+  isDisabled = (user) => {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
-  removeAccount() {
+  removeAccount = () => {
     this.setState({ isRemovalModalVisible: true });
   }
 
-  closeRemoveAccountModal() {
+  closeRemoveAccountModal = () => {
     this.setState({ isRemovalModalVisible: false });
   }
 
-  validateRemoval() {
+  validateRemoval = () => {
     this.props.onDelete(this.props.user);
     this.closeRemoveAccountModal();
   }
@@ -68,7 +68,7 @@ class ProfilePane extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { user, submit } = this.props;
     const { fields, details } = this.state.errors;
     const isDisabled = this.isDisabled(user);
@@ -96,7 +96,7 @@ class ProfilePane extends React.Component {
               type='text' name='email' autoComplete='off' placeholder='A valid email address' disabled={isDisabled}
           />
           <Button fluid color='red' content='Remove your account' loading={user.isDeleting}
-            icon='trash' labelPosition='left' tabIndex='0' onClick={() => this.removeAccount()}
+            icon='trash' labelPosition='left' tabIndex='0' onClick={this.removeAccount}
           />
           <Message warning content="You can't edit your personal data because it's own by a LDAP provider" />
           {!user.isFetching && user.passwordErrorMessage &&
@@ -106,19 +106,19 @@ class ProfilePane extends React.Component {
           <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>
         </Form>
         <Rodal visible={this.state.isRemovalModalVisible}
-            onClose={() => this.closeRemoveAccountModal()}>
+            onClose={this.closeRemoveAccountModal}>
           <div className={modalClasses}>
-            <i className='close icon' onClick={() =>this.closeRemoveAccountModal()} />
+            <i className='close icon' onClick={this.closeRemoveAccountModal} />
             <div className='header'><i className='large trash icon' /> Remove your account</div>
             <div className='content'>
               <h2>Are you sure to delete your account ?</h2>
               <p>This action is irreversible and you will lose all your data</p>
             </div>
             <div className='actions'>
-              <div className='ui black button' onClick={() => this.closeRemoveAccountModal()}>
+              <div className='ui black button' onClick={this.closeRemoveAccountModal}>
                 No
               </div>
-              <div className='ui teal right labeled icon button' onClick={() => this.validateRemoval()}>
+              <div className='ui teal right labeled icon button' onClick={this.validateRemoval}>
                 Yes
                 <i className='trash icon' />
               </div>
