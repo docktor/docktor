@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
-	log "github.com/lytics/logrus"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
