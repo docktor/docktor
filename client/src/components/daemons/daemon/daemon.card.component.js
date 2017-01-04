@@ -65,12 +65,11 @@ class DaemonCard extends React.Component {
               );
             } else {
               return (
-                  <div className='ui bottom attached mini blue buttons'>
-                    <div className='ui button disabled'>{(info && info.nbImages ? info.nbImages : '0') + ' Image(s)'}</div>
-                    <div className='ui button disabled'>{(info && info.nbContainers ? info.nbContainers : '0') + ' Container(s)'}</div>
-                    <div className='ui icon button' onClick={fetchInfo(daemon, true)}>
-                      <i className='refresh icon' />
-                    </div>
+                <div className='ui bottom attached mini blue buttons'>
+                  <div className='ui button disabled'>{(info && info.nbImages ? info.nbImages : '0') + ' Image(s)'}</div>
+                  <div className='ui button disabled'>{(info && info.nbContainers ? info.nbContainers : '0') + ' Container(s)'}</div>
+                  <div className='ui icon button' onClick={fetchInfo(daemon, true)}>
+                    <i className='refresh icon' />
                   </div>
                 </div>
               );

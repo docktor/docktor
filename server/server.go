@@ -13,7 +13,6 @@ import (
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
-	"github.com/soprasteria/docktor/server/groups"
 	"github.com/soprasteria/docktor/server/services"
 	"github.com/soprasteria/docktor/server/users"
 	"github.com/spf13/viper"
@@ -94,10 +93,7 @@ func New(version string) {
 			{
 				tagAPI.Use(isValidID("id"), hasRole(types.AdminRole))
 				tagAPI.DELETE("", tagsC.Delete)
-<<<<<<< HEAD
-=======
 				tagAPI.PUT("", tagsC.Save, hasRole(types.AdminRole))
->>>>>>> f17d7d6... refactor: create moregeneric "hasRole" middleware
 			}
 		}
 

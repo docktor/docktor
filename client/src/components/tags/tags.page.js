@@ -33,6 +33,10 @@ class Tags extends React.Component {
     });
   }
 
+  componentWillMount() {
+    this.props.fetchTags();
+  }
+
   render() {
     const { isFetching, filterValue, tags, availableCategories } = this.props;
     const { onCreate, onEdit, onDelete, onChangeFilter } = this.props;
@@ -71,11 +75,11 @@ class Tags extends React.Component {
             {availableCategories.map(cat => {
               return (
                 <CategoryCard
-                category={cat}
-                tags={tags.filter(tag => tag.category.slug === cat.id)}
-                key={cat.id}
-                onDelete={(tag) => onDelete(tag)}
-                onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
+                  category={cat}
+                  tags={tags.filter(tag => tag.category.slug === cat.id)}
+                  key={cat.id}
+                  onDelete={(tag) => onDelete(tag)}
+                  onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
               );
             })}
           </div>

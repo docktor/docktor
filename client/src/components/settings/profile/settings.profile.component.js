@@ -106,25 +106,23 @@ class ProfilePane extends React.Component {
             disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}
           </button>
         </form>
-        <Rodal visible={this.state.isRemovalModalVisible}
-            onClose={() => this._closeRemoveAccountModal()}>
-            <div className='ui active small modal'>
-                <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
-                <div className='header'><i className='large trash icon' /> Remove your account</div>
-                <div className='content'>
-                    <h2>Are you sure to delete your account ?</h2>
-                    <p>This action is irreversible and you will lose all your data</p>
-                </div>
-                <div className='actions'>
-                    <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
-                        No
-                    </div>
-                    <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
-                        Yes
-                        <i className='trash icon' />
-                    </div>
-                </div>
-            </div>
+        <Rodal visible={this.state.isRemovalModalVisible} onClose={() => this._closeRemoveAccountModal()}>
+          <div className='ui active small modal'>
+              <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
+              <div className='header'><i className='large trash icon' /> Remove your account</div>
+              <div className='content'>
+                  <h2>Are you sure to delete your account ?</h2>
+                  <p>This action is irreversible and you will lose all your data</p>
+              </div>
+              <div className='actions'>
+                  <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
+                      No
+                  </div>
+                  <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
+                      Yes
+                      <i className='trash icon' />
+                  </div>
+              </div>
           </div>
         </Rodal>
       </div>

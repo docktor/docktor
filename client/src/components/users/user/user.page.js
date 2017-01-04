@@ -34,7 +34,7 @@ class UserComponent extends React.Component {
   componentDidMount() {
     const { userId } = this.props;
 
-    // We need to fetch the tagd before the user info
+    // We need to fetch the tags before the user info
     this.props.fetchTags()
       .then(() => this.props.fetchUser(userId));
 
@@ -48,7 +48,6 @@ class UserComponent extends React.Component {
   initializeRoleDropdown() {
     const roleDropdownSelector = '.role.ui.dropdown';
     $(roleDropdownSelector).dropdown({
-      action: 'select', // necessary to avoid refresh conflicts between jQuery and React
       onChange: newRole => {
         $(roleDropdownSelector).dropdown('hide');
         this.onChangeRole(newRole);
@@ -121,11 +120,11 @@ class UserComponent extends React.Component {
           <div className='flex layout horizontal around-justified'>
             {
               isFetching
-                ?
+              ?
                 <div className='ui active dimmer'>
                   <div className='ui text loader'>Fetching</div>
                 </div>
-                :
+              :
                 <div className='flex layout vertical start-justified user-details'>
                   <h1>
                     <Link to={'/users'}>
