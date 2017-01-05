@@ -169,7 +169,7 @@ class DaemonComponent extends React.Component {
     `;
     return (
       <div className='flex layout vertical start-justified daemon-page'>
-        <Scrollbars ref='scrollbars' className='flex ui dimmable'>
+        <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
             {
               isFetching ?

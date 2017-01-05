@@ -57,7 +57,7 @@ class Daemons extends React.Component {
           <div className='flex layout vertical start-justified sites'>
             <Sites/>
           </div>
-          <Scrollbars className='flex-2 ui dimmable'>
+          <Scrollbars autoHide className='flex-2 ui dimmable'>
             {fetching ?
               <div className='flex ui active inverted dimmer'>
                 <div className='ui text loader'>Fetching</div>

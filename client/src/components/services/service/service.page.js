@@ -168,7 +168,7 @@ class ServiceComponent extends React.Component {
     const isFetching = this.props.isFetching;
     return (
       <div className='flex layout vertical start-justified service-page'>
-        <Scrollbars ref='scrollbars' className='flex ui dimmable'>
+        <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
             {
               isFetching ?

@@ -61,7 +61,7 @@ class Tags extends React.Component {
             </a>
           </div>
         </div>
-        <Scrollbars className='flex ui dimmable'>
+        <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal wrap'>
             {(isFetching => {
               if (isFetching) {

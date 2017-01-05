@@ -41,7 +41,7 @@ class Users extends React.Component {
           </div>
           <div className='flex-2' />
         </div>
-        <Scrollbars className='flex ui dimmable'>
+        <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center wrap user-list'>
               {isFetching && (
                   <div className='ui active inverted dimmer'>

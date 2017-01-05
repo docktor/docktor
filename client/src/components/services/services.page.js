@@ -49,7 +49,7 @@ class Services extends React.Component {
             </Link>
           </div>
         </div>
-        <Scrollbars className='flex ui dimmable'>
+        <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center services-list wrap'>
               {(fetching => {
                 if (fetching) {

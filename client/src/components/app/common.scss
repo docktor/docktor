@@ -1,4 +1,7 @@
 $body-background-color: #28303a !default;
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
 
 body,
 html {
@@ -113,8 +116,21 @@ input {
   }
 }
 
-.ui.yellow.buttons .button, .ui.yellow.button {
+.ui.yellow.buttons .button,
+.ui.yellow.button {
   background-color: #f1c40f; // yellow from https://flatuicolors.com/
+}
+
+.ui.teal.button {
+  background-color: $teal-button-color !important;
+}
+
+.ui.teal.button:hover {
+  background-color: $teal-button-color-hover !important;
+}
+
+.ui.teal.button:active {
+  background-color: $teal-button-color-active !important;
 }
 
 .not-active {
@@ -134,4 +150,8 @@ input {
 
 [readonly] {
   cursor: not-allowed;
+}
+
+.ui.active.dimmer {
+  background-color: $body-background-color;
 }

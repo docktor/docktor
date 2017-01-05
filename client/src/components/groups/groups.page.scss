@@ -3,24 +3,27 @@ $teal-button-color: #00948d !default;
 $teal-button-color-hover: #008c85 !default;
 $teal-button-color-active: #00827c !default;
 
-.groups-bar {
-  background-color: $groups-bar-background-color;
-  min-height: 3em;
-  padding: .5em 1em;
+.groups-page {
 
-  .ui.teal.button {
-    background-color: $teal-button-color !important;
+  .groups-bar {
+    background-color: $groups-bar-background-color;
+    min-height: 3em;
+    padding: .5em 1em;
 
+    .ui.teal.button {
+      background-color: $teal-button-color !important;
+
+    }
+    .ui.teal.button:hover {
+      background-color: $teal-button-color-hover !important;
+    }
+
+    .ui.teal.button:active {
+      background-color: $teal-button-color-active !important;
+    }
   }
-  .ui.teal.button:hover {
-    background-color: $teal-button-color-hover !important;
-  }
 
-  .ui.teal.button:active {
-    background-color: $teal-button-color-active !important;
+  .groups-list {
+    overflow-y: auto !important;
   }
-}
-
-.groups-list {
-  overflow-y: auto !important;
 }
