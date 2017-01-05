@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 import UUID from 'uuid-js';
 
 // Thunks / Actions
@@ -22,22 +24,30 @@ import TagsSelector from '../../tags/tags.selector.component.js';
 import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors.js';
 import { getUsersAsOptions } from '../../../modules/users/users.selectors.js';
 
+import { parseError } from '../../../modules/utils/forms.js';
+
 // Style
 import './group.edit.page.scss';
 
 // Group Component for edition
 class GroupEditComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { ...props.group };
+  state = { errors: { details: [], fields: {} }, group: {}, tags:[] }
+
+  schema = Joi.object().keys({
+    title: Joi.string().trim().required().label('Title'),
+    description: Joi.string().trim().required().label('Description')
+  })
+
+  componentWillMount = () => {
+    this.setState({ group: { ...this.props.group }, errors: { details: [], fields:{} } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...nextProps.group });
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ group: { ...nextProps.group }, errors: { details: [], fields:{} } });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const groupId = this.props.groupId;
 
     // Tags must be fetched before the group for the UI to render correctly
@@ -53,48 +63,37 @@ class GroupEditComponent extends React.Component {
     });
 
     if (!groupId) {
-      // New group
-      $('.ui.form.group-form').form('clear');
       const tagsSelector = this.refs.tags;
       tagsSelector.setState({ tags: [] });
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.isFetching) {
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  onChangeProperty(value, property) {
-    this.setState({ [property]: value });
+  onChangeProperty = (value, property) => {
+    this.setState({ group: { ...this.state.group, [property]: value } });
   }
 
-  isFormValid() {
-    const settings = {
-      fields: {
-        title: 'empty',
-        description: 'empty',
-        portminrange: 'empty',
-        portmaxrange: 'empty'
-      }
-    };
-    $('.ui.form.group-form').form(settings);
-    $('.ui.form.group-form').form('validate form');
-    return $('.ui.form.group-form').form('is valid');
+  isFormValid = () => {
+    const { error } = Joi.validate(this.state.group, this.schema, { abortEarly: false, allowUnknown: true });
+    error && this.setState({ errors: parseError(error) });
+    return !Boolean(error);
   }
 
-  onSave(event) {
-    event.preventDefault();
+  onSave = (e) => {
+    e.preventDefault();
     const tagsSelector = this.refs.tags;
-    const filesystemsBox = this.refs.filesystemsBox;
-    const membersBox = this.refs.membersBox;
+    const filesystemsBox = this.refs.filesystems;
+    const membersBox = this.refs.members;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
-
-    let formValid = filesystemsBox.isFormValid() & membersBox.isFormValid() & this.isFormValid();
+    let formValid = this.isFormValid() & filesystemsBox.isFormValid() & membersBox.isFormValid();
     if (formValid) {
-      const group = { ...this.state };
+      const group = { ...this.state.group };
       group.tags = tagsSelector.state.tags;
       group.filesystems = filesystemsBox.state.filesystems;
       group.members = membersBox.state.members;
@@ -102,12 +101,9 @@ class GroupEditComponent extends React.Component {
     }
   }
 
-  render() {
-    const group = this.state;
-    const isFetching = this.props.isFetching;
-    const daemons = this.props.daemons;
-    const tags = this.props.tags;
-    const users = this.props.users;
+  render = () => {
+    const { group } = this.state;
+    const { isFetching, daemons, tags, users } = this.props;
     return (
       <div className='flex layout vertical start-justified group-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
@@ -151,10 +147,10 @@ class GroupEditComponent extends React.Component {
                       </div>
                     </div>
                   </form>
-                  <FilesystemsBox filesystems={group.filesystems} daemons={daemons} ref='filesystemsBox' boxId={UUID.create(4).hex}>
+                  <FilesystemsBox filesystems={group.filesystems || []} daemons={daemons} ref='filesystems' boxId={UUID.create(4).hex}>
                     <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
                   </FilesystemsBox>
-                  <MembersBox members={group.members} users={users} ref='membersBox' boxId={UUID.create(4).hex}>
+                  <MembersBox members={group.members} users={users} ref='members'>
                     <p>Members of groups are able to see it and interact with containers.</p>
                     <ul>
                       <li>Moderators are able to add other members and to interact with services (stop/start)</li>
@@ -162,7 +158,7 @@ class GroupEditComponent extends React.Component {
                     </ul>
                   </MembersBox>
                   <div className='flex button-form'>
-                    <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
+                    <a className='ui fluid button' onClick={this.onSave}>Save</a>
                   </div>
                 </div>
             }

@@ -16,7 +16,7 @@ $br: 4px;
 .group-page {
 
   .ui.active.dimmer {
-      background-color: transparent;
+    background-color: transparent;
   }
 
   .group-details {
@@ -29,11 +29,12 @@ $br: 4px;
     h1 {
       color: $white;
       font-weight: $thin;
-      margin: 0 0 30px;
+      margin: 0 0 1em;
       text-transform: uppercase;
 
       .right-floated {
         float: right !important;
+        margin: 0;
       }
     }
 

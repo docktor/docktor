@@ -28,9 +28,11 @@ const createSchema = (fields) => {
       break;
     }
     if (field.required) {
-      rule = rule.required().label(field.label || field.name);
+      rule = rule.required();
+    } else {
+      rule = rule.allow('');
     }
-    obj[field.name] = rule;
+    obj[field.name] = rule.label(field.label || field.name);
   });
   return obj;
 };
@@ -40,6 +42,17 @@ export const parseError = (error) => {
   const details = [];
   error && error.details.forEach(err => {
     fields[err.path] = true;
+    details.push(err.message);
+  });
+  return { details, fields };
+};
+
+export const parseErrorArray = (error) => {
+  const fields = {};
+  const details = [];
+  error && error.details.forEach(err => {
+    const [index, path] = err.path.split('.');
+    fields[index] = { ...fields[index], [path]:true };
     details.push(err.message);
   });
   return { details, fields };

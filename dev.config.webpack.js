@@ -6,7 +6,7 @@ var nodeModules = path.resolve(__dirname, 'node_modules'),
   src = path.resolve(__dirname, './client/src/main.js');
 
 var devConfig = {
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   entry: [
     'webpack/hot/dev-server',
     'webpack-dev-server/client?http://localhost:8081',
