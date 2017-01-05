@@ -1,0 +1,73 @@
+$form-bg: #2c3e50;
+$white: #fff;
+
+$main: #00948d;
+$main-light: lighten($main, 5%);
+$main-dark: darken($main, 5%);
+
+$gray-light: #a0b3b0;
+$gray: #ddd;
+
+$thin: 300;
+$normal: 400;
+$bold: 600;
+$br: 4px;
+
+.group-view-page {
+
+  .ui.active.dimmer {
+      background-color: transparent;
+  }
+
+  .group-view-details {
+    background: rgba($form-bg, .9);
+    margin: 2em;
+    max-width: 80%;
+    min-width: 450px;
+    padding: 2em 5em;
+    width: 70%;
+
+    h1 {
+      color: $white;
+      font-weight: $thin;
+      margin: 0 0 30px;
+      text-transform: uppercase;
+
+      .right-floated {
+        float: right !important;
+      }
+    }
+
+    a {
+      color: $main;
+      text-decoration: none;
+      transition: .5s ease;
+      &:hover {
+        color: $main-dark;
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  .labelised-field {
+
+    margin-bottom: 1em;
+
+    &> .ui.label:first-child {
+      background-color: #3a6191;
+      border-radius: 0;
+      color: white;
+      line-height: 2.5em;
+      padding-bottom: 0;
+      padding-top: 0;
+      margin-right: 1em;
+      text-align: center;
+    }
+
+    .ui.label b {
+      font-size: small;
+    }
+
+  }
+}

@@ -23,10 +23,10 @@ import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selector
 import { getUsersAsOptions } from '../../../modules/users/users.selectors.js';
 
 // Style
-import './group.page.scss';
+import './group.edit.page.scss';
 
-// Group Component
-class GroupComponent extends React.Component {
+// Group Component for edition
+class GroupEditComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -172,7 +172,7 @@ class GroupComponent extends React.Component {
     );
   }
 }
-GroupComponent.propTypes = {
+GroupEditComponent.propTypes = {
   group: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   groupId: React.PropTypes.string,
@@ -222,9 +222,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // Redux container to Sites component
-const GroupPage = connect(
+const GroupEditPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(GroupComponent);
+)(GroupEditComponent);
 
-export default GroupPage;
+export default GroupEditPage;

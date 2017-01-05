@@ -25,7 +25,8 @@ import Home from './components/app/home.page.js';
 import DaemonsPage from './components/daemons/daemons.page.js';
 import DaemonPage from './components/daemons/daemon/daemon.page.js';
 import GroupsPage from './components/groups/groups.page.js';
-import GroupPage from './components/groups/group/group.page.js';
+import GroupEditPage from './components/groups/group/group.edit.page.js';
+import GroupViewPage from './components/groups/group/group.view.page.js';
 import ServicesPage from './components/services/services.page.js';
 import ServicePage from './components/services/service/service.page.js';
 
@@ -87,8 +88,12 @@ ReactDOM.render(
         </Route>
         <Route path='groups'>
           <IndexRoute component={requireAuthorization(GroupsPage)} />
-          <Route path='new' component={requireAuthorization(GroupPage, [AUTH_ADMIN_ROLE])} />
-          <Route path=':id' component={requireAuthorization(GroupPage, [AUTH_ADMIN_ROLE])} />
+          <Route path='new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+          <Route path=':id'>
+            <IndexRoute component={requireAuthorization(GroupViewPage)} />
+            <Route path='view' component={requireAuthorization(GroupViewPage)} />
+            <Route path='edit' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+          </Route>
         </Route>
         <Route path='services'>
           <IndexRoute component={requireAuthorization(ServicesPage)} />
