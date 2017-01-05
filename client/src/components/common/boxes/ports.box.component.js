@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // PortsBox is a list of ports
 class PortsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { ports: [] }
 
-    // Set state of component from the props.
-    this.state = { ports: this.props.ports || [] };
+  componentWillMount = () => {
+    this.setState({ ports: this.props.ports });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ ports: nextProps.ports });
+  }
+
+  isFormValid = () => {
     return this.refs.portsBox.isFormValid();
   }
 
-  onChangePorts(ports) {
+  onChangePorts = (ports) => {
     this.state.ports = ports;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
     form.getTitle = (port) => {
@@ -64,11 +67,11 @@ class PortsBox extends React.Component {
       <Box
         ref='portsBox'
         boxId={this.props.boxId}
-        icon='large sitemap icon'
+        icon='sitemap'
         title='Ports' form={form}
         lines={this.props.ports}
         stacked={this.props.stacked}
-        onChange={ports => this.onChangePorts(ports)}>
+        onChange={this.onChangePorts}>
         {this.props.children || ''}
       </Box>
     );

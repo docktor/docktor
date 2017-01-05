@@ -7,22 +7,25 @@ import Box from './box/box.component.js';
 // FilesystemsBox is a list of filesystems
 class FilesystemsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { filesystems: [] }
 
-    // Set state of component from the props.
-    this.state = { filesystems: this.props.filesystems || [], options: {} };
+  componentWillMount = () => {
+    this.setState({ filesystems: this.props.filesystems });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ filesystems: nextProps.filesystems });
+  }
+
+  isFormValid = () => {
     return this.refs.filesystemsBox.isFormValid();
   }
 
-  onChangeFilesystems(filesystems) {
+  onChangeFilesystems = (filesystems) => {
     this.state.filesystems = filesystems;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
     form.getTitle = (filesystem) => {
@@ -63,10 +66,10 @@ class FilesystemsBox extends React.Component {
         boxId={UUID.create(4).hex}
         icon='disk outline'
         title='Filesystems'
-        form={form} options={this.state.options}
+        form={form}
         lines={this.props.filesystems}
         stacked={this.props.stacked}
-        onChange={filesystems => this.onChangeFilesystems(filesystems)}>
+        onChange={this.onChangeFilesystems}>
         {this.props.children || ''}
       </Box>
     );

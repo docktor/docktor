@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // JobsBox is a list of jobs
 class JobsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { jobs: [] }
 
-    // Set state of component from the props.
-    this.state = { jobs: this.props.jobs || [] };
+  componentWillMount = () => {
+    this.setState({ jobs: this.props.jobs });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ jobs: nextProps.jobs });
+  }
+
+  isFormValid = () => {
     return this.refs.jobsBox.isFormValid();
   }
 
-  onChangeJobs(jobs) {
+  onChangeJobs = (jobs) => {
     this.state.jobs = jobs;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
     form.getTitle = (job) => {
@@ -78,11 +81,11 @@ class JobsBox extends React.Component {
       <Box
         ref='jobsBox'
         boxId={this.props.boxId}
-        icon='large checked calendar icon'
+        icon='checked calendar'
         title='Jobs' form={form}
         lines={this.props.jobs}
         stacked={this.props.stacked}
-        onChange={jobs => this.onChangeJobs(jobs)}>
+        onChange={this.onChangeJobs}>
         {this.props.children || ''}
       </Box>
     );

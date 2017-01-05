@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // VariablesBox is a list of docker variables
 class VariablesBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { variables: [] }
 
-    // Set state of component from the props.
-    this.state = { variables: this.props.variables || [] };
+  componentWillMount = () => {
+    this.setState({ variables: this.props.variables });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ variables: nextProps.variables });
+  }
+
+  isFormValid = () => {
     return this.refs.variablesBox.isFormValid();
   }
 
-  onChangeVariables(variables) {
+  onChangeVariables = (variables) => {
     this.state.variables = variables;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
     const allowEmpty = this.props.allowEmpty;
 
@@ -58,11 +61,11 @@ class VariablesBox extends React.Component {
       <Box
         ref='variablesBox'
         boxId={this.props.boxId}
-        icon='large setting icon'
+        icon='setting'
         title='Variables' form={form}
         lines={this.props.variables}
         stacked={this.props.stacked}
-        onChange={variables => this.onChangeVariables(variables)}>
+        onChange={this.onChangeVariables}>
         {this.props.children || ''}
       </Box>
     );

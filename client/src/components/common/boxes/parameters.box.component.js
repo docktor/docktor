@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // ParametersBox is a list of docker parameters
 class ParametersBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { parameters: [] }
 
-    // Set state of component from the props.
-    this.state = { parameters: this.props.parameters || [] };
+  componentWillMount = () => {
+    this.setState({ parameters: this.props.parameters });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ parameters: nextProps.parameters });
+  }
+
+  isFormValid = () => {
     return this.refs.parametersBox.isFormValid();
   }
 
-  onChangeParameters(parameters) {
+  onChangeParameters = (parameters) => {
     this.state.parameters = parameters;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
     const allowEmpty = this.props.allowEmpty;
 
@@ -59,11 +62,11 @@ class ParametersBox extends React.Component {
       <Box
         ref='parametersBox'
         boxId={this.props.boxId}
-        icon='large configure icon'
+        icon='configure'
         title='Parameters' form={form}
         lines={this.props.parameters}
         stacked={this.props.stacked}
-        onChange={parameters => this.onChangeParameters(parameters)}>
+        onChange={this.onChangeParameters}>
         {this.props.children || ''}
       </Box>
     );

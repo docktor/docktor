@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { commands: [] }
 
-    // Set state of component from the props.
-    this.state = { commands: this.props.commands || [] };
+  componentWillMount = () => {
+    this.setState({ commands: this.props.commands });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ commands: nextProps.commands });
+  }
+
+  isFormValid = () => {
     return this.refs.commandsBox.isFormValid();
   }
 
-  onChangeCommands(commands) {
+  onChangeCommands = (commands) => {
     this.state.commands = commands;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
     form.getTitle = (command) => {
@@ -62,11 +65,11 @@ class CommandsBox extends React.Component {
       <Box
         ref='commandsBox'
         boxId={this.props.boxId}
-        icon='large terminal icon'
+        icon='terminal'
         title='Commands' form={form}
         lines={this.props.commands}
         stacked={this.props.stacked}
-        onChange={commands => this.onChangeCommands(commands)}>
+        onChange={this.onChangeCommands}>
         {this.props.children || ''}
       </Box>
     );

@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // URLsBox is a list of docker urls
 class URLsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { urls: [] }
 
-    // Set state of component from the props.
-    this.state = { urls: this.props.urls || [] };
+  componentWillMount = () => {
+    this.setState({ urls: this.props.urls });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ urls: nextProps.urls });
+  }
+
+  isFormValid = () => {
     return this.refs.urlsBox.isFormValid();
   }
 
-  onChangeURLs(urls) {
+  onChangeURLs = (urls) => {
     this.state.urls = urls;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
     form.getTitle = (url) => {
@@ -48,11 +51,11 @@ class URLsBox extends React.Component {
       <Box
         ref='urlsBox'
         boxId={this.props.boxId}
-        icon='large linkify icon'
+        icon='linkify'
         title='URLs' form={form}
         lines={this.props.urls}
         stacked={this.props.stacked}
-        onChange={urls => this.onChangeURLs(urls)}>
+        onChange={this.onChangeURLs}>
         {this.props.children || ''}
       </Box>
     );

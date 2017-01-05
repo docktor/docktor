@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // VolumesBox is a list of docker volumes
 class VolumesBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { volumes: [] }
 
-    // Set state of component from the props.
-    this.state = { volumes: this.props.volumes || [] };
+  componentWillMount = () => {
+    this.setState({ volumes: this.props.volumes });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ volumes: nextProps.volumes });
+  }
+
+  isFormValid = () => {
     return this.refs.volumesBox.isFormValid();
   }
 
-  onChangeVolumes(volumes) {
+  onChangeVolumes = (volumes) => {
     this.state.volumes = volumes;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
     const allowEmpty = this.props.allowEmpty;
 
@@ -73,11 +76,11 @@ class VolumesBox extends React.Component {
       <Box
         ref='volumesBox'
         boxId={this.props.boxId}
-        icon='large folder open icon'
+        icon='folder open'
         title='Volumes' form={form}
         lines={this.props.volumes}
         stacked={this.props.stacked}
-        onChange={volumes => this.onChangeVolumes(volumes)}>
+        onChange={this.onChangeVolumes}>
         {this.props.children || ''}
       </Box>
     );
