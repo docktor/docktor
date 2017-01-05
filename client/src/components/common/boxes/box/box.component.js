@@ -40,8 +40,10 @@ class Box extends React.Component {
 
   onRemoveLine = (index) => (e) => {
     e.preventDefault();
-    const state = { lines: [...this.state.lines] };
+    const { lines, errors } = this.state;
+    const state = { lines: [...lines], errors: { details: [...errors.details], fields: { ...errors.fields } } };
     state.lines.splice(index, 1);
+    delete state.errors.fields[index];
     this.setState(state);
   }
 
@@ -118,7 +120,7 @@ class Box extends React.Component {
             return this.renderInput(line, index, field, popup, errors);
           }
         })}
-        <Form.Button color='red' icon='trash' onClick={this.onRemoveLine(index)} />
+        <Form.Button color='red' icon='trash' onClick={this.onRemoveLine(index)} width='one' />
       </Form.Group>
     );
   }

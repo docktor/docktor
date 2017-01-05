@@ -54,12 +54,7 @@ class Daemons extends React.Component {
             <Sites/>
           </div>
           <Scrollbars autoHide className='flex-2 ui dimmable'>
-            {isFetching ?
-              <div className='flex ui active inverted dimmer'>
-                <div className='ui text loader'>Fetching</div>
-              </div>
-              : ''
-            }
+            {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
             <div className='flex layout horizontal center-center wrap daemons-list'>
               {daemons.map(daemon => <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />)}
             </div>

@@ -39,7 +39,7 @@ class UserCardComponent extends React.Component {
     const options = ALL_ROLES.map(role => {return { icon: getRoleIcon(role), value: role, text: getRoleLabel(role) };});
     const canGoToProfile = connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE;
     return (
-      <Card className='user'>
+      <Card className='user-card'>
         <Card.Content>
           <Image avatar alt='Avatar' src='/images/avatar.jpg' />
           {
@@ -59,7 +59,7 @@ class UserCardComponent extends React.Component {
             {user.provider.toUpperCase()}
           </Label>
           <div className='email' title={user.email}>
-            <Icon name='mail' /> <a href={`mailto:${user.email}`}>{user.email}</a>
+            <a href={`mailto:${user.email}`}><Icon name='mail' />{user.email}</a>
           </div>
         </Card.Content>
       </Card>

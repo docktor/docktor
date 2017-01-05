@@ -15,16 +15,12 @@
       }
     }
   }
+  .leaflet-popup-content-wrapper {
+    border-radius: 0 !important;
+  }
+  .popup-actions {
+    margin-left: 5px;
+  }
 }
 
-.leaflet-bottom.leaflet-right,
-leaflet-control-zoom {
-  z-index: 1 !important;
-}
 
-.leaflet-popup-content-wrapper {
-  border-radius: 0 !important;
-}
-.popup-actions {
-  margin-left: 5px;
-}

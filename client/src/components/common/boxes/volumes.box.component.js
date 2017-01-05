@@ -75,7 +75,6 @@ class VolumesBox extends React.Component {
     return (
       <Box
         ref='volumesBox'
-        boxId={this.props.boxId}
         icon='folder open'
         title='Volumes' form={form}
         lines={this.props.volumes}
@@ -88,7 +87,6 @@ class VolumesBox extends React.Component {
 };
 
 VolumesBox.propTypes = {
-  boxId: React.PropTypes.string,
   volumes: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
   stacked: React.PropTypes.bool,

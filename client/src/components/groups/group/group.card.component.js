@@ -16,7 +16,7 @@ class GroupCard extends React.Component {
     const nbContainers = (group.containers ? group.containers.length : 0);
     const containers = nbContainers > 0 ? nbContainers + (nbContainers > 1 ? ' containers' : ' container') : 'No containers';
     return (
-      <Card className='group'>
+      <Card className='group-card'>
         <Card.Content>
           <Card.Header as={Link} to={`/groups/${group.id}/view`} title={group.title} className='link'>
             <Icon name='travel' />{group.title}

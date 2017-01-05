@@ -60,59 +60,5 @@ $br: 4px;
         cursor: pointer;
       }
     }
-
-    .button-form {
-      .ui.button {
-        -moz-appearance: none; // Firefox
-        -webkit-appearance: none; // Safari and Chrome
-        appearance: none;
-        background: $main;
-        border: none;
-        border-radius: 0;
-        color: $white;
-        font-size: 1.5rem;
-        font-weight: $bold;
-        letter-spacing: .1em;
-        outline: none;
-        padding: 15px 0;
-        text-transform: uppercase;
-        transition: all.5s ease;
-        &:hover,
-        &:focus {
-          background: $main-dark;
-          color: $white;
-        }
-      }
-    }
-
-    .ui.label.form-label {
-      background-color: #3a6191;
-      border-radius: 0;
-      color: white;
-      height: 38px;
-      line-height: 38px;
-      margin-top: 24px;
-      padding-bottom: 0;
-      padding-top: 0;
-      text-align: center;
-      width: 100%;
-      @media only screen and (max-width: 767px) {
-        margin-left: 25%;
-        margin-top: 0;
-        width: 50% !important;
-      }
-    }
-
-    .tags {
-      .ui.label {
-        width: calc(12.5% - 1.5em);
-        margin-top: 0;
-        margin-bottom: 0em !important;
-        @media only screen and (max-width: 767px) {
-          margin-bottom: .5em !important;
-        }
-        margin-right: 2em;
-      }
-    }
   }
 }

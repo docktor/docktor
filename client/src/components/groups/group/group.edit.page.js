@@ -35,8 +35,7 @@ class GroupEditComponent extends React.Component {
   state = { errors: { details: [], fields: {} }, group: {}, tags:[] }
 
   schema = Joi.object().keys({
-    title: Joi.string().trim().required().label('Title'),
-    description: Joi.string().trim().allow('').label('Description')
+    title: Joi.string().trim().required().label('Title')
   })
 
   componentWillMount = () => {
@@ -118,7 +117,7 @@ class GroupEditComponent extends React.Component {
             <div className='flex layout vertical start-justified group-details'>
               <h1>
                 <Link to={group.id ? `/groups/${group.id}` : '/groups'}>
-                  <Icon name='arrow left'/>
+                  <Icon name='arrow left' fitted/>
                 </Link>
                 {this.props.group.title || 'New Group'}
                 <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
@@ -128,11 +127,12 @@ class GroupEditComponent extends React.Component {
               <Form className='group-form'>
                 <Input type='hidden' name='created' value={group.created || ''} onChange={this.handleChange} />
                 <Input type='hidden' name='id' value={group.id || ''} onChange={this.handleChange} />
+
                 <Form.Input required label='Title' name='title' value={group.title || ''} onChange={this.handleChange}
                   type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['title']}
                 />
                 <Form.TextArea label='Description' name='description' value={group.description || ''} onChange={this.handleChange}
-                  rows='4' placeholder='A description of the group' autoComplete='off' error={errors.fields['description']}
+                  rows='4' placeholder='A description of the group' autoComplete='off'
                 />
                 <Form.Group>
                   <Form.Field width='two'>

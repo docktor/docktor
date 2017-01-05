@@ -15,33 +15,25 @@ import './sites.component.scss';
 
 //Site Component using react-leaflet
 class SitesComponent extends React.Component {
-  constructor() {
-    super();
-    this.state = { lat: 45, lng: 5, zoom: 4 };
-  }
 
-  componentDidUpdate() {
+  state = { lat: 45, lng: 5, zoom: 4 }
+
+  componentDidUpdate = () => {
     setTimeout(() => {
-
       this.refs.sitesMap && this.refs.sitesMap.leafletElement.invalidateSize(false);
     }, 300); // Adjust timeout to tab transition
   }
 
-  closePopup() {
+  closePopup = () => {
     this.refs.sitesMap.leafletElement.closePopup();
   }
 
-  render() {
-    const initPosition = [this.state.lat, this.state.lng];
-    const sites = this.props.sites;
-    const fetching = this.props.sites.isFetching;
-    const onDelete = this.props.onDelete;
-    const onCreate = this.props.onCreate;
-    const onEdit = this.props.onEdit;
-    const changeFilter = this.props.changeFilter;
+  render = () => {
+    const { lat, lng, zoom } = this.state;
+    const { sites, onDelete, onCreate, onEdit, changeFilter } = this.props;
     return (
       <div className='flex-2 self-stretch map-container layout horizontal center-center'>
-        <Map ref='sitesMap' className='flex self-stretch map' center={initPosition} zoom={this.state.zoom} onClick={(e) => onCreate(e.latlng)}>
+        <Map ref='sitesMap' className='flex self-stretch map' center={[lat, lng]} zoom={zoom} onClick={(e) => onCreate(e.latlng)}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -55,7 +47,7 @@ class SitesComponent extends React.Component {
                     {site.title}
                     <span className='popup-actions'>
                       <i onClick={() => changeFilter('site: ' + site.title)} className='teal search link icon' />
-                      <i onClick={() => onEdit(site, () => this.closePopup())} className='blue write link icon' />
+                      <i onClick={() => onEdit(site, this.closePopup)} className='blue write link icon' />
                       <i onClick={() => onDelete(site)} className='red trash link icon' />
                     </span>
                   </div>
@@ -68,6 +60,7 @@ class SitesComponent extends React.Component {
     );
   }
 }
+
 SitesComponent.propTypes = {
   sites: React.PropTypes.array,
   onCreate: React.PropTypes.func,
