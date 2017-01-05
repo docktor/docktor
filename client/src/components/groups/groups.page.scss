@@ -1,7 +1,4 @@
 $groups-bar-background-color: #2c3e50 !default;
-$teal-button-color: #00948d !default;
-$teal-button-color-hover: #008c85 !default;
-$teal-button-color-active: #00827c !default;
 
 .groups-page {
 
@@ -9,18 +6,6 @@ $teal-button-color-active: #00827c !default;
     background-color: $groups-bar-background-color;
     min-height: 3em;
     padding: .5em 1em;
-
-    .ui.teal.button {
-      background-color: $teal-button-color !important;
-
-    }
-    .ui.teal.button:hover {
-      background-color: $teal-button-color-hover !important;
-    }
-
-    .ui.teal.button:active {
-      background-color: $teal-button-color-active !important;
-    }
   }
 
   .groups-list {

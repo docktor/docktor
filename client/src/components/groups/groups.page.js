@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
-import { Form, Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
+import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // Thunks / Actions
@@ -30,7 +30,7 @@ class Groups extends React.Component {
     const { groups, filterValue, isFetching, changeFilter } = this.props;
     return (
       <div className='flex layout vertical start-justified groups-page'>
-        <div className='layout horizontal center-center groups-bar'>
+        <div className='layout horizontal justified groups-bar'>
           <Input icon labelPosition='left corner' className='flex'>
             <Label corner='left' icon='search' />
             <DebounceInput
