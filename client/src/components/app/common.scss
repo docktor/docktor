@@ -122,8 +122,14 @@ input {
   pointer-events: none;
 }
 
-.dropdown.optgroup .divider {
-  border-top: none !important;
+.dropdown.optgroup .dropdown-divider {
+  &:hover {
+    background-color: transparent !important;
+  }
+  .divider {
+    border-top: none !important;
+    margin: 0;
+  }
 }
 
 [readonly] {

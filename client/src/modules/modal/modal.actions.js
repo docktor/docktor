@@ -12,9 +12,9 @@ const closeModal = () => {
 const openNewSiteModal = (position, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
-  line.fields.push({ label: 'Title', name: 'title', desc: 'Site Title', type: 'text', required: true });
-  line.fields.push({ label: 'Latitude', name: 'latitude', desc: 'Site Latitude', value: Math.round(position.lat * 10000) / 10000, type: 'number', required: true });
-  line.fields.push({ label: 'Longitude', name: 'longitude', desc: 'Site Longitude', value: Math.round(position.lng * 10000) / 10000, type: 'number', required: true });
+  line.fields.push({ label: 'Title', name: 'title', placeholder: 'Site Title', type: 'text', required: true });
+  line.fields.push({ label: 'Latitude', name: 'latitude', placeholder: 'Site Latitude', value: Math.round(position.lat * 10000) / 10000, type: 'number', required: true });
+  line.fields.push({ label: 'Longitude', name: 'longitude', placeholder: 'Site Longitude', value: Math.round(position.lng * 10000) / 10000, type: 'number', required: true });
   form.lines.push(line);
   return {
     type: ModalConstants.OPEN_MODAL,
@@ -28,9 +28,9 @@ const openNewSiteModal = (position, callback) => {
 const openEditSiteModal = (site, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
-  line.fields.push({ label: 'Title', name: 'title', desc: 'Site Title', value: site.title, type: 'text', required: true });
-  line.fields.push({ label: 'Latitude', name: 'latitude', desc: 'Site Latitude', value: site.latitude, type: 'number', required: true });
-  line.fields.push({ label: 'Longitude', name: 'longitude', desc: 'Site Longitude', value: site.longitude, type: 'number', required: true });
+  line.fields.push({ label: 'Title', name: 'title', placeholder: 'Site Title', value: site.title, type: 'text', required: true });
+  line.fields.push({ label: 'Latitude', name: 'latitude', placeholder: 'Site Latitude', value: site.latitude, type: 'number', required: true });
+  line.fields.push({ label: 'Longitude', name: 'longitude', placeholder: 'Site Longitude', value: site.longitude, type: 'number', required: true });
   form.lines.push(line);
 
   form.hidden.push({ name: 'id', value: site.id });
@@ -59,11 +59,11 @@ const tagRightsHelp = `<div>
 const openNewTagsModal = (availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
   let firstLine = { fields: [] };
-  firstLine.fields.push({ label: 'Tag names', name: 'tags', desc: 'Add some tags', type: 'tags', required: true, class: 'sixteen wide' });
+  firstLine.fields.push({ label: 'Tag names', name: 'tags', placeholder: 'Add some tags', type: 'tags', required: true, class: 'sixteen wide' });
   form.lines.push(firstLine);
   let secondLine = { class: 'two', fields: [] };
-  secondLine.fields.push({ label: 'Category', name: 'category', desc: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
-  secondLine.fields.push({ label: 'Default rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
+  secondLine.fields.push({ label: 'Category', name: 'category', placeholder: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });
+  secondLine.fields.push({ label: 'Default rights', name: 'rights', placeholder: 'Select the role', help: tagRightsHelp, type: 'dropdown', options: availableRights, required: true });
   form.lines.push(secondLine);
   return {
     type: ModalConstants.OPEN_MODAL,
@@ -76,9 +76,9 @@ const openNewTagsModal = (availableRights, availableCategories, callback) => {
 const openEditTagModal = (tag, availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
   let line = { class: 'three', fields: [] };
-  line.fields.push({ label: 'Name', name: 'name', desc: 'Fill a name', value: tag.name.raw, type: 'text', required: true });
-  line.fields.push({ label: 'Category', name: 'category', desc: 'Set a category', value: tag.category.raw, type: 'autocomplete', options: availableCategories, required: true });
-  line.fields.push({ label: 'Rights', name: 'rights', desc: 'Select the role', help: tagRightsHelp, value: tag.usageRights, type: 'dropdown', options: availableRights, required: true });
+  line.fields.push({ label: 'Name', name: 'name', placeholder: 'Fill a name', value: tag.name.raw, type: 'text', required: true });
+  line.fields.push({ label: 'Category', name: 'category', placeholder: 'Set a category', value: tag.category.raw, type: 'autocomplete', options: availableCategories, required: true });
+  line.fields.push({ label: 'Rights', name: 'rights', placeholder: 'Select the role', help: tagRightsHelp, value: tag.usageRights, type: 'dropdown', options: availableRights, required: true });
   form.lines.push(line);
 
   form.hidden.push({ name: 'id', value: tag.id });

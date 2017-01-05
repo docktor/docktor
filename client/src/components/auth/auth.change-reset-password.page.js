@@ -56,7 +56,7 @@ class ChangeResetPasswordP extends React.Component {
         <TabForm>
           <div id='change-password'>
             <Header as='h1'>Set a new password</Header>
-            <Form error={!!details.length} onSubmit={this.handleSubmit}>
+            <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
               <Form.Input required error={fields['newPassword']} label='New Password'
                 type='password' name='newPassword' autoComplete='off' placeholder='Set a new password'
               />

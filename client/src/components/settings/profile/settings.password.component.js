@@ -48,7 +48,7 @@ class ChangePasswordPane extends React.Component {
     return (
       <div id='change-password'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!!details.length} onSubmit={this.handleSubmit} warning={isDisabled}>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit} warning={isDisabled}>
           <Form.Input required
             error={fields['oldPassword']} label='Old Password' type='password'
             name='oldPassword' autoComplete='off' placeholder='Your old password'

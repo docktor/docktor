@@ -33,23 +33,23 @@ class VariablesBox extends React.Component {
       name: 'name',
       label: 'Variable Name',
       placeholder: 'The environment variable name',
-      sizeClass: 'five wide',
-      isRequired: true
+      class: 'five wide',
+      required: true
     });
 
     form.fields.push({
       name: 'value',
       label: allowEmpty ? 'Default Value' : 'Variable Value',
       placeholder: 'The environment variable value',
-      sizeClass: 'five wide',
-      isRequired: !allowEmpty
+      class: 'five wide',
+      required: !allowEmpty
     });
 
     form.fields.push({
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this variable',
-      sizeClass: 'five wide',
+      class: 'five wide',
       type: 'textarea',
       rows: 2
     });

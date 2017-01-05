@@ -52,7 +52,7 @@ class RegisterPane extends React.Component {
     return (
       <div id='register'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!!details.length} onSubmit={this.handleSubmit}>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
           <Form.Group widths='equal'>
             <Form.Input required error={fields['username']} label='Username'
               type='text' name='username' autoComplete='off' placeholder='A unique username'

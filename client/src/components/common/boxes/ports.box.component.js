@@ -32,8 +32,8 @@ class PortsBox extends React.Component {
       name: 'internal',
       label: 'Internal',
       placeholder: 'Internal Port',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       type: 'number'
     });
 
@@ -41,8 +41,8 @@ class PortsBox extends React.Component {
       name: 'protocol',
       label: 'Protocol',
       placeholder: 'Protocol',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'tcp', name:'TCP' },
         { value:'udp', name:'UDP' }
@@ -55,7 +55,7 @@ class PortsBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this Port',
-      sizeClass: 'five wide',
+      class: 'five wide',
       type: 'textarea',
       rows: 2
     });

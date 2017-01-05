@@ -50,7 +50,7 @@ class SigninPane extends React.Component {
     return (
       <div id='login'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!!details.length} onSubmit={this.handleSubmit}>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
           <Form.Input required error={fields['username']} label='Username'
             type='text' name='username' autoComplete='off' placeholder='Registered/LDAP username'
           />

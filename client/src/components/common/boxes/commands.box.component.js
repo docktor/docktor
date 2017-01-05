@@ -32,24 +32,24 @@ class CommandsBox extends React.Component {
       name: 'name',
       label: 'Name',
       placeholder: 'Command Name',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'exec',
       label: 'Exec Command',
       placeholder: 'Command to execute',
-      sizeClass: 'nine wide',
-      isRequired: true
+      class: 'nine wide',
+      required: true
     });
 
     form.fields.push({
       name: 'role',
       label: 'Role',
       placeholder: 'Select a role',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'moderator', name:'Moderators' },
         { value:'member', name:'Members' }

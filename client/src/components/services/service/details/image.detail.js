@@ -46,7 +46,7 @@ class ImageDetails extends React.Component {
     const formValid = parametersBox.isFormValid() & portsBox.isFormValid() & variablesBox.isFormValid() & volumesBox.isFormValid();
     const nameIsValid = this.state.image.name;
     this.setState({ error: !nameIsValid });
-    return formValid && !!nameIsValid;
+    return formValid && Boolean(nameIsValid);
   }
 
   getImage() {

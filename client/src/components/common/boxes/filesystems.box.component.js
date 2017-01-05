@@ -33,9 +33,9 @@ class FilesystemsBox extends React.Component {
       name: 'daemon',
       label: 'Daemon',
       placeholder: 'Select a daemon',
-      sizeClass: 'three wide',
-      isRequired: true,
-      options: this.props.daemons,
+      class: 'three wide',
+      required: true,
+      options: this.props.daemons || [],
       type: 'select'
     });
 
@@ -43,8 +43,8 @@ class FilesystemsBox extends React.Component {
       name: 'partition',
       label: 'Partition',
       placeholder: 'Select a partition',
-      sizeClass: 'five wide',
-      isRequired: true,
+      class: 'five wide',
+      required: true,
       type: 'text'
     });
 
@@ -52,7 +52,7 @@ class FilesystemsBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this filesystem',
-      sizeClass: 'seven wide',
+      class: 'seven wide',
       type: 'textarea',
       rows: 2
     });
@@ -61,7 +61,7 @@ class FilesystemsBox extends React.Component {
       <Box
         ref='filesystemsBox'
         boxId={UUID.create(4).hex}
-        icon='large disk outline icon'
+        icon='disk outline'
         title='Filesystems'
         form={form} options={this.state.options}
         lines={this.props.filesystems}

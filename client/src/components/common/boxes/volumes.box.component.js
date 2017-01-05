@@ -35,23 +35,23 @@ class VolumesBox extends React.Component {
       name: 'external',
       label: allowEmpty ? 'Default Value' : 'External Volume',
       placeholder: 'The default volume on host',
-      sizeClass: 'five wide',
-      isRequired: !allowEmpty
+      class: 'five wide',
+      required: !allowEmpty
     });
 
     form.fields.push({
       name: 'internal',
       label: 'Internal Volume',
       placeholder: 'The volume inside the container',
-      sizeClass: 'five wide',
-      isRequired: true
+      class: 'five wide',
+      required: true
     });
     form.fields.push({
       name: 'rights',
       label: 'Rights',
       placeholder: 'Select rights',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'ro', name:'Read-only' },
         { value:'rw', name:'Read-write' }
@@ -64,7 +64,7 @@ class VolumesBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this volume',
-      sizeClass: 'three wide',
+      class: 'three wide',
       type: 'textarea',
       rows: 2
     });

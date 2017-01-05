@@ -32,16 +32,16 @@ class URLsBox extends React.Component {
       name: 'label',
       label: 'Label',
       placeholder: 'Label',
-      sizeClass: 'seven wide',
-      isRequired: true
+      class: 'seven wide',
+      required: true
     });
 
     form.fields.push({
       name: 'url',
       label: 'URL',
       placeholder: 'URL',
-      sizeClass: 'eight wide',
-      isRequired: true
+      class: 'eight wide',
+      required: true
     });
 
     return (

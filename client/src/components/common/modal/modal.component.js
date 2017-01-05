@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 // Actions for redux container
 import ModalActions from '../../../modules/modal/modal.actions.js';
-import { createSchema, parseError } from '../../../modules/utils/forms.js';
+import { createSchemaModal, parseError } from '../../../modules/utils/forms.js';
 
 // Components
 import Rodal from 'rodal';
@@ -34,7 +34,7 @@ class ModalComponent extends React.Component {
       line.fields.forEach(field => form[field.name] = field.value);
     });
     modal.form.hidden.map(field => form[field.name] = field.value);
-    this.setState({ schema:createSchema(modal), form, errors: { details: [], fields: {} } });
+    this.setState({ schema:createSchemaModal(modal), form, errors: { details: [], fields: {} } });
   }
 
   handleChange = (e, { name, value }) => {
@@ -72,14 +72,14 @@ class ModalComponent extends React.Component {
         };
       });
       return (
-        <Dropdown placeholder={field.desc} name={field.name} value={form[field.name]} allowAdditions={search}
+        <Dropdown placeholder={field.placeholder} name={field.name} value={form[field.name]} allowAdditions={search}
           fluid search={search} multiple={multiple} selection options={dropdownOptions} onChange={this.handleChange}
         />
       );
     default:
       // Default component for text/email/numbers...
       return (
-        <Input fluid type={field.type} name={field.name} placeholder={field.desc} defaultValue={form[field.name]} onChange={this.handleChange}/>
+        <Input fluid type={field.type} name={field.name} placeholder={field.placeholder} defaultValue={form[field.name]} onChange={this.handleChange}/>
       );
     }
   }
@@ -92,11 +92,11 @@ class ModalComponent extends React.Component {
   )
 
   renderField = (field, errors) => (
-  <Form.Field key={field.name} error={errors[field.name]} label={null} required={field.required}>
-    {field.help ?  this.renderPopup(field) : ''}
-    <label>{field.label || field.name}</label>
-    {this.renderInputField(field)}
-  </Form.Field>
+    <Form.Field key={field.name} error={errors[field.name]} label={null} required={field.required}>
+      {field.help ?  this.renderPopup(field) : ''}
+      <label>{field.label || field.name}</label>
+      {this.renderInputField(field)}
+    </Form.Field>
   );
 
   render() {
@@ -112,7 +112,7 @@ class ModalComponent extends React.Component {
           <Icon name='close' onClick={onClose} />
           <Header content={modal.title} />
           <Modal.Content>
-            <Form error={!!details.length}>
+            <Form error={Boolean(details.length)}>
               {modal.form.lines.map((line, index) => (
                 <Form.Group key={index} className={line.class}>
                   {line.fields.map(field => this.renderField(field, fields))}

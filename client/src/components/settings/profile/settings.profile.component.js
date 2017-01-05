@@ -72,7 +72,7 @@ class ProfilePane extends React.Component {
     return (
       <div id='profile'>
         <Header as='h1'>{this.props.title}</Header>
-        <Form error={!!details.length} onSubmit={this.handleSubmit} warning={isDisabled}>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit} warning={isDisabled}>
           <Form.Input required disabled label='Username' defaultValue={user.username}
               type='text' name='username' autoComplete='off' placeholder='Username'
             />

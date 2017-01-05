@@ -1,47 +1,38 @@
 // React
 import React from 'react';
+import { Header, Form, Button, Modal, Message, Icon, Popup, Input, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames';
 
 import HeadingBox from './heading.box.component.js';
+import { createSchemaArray, parseError } from '../../../../modules/utils/forms.js';
 
 import './box.component.scss';
 
 // Box is a form with list of lines
 class Box extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { errors: { details: [], fields: {} }, schema: {}, lines: [] }
 
-    // Set state of component from the props.
-    this.state = { lines : props.lines || [] };
+  componentWillMount = () => {
+    const { form, lines } = this.props;
+    this.syncBox(form, lines);
   }
 
-  componentDidMount() {
-    $('.' + this.props.boxId + ' .selection.ui.dropdown').dropdown({ forceSelection: false });
-    this.refreshForm();
+  componentWillReceiveProps = (nextProps) => {
+    const { form, lines } = nextProps;
+    this.syncBox(form, lines);
   }
 
   componentDidUpdate() {
-    $('.' + this.props.boxId + ' .selection.ui.dropdown').dropdown({ forceSelection: false });
-    this.refreshForm();
     this.props.onChange(this.state.lines);
   }
 
-  refreshForm() {
-    const settings = { fields:{} };
-    this.state.lines.forEach((line, index) => {
-      this.props.form.fields.forEach(field => {
-        if (field.isRequired) {
-          settings.fields[field.name + index] = 'empty';
-        }
-      });
-    });
-    $('.' + this.props.boxId + '.ui.form').form(settings);
-    $('.' + this.props.boxId + '.ui.form').find('.error').removeClass('error').find('.prompt').remove();
+  syncBox = (form, lines) => {
+    this.setState({ schema:createSchemaArray(form.fields), lines, errors: { details: [], fields: {} } });
   }
 
-  onAddLine(event) {
-    event.preventDefault();
+  onAddLine = (e) => {
+    e.preventDefault();
     const state = { lines: [...this.state.lines] };
     const line = {};
     this.props.form.fields.forEach(field => {
@@ -51,137 +42,119 @@ class Box extends React.Component {
     this.setState(state);
   }
 
-  onRemoveLine(event, index) {
-    event.preventDefault();
+  onRemoveLine = (index) => (e) => {
+    e.preventDefault();
     const state = { lines: [...this.state.lines] };
     state.lines.splice(index, 1);
     this.setState(state);
   }
 
-  onChangeLine(event, index, property) {
-    event.preventDefault();
+  onChangeLine = (index, property) => (e, { value }) => {
+    e.preventDefault();
     const state = { lines: [...this.state.lines] };
-    state.lines[index][property] = event.target.value;
+    state.lines[index][property] = value;
     this.setState(state);
   }
 
-  isFormValid() {
-    $('.' + this.props.boxId + '.ui.form').form('validate form');
-    return $('.' + this.props.boxId + '.ui.form').form('is valid');
+  isFormValid = () => {
+    e.preventDefault();
+    const { lines, schema } = this.state;
+    const { error } = Joi.validate(lines, schema, { abortEarly: false, allowUnknown: true });
+    error && this.setState({ errors: parseError(error) });
+    return Boolean(error);
   }
 
-  renderDropdown(line, index, field, popup) {
-    const onChange = (event) => {
-      this.onChangeLine(event, index, field.name);
-    };
-
+  renderDropdown = (line, index, field, popup) => {
     const options = field.options || [];
-    const classes = classNames(field.sizeClass, 'field', { required: field.isRequired, loading: !options });
-    const dropdownClasses = classNames(
-        'ui fluid',
-        { 'search': field.type === 'autocomplete' },
-        { 'classic': field.type === 'select' },
-        'selection dropdown'
-    );
-    return (
-      <div key={field.name + index} className={classes}>
-        <label className='hidden'>{field.label}</label>
-        <select title={popup} value={line[field.name] || field.default || ''} className={dropdownClasses}
-            onChange={onChange} data-validate={field.name + index}>
-          <option value='' disabled>{field.placeholder}</option>
-          {
-            options.map(option => {return (<option key={'option-' + option.value} value={option.value}>{option.name}</option>);})
-          }
-        </select>
-      </div>
-    );
-  }
-
-  renderTextArea(line, index, field, popup) {
-    return (
-      <div key={field.name + index} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
-        <label className='hidden'>{field.label}</label>
-        <textarea title={popup} rows={field.rows} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
-          onChange={(event) => this.onChangeLine(event, index, field.name)} data-validate={field.name + index} />
-      </div>
-    );
-  }
-
-  renderField(line, index, field, popup) {
-    return (
-      <div key={field.name + index} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
-        <label className='hidden'>{field.label}</label>
-        <input title={popup} type={field.type || 'text'} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
-          onChange={(event) => this.onChangeLine(event, index, field.name)} data-validate={field.name + index} />
-      </div>
-    );
-  }
-
-  renderFieldType(form, line, index, popup) {
-    return form.fields.map(field => {
-      if (field.type === 'select' || field.type === 'autocomplete') {
-        // Set to default value when value is not found in options
-        if (field.options.filter((option) => option.value === line[field.name]).length === 0) {
-          line[field.name] = field.default || '';
-        }
-        return this.renderDropdown(line, index, field, popup);
-      } else if (field.type === 'textarea') {
-        return this.renderTextArea(line, index, field, popup);
-      } else {
-        return this.renderField(line, index, field, popup);
-      }
+    const search = field.type === 'autocomplete';
+    const dropdownOptions = options.map(option => {
+      return {
+        icon: option.icon,
+        value: field.type == 'dropdown' ? option.id : option.value,
+        text: option.value
+      };
     });
-  }
-
-  renderLine(boxId, line, index) {
-    const form = this.props.form;
-    const popup = this.props.form.getTitle(line);
     return (
-      <div key={boxId + index} className='fields'>
-        {this.renderFieldType(form, line, index, popup)}
-        <div className='button field'>
-          <button className='ui red icon button' onClick={(event) => this.onRemoveLine(event, index)}>
-            <i className='trash icon' />
-          </button>
-        </div>
-      </div>
+      <Form.Dropdown key={field.name + index} name={field.name} label={<label className='hidden'>{field.label}</label>} search={search}
+        title={popup} value={line[field.name]} placeholder={field.placeholder} autoComplete='off' options={dropdownOptions}
+        required={field.required} onChange={this.onChangeLine(index, field.name)} className={field.class} loading={!options}
+      />
     );
   }
 
+  renderTextArea = (line, index, field, popup) => {
+    return (
+      <Form.TextArea key={field.name + index} name={field.name} label={<label className='hidden'>{field.label}</label>}
+        title={popup} rows={field.rows} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
+        required={field.required} onChange={this.onChangeLine(index, field.name)} className={field.class}
+      />
+    );
+  }
+
+  renderInput = (line, index, field, popup) => {
+    return (
+      <Form.Input key={field.name + index} name={field.name} label={<label className='hidden'>{field.label}</label>}
+        title={popup} type={field.type || 'text'} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
+        required={field.required} onChange={this.onChangeLine(index, field.name)} className={field.class}
+      />
+    );
+  }
+
+  renderLine = (line, index, form) => {
+    const popup = form.getTitle(line);
+    return (
+      <Form.Group key={index}>
+        {form.fields.map(field => {
+          if (field.type === 'select' || field.type === 'autocomplete') {
+            return this.renderDropdown(line, index, field, popup);
+          } else if (field.type === 'textarea') {
+            return this.renderTextArea(line, index, field, popup);
+          } else {
+            return this.renderInput(line, index, field, popup);
+          }
+        })}
+        <Form.Button color='red' icon='trash' onClick={this.onRemoveLine(index)} />
+      </Form.Group>
+    );
+  }
+
+  renderHeader = (lines, form) => {
+    if(!this.props.lines.length) {
+      return '';
+    } else {
+      return (
+        <Form.Group className='header'>
+          {form.fields.map(field => {
+            return (
+              <Form.Field key={'header-' + field.name} className={field.class} required={field.required} label={null}>
+                <label>{field.label}</label>
+              </Form.Field>
+            );
+          })}
+          <Form.Field width='one'>
+            <label />
+          </Form.Field>
+        </Form.Group>
+      );
+    }
+  }
 
   render() {
-    const { boxId, title, icon, form, stacked } = this.props;
+    const { title, icon, form, stacked } = this.props;
     return (
-      <HeadingBox className={boxId + ' box-component ui form'} icon={icon} title={title} stacked={stacked}>
+      <Form as={HeadingBox} className='box-component' icon={icon} title={title} stacked={stacked}>
         {this.props.children || ''}
-        {
-          this.state.lines.length ?
-            <div className='fields header'>
-              {form.fields.map(field => {
-                return (
-                  <div key={'header-' + field.name} className={field.sizeClass + ' field' + (field.isRequired ? ' required' : '')}>
-                    <label>{field.label}</label>
-                  </div>
-                );
-              })}
-              <div className='one wide field'>
-                <label />
-              </div>
-            </div>
-          :
-            ''
-        }
+        {this.renderHeader(form)}
         {this.state.lines.map((line, index) => {
-          return this.renderLine(boxId, line, index);
+          return this.renderLine(line, index, form);
         })}
-        <div className='ui green small labeled icon button' onClick={(event) => this.onAddLine(event)}><i className='plus icon' />{'Add ' + title}</div>
-      </HeadingBox>
+        <Button content={'Add ' + title} icon='plus' labelPosition='left' color='green' onClick={this.onAddLine} />
+      </Form>
     );
   }
 };
 
 Box.propTypes = {
-  boxId: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   icon: React.PropTypes.string.isRequired,
   lines: React.PropTypes.array.isRequired,

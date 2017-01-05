@@ -47,7 +47,7 @@ class ResetPwdComponent extends React.Component {
     return (
       <div id='reset-password'>
         <Header as='h1'>Reset your password</Header>
-        <Form error={!!details.length} onSubmit={this.handleSubmit}>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
           <Form.Input required error={fields['username']} label='Username'
             type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'
           />

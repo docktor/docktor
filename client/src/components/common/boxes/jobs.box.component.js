@@ -32,32 +32,32 @@ class JobsBox extends React.Component {
       name: 'name',
       label: 'Name',
       placeholder: 'Job Name',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'value',
       label: 'Value',
       placeholder: 'Job Value',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'interval',
       label: 'Interval',
       placeholder: 'Job Interval',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'type',
       label: 'Type',
       placeholder: 'Select a type',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'url', name:'HTTP Job' },
         { value:'exec', name:'Exec Job' }
@@ -69,7 +69,7 @@ class JobsBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this Job',
-      sizeClass: 'three wide',
+      class: 'three wide',
       type: 'textarea',
       rows: 2
     });

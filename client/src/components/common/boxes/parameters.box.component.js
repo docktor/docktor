@@ -34,23 +34,23 @@ class ParametersBox extends React.Component {
       name: 'name',
       label: 'Parameter Name',
       placeholder: 'The name of the docker parameter',
-      sizeClass: 'five wide',
-      isRequired: true
+      class: 'five wide',
+      required: true
     });
 
     form.fields.push({
       name: 'value',
       label: allowEmpty ? 'Default Value' : 'Parameter Value',
       placeholder: 'The value of the docker parameter',
-      sizeClass: 'five wide',
-      isRequired: !allowEmpty
+      class: 'five wide',
+      required: !allowEmpty
     });
 
     form.fields.push({
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this parameter',
-      sizeClass: 'five wide',
+      class: 'five wide',
       type: 'textarea',
       rows: 2
     });
