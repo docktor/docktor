@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Input, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // API Fetching
@@ -20,41 +21,43 @@ import './users.page.scss';
 //Site Component using react-leaflet
 class Users extends React.Component {
 
-  componentWillMount() {
+  componentWillMount = () => {
     this.props.fetchUsers();
   }
 
-  render() {
-    const { users, filterValue, changeFilter,  isFetching } = this.props;
+  render = () => {
+    const { users, filterValue, isFetching, changeFilter } = this.props;
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified users-page'>
         <div className='layout horizontal justified users-bar'>
-          <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon' /></div>
-            <i className='remove link icon' onClick={() => changeFilter('')} />
+          <Input icon labelPosition='left corner' className='flex'>
+            <Label corner='left' icon='search' />
             <DebounceInput
+              placeholder='Search...'
               minLength={1}
               debounceTimeout={300}
-              placeholder='Search…'
               onChange={(event) => changeFilter(event.target.value)}
-              value={filterValue}/>
-          </div>
+              value={filterValue}
+            />
+            <Icon link name='remove' onClick={() => changeFilter('')}/>
+          </Input>
           <div className='flex-2' />
         </div>
         <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center wrap user-list'>
-              {isFetching && (
-                  <div className='ui active inverted dimmer'>
-                    <div className='ui text loader'>Fetching</div>
-                  </div>
-              )}
-              {users.map(user => <UserCard user={user} key={user.id} />)}
+              {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
+              {users.map(user => {
+                return (
+                  <UserCard user={user} key={user.id} />
+                );
+              })}
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
+
 Users.propTypes = {
   users: React.PropTypes.array,
   filterValue: React.PropTypes.string,
