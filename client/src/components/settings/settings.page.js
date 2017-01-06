@@ -66,7 +66,7 @@ Settings.propTypes = {
 
 // Function to map state to container props
 const mapStateToProps = (state) => {
-  const { auth, routing } = state;
+  const { auth } = state;
   const { user, isAuthenticated, isFetching } = auth;
   return { user, isAuthenticated, isFetching };
 };

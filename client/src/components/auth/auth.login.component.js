@@ -1,6 +1,5 @@
 // React
 import React from 'react';
-import classNames from 'classnames';
 import { Link } from 'react-router';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';

@@ -27,7 +27,7 @@ class PortsBox extends React.Component {
   render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (port) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -66,7 +66,6 @@ class PortsBox extends React.Component {
     return (
       <Box
         ref='portsBox'
-        boxId={this.props.boxId}
         icon='sitemap'
         title='Ports' form={form}
         lines={this.props.ports}
@@ -79,7 +78,6 @@ class PortsBox extends React.Component {
 }
 
 PortsBox.propTypes = {
-  boxId: React.PropTypes.string,
   ports: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

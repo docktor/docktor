@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Link } from 'react-router';
 import DebounceInput from 'react-debounce-input';
 
 // Roles

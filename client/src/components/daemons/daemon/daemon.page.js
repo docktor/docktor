@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Input, Button, Dimmer, Loader, Label, Icon, Popup } from 'semantic-ui-react';
 import Joi from 'joi-browser';
-import UUID from 'uuid-js';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
@@ -62,17 +61,13 @@ class DaemonComponent extends React.Component {
 
     if (!daemonId) {
       // New daemon
-      const volumesBox = this.refs.volumes;
-      volumesBox.setState({ volumes: [] });
-      const variablesBox = this.refs.variables;
-      variablesBox.setState({ variables: [] });
       const tagsSelector = this.refs.tags;
       tagsSelector.setState({ tags: [] });
       this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
       this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
@@ -201,7 +196,7 @@ class DaemonComponent extends React.Component {
                   </Form.Field>
                   <Form.Field width='fourteen'>
                     <label>Tags of the daemon</label>
-                    <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={daemon.tags || []} tags={tags} ref='tags' />
+                    <TagsSelector selectedTags={daemon.tags || []} tags={tags} ref='tags' />
                   </Form.Field>
                 </Form.Group>
 
@@ -243,7 +238,7 @@ class DaemonComponent extends React.Component {
               </VariablesBox>
 
               <div className='flex button-form'>
-                <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
+                <Button fluid onClick={this.onSave}>Save</Button>
               </div>
             </div>
           </div>
@@ -271,7 +266,7 @@ const mapStateToProps = (state, ownProps) => {
   const daemons = state.daemons;
   const daemon = daemons.selected;
   const emptyDaemon = { volumes: [], variables: [], tags: [] };
-  const isFetching = paramId && (paramId !== daemon.id || (daemon.id ? daemon.isFetching : true));
+  const isFetching = paramId && (paramId !== daemon.id);
   const sites = Object.values(state.sites.items);
   return {
     daemon: daemons.items[paramId] || emptyDaemon,

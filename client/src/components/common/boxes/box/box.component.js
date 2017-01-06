@@ -1,7 +1,6 @@
 // React
 import React from 'react';
-import { Header, Form, Button, Modal, Message, Icon, Popup, Input, Dropdown } from 'semantic-ui-react';
-import classNames from 'classnames';
+import { Form, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 import HeadingBox from './heading.box.component.js';
@@ -148,7 +147,7 @@ class Box extends React.Component {
 
   render() {
     const { title, icon, form, stacked } = this.props;
-    const { fields, details } = this.state.errors;
+    const { fields } = this.state.errors;
     return (
       <Form as={HeadingBox} className='box-component' icon={icon} title={title} stacked={stacked}>
         {this.props.children || ''}

@@ -27,7 +27,7 @@ class CommandsBox extends React.Component {
   render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (command) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -64,7 +64,6 @@ class CommandsBox extends React.Component {
     return (
       <Box
         ref='commandsBox'
-        boxId={this.props.boxId}
         icon='terminal'
         title='Commands' form={form}
         lines={this.props.commands}
@@ -77,7 +76,6 @@ class CommandsBox extends React.Component {
 }
 
 CommandsBox.propTypes = {
-  boxId: React.PropTypes.string,
   commands: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

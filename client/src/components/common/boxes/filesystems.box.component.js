@@ -1,6 +1,5 @@
 // React
 import React from 'react';
-import UUID from 'uuid-js';
 
 import Box from './box/box.component.js';
 
@@ -28,7 +27,7 @@ class FilesystemsBox extends React.Component {
   render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (filesystem) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -63,7 +62,6 @@ class FilesystemsBox extends React.Component {
     return (
       <Box
         ref='filesystemsBox'
-        boxId={UUID.create(4).hex}
         icon='disk outline'
         title='Filesystems'
         form={form}

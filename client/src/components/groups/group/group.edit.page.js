@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import Joi from 'joi-browser';
-import UUID from 'uuid-js';
 
 // Thunks / Actions
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
@@ -68,7 +67,7 @@ class GroupEditComponent extends React.Component {
     }
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
       this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
@@ -140,11 +139,11 @@ class GroupEditComponent extends React.Component {
                   </Form.Field>
                   <Form.Field width='fourteen'>
                     <label>Tags of the group</label>
-                    <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={group.tags || []} tags={tags} ref='tags' />
+                    <TagsSelector selectedTags={group.tags || []} tags={tags} ref='tags' />
                   </Form.Field>
                 </Form.Group>
               </Form>
-              <FilesystemsBox filesystems={group.filesystems || []} daemons={daemons} ref='filesystems' boxId={UUID.create(4).hex}>
+              <FilesystemsBox filesystems={group.filesystems || []} daemons={daemons} ref='filesystems'>
                 <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
               </FilesystemsBox>
               <MembersBox members={group.members} users={users} ref='members'>

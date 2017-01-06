@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dropdown, Divider } from 'semantic-ui-react';
 
-import classNames from 'classnames';
 import groupBy from 'lodash.groupby';
 import sortBy from 'lodash.sortby';
 
@@ -17,7 +16,7 @@ class TagsSelector extends React.Component {
     this.setState({ tags: nextProps.selectedTags });
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (e, { value }) => {
     const state = { tags:[...value] };
     this.setState(state);
   }
@@ -25,7 +24,7 @@ class TagsSelector extends React.Component {
   // TODO: add isFormValid method
 
   render = () => {
-    const { tags, selectedTags, tagsSelectorId } = this.props;
+    const { tags } = this.props;
 
     // Create an object indexing the tags by their category
     // This allows to easily add a divider with the name of the category in the dropdown
@@ -50,7 +49,6 @@ class TagsSelector extends React.Component {
 }
 
 TagsSelector.propTypes = {
-  tagsSelectorId: React.PropTypes.string.isRequired,
   tags: React.PropTypes.object,
   selectedTags: React.PropTypes.array
 };

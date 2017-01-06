@@ -2,8 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Header, Form, Button, Modal, Message, Icon, Popup, Input, Dropdown } from 'semantic-ui-react';
-import Joi from 'joi-browser';
 import classNames from 'classnames';
+import Joi from 'joi-browser';
 
 // Actions for redux container
 import ModalActions from '../../../modules/modal/modal.actions.js';

@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
+import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // API Fetching
@@ -21,56 +22,45 @@ import './services.page.scss';
 // Services Component
 class Services extends React.Component {
 
-  componentWillMount() {
+  componentWillMount = () => {
     this.props.fetchServices();
   }
 
-  render() {
-    const services = this.props.services;
-    const filterValue = this.props.filterValue;
-    const fetching = this.props.isFetching;
-    const changeFilter = this.props.changeFilter;
+  render = () => {
+    const { services, isFetching, filterValue, changeFilter } = this.props;
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified services-page'>
         <div className='layout horizontal justified services-bar'>
-          <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon' /></div>
-            <i className='remove link icon' onClick={() => changeFilter('')} />
+          <Input icon labelPosition='left corner' className='flex'>
+            <Label corner='left' icon='search' />
             <DebounceInput
+              placeholder='Search...'
               minLength={1}
               debounceTimeout={300}
-              placeholder='Search...'
               onChange={(event) => changeFilter(event.target.value)}
-              value={filterValue}/>
-          </div>
+              value={filterValue}
+            />
+            <Icon link name='remove' onClick={() => changeFilter('')}/>
+          </Input>
           <div className='flex-2 layout horizontal end-justified'>
-            <Link className='ui teal labeled icon button' to={'/services/new'}>
-              <i className='plus icon' />New Service
-            </Link>
+            <Button as={Link} color='teal' content='New Service' labelPosition='left' icon='plus' to={'/services/new'} />
           </div>
         </div>
         <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center services-list wrap'>
-              {(fetching => {
-                if (fetching) {
-                  return (
-                      <div className='ui active inverted dimmer'>
-                        <div className='ui text loader'>Fetching</div>
-                      </div>
-                  );
-                }
-              })(fetching)}
-                {services.map(service => {
-                  return (
-                    <ServiceCard service={service} key={service.id} />
-                  );
-                })}
+              {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
+              {services.map(service => {
+                return (
+                  <ServiceCard service={service} key={service.id} />
+                );
+              })}
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
+
 Services.propTypes = {
   services: React.PropTypes.array,
   filterValue: React.PropTypes.string,

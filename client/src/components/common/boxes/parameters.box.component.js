@@ -61,7 +61,6 @@ class ParametersBox extends React.Component {
     return (
       <Box
         ref='parametersBox'
-        boxId={this.props.boxId}
         icon='configure'
         title='Parameters' form={form}
         lines={this.props.parameters}
@@ -74,7 +73,6 @@ class ParametersBox extends React.Component {
 }
 
 ParametersBox.propTypes = {
-  boxId: React.PropTypes.string,
   parameters: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
   stacked: React.PropTypes.bool,

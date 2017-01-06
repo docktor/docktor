@@ -57,13 +57,13 @@ const toastsReducer = (state = initialState, action) => {
     const invalidReqRegisterToast = createInvalidReqRegisterToast(state, action);
     return Object.assign({}, { ...state }, invalidReqRegisterToast);
   case AuthConstants.RESET_PASSWORD_SUCCESS:
-    const successResetPassword = createSuccessfulResetPasswordToast(state, action);
+    const successResetPassword = createSuccessfulResetPasswordToast();
     return Object.assign({}, { ...state }, successResetPassword);
   case AuthConstants.RESET_PASSWORD_INVALID_REQUEST:
     const invalidReqResetPasswordToast = createInvalidReqResetPasswordToast(state, action);
     return Object.assign({}, { ...state }, invalidReqResetPasswordToast);
   case AuthConstants.CHANGE_PASSWORD_SUCCESS:
-    const successPasswordChange = createSuccessfulChangePasswordToast(state, action);
+    const successPasswordChange = createSuccessfulChangePasswordToast();
     return Object.assign({}, { ...state }, successPasswordChange);
   case AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST:
     const invalidReqChangePasswordToast = createInvalidReqChangePasswordToast(state, action);
@@ -177,7 +177,7 @@ const createInvalidReqResetPasswordToast = (state, action) => {
   return res;
 };
 
-const createSuccessfulResetPasswordToast = (state, action) => {
+const createSuccessfulResetPasswordToast = () => {
   let res = {};
   const uuid = UUID.create(4).hex;
   res[uuid] = {
@@ -203,7 +203,7 @@ const createInvalidReqChangePasswordToast = (state, action) => {
   return res;
 };
 
-const createSuccessfulChangePasswordToast = (state, action) => {
+const createSuccessfulChangePasswordToast = () => {
   let res = {};
   const uuid = UUID.create(4).hex;
   res[uuid] = {

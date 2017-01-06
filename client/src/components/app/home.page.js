@@ -35,15 +35,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-// Function to map dispatch to container props
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
 // Redux container to Sites component
 const Home = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(HomeComponent);
 
 export default Home;

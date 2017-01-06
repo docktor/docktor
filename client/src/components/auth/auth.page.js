@@ -33,7 +33,7 @@ class LoginP extends React.Component {
   }
 
   render = () => {
-    const { logUser, regUser, onSwitch, errorMessage, isAuthenticated, isFetching } = this.props;
+    const { logUser, regUser, onSwitch, errorMessage, isFetching } = this.props;
     return (
       <TabForm selected={this.selectTab()} onSwitch={onSwitch}>
         <Signin link='sign-in' label='Log in' title='Welcome back!'

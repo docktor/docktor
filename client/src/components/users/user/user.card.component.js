@@ -1,9 +1,7 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
-import classNames from 'classnames';
 
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 import UsersThunks from '../../../modules/users/users.thunks.js';

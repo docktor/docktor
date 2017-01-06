@@ -2,7 +2,7 @@
 import React from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Menu, Icon, Loader, Dimmer, Dropdown } from 'semantic-ui-react';
+import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 import ExportThunks from '../../modules/export/export.thunk.js';

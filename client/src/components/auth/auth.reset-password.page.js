@@ -99,7 +99,7 @@ ResetPasswordP.propTypes = {
 };
 
 // Function to map state to container props
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const auth = state.auth;
   return {
     isFetching: auth.isFetching,

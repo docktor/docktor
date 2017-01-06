@@ -14,10 +14,6 @@ class HeadingBox extends React.Component {
     this.setState({ stacked: this.props.stacked });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({ stacked: nextProps.stacked });
-  }
-
   toggle = () => {
     this.setState((prevState) => {return { stacked: !prevState.stacked };});
   }

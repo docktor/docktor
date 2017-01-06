@@ -1,12 +1,13 @@
 // React
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import UUID from 'uuid-js';
+import { Form, Input, Button, Dimmer, Loader, Label, Icon, Menu, Segment } from 'semantic-ui-react';
+import classNames from 'classnames';
+import Joi from 'joi-browser';
 
 // Thunks / Actions
-import SitesThunks from '../../../modules/sites/sites.thunks.js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import ServicesThunks from '../../../modules/services/services.thunks.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
@@ -18,24 +19,29 @@ import JobsBox from '../../common/boxes/jobs.box.component.js';
 import TagsSelector from '../../tags/tags.selector.component.js';
 import ImageTab from './details/image.tab.js';
 
+import { parseError } from '../../../modules/utils/forms.js';
+
 // Style
 import './service.page.scss';
 
 // Service Component
 class ServiceComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { ...props.service };
+  state = { errors: { details: [], fields: {} }, service: {}, tags:[], selected: 'general' }
+
+  schema = Joi.object().keys({
+    title: Joi.string().trim().required().label('Title'),
+  })
+
+  componentWillMount = () => {
+    this.setState({ service: { ...this.props.service }, errors: { details: [], fields:{} } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state = { ...nextProps.service };
-    this.forceUpdate();
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ service: { ...nextProps.service }, errors: { details: [], fields:{} } });
   }
 
   componentDidMount() {
-    $('.ui.pointing.two.item.menu .item').tab();
     const serviceId = this.props.serviceId;
 
     // Tags must be fetched before the service for the UI to render correctly
@@ -48,156 +54,149 @@ class ServiceComponent extends React.Component {
 
     if (!serviceId) {
       // New service
-      $('.ui.form.service-form').form('clear');
       const tagsSelector = this.refs.tags;
       tagsSelector.setState({ tags: [] });
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    $('.ui.pointing.two.item.menu .item').tab();
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  onChangeProperty(value, property) {
-    this.setState({ [property]: value });
-  }
-
-  isFormValid() {
-    const settings = {
-      fields: {
-        title: 'empty',
-      }
+  handleChange = (e, { name, value }) => {
+    const { service, errors } = this.state;
+    const state = {
+      service: { ...service, [name]:value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
     };
-    $('.ui.form.service-form').form(settings);
-    $('.ui.form.service-form').form('validate form');
-    return $('.ui.form.service-form').form('is valid');
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
-  onSave(event) {
-    event.preventDefault();
+  toggleTab = (tab) => {
+    const selected = tab;
+    this.setState({ selected });
+  }
+
+  isFormValid = () => {
+    const { error } = Joi.validate(this.state.service, this.schema, { abortEarly: false, allowUnknown: true });
+    error && this.setState({ errors: parseError(error) });
+    return !Boolean(error);
+  }
+
+  onSave = (e) => {
+    e.preventDefault();
     const commandsBox = this.refs.commands;
     const urlsBox = this.refs.urls;
     const jobsBox = this.refs.jobs;
     const imagesBoxes = this.refs.images;
     const tagsSelector = this.refs.tags;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
-    let formValid = commandsBox.isFormValid() & urlsBox.isFormValid() & jobsBox.isFormValid() & imagesBoxes.isFormValid() & this.isFormValid();
+    let formValid = this.isFormValid() & commandsBox.isFormValid() & urlsBox.isFormValid() & jobsBox.isFormValid() & imagesBoxes.isFormValid();
     if (formValid) {
-      const service = {
-        title: this.refs.title.value,
-        created: this.refs.created.value,
-        id: this.refs.id.value,
-        urls: urlsBox.state.urls,
-        jobs: jobsBox.state.jobs,
-        commands: commandsBox.state.commands,
-        tags: tagsSelector.state.tags,
-        images: imagesBoxes.getImages()
-      };
+      const service = { ...this.state.service };
+      service.urls = urlsBox.state.urls;
+      service.jobs = jobsBox.state.jobs;
+      service.commands = commandsBox.state.commands;
+      service.tags = tagsSelector.state.tags;
+      service.images = imagesBoxes.getImages();
       this.props.onSave(service);
     }
   }
 
-  renderGeneralTab(service) {
+  renderGeneralTab = (service, selected, tags, errors) => {
+    const classes = classNames({ hidden: selected !== 'general' });
     return (
-      <div className='ui tab segment padded active' data-tab='general'>
-        <form className='ui form service-form'>
-          <input type='hidden' name='created' ref='created' defaultValue={service.created} />
-          <input type='hidden' name='id' ref='id' defaultValue={service.id} />
-          <div className='fields'>
-            <div className='sixteen wide field required'>
-              <label>
-                Title
-              </label>
-              <input type='text' ref='title' name='title' defaultValue={service.title} placeholder='A unique title' autoComplete='off' />
-            </div>
-          </div>
+      <Segment padded className={classes}>
+        <Form className='service-form'>
+          <Input type='hidden' name='created' value={service.created || ''} onChange={this.handleChange} />
+          <Input type='hidden' name='id' value={service.id || ''} onChange={this.handleChange} />
 
-          <div className='fields'>
-            <div className='two wide field'>
-              <div className='large ui label form-label'>Tags</div>
-            </div>
-            <div className='fourteen wide field'>
+          <Form.Input required label='Title' name='title' value={service.title || ''} onChange={this.handleChange}
+            type='text' placeholder='A unique title' autoComplete='off' error={errors.fields['title']}
+          />
+
+          <Form.Group>
+            <Form.Field width='two'>
+              <Label size='large' className='form-label' content='Tags' />
+            </Form.Field>
+            <Form.Field width='fourteen'>
               <label>Tags of the service</label>
-              <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={service.tags || []} tags={this.props.tags} ref='tags' />
-            </div>
-          </div>
-        </form>
+              <TagsSelector selectedTags={service.tags || []} tags={tags} ref='tags' />
+            </Form.Field>
+          </Form.Group>
+        </Form>
 
-        <URLsBox urls={service.urls ||  []} ref='urls' boxId={UUID.create(4).hex}>
+        <URLsBox urls={service.urls ||  []} ref='urls'>
           <p>These URLs are used to generate quick access to a service on a group.</p>
         </URLsBox>
 
-        <JobsBox jobs={service.jobs ||  []} ref='jobs' boxId={UUID.create(4).hex}>
+        <JobsBox jobs={service.jobs ||  []} ref='jobs'>
           <p>These Jobs are used to make checks on the service asynchronously.</p>
         </JobsBox>
 
-        <CommandsBox commands={service.commands ||  []} ref='commands' boxId={UUID.create(4).hex}>
+        <CommandsBox commands={service.commands ||  []} ref='commands'>
           <p>These commands will be available for this service to the users/admins of a group.</p>
         </CommandsBox>
-      </div>
+      </Segment>
     );
   }
 
-  renderImagesTab(service) {
+  renderImagesTab = (service, selected) => {
+    const classes = classNames('nonpadded', { hidden: selected !== 'images' });
     return (
-      <div className='ui tab segment nonpadded' data-tab='images'>
+      <Segment className={classes}>
         <ImageTab scrollbars={this.refs.scrollbars} images={service.images} ref='images' />
-      </div>
+      </Segment>
     );
   }
 
-  renderTabular(service) {
+  renderTabular = (service, selected, tags, errors) => {
     return (
       <div className='flex tabular-details'>
-        <div className='ui pointing two item menu'>
-          <a className='item active' data-tab='general'>General</a>
-          <a className='item' data-tab='images'>Images</a>
-        </div>
-        {this.renderImagesTab(service)}
-        {this.renderGeneralTab(service)}
+        <Menu widths='two' pointing>
+          <Menu.Item active={selected === 'general'} onClick={() => this.toggleTab('general')}>General</Menu.Item>
+          <Menu.Item active={selected === 'images'} onClick={() => this.toggleTab('images')}>Images</Menu.Item>
+        </Menu>
+        {this.renderGeneralTab(service, selected, tags, errors)}
+        {this.renderImagesTab(service, selected)}
       </div>
     );
   }
 
-  render() {
-    const service = this.state;
-    const isFetching = this.props.isFetching;
+  render = () => {
+    const { service, selected, errors } = this.state;
+    const { isFetching, tags } = this.props;
     return (
       <div className='flex layout vertical start-justified service-page'>
         <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
-            {
-              isFetching ?
-                <div className='ui active dimmer'>
-                  <div className='ui text loader'>Fetching</div>
-                </div>
-                :
-                <div className='flex layout vertical start-justified service-details'>
-                  <h1>
-                    <Link to={'/services'}>
-                      <i className='arrow left icon' />
-                    </Link>
-                    {this.props.service.title || 'New Service'}
-                    <button disabled={!service.id} onClick={() => this.props.onDelete(service)} className='ui red labeled icon button right-floated'>
-                      <i className='trash icon' />Remove
-                      </button>
-                  </h1>
-                  {this.renderTabular(service)}
-                  <div className='flex button-form'>
-                    <a className='ui fluid button' onClick={(event) => this.onSave(event)}>Save</a>
-                  </div>
-                </div>
-            }
+            {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
+            <div className='flex layout vertical start-justified service-details'>
+              <h1>
+                <Link to={'/services'}>
+                  <Icon name='arrow left' fitted/>
+                </Link>
+                {this.props.service.title || 'New Service'}
+                <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
+                  disabled={!service.id} onClick={() => this.props.onDelete(service)} className='right-floated'
+                />
+              </h1>
+              {this.renderTabular(service, selected, tags, errors)}
+              <div className='flex button-form'>
+                <Button fluid onClick={this.onSave}>Save</Button>
+              </div>
+            </div>
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
+
 ServiceComponent.propTypes = {
   service: React.PropTypes.object,
   tags: React.PropTypes.object,

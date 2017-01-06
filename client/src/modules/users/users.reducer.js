@@ -17,7 +17,7 @@ const createRequestDeleteUser  = (state, action) => {
 };
 
 const createReceiveDeletedUser = (state, action) => {
-  let { [action.removedID] : omit,  ...newItems } = state.items;
+  let { [action.removedID]: {},  ...newItems } = state.items;
   return {
     items: newItems
   };

@@ -1,6 +1,5 @@
 // React
 import React from 'react';
-import { Link } from 'react-router';
 import classNames from 'classnames';
 
 import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants.js';

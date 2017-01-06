@@ -3,7 +3,6 @@ import React from 'react';
 
 // Components
 import NavBar from './navBar.component.js';
-import Footer from './footer.component.js';
 import Toasts from '../common/toasts/toasts.component.js';
 import Modal from '../common/modal/modal.component.js';
 

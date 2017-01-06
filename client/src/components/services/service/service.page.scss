@@ -1,17 +1,9 @@
 $form-bg: #2c3e50;
-$white: #fff;
 
 $main: #00948d;
-$main-light: lighten($main, 5%);
 $main-dark: darken($main, 5%);
 
-$gray-light: #a0b3b0;
-$gray: #ddd;
-
 $thin: 300;
-$normal: 400;
-$bold: 600;
-$br: 4px;
 
 .service-page {
 
@@ -20,44 +12,56 @@ $br: 4px;
     margin: 2em;
     max-width: 70%;
     min-width: 450px;
-    padding: 2em 5em;
+    padding: 2em;
     width: 70%;
 
     .tabular-details {
-      margin-bottom: 2rem;
+
       > .nonpadded {
         padding: 0;
       }
 
       > .padded {
-        padding: 2em;
-      }
-    }
-    .ui.form.service-form {
-      > .fields > .field > label {
-        color: rgba(0, 0, 0, .95) !important;
+        padding: .5em 2em 2em;
       }
 
+      > .hidden {
+        display: none;
+      }
+
+      .box:last-child {
+        margin-bottom: 0;
+      }
+
+      .service-form {
+        .field {
+          label {
+            color: rgba(0, 0, 0, .95) !important;
+          }
+        }
+      }
     }
 
     h1 {
-      color: $white;
+      color: white;
       font-weight: $thin;
-      margin-bottom: 2rem;
+      margin: 0 0 .5em;
       text-transform: uppercase;
 
       .right-floated {
         float: right !important;
+        margin: 0;
       }
-    }
 
-    a {
-      color: $main;
-      text-decoration: none;
-      transition: .5s ease;
-      &:hover {
-        color: $main-dark;
-        cursor: pointer;
+      a {
+        margin-right: .5em;
+        color: $main;
+        text-decoration: none;
+        transition: .5s ease;
+        &:hover {
+          color: $main-dark;
+          cursor: pointer;
+        }
       }
     }
   }

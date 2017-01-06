@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Card, Icon, Button, Label } from 'semantic-ui-react';
 
 // Components
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
@@ -77,11 +77,6 @@ DaemonCard.propTypes = {
   fetchInfo: React.PropTypes.func
 };
 
-// Function to map state to container props
-const mapStateToProps = (state) => {
-  return {};
-};
-
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -91,7 +86,7 @@ const mapDispatchToProps = (dispatch) => {
 
 // Redux container
 const CardDaemon = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(DaemonCard);
 
