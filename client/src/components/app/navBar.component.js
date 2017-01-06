@@ -17,8 +17,9 @@ import './navBar.component.scss';
 // NavBar Component
 class NavBarComponent extends React.Component {
 
-  isAuthorized = (Roles) => {
-    return this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
+  isAuthorized = (child, Roles) => {
+    const authorized = this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
+    return authorized && child;
   }
 
   isActiveURL = (url) => {
@@ -34,37 +35,37 @@ class NavBarComponent extends React.Component {
 
   render = () => {
     const { logout, exportDocktor, isExportFetching } = this.props;
+    const isAuthorized = this.isAuthorized;
     return (
       <Menu inverted className='navbar'>
         <Menu.Item  as={IndexLink} to='/' className='brand'>
           <Icon fitted name='doctor' size='large'/>{' Docktor'}
         </Menu.Item>
-        {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])
-          && <Menu.Item active={this.isActiveURL('/daemons')} as={Link} to='/daemons'>Daemons</Menu.Item>
-        }
-        {this.isAuthorized()
-          && <Menu.Item active={this.isActiveURL('/services')} as={Link} to='/services'>Services</Menu.Item>
-        }
-        {this.isAuthorized()
-          && <Menu.Item active={this.isActiveURL('/groups')} as={Link} to='/groups'>Groups</Menu.Item>
-        }
-        {this.isAuthorized()
-          && <Menu.Item active={this.isActiveURL('/users')} as={Link} to='/users'>Users</Menu.Item>
-        }
-        {this.isAuthorized([AUTH_ADMIN_ROLE])
-          && <Menu.Item active={this.isActiveURL('/tags')} as={Link} to='/tags'>Tags</Menu.Item>
-        }
-        {this.isAuthorized()
-          && <Menu.Menu position='right'>
-              <Menu.Item as={Dropdown} trigger={this.renderDropdown(isExportFetching)}>
-                <Dropdown.Menu>
-                  {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Dropdown.Item onClick={exportDocktor} disabled={isExportFetching}><Icon name='download' />Export</Dropdown.Item>}
-                  <Dropdown.Item as={Link} to='/settings'><Icon name='settings' />Settings</Dropdown.Item>
-                  <Dropdown.Item onClick={logout} ><Icon name='sign out' />Logout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Menu.Item>
-            </Menu.Menu>
-        }
+        {isAuthorized(
+          <Menu.Item active={this.isActiveURL('/daemons')} as={Link} to='/daemons'>Daemons</Menu.Item>,
+          [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]
+        )}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/services')} as={Link} to='/services'>Services</Menu.Item>)}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/groups')} as={Link} to='/groups'>Groups</Menu.Item>)}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/users')} as={Link} to='/users'>Users</Menu.Item>)}
+        {isAuthorized(
+          <Menu.Item active={this.isActiveURL('/tags')} as={Link} to='/tags'>Tags</Menu.Item>,
+          [AUTH_ADMIN_ROLE]
+        )}
+        {isAuthorized(
+          <Menu.Menu position='right'>
+            <Menu.Item as={Dropdown} trigger={this.renderDropdown(isExportFetching)}>
+              <Dropdown.Menu>
+                {isAuthorized(
+                  <Dropdown.Item onClick={exportDocktor} disabled={isExportFetching}><Icon name='download' />Export</Dropdown.Item>,
+                  [AUTH_ADMIN_ROLE]
+                )}
+                <Dropdown.Item as={Link} to='/settings'><Icon name='settings' />Settings</Dropdown.Item>
+                <Dropdown.Item onClick={logout} ><Icon name='sign out' />Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Menu.Item>
+          </Menu.Menu>
+        )}
       </Menu>
     );
   }
