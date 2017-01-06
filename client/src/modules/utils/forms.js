@@ -23,6 +23,9 @@ const createSchema = (fields) => {
     case 'number':
       rule = Joi.number();
       break;
+    case 'tags':
+      rule = Joi.array();
+      break;
     default:
       rule = Joi.string().trim();
       break;

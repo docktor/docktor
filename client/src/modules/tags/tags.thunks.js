@@ -10,7 +10,7 @@ import TagsActions from './tags.actions.js';
 // Thunk to create new category containing tags
 const createTags = (form) => {
 
-  let tags = form.tags.split(',').map(tag =>{
+  let tags = form.tags.map(tag =>{
     return {
       'name': { 'raw' : tag },
       'category': { 'raw' : form.category },

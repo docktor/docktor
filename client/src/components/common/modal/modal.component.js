@@ -18,7 +18,7 @@ import './modal.component.scss';
 // Modal Component
 class ModalComponent extends React.Component {
 
-  state = { errors: { details: [], fields: {} }, form: {}, schema: {} }
+  state = { errors: { details: [], fields: {} }, form: {}, schema: {}, options: {} }
 
   componentWillMount = () => {
     this.syncModal(this.props.modal);
@@ -30,11 +30,26 @@ class ModalComponent extends React.Component {
 
   syncModal = (modal) => {
     const form = {};
+    const options = {};
     modal.form.lines.forEach(line => {
-      line.fields.forEach(field => form[field.name] = field.value);
+      line.fields.forEach(field => {
+        form[field.name] = field.value;
+        if(field.options) {
+          options[field.name] = field.options;
+        }
+      });
     });
     modal.form.hidden.map(field => form[field.name] = field.value);
-    this.setState({ schema:createSchemaModal(modal), form, errors: { details: [], fields: {} } });
+    this.setState({ schema:createSchemaModal(modal), form, errors: { details: [], fields: {} }, options });
+  }
+
+  handleAddition = (e, { name, value }) => {
+    const options = this.state.options;
+    const opts = options[name] || [];
+    const state = {
+      options: { ...options, [name]: [...opts, { text:value, value }] }
+    };
+    this.setState(state);
   }
 
   handleChange = (e, { name, value }) => {
@@ -56,23 +71,24 @@ class ModalComponent extends React.Component {
 
   // Render the input field, depending on the type (ex: text, dropdown, etc.)
   renderInputField = (field) => {
-    const { form } = this.state;
-    const options = field.options || [];
+    const { form, options } = this.state;
+    const opts = options[field.name] || [];
     switch (field.type) {
     case 'dropdown':
     case 'autocomplete':
     case 'tags':
       const search = field.type === 'autocomplete' || field.type === 'tags';
       const multiple = field.type === 'tags';
-      const dropdownOptions = options.map(option => {
+      const dropdownOptions = opts.map(option => {
         return {
           icon: option.icon,
           value: field.type == 'dropdown' ? option.id : option.value,
           text: option.value
         };
       });
+      const value = multiple ? (form[field.name] || []) : form[field.name];
       return (
-        <Dropdown placeholder={field.placeholder} name={field.name} value={form[field.name]} allowAdditions={search}
+        <Dropdown placeholder={field.placeholder} name={field.name} value={value} allowAdditions={search} onAddItem={this.handleAddition}
           fluid search={search} multiple={multiple} selection options={dropdownOptions} onChange={this.handleChange}
         />
       );
@@ -92,7 +108,7 @@ class ModalComponent extends React.Component {
   )
 
   renderField = (field, errors) => (
-    <Form.Field key={field.name} error={errors[field.name]} label={null} required={field.required}>
+    <Form.Field key={field.name} error={errors[field.name]} label={null} required={field.required} className={field.class}>
       {field.help ?  this.renderPopup(field) : ''}
       <label>{field.label || field.name}</label>
       {this.renderInputField(field)}

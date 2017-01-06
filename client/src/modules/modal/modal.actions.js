@@ -1,3 +1,6 @@
+// React
+import React from 'react';
+
 // import constants
 import ModalConstants from './modal.constants.js';
 
@@ -45,21 +48,23 @@ const openEditSiteModal = (site, callback) => {
 
 // ## Tag modal actions
 
-const tagRightsHelp = `<div>
+const tagRightsHelp = (
+  <div>
     Rights defines who is able to add or remove the tag <b>from groups or containers</b>, depending on his role. Be aware that only admins are able to create or delete tags on Docktor.
-    <hr>
+    <hr/>
     For example :
     <ul>
-    <li>a user who is classical user can only add or remove a tag with 'user' role</li>
-    <li>a user who is supervisor can only add or remove a tag with 'user' or 'supervisor' role</li>
-    <li>a user who is admin can add or remove every type of tag</li>
+      <li>a user who is classical user can only add or remove a tag with 'user' role</li>
+      <li>a user who is supervisor can only add or remove a tag with 'user' or 'supervisor' role</li>
+      <li>a user who is admin can add or remove every type of tag</li>
     </ul>
-    </div>`;
+  </div>
+);
 
 const openNewTagsModal = (availableRights, availableCategories, callback) => {
   let form = { lines: [], hidden: [] };
   let firstLine = { fields: [] };
-  firstLine.fields.push({ label: 'Tag names', name: 'tags', placeholder: 'Add some tags', type: 'tags', required: true, class: 'sixteen wide' });
+  firstLine.fields.push({ label: 'Tag names', name: 'tags', placeholder: 'Add some tags', type: 'tags', required: true, class: 'sixteen wide', value: [] });
   form.lines.push(firstLine);
   let secondLine = { class: 'two', fields: [] };
   secondLine.fields.push({ label: 'Category', name: 'category', placeholder: 'Choose category', type: 'autocomplete', options: availableCategories, required: true });

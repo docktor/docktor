@@ -89,7 +89,7 @@ class DaemonComponent extends React.Component {
     return !Boolean(error);
   }
 
-  onSave(e) {
+  onSave = (e) => {
     e.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
