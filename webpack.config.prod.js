@@ -7,8 +7,6 @@ var nodeModules = path.resolve(__dirname, 'node_modules'),
   src = path.resolve(__dirname, './client/src/main.js');
 
 var prodConfig = {
-
-  devtool: 'source-map',
   entry: src,
   output: {
     path: build,
@@ -21,10 +19,12 @@ var prodConfig = {
       exclude: [nodeModules]
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('css!sass')
+      loader: ExtractTextPlugin.extract('css!sass',
+      'css-loader?sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('css')
+      loader: ExtractTextPlugin.extract('css',
+ 'css-loader?sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
     }, {
       test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
       loader: 'file',
@@ -44,10 +44,33 @@ var prodConfig = {
     modulesDirectories: ['node_modules']
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
     new ExtractTextPlugin('../css/style.css', {
       allChunks: true
     }),
-    new OptimizeCssAssetsWebpackPlugin()
+    new OptimizeCssAssetsWebpackPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
+      compress: {
+        warnings: false, // Suppress uglification warnings
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+      },
+      exclude: [/\.min\.js$/gi] // skip pre-minified libs
+    }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]) //https://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack
   ]
 };
 

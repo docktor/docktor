@@ -6,8 +6,10 @@ client/dist/
 .idea/
 docktor
 docktor.zip
+vendor
+!vendor/vendor.json
 bower_components/
 .vscode/
-vendor/*/
 debug
 logs/
+.git

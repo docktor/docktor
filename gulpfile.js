@@ -107,7 +107,14 @@ gulp.task('bundle-images', function() {
 });
 
 gulp.task('bundle-client', function(doneCallBack) {
+<<<<<<< HEAD
   webpack(prodConfigWebpack, function() {
+=======
+  return webpack(prodConfigWebpack, function(err, stats) {
+    if (err) {
+      console.log(err);
+    }
+>>>>>>> ea4f558... feat(dockerfile) : real dist prod with optimisation + alpine docker image
     doneCallBack();
   });
 });
