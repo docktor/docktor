@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { Form, Button } from 'semantic-ui-react';
+import { Form, Button, Icon } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 import HeadingBox from './heading.box.component.js';
@@ -18,7 +18,7 @@ class Box extends React.Component {
     this.syncBox(form, lines);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate = () => {
     this.props.onChange(this.state.lines);
   }
 
@@ -68,7 +68,7 @@ class Box extends React.Component {
     const search = field.type === 'autocomplete';
     const dropdownOptions = options.map(option => {
       return {
-        icon: option.icon,
+        icon: option.icon && <Icon name={option.icon} color={option.color || null}/>,
         value: field.type == 'dropdown' ? option.id : option.value,
         text: option.name
       };
@@ -106,13 +106,8 @@ class Box extends React.Component {
     return (
       <Form.Group key={index}>
         {form.fields.map(field => {
-<<<<<<< HEAD
           if (field.type === 'select' || field.type === 'autocomplete') {
-            return this.renderDropdown(line, index, field, popup);
-=======
-          if (field.type === 'select') {
             return this.renderDropdown(line, index, field, popup, errors);
->>>>>>> b96ade6... feat: refact selector + add validation on boxes
           } else if (field.type === 'textarea') {
             return this.renderTextArea(line, index, field, popup, errors);
           } else {
@@ -145,7 +140,7 @@ class Box extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { title, icon, form, stacked } = this.props;
     const { fields } = this.state.errors;
     return (

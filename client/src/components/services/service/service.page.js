@@ -108,7 +108,7 @@ class ServiceComponent extends React.Component {
   }
 
   renderGeneralTab = (service, selected, tags, errors) => {
-    const classes = classNames({ hidden: selected !== 'general' });
+    const classes = classNames('tab', { active: selected === 'general' });
     return (
       <Segment padded className={classes}>
         <Form className='service-form'>
@@ -146,7 +146,7 @@ class ServiceComponent extends React.Component {
   }
 
   renderImagesTab = (service, selected) => {
-    const classes = classNames('nonpadded', { hidden: selected !== 'images' });
+    const classes = classNames('tab nonpadded', { active: selected === 'images' });
     return (
       <Segment className={classes}>
         <ImageTab scrollbars={this.refs.scrollbars} images={service.images} ref='images' />

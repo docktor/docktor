@@ -38,7 +38,7 @@ class FilesystemsBox extends React.Component {
       class: 'three wide',
       required: true,
       options: this.props.daemons || [],
-      type: 'select'
+      type: 'autocomplete'
     });
 
     form.fields.push({

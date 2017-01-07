@@ -1,6 +1,5 @@
 // React
 import React from 'react';
-import UUID from 'uuid-js';
 
 import Box from './box/box.component.js';
 
@@ -10,31 +9,34 @@ import { ALL_GROUP_ROLES, getGroupRoleData } from '../../../modules/groups/group
 // MembersBox is a list of members
 class MembersBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { members: [] }
+  membersRoles = ALL_GROUP_ROLES.map(role => {
+    return {
+      id: role,
+      ...getGroupRoleData(role)
+    };
+  })
 
-    // Set state of component from the props.
-    this.state = { members: this.props.members || [], options: {} };
-    this.membersRoles = ALL_GROUP_ROLES.map(role => {
-      return {
-        id: role,
-        ...getGroupRoleData(role)
-      };
-    });
+  componentWillMount = () => {
+    this.setState({ members: this.props.members });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ members: nextProps.members });
+  }
+
+  isFormValid = () => {
     return this.refs.membersBox.isFormValid();
   }
 
-  onChangeMembers(members) {
+  onChangeMembers = (members) => {
     this.state.members = members;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (member) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -42,9 +44,9 @@ class MembersBox extends React.Component {
       name: 'user',
       label: 'User',
       placeholder: 'Select a user',
-      sizeClass: 'seven wide',
-      isRequired: true,
-      options: this.props.users,
+      class: 'seven wide',
+      required: true,
+      options: this.props.users || [],
       type: 'autocomplete'
     });
 
@@ -52,8 +54,8 @@ class MembersBox extends React.Component {
       name: 'role',
       label: 'Role',
       placeholder: 'Select role',
-      sizeClass: 'six wide',
-      isRequired: true,
+      class: 'six wide',
+      required: true,
       options: this.membersRoles,
       type: 'select'
     });
@@ -61,11 +63,10 @@ class MembersBox extends React.Component {
     return (
       <Box
         ref='membersBox'
-        boxId={UUID.create(4).hex}
-        icon='large users outline icon'
+        icon='user'
         title='Members'
-        form={form} options={this.state.options}
-        lines={this.props.members || []}
+        form={form}
+        lines={this.props.members}
         stacked={this.props.stacked}
         onChange={members => this.onChangeMembers(members)}>
         {this.props.children || ''}

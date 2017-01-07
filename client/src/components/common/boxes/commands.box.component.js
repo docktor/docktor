@@ -3,10 +3,19 @@ import React from 'react';
 
 import Box from './box/box.component.js';
 
+// Roles
+import { ALL_GROUP_ROLES, getGroupRoleData } from '../../../modules/groups/groups.constants.js';
+
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {
 
   state = { commands: [] }
+  membersRoles = ALL_GROUP_ROLES.map(role => {
+    return {
+      id: role,
+      ...getGroupRoleData(role)
+    };
+  })
 
   componentWillMount = () => {
     this.setState({ commands: this.props.commands });
@@ -53,10 +62,7 @@ class CommandsBox extends React.Component {
       placeholder: 'Select a role',
       class: 'three wide',
       required: true,
-      options: [
-        { value:'moderator', name:'Moderators' },
-        { value:'member', name:'Members' }
-      ],
+      options: this.membersRoles,
       default: 'member',
       type: 'select'
     });
