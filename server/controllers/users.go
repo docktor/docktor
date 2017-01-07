@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
@@ -78,10 +79,18 @@ func (u *Users) Delete(c echo.Context) error {
 		return c.String(http.StatusForbidden, "You do not have rights to delete this user")
 	}
 
+	// Delete the user
 	res, err := docktorAPI.Users().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove user: %v", err))
 	}
+
+	// Remove members on all groups as we delete it
+	rmInfo, err := docktorAPI.Groups().RemoveMemberFromAllGroups(bson.ObjectIdHex(id))
+	if err != nil {
+		log.WithField("info", rmInfo).WithField("userId", id).Warn("Could not remove member from groups after deleting user")
+	}
+
 	return c.JSON(http.StatusOK, res)
 }
 

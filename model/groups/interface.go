@@ -2,6 +2,7 @@ package groups
 
 import (
 	"github.com/soprasteria/docktor/model/types"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -29,7 +30,8 @@ type RepoGroups interface {
 	FindAllByRegex(nameRegex string) ([]types.Group, error)
 	// FindAllWithContainers get all groups that contains a list of containers
 	FindAllWithContainers(groupNameRegex string, containersID []string) ([]types.Group, error)
-
+	// Remove a member from all groups
+	RemoveMemberFromAllGroups(userID bson.ObjectId) (*mgo.ChangeInfo, error)
 	// Containers
 
 	// FindContainer finds the first container with given containerID
