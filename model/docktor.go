@@ -1,6 +1,7 @@
 package docktor
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 
 	"github.com/soprasteria/docktor/model/daemons"
@@ -9,17 +10,29 @@ import (
 	"github.com/soprasteria/docktor/model/sites"
 	"github.com/soprasteria/docktor/model/tags"
 	"github.com/soprasteria/docktor/model/users"
+	"github.com/spf13/viper"
 )
 
-// Open the connexion to docktor API
-func Open(docktorMongoHost string) (*Docktor, error) {
+// Session stores mongo session
+var session *mgo.Session
 
-	session, err := mgo.Dial(docktorMongoHost)
+// Connect connects to mongodb
+func Connect() {
+	uri := viper.GetString("server.mongo")
+	s, err := mgo.Dial(uri)
 	if err != nil {
-		return &Docktor{}, err
+		log.WithError(err).Fatal("Can't connect to mongo")
 	}
-	session.SetMode(mgo.Monotonic, true)
-	context := appContext{session.DB("docktor")}
+	s.SetSafe(&mgo.Safe{})
+	log.Info("Connected to ", uri)
+	session = s
+}
+
+// Get the connexion to docktor API
+func Get() (*Docktor, error) {
+	s := session.Clone()
+	s.SetSafe(&mgo.Safe{})
+	context := appContext{s.DB("docktor")}
 	services := &services.Repo{Coll: context.db.C("services")}
 	groups := &groups.Repo{Coll: context.db.C("groups")}
 	daemons := &daemons.Repo{Coll: context.db.C("daemons")}
@@ -34,7 +47,7 @@ func Open(docktorMongoHost string) (*Docktor, error) {
 		users:    users,
 		sites:    sites,
 		tags:     tags,
-		session:  session,
+		session:  s,
 	}, nil
 }
 
