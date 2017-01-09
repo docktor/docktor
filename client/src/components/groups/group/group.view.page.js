@@ -9,14 +9,17 @@ import classNames from 'classnames';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
 import GroupsThunks from '../../../modules/groups/groups.thunks.js';
+import UsersThunks from '../../../modules/users/users.thunks.js';
 import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Selectors
 import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors.js';
 import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants.js';
+import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.constants.js';
 
 // Components
 import HeadingBox from '../../common/boxes/box/heading.box.component.js';
+import ContainerCard from './container/container.card.component.js';
 
 // Style
 import './group.view.page.scss';
@@ -44,6 +47,7 @@ class GroupViewComponent extends React.Component {
       this.props.fetchGroup(groupId);
       this.props.fetchTags();
       this.props.fetchDaemons();
+      this.props.fetchUsers(); // TODO : replace by fetchMembers thunk (that does not get all users)
     }
   }
 
@@ -53,70 +57,82 @@ class GroupViewComponent extends React.Component {
     }
   }
 
-  renderReadOnlyTags(group, tags) {
-    if (tags.isFetching) {
-      return <span>Fetching...</span>;
+  getMemberAddresses(members, users) {
+    const m = members.map(member => users[member.user]).filter(member => member);
+    return m.map(member => member.email);
+  }
+
+  renderMembers(group, users) {
+    if(users.isFetching) {
+      return <span><i className='notched circle loading icon' />Loading...</span>;
     } else {
-      return group.tags.map(id => {
-        const tag = tags.items[id];
-        if (tag) {
-          const role = this.roles[tag.usageRights];
-          const classes = classNames('ui label', role.color);
-          const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be add or removed from group by '${role.value}s'`;
-          return (<span key={id} className={classes} title={title}><b>{tag.category.raw} : </b>{tag.name.raw}</span>);
-        } else {
-          return '';
-        }
-      });
+      if (group.members && group.members.length > 0) {
+        const memberAddresses = this.getMemberAddresses(group.members, users.items).join(',');
+        const moderatorAdresses = this.getMemberAddresses(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items).join('');
+        return (
+          <div className='members-list'>
+           <div className='ui buttons'>
+               <a href={`mailto:${memberAddresses}?subject=[Docktor] ${group.title} - `} className='ui icon button'><i className='mail icon' />Email all</a>
+               <a href={`mailto:${moderatorAdresses}?subject=[Docktor] For ${group.title} moderators - `} className='ui icon button'><i className='mail icon' />Email moderators</a>
+           </div>
+           <div className='flex layout horizontal wrap'>
+            { group.members.map(member => {
+              const user = users.items[member.user];
+              if (user) {
+                return (
+                  <div id={user.id} className='ui card user'>
+                    <div className='content'>
+                      <Link to={`/users/${user.id}`}>{user.displayName}</Link>
+                      <div className='ui tiny right floated provider label'>
+                        {member.role.toUpperCase()}
+                      </div>
+                    </div>
+                    <div className='extra content'>
+                      <div className='email' title={user.email}>
+                        <i className='mail icon' /> <a href={`mailto:${user.email}?subject=[Docktor] ${group.title} - `}>{user.email}</a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else {
+                '';
+              }
+
+            })}
+            </div>
+          </div>
+        );
+      } else {
+        return 'No members';
+      }
     }
   }
 
-  renderGeneralTab(group, tags) {
-    return (
-      <div className='ui tab segment padded active' data-tab='general'>
-        <div className='labelised-field'>
-          <span className='large ui label'>Description</span>
-          <span>{group.description}</span>
-        </div>
-        <div className='labelised-field'>
-          <span className='large ui label'>Tags</span>
-          <span className='ui labels'>
-            {this.renderReadOnlyTags(group, tags)}
-          </span>
-        </div>
-        <HeadingBox className='box-component ui form' icon='cube icon' title='Containers'>
-            <p> test</p>
-          </HeadingBox>
-      </div>
-    );
-  }
+  renderReadOnlyTags(group, tags) {
+    if (tags.isFetching) {
+      return <span><i className='notched circle loading icon' />Loading...</span>;
+    } else {
+      if (group.tags && group.tags.length > 0) {
+        return group.tags.map(id => {
+          const tag = tags.items[id];
+          if (tag) {
+            const role = this.roles[tag.usageRights];
+            const classes = classNames('ui label', role.color);
+            const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be add or removed from group by '${role.value}s'`;
+            return (<span key={id} className={classes} title={title}><b>{tag.category.raw} : </b>{tag.name.raw}</span>);
+          } else {
+            return '';
+          }
+        });
+      } else {
+        return 'No tags';
+      }
 
-  renderDetailsTab(group) {
-    return (
-      <div className='ui tab segment nonpadded' data-tab='details'>
-        {/* TODO Members */}
-      </div>
-    );
-  }
-
-  renderTabs(group, tags) {
-    return (
-      <div className='flex tabular-details'>
-        <div className='ui pointing two item menu'>
-          <a className='item active' data-tab='general'>General</a>
-          <a className='item' data-tab='details'>Details</a>
-        </div>
-        {this.renderDetailsTab(group)}
-        {this.renderGeneralTab(group, tags)}
-      </div>
-    );
+    }
   }
 
   render() {
-    const group = this.props.group;
-    const isFetching = this.props.isFetching;
-    const daemons = this.props.daemons;
-    const tags = this.props.tags;
+    const { isFetching, group, daemons, tags, users } = this.props;
     return (
       <div className='flex layout vertical start-justified group-view-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
@@ -137,7 +153,36 @@ class GroupViewComponent extends React.Component {
                       <i className='edit icon'/> Edit
                     </Link>
                   </h1>
-                  {this.renderTabs(group, tags)}
+                  <div className='ui tab segment padded active' data-tab='general'>
+                    <div className='labelised-field'>
+                      <span className='large ui label'>Description</span>
+                      <span>{group.description}</span>
+                    </div>
+                    <div className='labelised-field'>
+                      <span className='large ui label'>Tags</span>
+                      <span className='ui labels'>
+                        {this.renderReadOnlyTags(group, tags)}
+                      </span>
+                    </div>
+                    <HeadingBox stacked className='box-component ui form' icon='user icon' title='Members'>
+                      {this.renderMembers(group, users)}
+                    </HeadingBox>
+                    <HeadingBox className='box-component ui form' icon='cube icon' title='Containers'>
+                      <div className='ui buttons'>
+                        <div className='ui icon disabled button'><i className='stop icon' />Stop all</div>
+                        <div className='ui icon disabled button'><i className='play icon' />Start all</div>
+                        <div className='ui icon disabled button'><i className='repeat icon' />Restart all</div>
+                        <div className='ui icon disabled button'><i className='cloud upload icon' />Redeploy all</div>
+                        <div className='ui icon disabled button'><i className='trash icon' />Uninstall all</div>
+                      </div>
+                      <div className='flex layout horizontal wrap'>
+                        {group.containers.map(container => {
+                          return <ContainerCard key={container.id} daemons={daemons} container={container} />;
+                        })
+                        }
+                        </div>
+                    </HeadingBox>
+                  </div>
                 </div>
             }
           </div>
@@ -152,9 +197,11 @@ GroupViewComponent.propTypes = {
   groupId: React.PropTypes.string,
   daemons: React.PropTypes.array,
   tags: React.PropTypes.object,
+  users: React.PropTypes.object,
   fetchGroup: React.PropTypes.func.isRequired,
   fetchDaemons: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
+  fetchUsers: React.PropTypes.func.isRequired,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
 };
@@ -166,13 +213,16 @@ const mapStateToProps = (state, ownProps) => {
   const group = groups.selected;
   const emptyGroup = { tags: [], filesystems: [] };
   const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
+  const tags = state.tags;
+  const users = state.users;
   const isFetching = paramId && (paramId !== group.id || (group.id ? group.isFetching : true));
   return {
-    group: groups.items[paramId],
+    group: groups.items[paramId] || emptyGroup,
     isFetching,
     groupId: paramId,
-    tags: state.tags,
-    daemons
+    tags,
+    daemons,
+    users
   };
 };
 
@@ -181,7 +231,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded())
+    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+    fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded())
   };
 };
 

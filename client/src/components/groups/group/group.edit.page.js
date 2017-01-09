@@ -120,7 +120,7 @@ class GroupEditComponent extends React.Component {
                 :
                 <div className='flex layout vertical start-justified group-details'>
                   <h1>
-                    <Link to={'/groups'}>
+                    <Link to={group.id ? `/groups/${group.id}` : '/groups'}>
                       <i className='arrow left icon'/>
                     </Link>
                     {this.props.group.title || 'New Group'}

@@ -104,6 +104,9 @@ input {
 .ui.buttons {
   margin: 0;
   padding: 1px;
+  .button .icon {
+    margin-right: 2px;
+  }
 }
 
 .ui.yellow.buttons .button, .ui.yellow.button {

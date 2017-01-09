@@ -16,7 +16,7 @@ $br: 4px;
 .group-view-page {
 
   .ui.active.dimmer {
-      background-color: transparent;
+    background-color: transparent;
   }
 
   .group-view-details {
@@ -69,5 +69,20 @@ $br: 4px;
       font-size: small;
     }
 
+  }
+
+  .members-list {
+    .buttons .button {
+      color: rgba(0, 0, 0, .6);
+    }
+    .buttons .button:hover {
+      color: rgba(0, 0, 0, .8);
+    }
+    .card {
+      border: 1px solid #d4d4d5;
+      .email {
+        max-width: 250px !important;
+      }
+    }
   }
 }

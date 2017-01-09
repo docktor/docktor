@@ -53,7 +53,7 @@ const saveGroup = (form) => {
       .then(parseJSON)
       .then(response => {
         dispatch(GroupsActions.groupSaved(response));
-        dispatch(push('/groups'));
+        dispatch(push(`/groups/${response.id}/view`));
       })
       .catch(error => {
         handleError(error, GroupsActions.invalidRequestGroup, dispatch);

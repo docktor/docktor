@@ -62,7 +62,7 @@ class MembersBox extends React.Component {
       <Box
         ref='membersBox'
         boxId={UUID.create(4).hex}
-        icon='large user outline icon'
+        icon='large users outline icon'
         title='Members'
         form={form} options={this.state.options}
         lines={this.props.members || []}
