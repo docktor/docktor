@@ -4,6 +4,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 
+	"strings"
+
 	"github.com/soprasteria/docktor/model/daemons"
 	"github.com/soprasteria/docktor/model/groups"
 	"github.com/soprasteria/docktor/model/services"
@@ -18,8 +20,11 @@ var session *mgo.Session
 
 // Connect connects to mongodb
 func Connect() {
-	uri := viper.GetString("server.mongo")
-	s, err := mgo.Dial(uri)
+	uri := viper.GetString("server.mongo.addr")
+	s, err := mgo.DialWithInfo(&mgo.DialInfo{
+		Addrs: strings.Split(uri, ","),
+	})
+
 	if err != nil {
 		log.WithError(err).Fatal("Can't connect to mongo")
 	}
@@ -30,9 +35,15 @@ func Connect() {
 
 // Get the connexion to docktor API
 func Get() (*Docktor, error) {
+	username := viper.GetString("server.mongo.username")
+	password := viper.GetString("server.mongo.password")
 	s := session.Clone()
 	s.SetSafe(&mgo.Safe{})
-	context := appContext{s.DB("docktor")}
+	database := s.DB("docktor")
+	if username != "" && password != "" {
+		database.Login(username, password)
+	}
+	context := appContext{database}
 	services := &services.Repo{Coll: context.db.C("services")}
 	groups := &groups.Repo{Coll: context.db.C("groups")}
 	daemons := &daemons.Repo{Coll: context.db.C("daemons")}
