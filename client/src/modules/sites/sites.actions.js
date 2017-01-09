@@ -14,7 +14,7 @@ const requestDeleteSite = (id) => {
 const receiveSiteDeleted = (response) => {
   return {
     type: SitesConstants.RECEIVE_SITE_DELETED,
-    id: response.id,
+    id: response,
     receivedAt: Date.now()
   };
 };

@@ -136,19 +136,19 @@ const authReducer = (state = initialState, action) => {
     });
   case UsersConstants.REQUEST_SAVE_USER:
     return Object.assign({}, state, authenticatedUserIsFetching(state, action));
-  case UsersConstants.RECEIVE_SAVED_USER:
+  case UsersConstants.USER_SAVED:
     return Object.assign({}, state, changeUserIfNeeded(state, action));
   case UsersConstants.INVALID_SAVE_USER:
     return Object.assign({}, state, authenticatedUserFetchingError(state, action));
   case UsersConstants.REQUEST_DELETE_USER:
-    if (action.user.id === state.user.id) {
+    if (action.id === state.user.id) {
       return Object.assign({}, state, {
         user : Object.assign({}, state.user, { isDeleting: true }),
       });
     } else {
       return state;
     }
-  case UsersConstants.RECEIVE_DELETED_USER:
+  case UsersConstants.USER_DELETED:
     if (action.removedID === state.user.id) {
       return {
         isAuthenticated : false,

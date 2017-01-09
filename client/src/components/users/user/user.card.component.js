@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import classNames from 'classnames';
 
-import { AUTH_ADMIN_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 import UsersThunks from '../../../modules/users/users.thunks.js';
 
 // Style
@@ -53,9 +53,15 @@ class UserCardComponent extends React.Component {
       <div id={user.id} className='ui card user'>
         <div className='content'>
           <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />
-          <Link to={`/users/${user.id}`}>
-            {user.displayName}
-          </Link>
+          {
+            connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE
+            ?
+            <Link to={`/users/${user.id}`}>
+              {user.displayName}
+            </Link>
+            :
+            user.displayName
+          }
           <div className={rolesDropdownClasses}>
             <input type='hidden' name='role' />
             <div className='default text'>

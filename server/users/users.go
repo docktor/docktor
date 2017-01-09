@@ -143,13 +143,13 @@ func (s *Rest) UpdateUser(userID string, email, displayName, firstName, lastName
 		if email != nil {
 			userFromDocktor.Email = *email
 		}
-		if email != nil {
+		if displayName != nil {
 			userFromDocktor.DisplayName = *displayName
 		}
-		if email != nil {
+		if firstName != nil {
 			userFromDocktor.FirstName = *firstName
 		}
-		if email != nil {
+		if lastName != nil {
 			userFromDocktor.LastName = *lastName
 		}
 	}

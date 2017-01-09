@@ -13,9 +13,10 @@ export const withAuth = (fetchOptions) => {
   var token = localStorage.getItem('id_token');
   headers = { ...headers, 'Authorization' : 'Bearer ' + token };
 
-  return Object.assign({}, fetchOptions, {
-    headers: headers
-  });
+  return {
+    ...fetchOptions,
+    headers
+  };
 };
 
 export const isRoleAuthorized = (Roles, userRole) => {

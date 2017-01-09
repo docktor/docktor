@@ -9,11 +9,11 @@ import UUID from 'uuid-js';
 import { AUTH_ADMIN_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 
 // Thunks / Actions
-import UserThunks from '../../../modules/users/user/user.thunks.js';
+import UsersThunks from '../../../modules/users/users.thunks.js';
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
 
 // Components
-import TagsSelector from '../../common/tags.selector.component.js';
+import TagsSelector from '../../tags/tags.selector.component.js';
 
 // Style
 import './user.page.scss';
@@ -198,24 +198,26 @@ UserComponent.propTypes = {
   tags: React.PropTypes.object,
   fetchUser: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func
+  onSave: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
-  const user = state.user;
+  const users = state.users;
+  const user = users.selected;
+  const isFetching = paramId && (paramId !== user.id);
   return {
-    user: user.item,
-    isFetching: user.isFetching,
+    user: users.items[paramId] || {},
+    isFetching,
     userId: paramId,
     tags: state.tags
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: id => dispatch(UserThunks.fetchUser(id)),
+  fetchUser: id => dispatch(UsersThunks.fetchUser(id)),
   fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-  onSave: user => dispatch(UserThunks.saveUser(user))
+  onSave: user => dispatch(UsersThunks.saveUser(user))
 });
 
 const UserPage = connect(
