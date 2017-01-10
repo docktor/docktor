@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	docktor "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server"
 	"github.com/soprasteria/docktor/server/email"
 	"github.com/spf13/cobra"
@@ -14,6 +15,7 @@ var serveCmd = &cobra.Command{
 	Long:  `Docktor server will listen on 0.0.0.0:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
 		email.InitSMTPConfiguration()
+		docktor.Connect()
 		server.New(Version)
 	},
 }
@@ -21,7 +23,9 @@ var serveCmd = &cobra.Command{
 func init() {
 
 	// Get configuration from command line flags
-	serveCmd.Flags().StringP("mongo-url", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("mongo-addr", "m", "localhost:27017", "URL to access MongoDB")
+	serveCmd.Flags().StringP("mongo-username", "", "", "A user which has access to MongoDB")
+	serveCmd.Flags().StringP("mongo-password", "", "", "Password of the mongo user")
 	serveCmd.Flags().StringP("redis-addr", "", "localhost:6379", "URL to access Redis")
 	serveCmd.Flags().StringP("redis-password", "", "", "Redis password. Optional")
 	serveCmd.Flags().StringP("jwt-secret", "j", "dev-docktor-secret", "Secret key used for JWT token authentication. Change it in your instance")
@@ -46,7 +50,9 @@ func init() {
 	serveCmd.Flags().String("smtp-identity", "", "Identity of the sender")
 
 	// Bind env variables.
-	_ = viper.BindPFlag("server.mongo", serveCmd.Flags().Lookup("mongo-url"))
+	_ = viper.BindPFlag("server.mongo.addr", serveCmd.Flags().Lookup("mongo-addr"))
+	_ = viper.BindPFlag("server.mongo.username", serveCmd.Flags().Lookup("mongo-username"))
+	_ = viper.BindPFlag("server.mongo.password", serveCmd.Flags().Lookup("mongo-password"))
 	_ = viper.BindPFlag("server.redis.addr", serveCmd.Flags().Lookup("redis-addr"))
 	_ = viper.BindPFlag("server.redis.password", serveCmd.Flags().Lookup("redis-password"))
 	_ = viper.BindPFlag("auth.jwt-secret", serveCmd.Flags().Lookup("jwt-secret"))

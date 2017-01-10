@@ -36,9 +36,9 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func New(version string) {
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     viper.GetString("redis.addr"),
-		Password: viper.GetString("redis.password"), // no password set
-		DB:       0,                                 // use default DB
+		Addr:     viper.GetString("server.redis.addr"),
+		Password: viper.GetString("server.redis.password"), // no password set
+		DB:       0,                                        // use default DB
 	})
 
 	engine := echo.New()

@@ -34,13 +34,12 @@ func redisCache(client *redis.Client) echo.MiddlewareFunc {
 
 func docktorAPI(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		mongoURL := viper.GetString("server.mongo")
-		dock, err := api.Open(mongoURL)
+		dock, err := api.Get()
 		if err != nil {
 			c.Error(err)
 		}
-		c.Set("api", dock)
 		defer dock.Close()
+		c.Set("api", dock)
 		return next(c)
 	}
 }
