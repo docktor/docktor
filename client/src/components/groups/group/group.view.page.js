@@ -57,9 +57,8 @@ class GroupViewComponent extends React.Component {
     }
   }
 
-  getMemberAddresses(members, users) {
-    const m = members.map(member => users[member.user]).filter(member => member);
-    return m.map(member => member.email);
+  getMembersEmail(members, users) {
+    return members.map(member => users[member.user]).map(member => member.email);
   }
 
   renderMembers(group, users) {
@@ -67,9 +66,9 @@ class GroupViewComponent extends React.Component {
       return <span><i className='notched circle loading icon' />Loading...</span>;
     } else {
       if (group.members && group.members.length > 0) {
-        const memberAddresses = this.getMemberAddresses(group.members, users.items) || [];
-        const moderatorAdresses = this.getMemberAddresses(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items) || [];
-        const mailtoModeratorAddressesClasses = classNames('ui icon button', { 'disabled': moderatorAdresses.length == 0 });
+        const memberAddresses = this.getMembersEmail(group.members, users.items) || [];
+        const moderatorAdresses = this.getMembersEmail(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items) || [];
+        const mailtoModeratorAddressesClasses = classNames('ui icon button', { 'disabled': moderatorAdresses.length === 0 });
         return (
           <div className='members-list'>
            <div className='ui buttons'>
@@ -82,6 +81,7 @@ class GroupViewComponent extends React.Component {
             { group.members.map(member => {
               const user = users.items[member.user];
               if (user) {
+                // Only displays users who still exist
                 return (
                   <div key={user.id} className='ui card member'>
                     <div className='content'>
@@ -121,7 +121,7 @@ class GroupViewComponent extends React.Component {
           if (tag) {
             const role = this.roles[tag.usageRights];
             const classes = classNames('ui label', role.color);
-            const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be add or removed from group by '${role.value}s'`;
+            const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be added or removed from group by '${role.value}s'`;
             return (<span key={id} className={classes} title={title}><b>{tag.category.raw} : </b>{tag.name.raw}</span>);
           } else {
             return '';

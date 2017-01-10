@@ -2,9 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-// Dependencies
-import moment from 'moment';
-
 // Style
 import './container.card.component.scss';
 
@@ -13,7 +10,7 @@ class ContainerCard extends React.Component {
   render() {
     const { container, daemons } = this.props;
     const isFetching = false;
-    const daemon = daemons.filter(daemon => container.daemonId === daemon.value)[0] || { 'name': 'Unknown' };
+    const daemon = daemons.find(daemon => container.daemonId === daemon.value) || { 'name': 'Unknown' };
     const statusMessage = `Container is up on daemon '${daemon.name}'`;
     return (
       <div className='container'>
