@@ -20,17 +20,17 @@ class ContainerCard extends React.Component {
         <div className='ui card'>
           <div className='content'>
             <div className='header'>
-              <Link className='header' to={'containers/' + container.id}>
+              <Link className='header' to={'containers/' + container.id} title={container.serviceTitle}>
                 {container.serviceTitle}
               </Link>
             </div>
-            <div title={statusMessage} className={'ui top right attached' + (isFetching ? ' disabled' : '') + ' label green'}>
+            <div title={statusMessage} className={'ui top right attached disabled label green'}>
               <i className='refresh icon' />UP
             </div>
             <div className='meta'>{container.name}</div>
             <div className='description'>{container.image}</div>
           </div>
-          <div className='ui bottom attached buttons'>
+          <div className='ui bottom attached small buttons'>
             <div className='ui icon disabled button'><i className='stop icon' />Stop</div>
             <div className='ui icon disabled button'><i className='play icon' />Start</div>
             <div className='ui icon disabled button'><i className='repeat icon' />Restart</div>

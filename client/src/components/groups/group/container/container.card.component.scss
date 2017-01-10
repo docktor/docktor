@@ -18,7 +18,7 @@
       }
     }
     .buttons {
-      margin-bottom: 0px !important;
+      margin-bottom: 0 !important;
       padding: 0;
     }
   }
@@ -26,6 +26,9 @@
     font-size: .9em !important;
     height: 45px;
     overflow-y: auto !important;
+    overflow: hidden;
+    max-width: 250px;
+    word-wrap: break-word;
   }
   .meta {
     border-bottom: 1px grey solid;

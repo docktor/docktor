@@ -67,22 +67,25 @@ class GroupViewComponent extends React.Component {
       return <span><i className='notched circle loading icon' />Loading...</span>;
     } else {
       if (group.members && group.members.length > 0) {
-        const memberAddresses = this.getMemberAddresses(group.members, users.items).join(',');
-        const moderatorAdresses = this.getMemberAddresses(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items).join('');
+        const memberAddresses = this.getMemberAddresses(group.members, users.items) || [];
+        const moderatorAdresses = this.getMemberAddresses(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items) || [];
+        const mailtoModeratorAddressesClasses = classNames('ui icon button', { 'disabled': moderatorAdresses.length == 0 });
         return (
           <div className='members-list'>
            <div className='ui buttons'>
-               <a href={`mailto:${memberAddresses}?subject=[Docktor] ${group.title} - `} className='ui icon button'><i className='mail icon' />Email all</a>
-               <a href={`mailto:${moderatorAdresses}?subject=[Docktor] For ${group.title} moderators - `} className='ui icon button'><i className='mail icon' />Email moderators</a>
+               <a href={`mailto:${memberAddresses.join(',')}?subject=[Docktor] ${group.title}`} className='ui icon button'><i className='mail icon' />Email all</a>
+               <a href={`mailto:${moderatorAdresses.join(',')}?subject=[Docktor] For ${group.title} moderators`} className={mailtoModeratorAddressesClasses}>
+                <i className='mail icon' />Email moderators
+               </a>
            </div>
            <div className='flex layout horizontal wrap'>
             { group.members.map(member => {
               const user = users.items[member.user];
               if (user) {
                 return (
-                  <div id={user.id} className='ui card user'>
+                  <div key={user.id} className='ui card member'>
                     <div className='content'>
-                      <Link to={`/users/${user.id}`}>{user.displayName}</Link>
+                      <Link to={`/users/${user.id}`}><i className='user icon' />{user.displayName}</Link>
                       <div className='ui tiny right floated provider label'>
                         {member.role.toUpperCase()}
                       </div>
@@ -164,7 +167,7 @@ class GroupViewComponent extends React.Component {
                         {this.renderReadOnlyTags(group, tags)}
                       </span>
                     </div>
-                    <HeadingBox stacked className='box-component ui form' icon='user icon' title='Members'>
+                    <HeadingBox stacked className='box-component ui form' icon='users icon' title='Members'>
                       {this.renderMembers(group, users)}
                     </HeadingBox>
                     <HeadingBox className='box-component ui form' icon='cube icon' title='Containers'>
@@ -175,7 +178,7 @@ class GroupViewComponent extends React.Component {
                         <div className='ui icon disabled button'><i className='cloud upload icon' />Redeploy all</div>
                         <div className='ui icon disabled button'><i className='trash icon' />Uninstall all</div>
                       </div>
-                      <div className='flex layout horizontal wrap'>
+                      <div className='flex layout center-justified horizontal wrap'>
                         {group.containers.map(container => {
                           return <ContainerCard key={container.id} daemons={daemons} container={container} />;
                         })
@@ -211,11 +214,11 @@ const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
   const groups = state.groups;
   const group = groups.selected;
-  const emptyGroup = { tags: [], filesystems: [] };
+  const emptyGroup = { tags: [], filesystems: [], containers: [] };
   const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
   const tags = state.tags;
   const users = state.users;
-  const isFetching = paramId && (paramId !== group.id || (group.id ? group.isFetching : true));
+  const isFetching = paramId && (paramId !== group.id);
   return {
     group: groups.items[paramId] || emptyGroup,
     isFetching,
