@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import UUID from 'uuid-js';
+import { Form, Input, Button, Dimmer, Loader, Label, Icon, Popup } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 // Thunks / Actions
 import SitesThunks from '../../../modules/sites/sites.thunks.js';
@@ -16,23 +17,35 @@ import VolumesBox from '../../common/boxes/volumes.box.component.js';
 import VariablesBox from '../../common/boxes/variables.box.component.js';
 import TagsSelector from '../../tags/tags.selector.component.js';
 
+import { parseError } from '../../../modules/utils/forms.js';
+
 // Style
 import './daemon.page.scss';
 
 // Daemon Component
 class DaemonComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { ...props.daemon };
+  state = { errors: { details: [], fields: {} }, daemon: {}, tags:[] }
+
+  schema = Joi.object().keys({
+    site: Joi.string().trim().required().label('Site'),
+    name: Joi.string().trim().required().label('Name'),
+    mountingPoint: Joi.string().trim().required().label('Mounting Point'),
+    protocol: Joi.string().trim().required().label('Protocol'),
+    host: Joi.string().trim().required().label('Host'),
+    port: Joi.number().required().label('Port'),
+    timeout: Joi.number().required().label('Timeout')
+  })
+
+  componentWillMount = () => {
+    this.setState({ daemon: { ...this.props.daemon }, errors: { details: [], fields:{} } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state = { ...nextProps.daemon };
-    this.forceUpdate();
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ daemon: { ...nextProps.daemon }, errors: { details: [], fields:{} } });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const daemonId = this.props.daemonId;
 
     // Tags must be fetched before the daemon for the UI to render correctly
@@ -48,58 +61,43 @@ class DaemonComponent extends React.Component {
 
     if (!daemonId) {
       // New daemon
-      $('.ui.form.daemon-form').form('clear');
-      const volumesBox = this.refs.volumes;
-      volumesBox.setState({ volumes: [] });
-      const variablesBox = this.refs.variables;
-      variablesBox.setState({ variables: [] });
       const tagsSelector = this.refs.tags;
       tagsSelector.setState({ tags: [] });
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    $('#sites-dropdown').dropdown({
-      onChange: value => this.onChangeProperty(value, 'site')
-    });
-    $('#protocol-dropdown').dropdown();
-    $('.ui.corner.label').popup();
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  onChangeProperty(value, property) {
-    this.setState({ [property]: value });
-  }
-
-  isFormValid() {
-    const settings = {
-      fields: {
-        site: 'empty',
-        name: 'empty',
-        mountingPoint: 'empty',
-        protocol: 'empty',
-        host: 'empty',
-        port: 'empty',
-        timeout: 'empty'
-      }
+  handleChange = (e, { name, value }) => {
+    const { daemon, errors } = this.state;
+    const state = {
+      daemon: { ...daemon, [name]:value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
     };
-    $('.ui.form.daemon-form').form(settings);
-    $('.ui.form.daemon-form').form('validate form');
-    return $('.ui.form.daemon-form').form('is valid');
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
-  onSave(event) {
-    event.preventDefault();
+  isFormValid = () => {
+    const { error } = Joi.validate(this.state.daemon, this.schema, { abortEarly: false, allowUnknown: true });
+    error && this.setState({ errors: parseError(error) });
+    return !Boolean(error);
+  }
+
+  onSave = (e) => {
+    e.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
     const tagsSelector = this.refs.tags;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
-    let formValid = volumesBox.isFormValid() & variablesBox.isFormValid() & this.isFormValid();
+    let formValid = this.isFormValid() & volumesBox.isFormValid() & variablesBox.isFormValid();
     if (formValid) {
-      const daemon = { ...this.state };
+      const daemon = { ...this.state.daemon };
       daemon.volumes = volumesBox.state.volumes;
       daemon.variables = variablesBox.state.variables;
       daemon.tags = tagsSelector.state.tags;
@@ -107,58 +105,48 @@ class DaemonComponent extends React.Component {
     }
   }
 
-  renderSites(sites, daemon) {
-    if (sites.isFetching || sites.didInvalidate) {
-      return (
-        <div className='ui loading fluid search selection dropdown'>
-          Sites loading…<i className='dropdown icon' />
-        </div>
-      );
-    } else {
-      const items = Object.values(sites.items);
-      return (
-        <div id='sites-dropdown' className='ui fluid search selection dropdown'>
-          <input type='hidden' name='site' defaultValue={daemon.site} />
-          <i className='dropdown icon' />
-          <div className='default text'>Select Site</div>
-          <div className='menu'>
-            {items.map(site => <div className='item' key={site.id} data-value={site.id}>{site.title}</div>)}
-          </div>
-        </div>
-      );
-    }
+  renderSites = (sites, daemon, errors) => {
+    const options = sites.map(site => {return { text: site.title, value: site.id };});
+    return (
+      <Form.Dropdown name='site' label='Site' fluid value={daemon.site} selection placeholder='Select a site...' autoComplete='off' options={options || []}
+        required onChange={this.handleChange} loading={!options} error={errors.fields['site']} width='four'
+      />
+    );
   }
 
-  renderCertificates(daemon) {
-    if (daemon.protocol === 'https') {
-      return (
-        <div className='three fields'>
-          <div className='field'>
-            <label>CA</label>
-            <textarea rows='10' name='ca' value={daemon.ca || ''} onChange={event => this.onChangeProperty(event.target.value, 'ca')}
-              placeholder='The Certification Authority key Pem file' autoComplete='off' />
-          </div>
-          <div className='field'>
-            <label>Cert</label>
-            <textarea rows='10' name='cert' value={daemon.cert || ''} onChange={event => this.onChangeProperty(event.target.value, 'cert')}
-              placeholder='The certificate Pem file' autoComplete='off' />
-          </div>
-          <div className='field'>
-            <label>Key</label>
-            <textarea rows='10' name='key' value={daemon.key || ''} onChange={event => this.onChangeProperty(event.target.value, 'key')}
-              placeholder='The private key file' autoComplete='off' />
-          </div>
-        </div>
-      );
-    } else {
-      return '';
-    }
+  renderProtocol = (daemon, errors) => {
+    const options = [
+      { text: 'HTTP', value: 'http' },
+      { text: 'HTTPS', value: 'https' }
+    ];
+    return (
+      <Form.Dropdown name='protocol' label='Protocol' fluid value={daemon.protocol} selection placeholder='Select a protocol...' autoComplete='off' options={options}
+        required onChange={this.handleChange} error={errors.fields['protocol']} width='three'
+      />
+    );
   }
 
-  render() {
-    const daemon = this.state;
+  renderCertificates = (daemon) => {
+    return (
+      <Form.Group widths='three'>
+        <Form.TextArea label='CA' name='ca' value={daemon.ca || ''} onChange={this.handleChange}
+          rows='10' placeholder='The Certification Authority key Pem file' autoComplete='off'
+        />
+        <Form.TextArea label='Cert' name='cert' value={daemon.cert || ''} onChange={this.handleChange}
+          rows='10' placeholder='The certificate Pem file' autoComplete='off'
+        />
+        <Form.TextArea label='Key' name='key' value={daemon.key || ''} onChange={this.handleChange}
+          rows='10' placeholder='The private key file' autoComplete='off'
+        />
+      </Form.Group>
+    );
+  }
+
+  render = () => {
+    const { daemon, errors } = this.state;
     const { isFetching, sites, tags } = this.props;
-    const popup = `
+    const certificates = daemon.protocol === 'https';
+    const popup = (
       <div>
         Example: <strong>http://host:port/api/v1.x</strong>
         <br/>
@@ -166,128 +154,93 @@ class DaemonComponent extends React.Component {
         <hr/>
         Docktor recommends to have a cAdvisor instance for each daemon.
       </div>
-    `;
+    );
     return (
       <div className='flex layout vertical start-justified daemon-page'>
-        <Scrollbars ref='scrollbars' className='flex ui dimmable'>
+        <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
-            {
-              isFetching ?
-                <div className='ui active dimmer'>
-                  <div className='ui text loader'>Fetching</div>
-                </div>
-                :
-                <div className='flex layout vertical start-justified daemon-details'>
-                  <h1>
-                    <Link to={'/daemons'}>
-                      <i className='arrow left icon' />
-                    </Link>
-                    {this.props.daemon.name || 'New Daemon'}
-                    <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
-                      <i className='trash icon' />Remove
-                    </button>
-                  </h1>
-                  <form className='ui form daemon-form'>
-                    <input type='hidden' name='created' value={daemon.created || ''} onChange={event => this.onChangeProperty(event.target.value, 'created')} />
-                    <input type='hidden' name='id' value={daemon.id || ''} onChange={event => this.onChangeProperty(event.target.value, 'id')} />
+            {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
+            <div className='flex layout vertical start-justified daemon-details'>
+              <h1>
+                <Link to={'/daemons'}>
+                  <Icon name='arrow left' fitted/>
+                </Link>
+                {this.props.daemon.name || 'New Daemon'}
+                <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
+                  disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='right-floated'
+                />
+              </h1>
+              <Form className='daemon-form'>
+                <Input type='hidden' name='created' value={daemon.created || ''} onChange={this.handleChange} />
+                <Input type='hidden' name='id' value={daemon.id || ''} onChange={this.handleChange} />
 
-                    <div className='two fields'>
-                      <div className='field required'>
-                        <label>Name</label>
-                        <input type='text' name='name' value={daemon.name || ''} onChange={event => this.onChangeProperty(event.target.value, 'name')}
-                          placeholder='A unique name' autoComplete='off' />
-                      </div>
-                      <div className='field'>
-                        <label>Description</label>
-                        <textarea rows='4' name='description' value={daemon.description || ''} onChange={event => this.onChangeProperty(event.target.value, 'description')}
-                          placeholder='A description of the daemon' autoComplete='off' />
-                      </div>
-                    </div>
+                <Form.Group widths='two'>
+                  <Form.Input required label='Name' name='name' value={daemon.name || ''} onChange={this.handleChange}
+                    type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['name']}
+                  />
+                  <Form.TextArea label='Description' name='description' value={daemon.description || ''} onChange={this.handleChange}
+                    rows='4' placeholder='A description of the daemon' autoComplete='off'
+                  />
+                </Form.Group>
 
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='large ui label form-label'>Tags</div>
-                      </div>
-                      <div className='fourteen wide field'>
-                        <label>Tags of the daemon</label>
-                        <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={daemon.tags || []} tags={tags} ref='tags' />
-                      </div>
-                    </div>
+                <Form.Group>
+                  {this.renderSites(sites, daemon, errors)}
+                  <Form.Input required label='Default data mounting point' name='mountingPoint' value={daemon.mountingPoint || ''} onChange={this.handleChange}
+                    type='text' placeholder='/data' autoComplete='off' error={errors.fields['mountingPoint']} width='twelve'
+                  />
+                </Form.Group>
 
-                    <div className='two fields'>
-                      <div className='field required'>
-                        <label>Site</label>
-                        {this.renderSites(sites, daemon)}
-                      </div>
-                      <div className='field required'>
-                        <label>Default data mounting point</label>
-                        <input type='text' name='mountingPoint' value={daemon.mountingPoint || ''} onChange={event => this.onChangeProperty(event.target.value, 'mountingPoint')}
-                          placeholder='/data' autoComplete='off' />
-                      </div>
-                    </div>
+                <Form.Group>
+                  <Form.Field width='two'>
+                    <Label size='large' className='form-label' content='Tags' />
+                  </Form.Field>
+                  <Form.Field width='fourteen'>
+                    <label>Tags of the daemon</label>
+                    <TagsSelector selectedTags={daemon.tags || []} tags={tags} ref='tags' />
+                  </Form.Field>
+                </Form.Group>
 
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='large ui label form-label'>cAdvisor</div>
-                      </div>
-                      <div className='fourteen wide field'>
+                <Form.Group widths='two'>
+                  <Form.Field width='two'>
+                    <Label size='large' className='form-label' content='cAdvisor' />
+                  </Form.Field>
+                  <Form.Input label='cAdvisor API URL' name='cadvisorApi' value={daemon.cadvisorApi || ''} onChange={this.handleChange}
+                    type='text' autoComplete='off' labelPosition='right corner' width='fourteen'>
+                    <input placeholder='http://host:port/api/v1.x' />
+                    <Popup trigger={<Label corner='right'><Icon link name='help circle'/></Label>} inverted wide='very'>{popup}</Popup>
+                  </Form.Input>
+                </Form.Group>
 
-                        <label>cAdvisor API URL</label>
-                        <div className='ui corner labeled input'>
-                          <input type='text' name='cadvisorApi' placeholder='http://host:port/api/v1.x'
-                            value={daemon.cadvisorApi || ''} onChange={event => this.onChangeProperty(event.target.value, 'cadvisorApi')} autoComplete='off' />
-                          <div className='ui corner label' data-html={popup} data-variation='inverted very wide'>
-                            <i className='help circle link icon' />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='large ui label form-label'>Docker</div>
-                      </div>
-                      <div className='three wide field required'>
-                        <label>Protocol</label>
-                        <select id='protocol-dropdown' name='protocol' value={daemon.protocol || ''} onChange={event => this.onChangeProperty(event.target.value, 'protocol')}
-                          className='ui fluid dropdown'>
-                          <option value=''>Protocol</option>
-                          <option value='http'>HTTP</option>
-                          <option value='https'>HTTPS</option>
-                        </select>
-                      </div>
-                      <div className='five wide field required'>
-                        <label>Hostname</label>
-                        <input type='text' name='host' value={daemon.host || ''} onChange={event => this.onChangeProperty(event.target.value, 'host')}
-                          placeholder='Hostname or IP' autoComplete='off' />
-                      </div>
-                      <div className='three wide field required'>
-                        <label>Port</label>
-                        <input type='number' name='port' min='0' value={daemon.port || ''} onChange={event => this.onChangeProperty(event.target.value, 'port')}
-                          placeholder='Port' autoComplete='off' />
-                      </div>
-                      <div className='three wide field required'>
-                        <label>Timeout</label>
-                        <input type='number' name='timeout' min='0' value={daemon.timeout || ''} onChange={event => this.onChangeProperty(event.target.value, 'timeout')}
-                          placeholder='Timeout' autoComplete='off' />
-                      </div>
-                    </div>
-                    {this.renderCertificates(daemon)}
-                  </form>
-
-                  <VolumesBox volumes={daemon.volumes} ref='volumes' boxId={UUID.create(4).hex}>
-                    <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
-                  </VolumesBox>
-
-                  <VariablesBox variables={daemon.variables} ref='variables' boxId={UUID.create(4).hex}>
-                    <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
-                  </VariablesBox>
-
-                  <div className='flex button-form'>
-                    <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
+                <Form.Group>
+                  <div className='two wide field'>
+                    <div className='large ui label form-label'>Docker</div>
                   </div>
-                </div>
-            }
+                  {this.renderProtocol(daemon, errors)}
+                  <Form.Input required label='Hostname' name='host' value={daemon.host || ''} onChange={this.handleChange}
+                    type='text' placeholder='Hostname or IP' autoComplete='off' error={errors.fields['host']} width='five'
+                  />
+                  <Form.Input required label='Port' min='0' name='port' value={daemon.port || ''} onChange={this.handleChange}
+                    type='number' placeholder='Port' autoComplete='off' error={errors.fields['port']} width='three'
+                  />
+                  <Form.Input required label='Timeout' min='0' name='timeout' value={daemon.timeout || ''} onChange={this.handleChange}
+                    type='number' placeholder='Timeout' autoComplete='off' error={errors.fields['timeout']} width='three'
+                  />
+                </Form.Group>
+                {certificates && this.renderCertificates(daemon, errors)}
+              </Form>
+
+              <VolumesBox volumes={daemon.volumes} ref='volumes'>
+                <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
+              </VolumesBox>
+
+              <VariablesBox variables={daemon.variables} ref='variables'>
+                <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
+              </VariablesBox>
+
+              <div className='flex button-form'>
+                <Button fluid onClick={this.onSave}>Save</Button>
+              </div>
+            </div>
           </div>
         </Scrollbars>
       </div>
@@ -298,7 +251,7 @@ DaemonComponent.propTypes = {
   daemon: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   daemonId: React.PropTypes.string,
-  sites: React.PropTypes.object,
+  sites: React.PropTypes.array,
   tags: React.PropTypes.object,
   fetchDaemon: React.PropTypes.func.isRequired,
   fetchSites: React.PropTypes.func.isRequired,
@@ -313,12 +266,13 @@ const mapStateToProps = (state, ownProps) => {
   const daemons = state.daemons;
   const daemon = daemons.selected;
   const emptyDaemon = { volumes: [], variables: [], tags: [] };
-  const isFetching = paramId && (paramId !== daemon.id || (daemon.id ? daemon.isFetching : true));
+  const isFetching = paramId && (paramId !== daemon.id);
+  const sites = Object.values(state.sites.items);
   return {
     daemon: daemons.items[paramId] || emptyDaemon,
     isFetching,
     daemonId: paramId,
-    sites: state.sites,
+    sites,
     tags: state.tags
   };
 };

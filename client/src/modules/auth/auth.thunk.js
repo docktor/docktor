@@ -1,5 +1,4 @@
 // Imports for fetch API
-import 'babel-polyfill';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 
@@ -141,7 +140,7 @@ const changePassword = (account) => {
     return fetch(request)
       .then(checkHttpStatus)
       .then(parseJSON)
-      .then(response => {
+      .then(() => {
         dispatch(AuthActions.receiveChangePassword());
       })
       .catch(error => {
@@ -175,7 +174,7 @@ const resetPassword = (username) => {
     return fetch('/auth/reset_password', config)
       .then(checkHttpStatus)
       .then(parseJSON)
-      .then((resp) =>  {
+      .then(() =>  {
         dispatch(AuthActions.receiveResetPassword());
       }).catch(error => {
         if (error.response) {

@@ -4,7 +4,6 @@ var webpack = require('webpack'),
   OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 
 var nodeModules = path.resolve(__dirname, 'node_modules'),
-  bowerComponents = path.resolve(__dirname, 'bower_components'),
   build = path.resolve(__dirname, './client/dist/js'),
   src = path.resolve(__dirname, './client/src/main.js');
 
@@ -19,11 +18,8 @@ var prodConfig = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015']
-      },
-      exclude: [nodeModules, bowerComponents]
+      loader: 'babel',
+      exclude: [nodeModules]
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('css!sass')
@@ -32,24 +28,22 @@ var prodConfig = {
       loader: ExtractTextPlugin.extract('css')
     }, {
       test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
-      loader: 'file-loader?name=../fonts/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../fonts/[name].[ext]'
+      }
     }, {
       test: /\.png?$|\.jpe?g$|\.ico$/,
-      loader: 'file-loader?name=../images/[name].[ext]'
+      loader: 'file',
+      query: {
+        name: '../images/[name].[ext]'
+      }
     }]
   },
   resolve: {
-      alias: {
-        jquery: bowerComponents + '/jquery/dist/jquery.js'
-      },
-      modulesDirectories: ['node_modules', 'bower_components']
+    modulesDirectories: ['node_modules']
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    }),
     new ExtractTextPlugin('../css/style.css', {
       allChunks: true
     }),

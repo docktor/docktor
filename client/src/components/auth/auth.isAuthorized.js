@@ -9,27 +9,27 @@ export function requireAuthorization(Component, Roles) {
 
   class AuthenticatedComponent extends React.Component {
 
-    componentWillMount() {
+    componentWillMount = () => {
       const { isAuthenticated, user, isFetching } = this.props.auth;
       this.checkAuth(isAuthenticated, user.role, isFetching);
     }
 
-    componentWillUpdate() {
+    componentWillUpdate = () => {
       const { isAuthenticated, user, isFetching } = this.props.auth;
       this.checkAuth(isAuthenticated, user.role, isFetching);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps = (nextProps) => {
       const { isAuthenticated, user, isFetching } = nextProps.auth;
       this.checkAuth(isAuthenticated, user.role, isFetching);
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
       const { isAuthenticated, user, isFetching } = this.props.auth;
       this.checkAuth(isAuthenticated, user.role, isFetching);
     }
 
-    checkAuth(isAuthenticated, userRole, isFetching) {
+    checkAuth = (isAuthenticated, userRole, isFetching) => {
       if (!isAuthenticated) {
         let redirectAfterLogin = this.props.loc.pathname;
         this.props.redirect('/login?next=' + redirectAfterLogin);
@@ -38,16 +38,16 @@ export function requireAuthorization(Component, Roles) {
       }
     }
 
-    render() {
+    render = () => {
       const isAuthenticated = this.props.auth.isAuthenticated;
       const role = this.props.auth.user.role;
       if (isAuthenticated && isRoleAuthorized(Roles, role)) {
         return <Component {...this.props} />;
       }
-
       return <div />;
     }
   }
+
   AuthenticatedComponent.propTypes = {
     redirect: React.PropTypes.func.isRequired,
     auth: React.PropTypes.object,

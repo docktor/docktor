@@ -1,8 +1,11 @@
 // React
 import React from 'react';
-import classNames from 'classnames';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 import UserConstants from '../../../modules/users/users.constants.js';
+import { parseError } from '../../../modules/utils/forms.js';
+
 
 // Style
 import '../../common/tabform/tabform.component.scss';
@@ -10,74 +13,60 @@ import '../../common/tabform/tabform.component.scss';
 // ChangePasswordPane containg fields to change password
 class ChangePasswordPane extends React.Component {
 
-  _isDisabled(user) {
+  state = { errors: { details: [], fields: {} } }
+
+  schema = Joi.object().keys({
+    oldPassword: Joi.string().trim().required().label('Old Password'),
+    newPassword: Joi.string().trim().min(6).required().label('New Password'),
+  })
+
+  isDisabled = (user) => {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
-  componentDidMount() {
-    $('#change-password > .ui.form')
-      .form({
-        fields: {
-          oldPassword: ['empty'],
-          newPassword : ['minLength[6]', 'empty', 'doesntContain[ ]']
-        },
-        onSuccess: (event, fields) => {
-          this.handleClick(event);
-        },
-        onFailure: (event, fields) => {
-          return false;
-        }
-      })
-    ;
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    if (error) {
+      this.setState({ errors: parseError(error) });
+    } else {
+      const account = {
+        id: this.props.user.id,
+        oldPassword: formData.oldPassword,
+        newPassword: formData.newPassword
+      };
+      this.props.onChangePassword(account);
+      this.setState({ errors: { details: [], fields: {} } });
+    }
   }
 
-  render() {
-    const { user } = this.props;
+  render = () => {
+    const { user, submit } = this.props;
+    const { fields, details } = this.state.errors;
+    const isDisabled = this.isDisabled(user);
     return (
       <div id='change-password'>
-        <h1>{this.props.title}</h1>
-         <form className='ui form' >
-            <div className='required field'>
-              <label>
-                Old password
-              </label>
-              <input
-              type='password' ref='oldPassword' defaultValue=''
-              name='oldPassword' placeholder='Your old password' autoComplete='off'
-              disabled={this._isDisabled(user) ? 'true' : ''}
-              />
-            </div>
-          <div className='required field'>
-            <label>
-              New password
-            </label>
-            <input type='password' ref='newPassword'  defaultValue=''
-            name='newPassword' placeholder='Your new password' autoComplete='off'
-            disabled={this._isDisabled(user) ? 'true' : ''}
-            />
-          </div>
+        <Header as='h1'>{this.props.title}</Header>
+        <Form error={Boolean(details.length)} onSubmit={this.handleSubmit} warning={isDisabled}>
+          <Form.Input required
+            error={fields['oldPassword']} label='Old Password' type='password'
+            name='oldPassword' autoComplete='off' placeholder='Your old password'
+            disabled={isDisabled}
+          />
+          <Form.Input required
+            error={fields['newPassword']} label='New Password' type='password'
+            name='newPassword' autoComplete='off' placeholder='Your new password'
+            disabled={isDisabled}
+          />
+          <Message warning content="You can't change your password here because your user comes from a LDAP provider" />
           {!user.isFetching && user.passwordErrorMessage &&
-              <p className='error api'>{user.passwordErrorMessage}</p>
+            <Message error list={[user.passwordErrorMessage]} visible/>
           }
-          {this._isDisabled(user) &&
-              <p className='info api'>You can't change your password here because your user comes from a LDAP provider</p>
-          }
-          <div className='ui error message' />
-          <button type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')} disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}</button>
-        </form>
+          <Message error list={details}/>
+          <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>
+        </Form>
       </div>
     );
-  }
-  handleClick(event) {
-    event.preventDefault();
-    const oldPassword = this.refs.oldPassword;
-    const newPassword = this.refs.newPassword;
-    const account = {
-      id: this.props.user.id,
-      oldPassword: oldPassword.value.trim(),
-      newPassword: newPassword.value.trim()
-    };
-    this.props.onChangePassword(account);
   }
 };
 

@@ -6,25 +6,28 @@ import Box from './box/box.component.js';
 // JobsBox is a list of jobs
 class JobsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { jobs: [] }
 
-    // Set state of component from the props.
-    this.state = { jobs: this.props.jobs || [] };
+  componentWillMount = () => {
+    this.setState({ jobs: this.props.jobs });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ jobs: nextProps.jobs });
+  }
+
+  isFormValid = () => {
     return this.refs.jobsBox.isFormValid();
   }
 
-  onChangeJobs(jobs) {
+  onChangeJobs = (jobs) => {
     this.state.jobs = jobs;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (job) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -32,32 +35,32 @@ class JobsBox extends React.Component {
       name: 'name',
       label: 'Name',
       placeholder: 'Job Name',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'value',
       label: 'Value',
       placeholder: 'Job Value',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'interval',
       label: 'Interval',
       placeholder: 'Job Interval',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'type',
       label: 'Type',
       placeholder: 'Select a type',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'url', name:'HTTP Job' },
         { value:'exec', name:'Exec Job' }
@@ -69,7 +72,7 @@ class JobsBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this Job',
-      sizeClass: 'three wide',
+      class: 'three wide',
       type: 'textarea',
       rows: 2
     });
@@ -77,12 +80,11 @@ class JobsBox extends React.Component {
     return (
       <Box
         ref='jobsBox'
-        boxId={this.props.boxId}
-        icon='large checked calendar icon'
+        icon='checked calendar'
         title='Jobs' form={form}
         lines={this.props.jobs}
         stacked={this.props.stacked}
-        onChange={jobs => this.onChangeJobs(jobs)}>
+        onChange={this.onChangeJobs}>
         {this.props.children || ''}
       </Box>
     );
@@ -90,7 +92,6 @@ class JobsBox extends React.Component {
 }
 
 JobsBox.propTypes = {
-  boxId: React.PropTypes.string,
   jobs: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

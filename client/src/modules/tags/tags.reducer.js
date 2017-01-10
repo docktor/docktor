@@ -21,7 +21,7 @@ const createRequestDeleteTag = (state, action) => {
 };
 
 const createReceiveDeletedTag = (state, action) => {
-  let { [action.tag.id] : omit,  ...newItems } = state.items;
+  let { [action.tag.id]: {},  ...newItems } = state.items;
   return {
     items: newItems
   };

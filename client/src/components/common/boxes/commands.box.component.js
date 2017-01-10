@@ -3,28 +3,40 @@ import React from 'react';
 
 import Box from './box/box.component.js';
 
+// Roles
+import { ALL_GROUP_ROLES, getGroupRoleData } from '../../../modules/groups/groups.constants.js';
+
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { commands: [] }
+  membersRoles = ALL_GROUP_ROLES.map(role => {
+    return {
+      id: role,
+      ...getGroupRoleData(role)
+    };
+  })
 
-    // Set state of component from the props.
-    this.state = { commands: this.props.commands || [] };
+  componentWillMount = () => {
+    this.setState({ commands: this.props.commands });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ commands: nextProps.commands });
+  }
+
+  isFormValid = () => {
     return this.refs.commandsBox.isFormValid();
   }
 
-  onChangeCommands(commands) {
+  onChangeCommands = (commands) => {
     this.state.commands = commands;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (command) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -32,28 +44,25 @@ class CommandsBox extends React.Component {
       name: 'name',
       label: 'Name',
       placeholder: 'Command Name',
-      sizeClass: 'three wide',
-      isRequired: true
+      class: 'three wide',
+      required: true
     });
 
     form.fields.push({
       name: 'exec',
       label: 'Exec Command',
       placeholder: 'Command to execute',
-      sizeClass: 'nine wide',
-      isRequired: true
+      class: 'nine wide',
+      required: true
     });
 
     form.fields.push({
       name: 'role',
       label: 'Role',
       placeholder: 'Select a role',
-      sizeClass: 'three wide',
-      isRequired: true,
-      options: [
-        { value:'moderator', name:'Moderators' },
-        { value:'member', name:'Members' }
-      ],
+      class: 'three wide',
+      required: true,
+      options: this.membersRoles,
       default: 'member',
       type: 'select'
     });
@@ -61,12 +70,11 @@ class CommandsBox extends React.Component {
     return (
       <Box
         ref='commandsBox'
-        boxId={this.props.boxId}
-        icon='large terminal icon'
+        icon='terminal'
         title='Commands' form={form}
         lines={this.props.commands}
         stacked={this.props.stacked}
-        onChange={commands => this.onChangeCommands(commands)}>
+        onChange={this.onChangeCommands}>
         {this.props.children || ''}
       </Box>
     );
@@ -74,7 +82,6 @@ class CommandsBox extends React.Component {
 }
 
 CommandsBox.propTypes = {
-  boxId: React.PropTypes.string,
   commands: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

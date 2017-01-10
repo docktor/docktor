@@ -38,9 +38,9 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
 };
 
 export const getDaemonsAsFSOptions = (daemons) => {
-  return Object.values(daemons).map(daemon => {
-    if (daemon.cadvisorApi) {
-      return { value: daemon.id, name: daemon.name } ;
-    }
-  });
+  return Object.values(daemons)
+    .filter(daemon => Boolean(daemon.cadvisorApi))
+    .map(daemon => {
+      return { value: daemon.id, name: daemon.name };
+    });
 };

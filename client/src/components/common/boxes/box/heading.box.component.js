@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import { Icon, Message, Segment, Header } from 'semantic-ui-react';
 import classNames from 'classnames';
 
 import './heading.box.component.scss';
@@ -7,46 +8,43 @@ import './heading.box.component.scss';
 // Heading box is a box with heading
 class HeadingBox extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { stacked : props.stacked };
+  state = { stacked : false };
+
+  componentWillMount = () => {
+    this.setState({ stacked: this.props.stacked });
   }
 
-  toggle() {
-    this.setState({ stacked: !this.state.stacked });
+  toggle = () => {
+    this.setState((prevState) => {return { stacked: !prevState.stacked };});
   }
 
-  render() {
+  render = () => {
     const { icon, title, children, className } = this.props;
-    const stacked = this.state.stacked;
-    const headerClasses = classNames(
-      { plus: stacked },
-      { minus: !stacked },
-      'square outline link icon'
-    );
+    const { stacked } = this.state;
+    const stackedIcon = stacked ? 'plus' : 'minus';
     const panelClasses = classNames(
-      'ui attached fluid segment',
       className,
       { hidden: stacked }
     );
     return (
       <div className='box'>
-        <div className='ui attached message box-header' onClick={() => this.toggle()}>
-          <div className='header'>
-            <i className={icon} />
+        <Message attached className='box-header' onClick={this.toggle}>
+          <Message.Header>
+            <Icon name={icon} size='large'/>
             <span className='title'>{title}</span>
-            <div className='ui right floated header'>
-                <i className={headerClasses} />
-            </div>
-          </div>
-        </div>
-        <div className={panelClasses}>
+            <Header floated='right'>
+                <Icon link name={stackedIcon + ' square outline'} />
+            </Header>
+          </Message.Header>
+        </Message>
+        <Segment attached className={panelClasses}>
           {children}
-        </div>
+        </Segment>
       </div>
     );
   }
 };
+
 HeadingBox.propTypes = {
   icon: React.PropTypes.string,
   stacked: React.PropTypes.bool,

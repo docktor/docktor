@@ -6,25 +6,28 @@ import Box from './box/box.component.js';
 // URLsBox is a list of docker urls
 class URLsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { urls: [] }
 
-    // Set state of component from the props.
-    this.state = { urls: this.props.urls || [] };
+  componentWillMount = () => {
+    this.setState({ urls: this.props.urls });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ urls: nextProps.urls });
+  }
+
+  isFormValid = () => {
     return this.refs.urlsBox.isFormValid();
   }
 
-  onChangeURLs(urls) {
+  onChangeURLs = (urls) => {
     this.state.urls = urls;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (url) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -32,27 +35,26 @@ class URLsBox extends React.Component {
       name: 'label',
       label: 'Label',
       placeholder: 'Label',
-      sizeClass: 'seven wide',
-      isRequired: true
+      class: 'seven wide',
+      required: true
     });
 
     form.fields.push({
       name: 'url',
       label: 'URL',
       placeholder: 'URL',
-      sizeClass: 'eight wide',
-      isRequired: true
+      class: 'eight wide',
+      required: true
     });
 
     return (
       <Box
         ref='urlsBox'
-        boxId={this.props.boxId}
-        icon='large linkify icon'
+        icon='linkify'
         title='URLs' form={form}
         lines={this.props.urls}
         stacked={this.props.stacked}
-        onChange={urls => this.onChangeURLs(urls)}>
+        onChange={this.onChangeURLs}>
         {this.props.children || ''}
       </Box>
     );
@@ -60,7 +62,6 @@ class URLsBox extends React.Component {
 }
 
 URLsBox.propTypes = {
-  boxId: React.PropTypes.string,
   urls: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

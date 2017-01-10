@@ -24,13 +24,13 @@ var dependenciesPath = {
     './client/src/index.tmpl'
   ],
   fonts: [
-    './bower_components/semantic/dist/themes/default/assets/fonts/*'
+    './node_modules/semantic-ui-css/themes/default/assets/fonts/*'
   ],
   images: [
     './client/src/components/app/images/*',
     './client/src/components/users/user/images/*',
     './node_modules/leaflet/dist/images/*',
-    './bower_components/semantic/dist/themes/default/assets/images/*'
+    './node_modules/semantic-ui-css/themes/default/assets/images/*'
   ]
 };
 var injectedPath = {

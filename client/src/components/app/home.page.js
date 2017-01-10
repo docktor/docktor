@@ -7,7 +7,7 @@ import AuthPage from '../auth/auth.page.js';
 // HomeComponent displaying either the register/login component or information about Docktor when authenticated
 class HomeComponent extends React.Component {
 
-  render() {
+  render = () => {
     const { isAuthenticated } = this.props;
     var content;
     if (isAuthenticated) {
@@ -35,15 +35,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-// Function to map dispatch to container props
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
 // Redux container to Sites component
 const Home = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(HomeComponent);
 
 export default Home;

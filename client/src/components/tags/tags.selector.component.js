@@ -1,45 +1,30 @@
 import React from 'react';
+import { Dropdown, Divider } from 'semantic-ui-react';
 
-import classNames from 'classnames';
 import groupBy from 'lodash.groupby';
 import sortBy from 'lodash.sortby';
 
 class TagsSelector extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { tags: [] };
 
-    this.state = { tags: props.selectedTags || [] };
+  componentWillMount = () => {
+    this.setState({ tags: this.props.selectedTags });
   }
 
-  componentDidMount() {
-    $(`#${this.props.tagsSelectorId}.ui.dropdown`).dropdown({
-      forceSelection: false,
-      onAdd: (value) => this.onAddTag(value),
-      onRemove: (value) => this.onRemoveTag(value)
-    });
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ tags: nextProps.selectedTags });
   }
 
-  onAddTag(addedValue) {
-    const state = {
-      ...this.state,
-      tags: [...this.state.tags, addedValue]
-    };
-    this.setState(state);
-  }
-
-  onRemoveTag(removedValue) {
-    const state = {
-      ...this.state,
-      tags: this.state.tags.filter(tag => tag !== removedValue)
-    };
+  handleChange = (e, { value }) => {
+    const state = { tags:[...value] };
     this.setState(state);
   }
 
   // TODO: add isFormValid method
 
-  render() {
-    const { tags, selectedTags, tagsSelectorId } = this.props;
+  render = () => {
+    const { tags } = this.props;
 
     // Create an object indexing the tags by their category
     // This allows to easily add a divider with the name of the category in the dropdown
@@ -49,39 +34,21 @@ class TagsSelector extends React.Component {
 
     const dropdownItems = [];
     Object.keys(groupedTagItems).forEach(category => {
-      dropdownItems.push(
-        <div key={category} className='ui horizontal divider'>
-          {category}
-        </div>
-      );
-
+      dropdownItems.push({ value: category, content:<Divider horizontal>{category}</Divider>, disabled: true, className:'dropdown-divider' });
       groupedTagItems[category].forEach(tag => {
-        dropdownItems.push(
-          <div key={tag.id} className='item' data-value={tag.id}>
-            {tag.name.raw}
-          </div>
-        );
+        dropdownItems.push({ key:tag.id, value:tag.id, text:tag.name.raw });
       });
     });
-
     const loading = tags.isFetching || tags.didInvalidate;
-    const classes = classNames('ui fluid multiple search selection dropdown optgroup', { loading });
-
     return (
-      <div id={tagsSelectorId} className={classes}>
-        <input name='tags' type='hidden' defaultValue={selectedTags.join(',')} />
-        <i className='dropdown icon' />
-        <div className='default text'>{loading ? 'Loading tags…' : 'Tags'}</div>
-        <div className='menu'>
-          {loading || dropdownItems}
-        </div>
-      </div>
+      <Dropdown placeholder={loading ? 'Loading tags…' : 'Tags'} loading={loading} value={this.state.tags} options={dropdownItems}
+        multiple search fluid className='fluid multiple search selection dropdown optgroup' selection onChange={this.handleChange}
+      />
     );
   }
 }
 
 TagsSelector.propTypes = {
-  tagsSelectorId: React.PropTypes.string.isRequired,
   tags: React.PropTypes.object,
   selectedTags: React.PropTypes.array
 };

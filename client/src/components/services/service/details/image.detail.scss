@@ -1,15 +1,40 @@
 .docker.images {
   .image-detail {
     & > div {
-        padding: 1em !important;
+      padding: 1em !important;
     }
 
     &:nth-of-type(even) {
-      background-color: rgba(0,0,50,.05);
+      background-color: rgba(0, 0, 50, .05);
     }
 
     .images-boxes.hidden {
       display: none;
+    }
+    .ui.input.error {
+      input {
+        background-color: #f9d6d6 !important;
+        color: #9f3a38 !important;
+      }
+      label {
+        color: #ce8b8a !important;
+      }
+      label:after {
+        color: #db2828 !important;
+      }
+
+      ::-webkit-input-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-webkit-input-placeholder {
+        color: #ce8b8a;
+      }
+      ::-moz-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-moz-placeholder {
+        color: #ce8b8a;
+      }
     }
   }
 }

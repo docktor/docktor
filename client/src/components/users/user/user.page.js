@@ -3,10 +3,9 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import classNames from 'classnames';
-import UUID from 'uuid-js';
+import { Form, Button, Dimmer, Loader, Label, Icon, Dropdown } from 'semantic-ui-react';
 
-import { AUTH_ADMIN_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
+import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 
 // Thunks / Actions
 import UsersThunks from '../../../modules/users/users.thunks.js';
@@ -21,169 +20,133 @@ import './user.page.scss';
 // User Component
 class UserComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { ...props.user };
+  state = { user: {}, tags:[] }
+
+  componentWillMount = () => {
+    this.setState({ user: { ...this.props.user } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state = { ...nextProps.user };
-    this.forceUpdate();
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ user: { ...nextProps.user } });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const { userId } = this.props;
 
     // We need to fetch the tags before the user info
     this.props.fetchTags()
       .then(() => this.props.fetchUser(userId));
-
-    this.initializeRoleDropdown();
   }
 
-  componentDidUpdate() {
-    this.initializeRoleDropdown();
+  handleChange = (e, { name, value }) => {
+    const { user } = this.state;
+    const state = {
+      user: { ...user, [name]: value },
+    };
+    this.setState(state);
   }
 
-  initializeRoleDropdown() {
-    const roleDropdownSelector = '.role.ui.dropdown';
-    $(roleDropdownSelector).dropdown({
-      onChange: newRole => {
-        $(roleDropdownSelector).dropdown('hide');
-        this.onChangeRole(newRole);
-      }
-    });
+  isFormValid = () => {
+    return true;
   }
 
-  onChangeRole(newRole) {
-    this.setState({
-      ...this.state,
-      role: newRole
-    });
-  }
-
-  onSave(event) {
-    event.preventDefault();
+  onSave = (e) => {
+    e.preventDefault();
     const tagsSelector = this.refs.tags;
     if (this.isFormValid()) {
       const user = {
-        ...this.state,
+        ...this.state.user,
         tags: [...tagsSelector.state.tags]
       };
       this.props.onSave(user);
     }
   }
 
-  isFormValid() {
-    return true;
-  }
-
-  renderRoleDropdown() {
-    const { user, isFetching } = this.props;
-
-    const rolesDropdownClasses = classNames(
-      'role ui dropdown button form-label',
-      getRoleColor(user.role),
-      { loading: isFetching }
-    );
-
+  renderDropDownButton = (user, isFetching) => {
     return (
-      <div className={rolesDropdownClasses}>
-        <input type='hidden' name='role' />
-        <div className='default text'>
-          <i className={classNames(getRoleIcon(user.role), 'icon')} />
-          {getRoleLabel(user.role)}
-        </div>
-        <div className='menu'>
-          {ALL_ROLES.map(role => {
-            const itemClasses = classNames('item', {
-              'active selected': role === user.role
-            });
-            return (
-              <div key={role} className={itemClasses} data-value={role}>
-                <i className={classNames(getRoleIcon(role), 'icon')} />
-                {getRoleLabel(role)}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <Button loading={isFetching} color={getRoleColor(user.role)} className='role' onClick={e => e.preventDefault()}>
+        <Icon name={getRoleIcon(user.role)} />
+        {getRoleLabel(user.role)}
+      </Button>
     );
   }
 
-  render() {
-    const { user, isFetching, tags } = this.props;
+  renderRoleDropdown = (user, isFetching) => {
+    const options = ALL_ROLES.map(role => {
+      return {
+        icon: <Icon name={getRoleIcon(role)} color={getRoleColor(role)} />,
+        value: role,
+        text: getRoleLabel(role)
+      };
+    });
 
     return (
-      <div className='flex layout vertical start-justified'>
+      <Dropdown trigger={this.renderDropDownButton(user, isFetching)} onChange={this.handleChange} options={options}
+        icon={null} value={user.role} name='role'
+      />
+    );
+  }
+
+  render = () => {
+    const { isFetching, tags } = this.props;
+    const { user } = this.state;
+    return (
+      <div className='flex layout vertical start-justified user-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
-            {
-              isFetching
-              ?
-                <div className='ui active dimmer'>
-                  <div className='ui text loader'>Fetching</div>
+            {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
+            <div className='flex layout vertical start-justified user-details'>
+              <h1>
+                <Link to={'/users'}>
+                  <Icon name='arrow left' fitted/>
+                </Link>
+                {`${user.displayName} (${user.username})`}
+              </h1>
+
+              <Form className='user-form'>
+                <Form.Group>
+                  <Form.Field width='two'>
+                    <Label size='large' className='form-label' content={user.provider && user.provider.toUpperCase()} />
+                  </Form.Field>
+
+                  <Form.Field width='two'>
+                    {this.renderRoleDropdown(user, isFetching)}
+                  </Form.Field>
+                </Form.Group>
+
+                <Form.Group widths='two'>
+                  <Form.Input required readOnly label='Username' value={user.username || ''} onChange={this.handleChange}
+                    type='text' name='username' autoComplete='off' placeholder='Username'
+                  />
+                  <Form.Input required readOnly label='Email Address' value={user.email || ''} onChange={this.handleChange}
+                      type='text' name='email' autoComplete='off' placeholder='A valid email address'
+                  />
+                </Form.Group>
+
+                <Form.Group widths='two'>
+                  <Form.Input required readOnly label='First Name' value={user.firstName || ''} onChange={this.handleChange}
+                    type='text' name='firstName' autoComplete='off' placeholder='First Name'
+                  />
+                  <Form.Input required readOnly label='Last Name' value={user.lastName || ''} onChange={this.handleChange}
+                      type='text' name='lastName' autoComplete='off' placeholder='Last Name'
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Field width='two'>
+                    <Label size='large' className='form-label' content='Tags' />
+                  </Form.Field>
+                  <Form.Field width='fourteen'>
+                    <label>Tags of the daemon</label>
+                    <TagsSelector selectedTags={user.tags || []} tags={tags} ref='tags' />
+                  </Form.Field>
+                </Form.Group>
+
+                <div className='flex button-form'>
+                  <Button fluid onClick={this.onSave}>Save</Button>
                 </div>
-              :
-                <div className='flex layout vertical start-justified user-details'>
-                  <h1>
-                    <Link to={'/users'}>
-                      <i className='arrow left icon' />
-                    </Link>
-                    {`${user.displayName} (${user.username})`}
-                  </h1>
-
-                  <form className='ui form user-form'>
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='ui large label form-label'>{user.provider && user.provider.toUpperCase()}</div>
-                      </div>
-
-                      <div className='two wide field'>
-                        {this.renderRoleDropdown()}
-                      </div>
-                    </div>
-
-                    <div className='two fields'>
-                      <div className='required field'>
-                        <label>Username</label>
-                        <input type='text' defaultValue={user.username || ''} readOnly />
-                      </div>
-
-                      <div className='required field'>
-                        <label>Email Address</label>
-                        <input type='text' defaultValue={user.email || ''} readOnly />
-                      </div>
-                    </div>
-
-                    <div className='two fields'>
-                      <div className='required field'>
-                        <label>First Name</label>
-                        <input type='text' defaultValue={user.firstName || ''} readOnly />
-                      </div>
-
-                      <div className='required field'>
-                        <label>Last Name</label>
-                        <input type='text' defaultValue={user.lastName || ''} readOnly />
-                      </div>
-                    </div>
-
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='large ui label form-label'>Tags</div>
-                      </div>
-                      <div className='fourteen wide field'>
-                        <label>Tags of the user</label>
-                        <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={user.tags || []} tags={tags || []} ref='tags' />
-                      </div>
-                    </div>
-
-                    <div className='flex button-form'>
-                      <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
-                    </div>
-                  </form>
-                </div>
-            }
+              </Form>
+            </div>
           </div>
         </Scrollbars>
       </div>
@@ -205,9 +168,10 @@ const mapStateToProps = (state, ownProps) => {
   const paramId = ownProps.params.id;
   const users = state.users;
   const user = users.selected;
+  const emptyUser = { tags: [] };
   const isFetching = paramId && (paramId !== user.id);
   return {
-    user: users.items[paramId] || {},
+    user: users.items[user.id] || emptyUser,
     isFetching,
     userId: paramId,
     tags: state.tags

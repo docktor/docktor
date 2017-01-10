@@ -2,7 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import classNames from 'classnames';
+import { Card, Icon, Button, Label } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 // Components
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
@@ -13,13 +14,12 @@ import './daemon.card.component.scss';
 // DaemonCard Component
 class DaemonCard extends React.Component {
 
-  componentWillMount() {
+  componentWillMount = () => {
     const daemon = this.props.daemon;
-    const fetchFunc = this.props.fetchInfo(daemon, false);
-    fetchFunc();
+    this.props.fetchInfo(daemon, false);
   }
 
-  getColor(info) {
+  getColor = (info) => {
     if (!info) {
       return 'grey';
     } else if (info.status === 'UP') {
@@ -29,7 +29,7 @@ class DaemonCard extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     const { daemon, fetchInfo } = this.props;
     const { isFetching, info } = daemon;
     let site = this.props.site;
@@ -37,53 +37,41 @@ class DaemonCard extends React.Component {
       site = { title: 'Unknown Site' };
     }
 
-    const daemonStatusClasses = classNames('ui top right attached label', this.getColor(info), {
-      disabled: isFetching
-    });
+    const nbImages = parseInt(info && info.nbImages ? info.nbImages : '0');
+    const images = nbImages > 0 ? nbImages + (nbImages > 1 ? ' images' : ' image') : 'No images';
+    const nbContainers = parseInt(info && info.nbContainers ? info.nbContainers : '0');
+    const containers = nbContainers > 0 ? nbContainers + (nbContainers > 1 ? ' containers' : ' container') : 'No containers';
+    const daemonStatusClasses = classnames({ disabled: isFetching });
 
     return (
-      <div className='daemon'>
-        <div className='ui card'>
-          <div className='content'>
-            <div className='header'>
-              <Link className='header' to={'/daemons/' + daemon.id}>
-                <i className='server icon' />{daemon.name}
-              </Link>
-            </div>
-            <div title={info ? info.message : ''} className={daemonStatusClasses}>
-              {(info ? info.status : 'UNKNOWN')}
-            </div>
-            <div className='meta'>{site.title}</div>
-            <div className='description'>{daemon.description}</div>
-          </div>
-          {(fetching => {
-            if (fetching) {
-              return (
-                  <div className='ui bottom attached mini blue buttons'>
-                    <div className='ui button loading' />
-                  </div>
-              );
-            } else {
-              const nbImages = parseInt(info && info.nbImages ? info.nbImages : '0');
-              const images = nbImages > 0 ? nbImages + (nbImages > 1 ? ' images' : ' image') : 'No images';
-              const nbContainers = parseInt(info && info.nbContainers ? info.nbContainers : '0');
-              const containers = nbContainers > 0 ? nbContainers + (nbContainers > 1 ? ' containers' : ' container') : 'No containers';
-              return (
-                <div className='ui bottom attached mini blue buttons'>
-                  <div className='ui button disabled'>{images}</div>
-                  <div className='ui button disabled'>{containers}</div>
-                  <div className='ui icon button' onClick={fetchInfo(daemon, true)}>
-                    <i className='refresh icon' />
-                  </div>
-                </div>
-              );
-            }
-          })(isFetching)}
-        </div>
-      </div>
+      <Card className='daemon-card'>
+        <Card.Content>
+          <Card.Header as={Link} to={'/daemons/' + daemon.id}>
+            <Icon className='server' />{daemon.name}
+          </Card.Header>
+          <Label attached='top right' title={info ? info.message : ''} color={this.getColor(info)} className={daemonStatusClasses}>
+            {(info ? info.status : 'UNKNOWN')}
+          </Label>
+          <Card.Meta>{site.title}</Card.Meta>
+          <Card.Description>{daemon.description}</Card.Description>
+        </Card.Content>
+        {
+          isFetching ?
+            <Button.Group attached='bottom' size='mini' color='blue'>
+              <Button loading />
+            </Button.Group>
+            :
+            <Button.Group attached='bottom' size='mini' color='blue'>
+              <Button disabled>{images}</Button>
+              <Button disabled>{containers}</Button>
+              <Button icon='refresh' onClick={() => fetchInfo(daemon, true)}/>
+            </Button.Group>
+        }
+      </Card>
     );
   }
 }
+
 
 DaemonCard.propTypes = {
   daemon: React.PropTypes.object,
@@ -91,21 +79,16 @@ DaemonCard.propTypes = {
   fetchInfo: React.PropTypes.func
 };
 
-// Function to map state to container props
-const mapStateToProps = (state) => {
-  return {};
-};
-
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchInfo: (daemon, force) => () => dispatch(DaemonsThunks.fetchDaemonInfo(daemon, force))
+    fetchInfo: (daemon, force) => dispatch(DaemonsThunks.fetchDaemonInfo(daemon, force))
   };
 };
 
 // Redux container
 const CardDaemon = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(DaemonCard);
 

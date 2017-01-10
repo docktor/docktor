@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import classNames from 'classnames';
+import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
 
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 import UsersThunks from '../../../modules/users/users.thunks.js';
@@ -12,86 +12,56 @@ import './user.card.component.scss';
 
 // UserCard Component
 class UserCardComponent extends React.Component {
-  onChangeRole(newRole) {
+
+  handleChange = (e, { value }) => {
     const oldUser = this.props.user;
     const userToSave = {
       ...oldUser,
-      Role: newRole
+      Role: value
     };
     this.props.saveUser(userToSave);
   }
 
-  initializeDropdownComponents() {
-    const userCardSelector = `#${this.props.user.id} .ui.dropdown`;
-    $(userCardSelector).dropdown({
-      action: 'select', // necessary to avoid refresh conflicts between jQuery and React
-      onChange: value => {
-        $(userCardSelector).dropdown('hide');
-        this.onChangeRole(value);
-      }
-    });
+  renderDropDown = (user) => {
+    return (
+      <Button loading={user.isFetching} color={getRoleColor(user.role)} compact size='small'>
+        <Icon name={getRoleIcon(user.role)} />
+        {getRoleLabel(user.role)}
+      </Button>
+    );
   }
 
-  componentDidMount() {
-    this.initializeDropdownComponents();
-  }
-
-  render() {
+  render = () => {
     const user = this.props.user;
     const connectedUser = this.props.auth.user;
-
-    const rolesDropdownClasses = classNames(
-      'ui tiny compact top right attached pointing dropdown button',
-      getRoleColor(user.role),
-      {
-        disabled: connectedUser.role !== AUTH_ADMIN_ROLE,
-        loading: user.isFetching
-      }
-    );
-
+    const disabled = connectedUser.role !== AUTH_ADMIN_ROLE;
+    const options = ALL_ROLES.map(role => {return { icon: getRoleIcon(role), value: role, text: getRoleLabel(role) };});
+    const canGoToProfile = connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE;
     return (
-      <div id={user.id} className='ui card user'>
-        <div className='content'>
-          <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />
+      <Card className='user-card'>
+        <Card.Content>
+          <Image avatar alt='Avatar' src='/images/avatar.jpg' />
           {
-            connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE
-            ?
-            <Link to={`/users/${user.id}`}>
-              {user.displayName}
-            </Link>
+            canGoToProfile ?
+              <Link to={`/users/${user.id}`}>
+                {user.displayName}
+              </Link>
             :
-            user.displayName
+              user.displayName
           }
-          <div className={rolesDropdownClasses}>
-            <input type='hidden' name='role' />
-            <div className='default text'>
-              <i className={classNames(getRoleIcon(user.role), 'icon')} />
-              {getRoleLabel(user.role)}
-            </div>
-            <div className='menu'>
-              {ALL_ROLES.map(role => {
-                const itemClasses = classNames('item', {
-                  'active selected': role === user.role
-                });
-                return (
-                  <div key={role} className={itemClasses} data-value={role}>
-                    <i className={classNames(getRoleIcon(role), 'icon')} />
-                    {getRoleLabel(role)}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <div className='extra content'>
-          <div className='ui tiny right floated provider label'>
+          <Dropdown trigger={this.renderDropDown(user)} compact onChange={this.handleChange} options={options}
+            icon={null} button disabled={disabled} value={user.role} pointing className='tiny top right attached'
+          />
+        </Card.Content>
+        <Card.Content extra>
+          <Label size='tiny' className='right floated provider'>
             {user.provider.toUpperCase()}
-          </div>
+          </Label>
           <div className='email' title={user.email}>
-            <i className='mail icon' /> <a href={`mailto:${user.email}`}>{user.email}</a>
+            <a href={`mailto:${user.email}`}><Icon name='mail' />{user.email}</a>
           </div>
-        </div>
-      </div>
+        </Card.Content>
+      </Card>
     );
   }
 }

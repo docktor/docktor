@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // VariablesBox is a list of docker variables
 class VariablesBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { variables: [] }
 
-    // Set state of component from the props.
-    this.state = { variables: this.props.variables || [] };
+  componentWillMount = () => {
+    this.setState({ variables: this.props.variables });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ variables: nextProps.variables });
+  }
+
+  isFormValid = () => {
     return this.refs.variablesBox.isFormValid();
   }
 
-  onChangeVariables(variables) {
+  onChangeVariables = (variables) => {
     this.state.variables = variables;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
     const allowEmpty = this.props.allowEmpty;
 
@@ -33,23 +36,23 @@ class VariablesBox extends React.Component {
       name: 'name',
       label: 'Variable Name',
       placeholder: 'The environment variable name',
-      sizeClass: 'five wide',
-      isRequired: true
+      class: 'five wide',
+      required: true
     });
 
     form.fields.push({
       name: 'value',
       label: allowEmpty ? 'Default Value' : 'Variable Value',
       placeholder: 'The environment variable value',
-      sizeClass: 'five wide',
-      isRequired: !allowEmpty
+      class: 'five wide',
+      required: !allowEmpty
     });
 
     form.fields.push({
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this variable',
-      sizeClass: 'five wide',
+      class: 'five wide',
       type: 'textarea',
       rows: 2
     });
@@ -57,12 +60,11 @@ class VariablesBox extends React.Component {
     return (
       <Box
         ref='variablesBox'
-        boxId={this.props.boxId}
-        icon='large setting icon'
+        icon='setting'
         title='Variables' form={form}
         lines={this.props.variables}
         stacked={this.props.stacked}
-        onChange={variables => this.onChangeVariables(variables)}>
+        onChange={this.onChangeVariables}>
         {this.props.children || ''}
       </Box>
     );
@@ -70,7 +72,6 @@ class VariablesBox extends React.Component {
 }
 
 VariablesBox.propTypes = {
-  boxId: React.PropTypes.string,
   variables: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
   stacked: React.PropTypes.bool,

@@ -6,25 +6,28 @@ import Box from './box/box.component.js';
 // PortsBox is a list of ports
 class PortsBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { ports: [] }
 
-    // Set state of component from the props.
-    this.state = { ports: this.props.ports || [] };
+  componentWillMount = () => {
+    this.setState({ ports: this.props.ports });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ ports: nextProps.ports });
+  }
+
+  isFormValid = () => {
     return this.refs.portsBox.isFormValid();
   }
 
-  onChangePorts(ports) {
+  onChangePorts = (ports) => {
     this.state.ports = ports;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
 
-    form.getTitle = (port) => {
+    form.getTitle = () => {
       return '';
     };
 
@@ -32,8 +35,8 @@ class PortsBox extends React.Component {
       name: 'internal',
       label: 'Internal',
       placeholder: 'Internal Port',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       type: 'number'
     });
 
@@ -41,8 +44,8 @@ class PortsBox extends React.Component {
       name: 'protocol',
       label: 'Protocol',
       placeholder: 'Protocol',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'tcp', name:'TCP' },
         { value:'udp', name:'UDP' }
@@ -55,7 +58,7 @@ class PortsBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this Port',
-      sizeClass: 'five wide',
+      class: 'five wide',
       type: 'textarea',
       rows: 2
     });
@@ -63,12 +66,11 @@ class PortsBox extends React.Component {
     return (
       <Box
         ref='portsBox'
-        boxId={this.props.boxId}
-        icon='large sitemap icon'
+        icon='sitemap'
         title='Ports' form={form}
         lines={this.props.ports}
         stacked={this.props.stacked}
-        onChange={ports => this.onChangePorts(ports)}>
+        onChange={this.onChangePorts}>
         {this.props.children || ''}
       </Box>
     );
@@ -76,7 +78,6 @@ class PortsBox extends React.Component {
 }
 
 PortsBox.propTypes = {
-  boxId: React.PropTypes.string,
   ports: React.PropTypes.array,
   stacked: React.PropTypes.bool,
   children: React.PropTypes.oneOfType([

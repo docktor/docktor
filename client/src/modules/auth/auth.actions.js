@@ -95,7 +95,7 @@ const requestChangePassword = () => {
 };
 
 // Action when user successfully changed his password
-const receiveChangePassword = (register) => {
+const receiveChangePassword = () => {
   return {
     type: AuthConstants.CHANGE_PASSWORD_SUCCESS
   };

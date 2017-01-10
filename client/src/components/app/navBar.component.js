@@ -2,6 +2,7 @@
 import React from 'react';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
 import AuthThunks from '../../modules/auth/auth.thunk.js';
 import ExportThunks from '../../modules/export/export.thunk.js';
@@ -16,51 +17,56 @@ import './navBar.component.scss';
 // NavBar Component
 class NavBarComponent extends React.Component {
 
-  isAuthorized(roles) {
-    return this.props.auth.isAuthenticated && isRoleAuthorized(roles, this.props.auth.user.role);
+  isAuthorized = (child, Roles) => {
+    const authorized = this.props.auth.isAuthenticated && isRoleAuthorized(Roles, this.props.auth.user.role);
+    return authorized && child;
   }
 
-  componentDidMount() {
-    $('.navbar .ui.dropdown').dropdown();
+  isActiveURL = (url) => {
+    return this.props.location && this.props.location.pathname && this.props.location.pathname.startsWith(url);
   }
 
-  componentDidUpdate() {
-    $('.navbar .ui.dropdown').dropdown();
+  renderDropdown = (loading) => {
+    const item = [];
+    item.push(<Icon key='icon' name={loading ? 'circle notched' : 'user'} loading={loading} size='large'/>);
+    item.push(this.props.auth.user.displayName);
+    return item;
   }
 
-  isActiveURL(url) {
-    if (!this.props.location || !this.props.location.pathname) {
-      return '';
-    }
-    return this.props.location.pathname.startsWith(url) ? ' active' : '';
-  }
-
-  render() {
+  render = () => {
     const { logout, exportDocktor, isExportFetching } = this.props;
+    const isAuthorized = this.isAuthorized;
     return (
-      <div className='ui inverted fluid menu navbar'>
-        <IndexLink to='/' className='item brand'>
-          <i className='large fitted doctor icon' />{' '}Docktor
-        </IndexLink>
-        {this.isAuthorized([AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]) && <Link to='/daemons' className={'item' + this.isActiveURL('/daemons')}>Daemons</Link>}
-        {this.isAuthorized() && <Link to='/services' className={'item' + this.isActiveURL('/services')}>Services</Link>}
-        {this.isAuthorized() && <Link to='/groups' className={'item' + this.isActiveURL('/groups')}>Groups</Link>}
-        {this.isAuthorized() && <Link to='/users' className={'item' + this.isActiveURL('/users')}>Users</Link>}
-        {this.isAuthorized([AUTH_ADMIN_ROLE]) && <Link to='/tags' className={'item' + this.isActiveURL('/tags')}>Tags</Link>}
-        {this.isAuthorized() &&
-        <div className='right menu'>
-          {isExportFetching ? <div className='loader'><i className='inverted large notched circle icon loading'/></div> : ''}
-          <div className='ui dropdown item'>
-            <i className='inverted large user icon' />{' ' + this.props.auth.user.displayName}
-            <div className='menu'>
-              {this.isAuthorized([AUTH_ADMIN_ROLE]) && <a onClick={exportDocktor} className={'item ' + (isExportFetching ? 'disabled' : '')}><i className='download icon' />Export</a>}
-              <Link to='/settings' className='item'><i className='settings icon' />Settings</Link>
-              <a className='item' onClick={logout} ><i className='sign out icon' />Logout</a>
-            </div>
-          </div>
-        </div>
-        }
-      </div>
+      <Menu inverted className='navbar'>
+        <Menu.Item  as={IndexLink} to='/' className='brand'>
+          <Icon fitted name='doctor' size='large'/>{' Docktor'}
+        </Menu.Item>
+        {isAuthorized(
+          <Menu.Item active={this.isActiveURL('/daemons')} as={Link} to='/daemons'>Daemons</Menu.Item>,
+          [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]
+        )}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/services')} as={Link} to='/services'>Services</Menu.Item>)}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/groups')} as={Link} to='/groups'>Groups</Menu.Item>)}
+        {isAuthorized(<Menu.Item active={this.isActiveURL('/users')} as={Link} to='/users'>Users</Menu.Item>)}
+        {isAuthorized(
+          <Menu.Item active={this.isActiveURL('/tags')} as={Link} to='/tags'>Tags</Menu.Item>,
+          [AUTH_ADMIN_ROLE]
+        )}
+        {isAuthorized(
+          <Menu.Menu position='right'>
+            <Menu.Item as={Dropdown} trigger={this.renderDropdown(isExportFetching)}>
+              <Dropdown.Menu>
+                {isAuthorized(
+                  <Dropdown.Item onClick={exportDocktor} disabled={isExportFetching}><Icon name='download' />Export</Dropdown.Item>,
+                  [AUTH_ADMIN_ROLE]
+                )}
+                <Dropdown.Item as={Link} to='/settings'><Icon name='settings' />Settings</Dropdown.Item>
+                <Dropdown.Item onClick={logout} ><Icon name='sign out' />Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Menu.Item>
+          </Menu.Menu>
+        )}
+      </Menu>
     );
   }
 }

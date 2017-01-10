@@ -1,6 +1,3 @@
-// Imports for fetch API
-import 'babel-polyfill';
-import fetch from 'isomorphic-fetch';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
 import { generateEntitiesThunks } from '../utils/entities.js';
@@ -34,9 +31,7 @@ const deleteSite = (id) => {
 // Thunk to save a site
 const saveSite = (form) => {
 
-  let site = Object.assign({}, form);
-  site.latitude = parseFloat(site.latitude.replace(',', '.'));
-  site.longitude = parseFloat(site.longitude.replace(',', '.'));
+  const site = { ...form };
   site.created = site.created ? site.created : new Date();
 
   const endpoint = site.id || 'new';
@@ -46,7 +41,7 @@ const saveSite = (form) => {
 
     dispatch(SitesActions.requestSaveSite(site));
 
-    let request = new Request('/api/sites/' + endpoint, withAuth({
+    const request = new Request('/api/sites/' + endpoint, withAuth({
       method: method,
       headers: {
         'Accept': 'application/json',

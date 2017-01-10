@@ -1,7 +1,7 @@
 // React
 import React from 'react';
-import { Link } from 'react-router';
 import classNames from 'classnames';
+import { Card, Icon, Label, Popup } from 'semantic-ui-react';
 
 import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants.js';
 
@@ -11,56 +11,46 @@ import './category.card.scss';
 // CategoryCard Component
 class CategoryCard extends React.Component {
 
-  constructor() {
-    super();
-    this.roles = {};
+  roles = {}
+
+  componentWillMount = () => {
     ALL_ROLES.forEach(role => {
       this.roles[role] = getRoleData(role);
     });
   }
 
-  componentDidMount() {
-    const category = this.props.category;
-    $(`#id-cat-${category.id} .with-title`).popup({
-      delay: {
-        show: 300,
-        hide: 0
-      }
-    });
-  }
-
-  render() {
-    const category = this.props.category;
-    const onDelete = this.props.onDelete;
-    const onEdit = this.props.onEdit;
-    const tags = this.props.tags;
+  render = () => {
+    const { category, onDelete, onEdit, tags } = this.props;
     return (
-      <div className='ui card category' id={`id-cat-${category.id}`} >
-        <div className='content'>
-          <div className='header with-title' data-content={category.value} data-variation='inverted very wide'>{category.value}</div>
-        </div>
-        <div className='content'>
+      <Card className='category-card'>
+        <Card.Content>
+          <Popup offset={15} inverted wide='very' positioning='left center'
+            trigger={<Card.Header className='with-title' content={category.value} />}
+            content={category.value}
+          />
+        </Card.Content>
+        <Card.Content>
           {tags.map(tag => {
             let role = this.roles[tag.usageRights];
-            let usageRightsClasses = classNames(
-              {
-                [role.icon]: !tag.isEditing,
-                [role.color]: !tag.isEditing,
-                'notched circle loading' : tag.isEditing
-              },
-              'with-title icon'
-            );
-
             return (
-              <div key={tag.name.slug} className={classNames('ui label', { 'disabled not-active': tag.isDeleting })}>
-                <i className={usageRightsClasses} data-content={`Tag can be added or removed by role : ${role.value}`} data-position='left center' data-variation='inverted very wide'/>
+              <Label key={tag.name.slug} className={classNames({ 'disabled not-active': tag.isDeleting })}>
+                <Popup offset={15} inverted wide='very' positioning='left center'
+                  trigger= {
+                    <Icon color={tag.isEditing ? null : role.color} name={tag.isEditing ? 'notched circle' : role.icon}
+                      loading={tag.isEditing} className='with-title'
+                    />
+                  }
+                  content={`Tag can be added or removed by role : ${role.value}`}
+                />
                 <a className={classNames({ 'disabled not-active': tag.isDeleting || tag.isEditing })} onClick={() => onEdit(tag)}>{tag.name.raw}</a>
-                <i className={classNames('delete', { 'loading disabled not-active': tag.isDeleting }, 'icon')} onClick={() => onDelete(tag)}/>
-              </div>
+                <Icon name='delete' loading={tag.isDeleting} className={classNames({ 'disabled not-active': tag.isDeleting })}
+                  onClick={() => onDelete(tag)}
+                />
+              </Label>
             );
           })}
-        </div>
-      </div>
+        </Card.Content>
+      </Card>
     );
   }
 }

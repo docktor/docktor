@@ -1,7 +1,6 @@
 // React
 import React from 'react';
-import classNames from 'classnames';
-import UUID from 'uuid-js';
+import { Button } from 'semantic-ui-react';
 
 // Components
 import ImageDetails from './image.detail.js';
@@ -13,26 +12,23 @@ import './image.tab.scss';
 // Image
 class ImageTab extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { images: props.images || [] };
-    this._images = [];
-  }
+  state = { images: [] }
+  images = []
 
-  componentWillMount() {
+  componentWillMount = () => {
     this.setState({ images: this.props.images });
   }
 
-  onAdd() {
+  onAdd = () => {
     const image = {};
     image.name = 'new_image';
     const state = { images: [ ...this.getImages() ] };
     state.images.push(image);
     this.setState(state);
-    this.props.scrollbars.scrollToBottom();
+    this.props.scrollbars && this.props.scrollbars.scrollToBottom();
   }
 
-  onCopy(index) {
+  onCopy = (index) => {
     const image = this.state.images[index] && JSON.parse(JSON.stringify(this.state.images[index]));
     delete image.id;
     delete image.created;
@@ -40,47 +36,53 @@ class ImageTab extends React.Component {
     const state = { images: [ ...this.getImages() ] };
     state.images.push(image);
     this.setState(state);
-    this.props.scrollbars.scrollToBottom();
+    this.props.scrollbars && this.props.scrollbars.scrollToBottom();
   }
 
-  onRemove(index) {
+  onRemove = (index) => {
     const images = this.getImages();
     images.splice(index, 1);
     const state = { images };
     this.setState(state);
   }
 
-  isFormValid() {
+  isFormValid = () => {
     let formValid = true;
-    this._images.forEach(imageRef => {
-      imageRef && (formValid = imageRef.isFormValid() && formValid);
+    this.images.forEach(imageRef => {
+      if(imageRef) {
+        formValid = imageRef.isFormValid() && formValid;
+      }
     });
     return formValid;
   }
 
-  getImages() {
+  getImages = () => {
     let images = [];
-    this._images.forEach(imageRef => imageRef && images.push(imageRef.getImage()));
+    this.images.forEach(imageRef => {
+      if(imageRef) {
+        images.push(imageRef.getImage());
+      }
+    });
     return images;
   }
 
-  render() {
-    const images = this.state.images;
+  render = () => {
+    const { images } = this.state;
     return (
       <div className='docker images padded layout vertical'>
           {images && images.map((image, index) => {
             return (
               <ImageDetails
-                key={UUID.create(4).hex}
+                key={index}
                 image={image}
                 onCopy={() => this.onCopy(index)}
                 onRemove={() => this.onRemove(index)}
-                ref={(img) => this._images[index] = img}
+                ref={(img) => this.images[index] = img}
               />
             );
           })}
           <div className='image-detail new layout horizontal justified'>
-            <div className='ui green small labeled icon button' onClick={() => this.onAdd()}><i className='plus icon' />Add Image</div>
+            <Button content='Add Image' icon='plus' labelPosition='left' color='green' onClick={this.onAdd} />
           </div>
       </div>
     );

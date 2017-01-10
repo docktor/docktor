@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import UUID from 'uuid-js';
+import { Form, Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 // Thunks / Actions
 import TagsThunks from '../../../modules/tags/tags.thunks.js';
@@ -22,22 +23,29 @@ import TagsSelector from '../../tags/tags.selector.component.js';
 import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors.js';
 import { getUsersAsOptions } from '../../../modules/users/users.selectors.js';
 
+import { parseError } from '../../../modules/utils/forms.js';
+
 // Style
 import './group.edit.page.scss';
 
 // Group Component for edition
 class GroupEditComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { ...props.group };
+  state = { errors: { details: [], fields: {} }, group: {}, tags:[] }
+
+  schema = Joi.object().keys({
+    title: Joi.string().trim().required().label('Title')
+  })
+
+  componentWillMount = () => {
+    this.setState({ group: { ...this.props.group }, errors: { details: [], fields:{} } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...nextProps.group });
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ group: { ...nextProps.group }, errors: { details: [], fields:{} } });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const groupId = this.props.groupId;
 
     // Tags must be fetched before the group for the UI to render correctly
@@ -53,48 +61,43 @@ class GroupEditComponent extends React.Component {
     });
 
     if (!groupId) {
-      // New group
-      $('.ui.form.group-form').form('clear');
       const tagsSelector = this.refs.tags;
       tagsSelector.setState({ tags: [] });
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
-      this.refs.scrollbars.scrollTop();
+      this.refs.scrollbars && this.refs.scrollbars.scrollTop();
     }
   }
 
-  onChangeProperty(value, property) {
-    this.setState({ [property]: value });
-  }
-
-  isFormValid() {
-    const settings = {
-      fields: {
-        title: 'empty',
-        description: 'empty',
-        portminrange: 'empty',
-        portmaxrange: 'empty'
-      }
+  handleChange = (e, { name, value }) => {
+    const { group, errors } = this.state;
+    const state = {
+      group: { ...group, [name]:value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
     };
-    $('.ui.form.group-form').form(settings);
-    $('.ui.form.group-form').form('validate form');
-    return $('.ui.form.group-form').form('is valid');
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
-  onSave(event) {
-    event.preventDefault();
-    const tagsSelector = this.refs.tags;
-    const filesystemsBox = this.refs.filesystemsBox;
-    const membersBox = this.refs.membersBox;
-    // isFormValid validate the form and return the status so all the forms must be validated before doing anything
+  isFormValid = () => {
+    const { error } = Joi.validate(this.state.group, this.schema, { abortEarly: false, allowUnknown: true });
+    error && this.setState({ errors: parseError(error) });
+    return !Boolean(error);
+  }
 
-    let formValid = filesystemsBox.isFormValid() & membersBox.isFormValid() & this.isFormValid();
+  onSave = (e) => {
+    e.preventDefault();
+    const tagsSelector = this.refs.tags;
+    const filesystemsBox = this.refs.filesystems;
+    const membersBox = this.refs.members;
+    // isFormValid validate the form and return the status so all the forms must be validated before doing anything
+    let formValid = this.isFormValid() & filesystemsBox.isFormValid() & membersBox.isFormValid();
     if (formValid) {
-      const group = { ...this.state };
+      const group = { ...this.state.group };
       group.tags = tagsSelector.state.tags;
       group.filesystems = filesystemsBox.state.filesystems;
       group.members = membersBox.state.members;
@@ -102,76 +105,65 @@ class GroupEditComponent extends React.Component {
     }
   }
 
-  render() {
-    const group = this.state;
-    const isFetching = this.props.isFetching;
-    const daemons = this.props.daemons;
-    const tags = this.props.tags;
-    const users = this.props.users;
+  render = () => {
+    const { group, errors } = this.state;
+    const { isFetching, daemons, tags, users } = this.props;
     return (
       <div className='flex layout vertical start-justified group-page'>
-        <Scrollbars ref='scrollbars' className='flex ui dimmable'>
+        <Scrollbars autoHide ref='scrollbars' className='ui dimmable flex'>
           <div className='flex layout horizontal around-justified'>
-            {
-              isFetching ?
-                <div className='ui active dimmer'>
-                  <div className='ui text loader'>Fetching</div>
-                </div>
-                :
-                <div className='flex layout vertical start-justified group-details'>
-                  <h1>
-                    <Link to={group.id ? `/groups/${group.id}` : '/groups'}>
-                      <i className='arrow left icon'/>
-                    </Link>
-                    {this.props.group.title || 'New Group'}
-                    <button disabled={!group.id} onClick={() => this.props.onDelete(group)} className='ui red labeled icon button right-floated'>
-                      <i className='trash icon'/>Remove
-                    </button>
-                  </h1>
-                  <form className='ui form group-form'>
-                    <input type='hidden' name='created' value={group.created || ''} onChange={event => this.onChangeProperty(event.target.value, 'created')} />
-                    <input type='hidden' name='id' value={group.id || ''} onChange={event => this.onChangeProperty(event.target.value, 'id')} />
-                    <div className='field required'>
-                      <label>Title</label>
-                      <input type='text' name='title' value={group.title || ''} onChange={event => this.onChangeProperty(event.target.value, 'title')}
-                        placeholder='A unique name' autoComplete='off' />
-                    </div>
-                    <div className='field'>
-                      <label>Description</label>
-                      <textarea rows='4' name='description' value={group.description || ''} onChange={event => this.onChangeProperty(event.target.value, 'description')}
-                        placeholder='A description of the group' autoComplete='off' />
-                    </div>
-                    <div className='fields'>
-                      <div className='two wide field'>
-                        <div className='large ui label form-label'>Tags</div>
-                      </div>
-                      <div className='fourteen wide field'>
-                        <label>Tags of the group</label>
-                        <TagsSelector tagsSelectorId={UUID.create(4).hex} selectedTags={group.tags || []} tags={tags} ref='tags' />
-                      </div>
-                    </div>
-                  </form>
-                  <FilesystemsBox filesystems={group.filesystems} daemons={daemons} ref='filesystemsBox' boxId={UUID.create(4).hex}>
-                    <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
-                  </FilesystemsBox>
-                  <MembersBox members={group.members} users={users} ref='membersBox' boxId={UUID.create(4).hex}>
-                    <p>Members of groups are able to see it and interact with containers.</p>
-                    <ul>
-                      <li>Moderators are able to add other members and to interact with services (stop/start)</li>
-                      <li>Simple members are only able to see the group and instanciated services</li>
-                    </ul>
-                  </MembersBox>
-                  <div className='flex button-form'>
-                    <a className='ui fluid button' onClick={event => this.onSave(event)}>Save</a>
-                  </div>
-                </div>
-            }
+            {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
+            <div className='flex layout vertical start-justified group-details'>
+              <h1>
+                <Link to={group.id ? `/groups/${group.id}` : '/groups'}>
+                  <Icon name='arrow left' fitted/>
+                </Link>
+                {this.props.group.title || 'New Group'}
+                <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
+                  disabled={!group.id} onClick={() => this.props.onDelete(group)} className='right-floated'
+                />
+              </h1>
+              <Form className='group-form'>
+                <Input type='hidden' name='created' value={group.created || ''} onChange={this.handleChange} />
+                <Input type='hidden' name='id' value={group.id || ''} onChange={this.handleChange} />
+
+                <Form.Input required label='Title' name='title' value={group.title || ''} onChange={this.handleChange}
+                  type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['title']}
+                />
+                <Form.TextArea label='Description' name='description' value={group.description || ''} onChange={this.handleChange}
+                  rows='4' placeholder='A description of the group' autoComplete='off'
+                />
+                <Form.Group>
+                  <Form.Field width='two'>
+                    <Label size='large' className='form-label' content='Tags' />
+                  </Form.Field>
+                  <Form.Field width='fourteen'>
+                    <label>Tags of the group</label>
+                    <TagsSelector selectedTags={group.tags || []} tags={tags} ref='tags' />
+                  </Form.Field>
+                </Form.Group>
+              </Form>
+              <FilesystemsBox filesystems={group.filesystems || []} daemons={daemons} ref='filesystems'>
+                <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
+              </FilesystemsBox>
+              <MembersBox members={group.members || []} users={users} ref='members'>
+                <p>Members of groups are able to see it and interact with containers.</p>
+                <ul>
+                  <li>Moderators are able to add other members and to interact with services (stop/start)</li>
+                  <li>Simple members are only able to see the group and instanciated services</li>
+                </ul>
+              </MembersBox>
+              <div className='flex button-form'>
+                <Button fluid onClick={this.onSave}>Save</Button>
+              </div>
+            </div>
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
+
 GroupEditComponent.propTypes = {
   group: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
@@ -195,7 +187,7 @@ const mapStateToProps = (state, ownProps) => {
   const emptyGroup = { tags: [], filesystems: [], members: [] };
   const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
   const users = getUsersAsOptions(state.users.items) || [];
-  const isFetching = paramId && (paramId !== group.id || (group.id ? group.isFetching : true));
+  const isFetching = paramId && (paramId !== group.id);
   return {
     group: groups.items[paramId] || emptyGroup,
     isFetching,

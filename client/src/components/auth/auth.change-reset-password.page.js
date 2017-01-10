@@ -1,67 +1,68 @@
 // React
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { push } from 'react-router-redux';
+import { Header, Form, Message, Button } from 'semantic-ui-react';
+import Joi from 'joi-browser';
 
 import TabForm from '../common/tabform/tabform.component.js';
 import AuthThunks from '../../modules/auth/auth.thunk.js';
+import { parseError } from '../../modules/utils/forms.js';
 
 class ChangeResetPasswordP extends React.Component {
 
-  componentDidMount() {
-    $('#change-password > .ui.form').form({
-      fields: {
-        newPassword : ['minLength[6]', 'empty', 'doesntContain[ ]']
-      },
-      onSuccess: (event, fields) => {
-        this.onChangePassword(event);
-      },
-      onFailure: (event, fields) => {
-        return false;
-      }
-    });
-  }
+  state = { errors: { details: [], fields: {} } }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
+  schema = Joi.object().keys({
+    newPassword: Joi.string().trim().min(6).required().label('New Password')
+  })
+
+  componentWillMount = () => {
+    const errorMessage = this.props.errorMessage;
+    if(this.props.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
+    }
+    if (errorMessage) {
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
-  componentWillMount() {
-    if(this.props.isAuthenticated && !this.props.errorMessage) {
+  componentWillReceiveProps = (nextProps) => {
+    const errorMessage = nextProps.errorMessage;
+    if(nextProps.isAuthenticated && !errorMessage) {
       this.props.redirect('/');
+    }
+    if (errorMessage) {
+      this.setState({ errors: { details: [errorMessage], fields:{} } });
     }
   }
 
-  onChangePassword(event) {
-    event.preventDefault();
-    const newPassword = this.refs.newPassword.value.trim();
-    const token = this.props.token.trim();
-    this.props.changePassword(newPassword, token);
+  handleSubmit = (e, { formData }) => {
+    e.preventDefault();
+    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    if (error) {
+      this.setState({ errors: parseError(error) });
+    } else {
+      const token = this.props.token.trim();
+      this.props.changePassword(formData.newPassword, token);
+    }
   }
 
-  render() {
-    const { errorMessage, isFetching, token } = this.props;
+  render = () => {
+    const { isFetching, token } = this.props;
+    const { fields, details } = this.state.errors;
     if (token) {
       return (
         <TabForm>
           <div id='change-password'>
-              <h1>Set a new password</h1>
-              <form className='ui form' >
-                <div className='required field'>
-                  <label>
-                    New password
-                  </label>
-                  <input type='password' ref='newPassword' name='newPassword'  placeholder='Set a new password' autoComplete='off'/>
-                </div>
-                {errorMessage &&
-                    <p className='error api'>{errorMessage}</p>
-                }
-                <div className='ui error message' />
-                <button type='submit' className={'ui button button-block submit' + (isFetching ? ' loading' : '')}>Change password</button>
-              </form>
+            <Header as='h1'>Set a new password</Header>
+            <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
+              <Form.Input required error={fields['newPassword']} label='New Password'
+                type='password' name='newPassword' autoComplete='off' placeholder='Set a new password'
+              />
+              <Message error list={details}/>
+              <Button className={'button-block submit'} loading={isFetching}>Change password</Button>
+            </Form>
           </div>
         </TabForm>
       );

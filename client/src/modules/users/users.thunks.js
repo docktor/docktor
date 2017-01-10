@@ -1,6 +1,3 @@
-// Imports for fetch API
-import 'babel-polyfill';
-import fetch from 'isomorphic-fetch';
 import { push } from 'react-router-redux';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';

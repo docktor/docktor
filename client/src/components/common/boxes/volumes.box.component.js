@@ -6,22 +6,25 @@ import Box from './box/box.component.js';
 // VolumesBox is a list of docker volumes
 class VolumesBox extends React.Component {
 
-  constructor(props) {
-    super(props);
+  state = { volumes: [] }
 
-    // Set state of component from the props.
-    this.state = { volumes: this.props.volumes || [] };
+  componentWillMount = () => {
+    this.setState({ volumes: this.props.volumes });
   }
 
-  isFormValid() {
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ volumes: nextProps.volumes });
+  }
+
+  isFormValid = () => {
     return this.refs.volumesBox.isFormValid();
   }
 
-  onChangeVolumes(volumes) {
+  onChangeVolumes = (volumes) => {
     this.state.volumes = volumes;
   }
 
-  render() {
+  render = () => {
     const form = { fields:[] };
     const allowEmpty = this.props.allowEmpty;
 
@@ -35,23 +38,23 @@ class VolumesBox extends React.Component {
       name: 'external',
       label: allowEmpty ? 'Default Value' : 'External Volume',
       placeholder: 'The default volume on host',
-      sizeClass: 'five wide',
-      isRequired: !allowEmpty
+      class: 'five wide',
+      required: !allowEmpty
     });
 
     form.fields.push({
       name: 'internal',
       label: 'Internal Volume',
       placeholder: 'The volume inside the container',
-      sizeClass: 'five wide',
-      isRequired: true
+      class: 'five wide',
+      required: true
     });
     form.fields.push({
       name: 'rights',
       label: 'Rights',
       placeholder: 'Select rights',
-      sizeClass: 'three wide',
-      isRequired: true,
+      class: 'three wide',
+      required: true,
       options: [
         { value:'ro', name:'Read-only' },
         { value:'rw', name:'Read-write' }
@@ -64,7 +67,7 @@ class VolumesBox extends React.Component {
       name: 'description',
       label: 'Description',
       placeholder: 'Describe this volume',
-      sizeClass: 'three wide',
+      class: 'three wide',
       type: 'textarea',
       rows: 2
     });
@@ -72,12 +75,11 @@ class VolumesBox extends React.Component {
     return (
       <Box
         ref='volumesBox'
-        boxId={this.props.boxId}
-        icon='large folder open icon'
+        icon='folder open'
         title='Volumes' form={form}
         lines={this.props.volumes}
         stacked={this.props.stacked}
-        onChange={volumes => this.onChangeVolumes(volumes)}>
+        onChange={this.onChangeVolumes}>
         {this.props.children || ''}
       </Box>
     );
@@ -85,7 +87,6 @@ class VolumesBox extends React.Component {
 };
 
 VolumesBox.propTypes = {
-  boxId: React.PropTypes.string,
   volumes: React.PropTypes.array,
   allowEmpty: React.PropTypes.bool,
   stacked: React.PropTypes.bool,

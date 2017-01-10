@@ -2,27 +2,6 @@
 import UsersConstants from './users.constants.js';
 import { generateEntitiesReducer } from '../utils/entities.js';
 
-
-const createRequestDeleteUser  = (state, action) => {
-  if (action.user.id !== -1) {
-    let newItem = { ...state.items[action.user.id] };
-    newItem.isDeleting = true;
-    newItem.errorMessage = '';
-    state.items[action.user.id] = newItem;
-    return {
-      items: state.items
-    };
-  }
-  return {};
-};
-
-const createReceiveDeletedUser = (state, action) => {
-  let { [action.removedID] : omit,  ...newItems } = state.items;
-  return {
-    items: newItems
-  };
-};
-
 const usersReducer = (state, action) => {
   const entitiesState = generateEntitiesReducer(state, action, 'users');
   switch (action.type) {

@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Link } from 'react-router';
+import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // Roles
@@ -21,57 +21,45 @@ import './tags.page.scss';
 //Tags Component
 class Tags extends React.Component {
 
-  constructor() {
-    super();
+  usageRoles = ALL_ROLES.map(role => {
+    return {
+      id: role,
+      ...getRoleData(role)
+    };
+  })
 
-    // Get roles with label, icon, colors...
-    this.usageRoles = ALL_ROLES.map(role => {
-      return {
-        id: role,
-        ...getRoleData(role)
-      };
-    });
-  }
-
-  componentWillMount() {
+  componentWillMount = () => {
     this.props.fetchTags();
   }
 
-  render() {
+  render = () => {
     const { isFetching, filterValue, tags, availableCategories } = this.props;
     const { onCreate, onEdit, onDelete, onChangeFilter } = this.props;
     const availableUsageRights = this.usageRoles;
 
     return (
-      <div className='flex layout vertical start-justified'>
+      <div className='flex layout vertical start-justified tags-page'>
         <div className='layout horizontal justified tags-bar'>
-          <div className='ui left corner labeled icon input flex' >
-            <div className='ui left corner label'><i className='search icon' /></div>
-            <i className='remove link icon' onClick={() => onChangeFilter('')} />
+          <Input icon labelPosition='left corner' className='flex'>
+            <Label corner='left' icon='search' />
             <DebounceInput
+              placeholder='Search...'
               minLength={1}
               debounceTimeout={300}
-              placeholder='Search...'
               onChange={(event) => onChangeFilter(event.target.value)}
-              value={filterValue}/>
-          </div>
+              value={filterValue}
+            />
+            <Icon link name='remove' onClick={() => changeFilter('')}/>
+          </Input>
           <div className='flex-2 layout horizontal end-justified'>
-            <a className='ui teal labeled icon button' onClick={() => onCreate(availableUsageRights, availableCategories)}>
-              <i className='plus icon' />New Tags
-            </a>
+            <Button color='teal' content='New Tags' labelPosition='left' icon='plus'
+              onClick={() => onCreate(availableUsageRights, availableCategories)}
+            />
           </div>
         </div>
-        <Scrollbars className='flex ui dimmable'>
+        <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal wrap'>
-            {(isFetching => {
-              if (isFetching) {
-                return (
-                  <div className='ui active inverted dimmer'>
-                    <div className='ui text loader'>Fetching...</div>
-                  </div>
-                );
-              }
-            })(isFetching)}
+            {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
             {availableCategories.map(cat => {
               return (
                 <CategoryCard
@@ -86,9 +74,9 @@ class Tags extends React.Component {
         </Scrollbars>
       </div >
     );
-
   }
 }
+
 Tags.propTypes = {
   tags: React.PropTypes.array,
   availableCategories: React.PropTypes.array,

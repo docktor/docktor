@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import { Link } from 'react-router';
+import { Card, Icon, Button } from 'semantic-ui-react';
 
 // Dependencies
 import moment from 'moment';
@@ -8,35 +9,33 @@ import moment from 'moment';
 // Style
 import './group.card.component.scss';
 
-
-
 // GroupCard Component
 class GroupCard extends React.Component {
-  render() {
+  render = () => {
     const group = this.props.group;
     const nbContainers = (group.containers ? group.containers.length : 0);
+    const containers = nbContainers > 0 ? nbContainers + (nbContainers > 1 ? ' containers' : ' container') : 'No containers';
     return (
-      <div className='ui card group'>
-        <div className='content'>
-          <div className='ui left floated link header'>
-            <Link to={`/groups/${group.id}/view`} title={group.title}>
-              <i className='travel icon' />{group.title}
-            </Link>
-          </div>
-          <Link to={`/groups/${group.id}/edit`} title={`Edit ${group.title}`} className='ui tiny compact top right attached right labeled icon teal button'>
-            <i className='edit icon'/> Edit
-          </Link>
-          <div className='description' title={group.description}>{group.description}</div>
-        </div>
-        <div className='extra content'>
-          <i className='cube icon' />
-          {`${nbContainers} ${nbContainers > 1 ? 'Containers' : 'Container'}`}
-          <div className='ui right floated'>{moment(group.created).fromNow()}</div>
-        </div>
-      </div>
+      <Card className='group-card'>
+        <Card.Content>
+          <Card.Header as={Link} to={`/groups/${group.id}/view`} title={group.title} className='link'>
+            <Icon name='travel' />{group.title}
+          </Card.Header>
+          <Button as={Link} to={`/groups/${group.id}/edit`} title={'Edit ' + group.title} color='teal' size='tiny'
+            compact className='top right attached' labelPosition='left' icon='edit' content='Edit'
+          />
+          <Card.Description title={group.description}>{group.description}</Card.Description>
+        </Card.Content>
+        <Card.Content extra className='layout horizontal'>
+          <Icon name='cube' />
+          <span className='flex'>{containers}</span>
+          <span>{moment(group.created).fromNow()}</span>
+        </Card.Content>
+      </Card>
     );
   }
 }
+
 GroupCard.propTypes = { group: React.PropTypes.object };
 
 export default GroupCard;

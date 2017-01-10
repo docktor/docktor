@@ -13,8 +13,7 @@ const groupsReducer = (state, action) => {
       selected : {
         ...entitiesState.selected,
         isFetching: false,
-        didInvalidate: true,
-        id: ''
+        didInvalidate: true
       }
     };
   case GroupsConstants.REQUEST_GROUP:
