@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Form, Input, Button, Dimmer, Loader, Label, Icon, Popup } from 'semantic-ui-react';
+import { Form, Input, Button, Dimmer, Loader, Label, Icon, Popup, Grid } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
 // Thunks / Actions
@@ -73,10 +73,10 @@ class DaemonComponent extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (e, { name, value, checked }) => {
     const { daemon, errors } = this.state;
     const state = {
-      daemon: { ...daemon, [name]:value },
+      daemon: { ...daemon, [name]:value || checked },
       errors: { details: [...errors.details], fields: { ...errors.fields } }
     };
     delete state.errors.fields[name];
@@ -155,6 +155,9 @@ class DaemonComponent extends React.Component {
         Docktor recommends to have a cAdvisor instance for each daemon.
       </div>
     );
+
+    const daemonActive = typeof daemon.active !== 'undefined' ? daemon.active : true;
+
     return (
       <div className='flex layout vertical start-justified daemon-page'>
         <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
@@ -166,22 +169,27 @@ class DaemonComponent extends React.Component {
                   <Icon name='arrow left' fitted/>
                 </Link>
                 {this.props.daemon.name || 'New Daemon'}
-                <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
-                  disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='right-floated'
-                />
+                {daemon.id && <Button size='large' content='Remove' color='red' labelPosition='left' icon='trash'
+                  onClick={() => this.props.onDelete(daemon)} className='right-floated' />}
               </h1>
               <Form className='daemon-form'>
                 <Input type='hidden' name='created' value={daemon.created || ''} onChange={this.handleChange} />
                 <Input type='hidden' name='id' value={daemon.id || ''} onChange={this.handleChange} />
 
-                <Form.Group widths='two'>
-                  <Form.Input required label='Name' name='name' value={daemon.name || ''} onChange={this.handleChange}
-                    type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['name']}
-                  />
-                  <Form.TextArea label='Description' name='description' value={daemon.description || ''} onChange={this.handleChange}
-                    rows='4' placeholder='A description of the daemon' autoComplete='off'
-                  />
-                </Form.Group>
+                <Grid columns='equal' as={Form.Group}>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Form.Input required label='Name' name='name' value={daemon.name || ''} onChange={this.handleChange}
+                        type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['name']} />
+                      <Form.Checkbox label='Mark this daemon as active' name='active' toggle checked={daemonActive} className='field toggle-button' onChange={this.handleChange} />
+                    </Grid.Column>
+
+                    <Grid.Column>
+                      <Form.TextArea label='Description' name='description' value={daemon.description || ''} onChange={this.handleChange}
+                        rows='4' placeholder='A description of the daemon' autoComplete='off' />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
 
                 <Form.Group>
                   {this.renderSites(sites, daemon, errors)}
