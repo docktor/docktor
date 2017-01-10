@@ -117,6 +117,26 @@ func (s *Rest) GetAllUserRest() ([]UserRest, error) {
 	return GetUsersRest(users), nil
 }
 
+func updateUserAccountData(userFromDocktor types.User, email, displayName, firstName, lastName *string) types.User {
+	if userFromDocktor.Provider == types.LocalProvider {
+		// Can update personal data only if it's a local user
+		// as LDAP providers are masters of this type of data
+		if email != nil {
+			userFromDocktor.Email = *email
+		}
+		if displayName != nil {
+			userFromDocktor.DisplayName = *displayName
+		}
+		if firstName != nil {
+			userFromDocktor.FirstName = *firstName
+		}
+		if lastName != nil {
+			userFromDocktor.LastName = *lastName
+		}
+	}
+	return userFromDocktor
+}
+
 // UpdateUser allows a user to modify his own profile
 // This method updates: FirstName, LastName, DisplayName, Email (only in local provider mode), Tags, Role
 // The controls for rights to modify a field must be done before calling this method
@@ -137,22 +157,7 @@ func (s *Rest) UpdateUser(userID string, email, displayName, firstName, lastName
 		return UserRest{}, errors.New("User does not exists")
 	}
 
-	if userFromDocktor.Provider == types.LocalProvider {
-		// Can update personal data only if it's a local user
-		// as LDAP providers are masters of this type of data
-		if email != nil {
-			userFromDocktor.Email = *email
-		}
-		if displayName != nil {
-			userFromDocktor.DisplayName = *displayName
-		}
-		if firstName != nil {
-			userFromDocktor.FirstName = *firstName
-		}
-		if lastName != nil {
-			userFromDocktor.LastName = *lastName
-		}
-	}
+	userFromDocktor = updateUserAccountData(userFromDocktor, email, displayName, firstName, lastName)
 
 	if tags != nil {
 		userFromDocktor.Tags = tags
