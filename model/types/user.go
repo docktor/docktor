@@ -18,6 +18,11 @@ const (
 	UserRole Role = "user"
 )
 
+// IsValid checks if a role is valid
+func (r Role) IsValid() bool {
+	return r == AdminRole || r == SupervisorRole || r == UserRole
+}
+
 // Provider determines origin of user (local user, LDAP user or any other protocol)
 type Provider string
 
@@ -42,4 +47,5 @@ type User struct {
 	Created     time.Time       `bson:"created" json:"created"`
 	Updated     time.Time       `bson:"updated" json:"updated"`
 	Favorites   []bson.ObjectId `bson:"favorites" json:"favorites"`
+	Tags        []bson.ObjectId `bson:"tags" json:"tags"`
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import classNames from 'classnames';
 
-import { AUTH_ADMIN_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants.js';
 import UsersThunks from '../../../modules/users/users.thunks.js';
 
 // Style
@@ -52,7 +52,16 @@ class UserCardComponent extends React.Component {
     return (
       <div id={user.id} className='ui card user'>
         <div className='content'>
-          <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />{user.displayName}
+          <img className='ui avatar image' alt='Avatar' src='/images/avatar.jpg' />
+          {
+            connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE
+            ?
+            <Link to={`/users/${user.id}`}>
+              {user.displayName}
+            </Link>
+            :
+            user.displayName
+          }
           <div className={rolesDropdownClasses}>
             <input type='hidden' name='role' />
             <div className='default text'>
@@ -64,10 +73,12 @@ class UserCardComponent extends React.Component {
                 const itemClasses = classNames('item', {
                   'active selected': role === user.role
                 });
-                return (<div key={role} className={itemClasses} data-value={role}>
-                  <i className={classNames(getRoleIcon(role), 'icon')} />
-                  {getRoleLabel(role)}
-                </div>);
+                return (
+                  <div key={role} className={itemClasses} data-value={role}>
+                    <i className={classNames(getRoleIcon(role), 'icon')} />
+                    {getRoleLabel(role)}
+                  </div>
+                );
               })}
             </div>
           </div>

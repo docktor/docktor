@@ -82,7 +82,7 @@ const requestDeleteDaemon = (id) => {
 const daemonDeleted = (response) => {
   return {
     type: DaemonsConstants.DAEMON_DELETED,
-    id: response.id,
+    id: response,
     receivedAt: Date.now()
   };
 };

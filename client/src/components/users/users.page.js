@@ -25,10 +25,7 @@ class Users extends React.Component {
   }
 
   render() {
-    const users = this.props.users;
-    const filterValue = this.props.filterValue;
-    const fetching = this.props.isFetching;
-    const changeFilter = this.props.changeFilter;
+    const { users, filterValue, changeFilter,  isFetching } = this.props;
     return (
       <div className='flex layout vertical start-justified'>
         <div className='layout horizontal justified users-bar'>
@@ -38,7 +35,7 @@ class Users extends React.Component {
             <DebounceInput
               minLength={1}
               debounceTimeout={300}
-              placeholder='Search...'
+              placeholder='Search…'
               onChange={(event) => changeFilter(event.target.value)}
               value={filterValue}/>
           </div>
@@ -46,20 +43,12 @@ class Users extends React.Component {
         </div>
         <Scrollbars className='flex ui dimmable'>
           <div className='flex layout horizontal center-center wrap user-list'>
-              {(fetching => {
-                if (fetching) {
-                  return (
-                      <div className='ui active inverted dimmer'>
-                        <div className='ui text loader'>Fetching</div>
-                      </div>
-                  );
-                }
-              })(fetching)}
-              {users.map(user => {
-                return (
-                  <UserCard user={user} key={user.id} />
-                );
-              })}
+              {isFetching && (
+                  <div className='ui active inverted dimmer'>
+                    <div className='ui text loader'>Fetching</div>
+                  </div>
+              )}
+              {users.map(user => <UserCard user={user} key={user.id} />)}
           </div>
         </Scrollbars>
       </div>
@@ -85,10 +74,8 @@ const mapStateToUsersProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToUsersProps = (dispatch) => {
   return {
-    fetchUsers : () => {
-      dispatch(UsersThunks.fetchIfNeeded());
-    },
-    changeFilter: (filterValue) => dispatch(UsersActions.changeFilter(filterValue))
+    fetchUsers : () => dispatch(UsersThunks.fetchIfNeeded()),
+    changeFilter: filterValue => dispatch(UsersActions.changeFilter(filterValue))
   };
 };
 

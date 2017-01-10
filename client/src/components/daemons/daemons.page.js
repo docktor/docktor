@@ -65,11 +65,7 @@ class Daemons extends React.Component {
               : ''
             }
             <div className='flex layout horizontal center-center wrap daemons-list'>
-              {daemons.map(daemon => {
-                return (
-                  <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />
-                );
-              })}
+              {daemons.map(daemon => <DaemonCard daemon={daemon} site={sites[daemon.site]} key={daemon.id} />)}
             </div>
           </Scrollbars>
         </div>

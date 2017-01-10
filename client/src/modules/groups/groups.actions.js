@@ -54,7 +54,7 @@ const requestDeleteGroup = (id) => {
 const groupDeleted = (response) => {
   return {
     type: GroupsConstants.GROUP_DELETED,
-    id: response.id,
+    id: response,
     receivedAt: Date.now()
   };
 };

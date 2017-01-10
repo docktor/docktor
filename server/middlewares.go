@@ -106,44 +106,43 @@ func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.String(http.StatusUnauthorized, fmt.Sprintf("Your account %q has been removed. Please create a new one.", claims.Username))
 		}
 
-		c.Set("user", user)
+		c.Set("authuser", user)
 
 		return next(c)
 
 	}
 }
 
-// isReadOnlyAdmin is a middleware checking that user has rights to see administration data as read-only.
-func isReadOnlyAdmin(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		// Get user from context
-		user := c.Get("user").(users.UserRest)
+// hasRole is a middleware checking if the currently authenticated users has sufficient privileges to reach a route
+func hasRole(role types.Role) func(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// Get user from context
+			user := c.Get("authuser").(users.UserRest)
 
-		// Go on if admin or supervisor
-		if user.Role == types.AdminRole || user.Role == types.SupervisorRole {
-			return next(c)
+			// Check if the user has at least the required role
+			log.WithFields(log.Fields{
+				"username":     user.Username,
+				"userRole":     user.Role,
+				"requiredRole": role,
+			}).Info("Checking if user has correct privileges")
+
+			switch role {
+			case types.AdminRole:
+				if user.Role == types.AdminRole {
+					return next(c)
+				}
+			case types.SupervisorRole:
+				if user.Role == types.AdminRole || user.Role == types.SupervisorRole {
+					return next(c)
+				}
+			case types.UserRole:
+				return next(c)
+			}
+
+			// Refuse connection otherwise
+			return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
 		}
-
-		// Refuse connection otherwise
-		return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
-
-	}
-}
-
-// isAdmin is a middleware checking that user has rights to modify administration data as read-write.
-func isAdmin(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		// Get user from context
-		user := c.Get("user").(users.UserRest)
-
-		// Go on if admin
-		if user.Role == types.AdminRole {
-			return next(c)
-		}
-
-		// Refuse connection otherwise
-		return c.String(http.StatusForbidden, fmt.Sprintf(NotAuthorized, user.Username))
-
 	}
 }
 

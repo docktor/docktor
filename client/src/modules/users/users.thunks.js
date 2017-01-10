@@ -1,23 +1,27 @@
 // Imports for fetch API
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
+import { push } from 'react-router-redux';
 import { withAuth } from '../auth/auth.wrappers.js';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
-import { generateEntitiesThunks } from '../utils/entities.js';
 
-// User Actions
+import { generateEntitiesThunks } from '../utils/entities.js';
 import UsersActions from './users.actions.js';
 
 /********** Thunk Functions **********/
 
-// saveUser
-const saveUser = (user) => {
-  const id = user.id ? user.id : -1;
-  return function (dispatch) {
+// Thunk to save users
+// It's used to modify an existing user, not to create one
+const saveUser = user => {
+  user.created = new Date(user.created);
+  const endpoint = user.id;
+  const method = 'PUT';
+  return dispatch => {
 
     dispatch(UsersActions.requestSaveUser(user));
-    let request = new Request('/api/users/' + id, withAuth({
-      method: 'PUT',
+
+    const request = new Request(`/api/users/${endpoint}`, withAuth({
+      method: method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -26,14 +30,15 @@ const saveUser = (user) => {
     }));
 
     return fetch(request)
-    .then(checkHttpStatus)
-    .then(parseJSON)
-    .then(response => {
-      dispatch(UsersActions.receiveSavedUser(response));
-    })
-    .catch(error => {
-      handleError(error, UsersActions.invalidSaveUser(user), dispatch);
-    });
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(UsersActions.receiveSavedUser(response));
+        dispatch(push('/users'));
+      })
+      .catch(error => {
+        handleError(error, UsersActions.invalidRequestUser, dispatch);
+      });
   };
 };
 
@@ -56,13 +61,32 @@ const deleteUser = (user) => {
       dispatch(UsersActions.receiveDeletedUser(response));
     })
     .catch(error => {
-      handleError(error, UsersActions.invalidDeleteUser(user), dispatch);
+      handleError(error, UsersActions.invalidRequestUser, dispatch);
     });
+  };
+};
+
+// Thunk to fetch users
+const fetchUser = id => {
+  return dispatch => {
+
+    dispatch(UsersActions.requestUser(id));
+
+    return fetch(`/api/users/${id}`, withAuth({ method: 'GET' }))
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(UsersActions.receiveUser(response));
+      })
+      .catch(error => {
+        handleError(error, UsersActions.invalidRequestUser, dispatch);
+      });
   };
 };
 
 export default {
   ...generateEntitiesThunks('users'),
   saveUser,
-  deleteUser
+  deleteUser,
+  fetchUser
 };

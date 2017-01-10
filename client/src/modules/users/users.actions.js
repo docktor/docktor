@@ -2,6 +2,27 @@
 import UsersConstants from './users.constants.js';
 import { generateEntitiesActions } from '../utils/entities.js';
 
+
+// Change filter
+const changeFilter = (filterValue) => {
+  return {
+    type: UsersConstants.CHANGE_FILTER,
+    filterValue
+  };
+};
+
+// Request a user
+const requestUser = id => ({
+  type: UsersConstants.REQUEST_USER,
+  id
+});
+
+// User is received
+const receiveUser = user => ({
+  type: UsersConstants.RECEIVE_USER,
+  user
+});
+
 // Request save user
 const requestSaveUser = (user) => {
   return {
@@ -13,66 +34,38 @@ const requestSaveUser = (user) => {
 // User was saved
 const receiveSavedUser = (user) => {
   return {
-    type: UsersConstants.RECEIVE_SAVED_USER,
+    type: UsersConstants.USER_SAVED,
     user
   };
 };
 
-// Users API returns an Error
-const invalidSaveUser = (user) => {
-  return function(error) {
-    return {
-      type: UsersConstants.INVALID_SAVE_USER,
-      user,
-      error
-    };
-  };
-};
+// Request site deletion
+const requestDeleteUser = id => ({
+  type: UsersConstants.REQUEST_DELETE_USER,
+  id
+});
 
+// User is deleted
+const receiveDeletedUser = response => ({
+  type: UsersConstants.USER_DELETED,
+  id: response,
+  receivedAt: Date.now()
+});
 
-// Request delete user
-const requestDeleteUser = (user) => {
-  return {
-    type: UsersConstants.REQUEST_DELETE_USER,
-    user
-  };
-};
-
-// User was deleted
-const receiveDeletedUser = (removedID) => {
-  return {
-    type: UsersConstants.RECEIVE_DELETED_USER,
-    removedID
-  };
-};
-
-// Users API returns an Error
-const invalidDeleteUser = (user) => {
-  return function(error) {
-    return {
-      type: UsersConstants.INVALID_DELETE_USER,
-      user,
-      error
-    };
-  };
-};
-
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: UsersConstants.CHANGE_FILTER,
-    filterValue
-  };
-};
-
+// User API returns an Error
+const invalidRequestUser = error => ({
+  type: UsersConstants.INVALID_REQUEST_USER,
+  error
+});
 
 export default {
   ...generateEntitiesActions('users'),
+  changeFilter,
+  requestUser,
+  receiveUser,
   requestSaveUser,
   receiveSavedUser,
-  invalidSaveUser,
   requestDeleteUser,
   receiveDeletedUser,
-  invalidDeleteUser,
-  changeFilter
+  invalidRequestUser
 };

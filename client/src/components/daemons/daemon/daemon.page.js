@@ -118,7 +118,7 @@ class DaemonComponent extends React.Component {
       const items = Object.values(sites.items);
       return (
         <div id='sites-dropdown' className='ui fluid search selection dropdown'>
-          <input type='hidden' name='site' defaultValue={daemon.site}/>
+          <input type='hidden' name='site' defaultValue={daemon.site} />
           <i className='dropdown icon' />
           <div className='default text'>Select Site</div>
           <div className='menu'>
@@ -157,9 +157,7 @@ class DaemonComponent extends React.Component {
 
   render() {
     const daemon = this.state;
-    const isFetching = this.props.isFetching;
-    const sites = this.props.sites;
-    const tags = this.props.tags;
+    const { isFetching, sites, tags } = this.props;
     const popup = `
       <div>
         Example: <strong>http://host:port/api/v1.x</strong>
@@ -182,11 +180,11 @@ class DaemonComponent extends React.Component {
                 <div className='flex layout vertical start-justified daemon-details'>
                   <h1>
                     <Link to={'/daemons'}>
-                      <i className='arrow left icon'/>
+                      <i className='arrow left icon' />
                     </Link>
                     {this.props.daemon.name || 'New Daemon'}
                     <button disabled={!daemon.id} onClick={() => this.props.onDelete(daemon)} className='ui red labeled icon button right-floated'>
-                      <i className='trash icon'/>Remove
+                      <i className='trash icon' />Remove
                     </button>
                   </h1>
                   <form className='ui form daemon-form'>
@@ -328,10 +326,10 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon: (id) => dispatch(DaemonsThunks.fetchDaemon(id)),
+    fetchDaemon: id => dispatch(DaemonsThunks.fetchDaemon(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: (daemon) => dispatch(DaemonsThunks.saveDaemon(daemon)),
+    onSave: daemon => dispatch(DaemonsThunks.saveDaemon(daemon)),
     onDelete: daemon => {
       const callback = () => dispatch(DaemonsThunks.deleteDaemon(daemon.id));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));

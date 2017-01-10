@@ -8,6 +8,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/users"
 	"gopkg.in/mgo.v2/bson"
@@ -47,7 +48,7 @@ func (u *Users) Update(c echo.Context) error {
 	// This route is only for update of existing user.
 	// Another route exists for create a new user
 	if userRest.ID == "" || userRest.ID == "-1" {
-		return c.String(http.StatusBadRequest, "Bad user ID. User can not be created with this route. Please register.")
+		return c.String(http.StatusBadRequest, "Invalid user ID. User can not be created with this route. Please register.")
 	}
 
 	// Only admin or current user are authorized to modify user
@@ -55,8 +56,30 @@ func (u *Users) Update(c echo.Context) error {
 		return c.String(http.StatusForbidden, ErrNotAuthorized.Error())
 	}
 
+	var email, displayName, firstName, lastName *string
+	var role *types.Role
+	var tags []bson.ObjectId
+
+	if authenticatedUser.IsAdmin() {
+		log.WithFields(log.Fields{
+			"newTags": userRest.Tags,
+			"newRole": userRest.Role,
+		}).Info("Modifying user as Admin")
+		// An admin is allowed to modify the following fields
+		tags = userRest.Tags
+		role = &userRest.Role
+	}
+
+	if authenticatedUser.ID == userRest.ID {
+		// A user is allowed to modify the following fields from his own profile
+		email = &userRest.Email
+		displayName = &userRest.DisplayName
+		firstName = &userRest.FirstName
+		lastName = &userRest.LastName
+	}
+
 	webservice := users.Rest{Docktor: docktorAPI}
-	res, err := webservice.UpdateUser(userRest)
+	res, err := webservice.UpdateUser(userRest.ID, email, displayName, firstName, lastName, role, tags)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while saving user: %v", err))
 	}
@@ -145,6 +168,13 @@ func (u *Users) Profile(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, auth.ErrInvalidCredentials.Error())
 	}
 
+	return c.JSON(http.StatusOK, user)
+}
+
+//Get user from docktor
+func (u *Users) Get(c echo.Context) error {
+	// No access control on purpose
+	user := c.Get("user").(users.UserRest)
 	return c.JSON(http.StatusOK, user)
 }
 

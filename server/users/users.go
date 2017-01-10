@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/model/types"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Rest contains APIs entrypoints needed for accessing users
@@ -16,17 +18,18 @@ type Rest struct {
 
 // UserRest contains data of user, amputed from sensible data
 type UserRest struct {
-	ID          string         `json:"id"`
-	Username    string         `json:"username"`
-	FirstName   string         `json:"firstName"`
-	LastName    string         `json:"lastName"`
-	DisplayName string         `json:"displayName"`
-	Role        types.Role     `json:"role"`
-	Email       string         `json:"email"`
-	Provider    types.Provider `json:"provider"`
+	ID          string          `json:"id"`
+	Username    string          `json:"username"`
+	FirstName   string          `json:"firstName"`
+	LastName    string          `json:"lastName"`
+	DisplayName string          `json:"displayName"`
+	Role        types.Role      `json:"role"`
+	Email       string          `json:"email"`
+	Provider    types.Provider  `json:"provider"`
+	Tags        []bson.ObjectId `json:"tags"`
 }
 
-// IsAdmin checks that the user is an admin, meaning he can do anythin on the application.
+// IsAdmin checks that the user is an admin, meaning he can do anything on the application.
 func (u UserRest) IsAdmin() bool {
 	return u.Role == types.AdminRole
 }
@@ -61,6 +64,7 @@ func GetUserRest(user types.User) UserRest {
 		Email:       user.Email,
 		Role:        user.Role,
 		Provider:    user.Provider,
+		Tags:        user.Tags,
 	}
 }
 
@@ -74,6 +78,7 @@ func OverwriteUserFromRest(userToOverwrite types.User, userWithNewData UserRest)
 	userToOverwrite.DisplayName = userWithNewData.DisplayName
 	userToOverwrite.Email = userWithNewData.Email
 	userToOverwrite.Role = userWithNewData.Role
+	userToOverwrite.Tags = userWithNewData.Tags
 	return userToOverwrite
 }
 
@@ -112,35 +117,57 @@ func (s *Rest) GetAllUserRest() ([]UserRest, error) {
 	return GetUsersRest(users), nil
 }
 
-// UpdateUser saves rest user in database
-// Password, username and provider are not updatable here
-func (s *Rest) UpdateUser(user UserRest) (UserRest, error) {
+func updateUserAccountData(userFromDocktor types.User, email, displayName, firstName, lastName *string) types.User {
+	if userFromDocktor.Provider == types.LocalProvider {
+		// Can update personal data only if it's a local user
+		// as LDAP providers are masters of this type of data
+		if email != nil {
+			userFromDocktor.Email = *email
+		}
+		if displayName != nil {
+			userFromDocktor.DisplayName = *displayName
+		}
+		if firstName != nil {
+			userFromDocktor.FirstName = *firstName
+		}
+		if lastName != nil {
+			userFromDocktor.LastName = *lastName
+		}
+	}
+	return userFromDocktor
+}
+
+// UpdateUser allows a user to modify his own profile
+// This method updates: FirstName, LastName, DisplayName, Email (only in local provider mode), Tags, Role
+// The controls for rights to modify a field must be done before calling this method
+func (s *Rest) UpdateUser(userID string, email, displayName, firstName, lastName *string, role *types.Role, tags []bson.ObjectId) (UserRest, error) {
 	if s.Docktor == nil {
 		return UserRest{}, errors.New("Docktor API is not initialized")
 	}
 
+	log.WithField("userID", userID).Info("Updating user")
+
 	// Search for user
-	userFromDocktor, err := s.Docktor.Users().FindByID(user.ID)
+	userFromDocktor, err := s.Docktor.Users().FindByID(userID)
 	if err != nil {
 		return UserRest{}, err
 	}
+
 	if userFromDocktor.ID.Hex() == "" {
 		return UserRest{}, errors.New("User does not exists")
 	}
 
-	if userFromDocktor.Provider == types.LocalProvider {
-		// Can update personal data only if it's a local user
-		// as LDAP providers are masters of this type of data
-		userFromDocktor.Email = user.Email
-		userFromDocktor.DisplayName = user.DisplayName
-		userFromDocktor.FirstName = user.FirstName
-		userFromDocktor.LastName = user.LastName
-	}
-	userFromDocktor.Updated = time.Now()
+	userFromDocktor = updateUserAccountData(userFromDocktor, email, displayName, firstName, lastName)
 
-	if user.HasValidRole() {
-		userFromDocktor.Role = user.Role
+	if tags != nil {
+		userFromDocktor.Tags = tags
 	}
+
+	if role != nil && role.IsValid() {
+		userFromDocktor.Role = *role
+	}
+
+	userFromDocktor.Updated = time.Now()
 
 	// TODO: update groups and favorites
 

@@ -1,11 +1,12 @@
 package types
 
 import (
+	"strings"
+	"time"
+
 	"github.com/Machiel/slugify"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"strings"
-	"time"
 )
 
 //TagName is the name of a tag, represented by its raw name and its slugified one (Slug is unique)

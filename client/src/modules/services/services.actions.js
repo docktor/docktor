@@ -54,7 +54,7 @@ const requestDeleteService = (id) => {
 const serviceDeleted = (response) => {
   return {
     type: ServicesConstants.SERVICE_DELETED,
-    id: response.id,
+    id: response,
     receivedAt: Date.now()
   };
 };

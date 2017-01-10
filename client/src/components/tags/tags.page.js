@@ -75,17 +75,16 @@ class Tags extends React.Component {
             {availableCategories.map(cat => {
               return (
                 <CategoryCard
-                category={cat}
-                tags={tags.filter(tag => tag.category.slug === cat.id)}
-                key={cat.id}
-                onDelete={(tag) => onDelete(tag)}
-                onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
+                  category={cat}
+                  tags={tags.filter(tag => tag.category.slug === cat.id)}
+                  key={cat.id}
+                  onDelete={(tag) => onDelete(tag)}
+                  onEdit={(tag) => onEdit(tag, availableUsageRights, availableCategories)} />
               );
             })}
           </div>
         </Scrollbars>
       </div >
-
     );
 
   }

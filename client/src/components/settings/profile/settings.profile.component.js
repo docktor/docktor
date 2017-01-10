@@ -39,7 +39,7 @@ class ProfilePane extends React.Component {
     $('#profile > .ui.form')
       .form({
         fields: {
-          email : ['email', 'empty', 'doesntContain[ ]'],
+          email: ['email', 'empty', 'doesntContain[ ]'],
           firstname: ['empty'],
           lastname: ['empty']
         },
@@ -50,7 +50,7 @@ class ProfilePane extends React.Component {
           return false;
         }
       })
-    ;
+      ;
   }
 
   render() {
@@ -58,29 +58,29 @@ class ProfilePane extends React.Component {
     return (
       <div id='profile'>
         <h1>{this.props.title}</h1>
-         <form className='ui form' >
-            <div className='required field'>
-              <label>
-                Username
+        <form className='ui form' >
+          <div className='required field'>
+            <label>
+              Username
               </label>
-              <input type='text' defaultValue={user.username} placeholder='A unique username' autoComplete='off' disabled/>
-            </div>
+            <input type='text' defaultValue={user.username} placeholder='A unique username' autoComplete='off' disabled />
+          </div>
           <div className='top-row'>
             <div className='required field'>
               <label>
                 First Name
               </label>
               <input type='text' ref='firstname' name='firstname' defaultValue={user.firstName}
-              placeholder='First Name' autoComplete='off'
-              disabled={this._isDisabled(user) ? 'true' : ''} />
+                placeholder='First Name' autoComplete='off'
+                disabled={this._isDisabled(user) ? 'true' : ''} />
             </div>
             <div className='required field'>
               <label>
                 Last Name
               </label>
               <input type='text' ref='lastname' name='lastname' defaultValue={user.lastName}
-              placeholder='Last Name' autoComplete='off'
-              disabled={this._isDisabled(user) ? 'true' : ''}/>
+                placeholder='Last Name' autoComplete='off'
+                disabled={this._isDisabled(user) ? 'true' : ''} />
             </div>
           </div>
           <div className='required field'>
@@ -88,43 +88,42 @@ class ProfilePane extends React.Component {
               Email Address
             </label>
             <input type='email' ref='email' name='email' defaultValue={user.email}
-            placeholder='A valid email address' autoComplete='off'
-            disabled={this._isDisabled(user) ? 'true' : ''}/>
+              placeholder='A valid email address' autoComplete='off'
+              disabled={this._isDisabled(user) ? 'true' : ''} />
           </div>
           <div className={'ui red labeled icon button button-block' + (user.isDeleting ? ' loading' : '')} tabIndex='0' onClick={() => this._removeAccount()}>
             <i className='trash icon' />Remove your account
           </div>
           {!user.isFetching && user.errorMessage &&
-              <p className='error api'>{user.errorMessage}</p>
+            <p className='error api'>{user.errorMessage}</p>
           }
           <div className='ui error message' />
           {this._isDisabled(user) &&
-              <p className='info api'>You can't edit your personal data because it's own by a LDAP provider</p>
+            <p className='info api'>You can't edit your personal data because it's own by a LDAP provider</p>
           }
           <button
             type='submit' className={'ui button button-block submit' + (user.isFetching ? ' loading' : '')}
             disabled={this._isDisabled(user) ? 'true' : ''}>{this.props.submit}
           </button>
         </form>
-        <Rodal visible={this.state.isRemovalModalVisible}
-            onClose={() => this._closeRemoveAccountModal()}>
-            <div className='ui active small modal'>
-                <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
-                <div className='header'><i className='large trash icon' /> Remove your account</div>
-                <div className='content'>
-                    <h2>Are you sure to delete your account ?</h2>
-                    <p>This action is irreversible and you will lose all your data</p>
-                </div>
-                <div className='actions'>
-                    <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
-                        No
-                    </div>
-                    <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
-                        Yes
-                        <i className='trash icon' />
-                    </div>
-                </div>
-            </div>
+        <Rodal visible={this.state.isRemovalModalVisible} onClose={() => this._closeRemoveAccountModal()}>
+          <div className='ui active small modal'>
+              <i className='close circle icon' onClick={() =>this._closeRemoveAccountModal()} />
+              <div className='header'><i className='large trash icon' /> Remove your account</div>
+              <div className='content'>
+                  <h2>Are you sure to delete your account ?</h2>
+                  <p>This action is irreversible and you will lose all your data</p>
+              </div>
+              <div className='actions'>
+                  <div className='ui black button' onClick={() => this._closeRemoveAccountModal()}>
+                      No
+                  </div>
+                  <div className='ui teal right labeled icon button' onClick={() => this._validateRemoval()}>
+                      Yes
+                      <i className='trash icon' />
+                  </div>
+              </div>
+          </div>
         </Rodal>
       </div>
     );
@@ -140,7 +139,7 @@ class ProfilePane extends React.Component {
       lastname: lastname.value.trim(),
       displayName: firstname.value.trim() + ' ' + lastname.value.trim()
     };
-      // Override user with values defined by authenticated person
+    // Override user with values defined by authenticated person
     const userToSave = Object.assign({}, this.props.user, account);
     this.props.onSave(userToSave);
   }
