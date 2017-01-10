@@ -19,11 +19,11 @@ class GroupCard extends React.Component {
       <div className='ui card group'>
         <div className='content'>
           <div className='ui left floated link header'>
-            <Link to={'/view/' + group.id} title={group.title}>
+            <Link to={`/groups/${group.id}/view`} title={group.title}>
               <i className='travel icon' />{group.title}
             </Link>
           </div>
-          <Link to={'/groups/' + group.id} title={'Edit ' + group.title} className='ui tiny compact top right attached right labeled icon teal button'>
+          <Link to={`/groups/${group.id}/edit`} title={`Edit ${group.title}`} className='ui tiny compact top right attached right labeled icon teal button'>
             <i className='edit icon'/> Edit
           </Link>
           <div className='description' title={group.description}>{group.description}</div>

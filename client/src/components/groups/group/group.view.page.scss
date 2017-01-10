@@ -1,0 +1,139 @@
+$form-bg: #2c3e50;
+$white: #fff;
+
+$main: #00948d;
+$main-light: lighten($main, 5%);
+$main-dark: darken($main, 5%);
+
+$gray-light: #a0b3b0;
+$gray: #ddd;
+
+$thin: 300;
+$normal: 400;
+$bold: 600;
+$br: 4px;
+
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
+$yellow-button-color: #d29c01 !default;
+$yellow-button-color-hover: #c79400 !default;
+$yellow-button-color-active: #ad8000 !default;
+
+.group-view-page {
+
+  .ui.active.dimmer {
+    background-color: transparent;
+  }
+
+  .group-view-details {
+    background: rgba($form-bg, .9);
+    max-width: 80%;
+    min-width: 450px;
+    padding: 2em 5em;
+    width: 70%;
+
+    h1 {
+      color: $white;
+      font-weight: $thin;
+      margin: 0 0 30px;
+      text-transform: uppercase;
+
+      .right-floated {
+        float: right !important;
+      }
+    }
+
+    a {
+      color: $main;
+      text-decoration: none;
+      transition: .5s ease;
+      &:hover {
+        color: $main-dark;
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  .labelised-field {
+
+    margin-bottom: 1em;
+
+    &> .ui.label:first-child {
+      background-color: #3a6191;
+      border-radius: 0;
+      color: white;
+      line-height: 2.5em;
+      padding-bottom: 0;
+      padding-top: 0;
+      margin-right: 1em;
+      text-align: center;
+    }
+
+    .ui.label b {
+      font-size: small;
+    }
+
+  }
+
+  .members-list {
+    .buttons .button {
+      color: rgba(0, 0, 0, .6);
+    }
+    .buttons .button:hover {
+      color: rgba(0, 0, 0, .8);
+    }
+
+    .ui.card.member {
+      border: 1px solid #d4d4d5;
+      margin: 1em !important;
+      max-height: 100px;
+      .extra.content {
+        font-size: .9em;
+      }
+      .email {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ui.teal.button {
+        background-color: $teal-button-color !important;
+
+      }
+      .ui.teal.button:hover {
+        background-color: $teal-button-color-hover !important;
+      }
+      .ui.teal.button:active {
+        background-color: $teal-button-color-active !important;
+      }
+
+      .ui.yellow.button {
+        background-color: $yellow-button-color !important;
+
+      }
+      .ui.yellow.button:hover {
+        background-color: $yellow-button-color-hover !important;
+      }
+      .ui.yellow.button:active {
+        background-color: $yellow-button-color-active !important;
+      }
+
+      .ui.top.right.attached.button {
+        left: auto;
+        margin: 0;
+        padding: .75em 1em;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: auto;
+      }
+      .ui.provider.label {
+        background-color: #3a6191;
+        color: white;
+      }
+    }
+  }
+
+}
