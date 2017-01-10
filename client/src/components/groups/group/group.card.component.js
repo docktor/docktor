@@ -14,6 +14,7 @@ import './group.card.component.scss';
 class GroupCard extends React.Component {
   render() {
     const group = this.props.group;
+    const nbContainers = (group.containers ? group.containers.length : 0);
     return (
       <div className='ui card group'>
         <div className='content'>
@@ -29,7 +30,7 @@ class GroupCard extends React.Component {
         </div>
         <div className='extra content'>
           <i className='cube icon' />
-          {(group.containers ? group.containers.length : 0) + ' container(s)'}
+          {`${nbContainers} ${nbContainers > 1 ? 'Containers' : 'Container'}`}
           <div className='ui right floated'>{moment(group.created).fromNow()}</div>
         </div>
       </div>
