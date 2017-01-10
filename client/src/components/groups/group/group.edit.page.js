@@ -146,7 +146,7 @@ class GroupEditComponent extends React.Component {
               <FilesystemsBox filesystems={group.filesystems || []} daemons={daemons} ref='filesystems'>
                 <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.</p>
               </FilesystemsBox>
-              <MembersBox members={group.members} users={users} ref='members'>
+              <MembersBox members={group.members || []} users={users} ref='members'>
                 <p>Members of groups are able to see it and interact with containers.</p>
                 <ul>
                   <li>Moderators are able to add other members and to interact with services (stop/start)</li>

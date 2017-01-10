@@ -1,8 +1,9 @@
 // React
 import React from 'react';
 import { Link } from 'react-router';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { Form, Segment, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import classNames from 'classnames';
 
 // Thunks / Actions
@@ -10,7 +11,6 @@ import TagsThunks from '../../../modules/tags/tags.thunks.js';
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
 import GroupsThunks from '../../../modules/groups/groups.thunks.js';
 import UsersThunks from '../../../modules/users/users.thunks.js';
-import ToastsActions from '../../../modules/toasts/toasts.actions.js';
 
 // Selectors
 import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors.js';
@@ -27,20 +27,28 @@ import './group.view.page.scss';
 // Group Component for view (with services and so on)
 class GroupViewComponent extends React.Component {
 
+  state = { group: {} }
+  roles = {}
+
   constructor(props) {
     super(props);
     this.state = { ...props.group };
     this.roles = {};
+
+  }
+
+  componentWillMount = () => {
     ALL_ROLES.forEach(role => {
       this.roles[role] = getRoleData(role);
     });
+    this.setState({ group: { ...this.props.group } });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...nextProps.group });
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ group: { ...nextProps.group } });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const groupId = this.props.groupId;
 
     if (groupId) {
@@ -51,149 +59,132 @@ class GroupViewComponent extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.isFetching) {
       this.refs.scrollbars.scrollTop();
     }
   }
 
-  getMembersEmail(members, users) {
+  getMembersEmail = (members, users) => {
     return members.map(member => users[member.user]).map(member => member.email);
   }
 
-  renderMembers(group, users) {
+  renderMembers = (group, users) => {
     if(users.isFetching) {
-      return <span><i className='notched circle loading icon' />Loading...</span>;
-    } else {
-      if (group.members && group.members.length > 0) {
-        const memberAddresses = this.getMembersEmail(group.members, users.items) || [];
-        const moderatorAdresses = this.getMembersEmail(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items) || [];
-        const mailtoModeratorAddressesClasses = classNames('ui icon button', { 'disabled': moderatorAdresses.length === 0 });
-        return (
-          <div className='members-list'>
-           <div className='ui buttons'>
-               <a href={`mailto:${memberAddresses.join(',')}?subject=[Docktor] ${group.title}`} className='ui icon button'><i className='mail icon' />Email all</a>
-               <a href={`mailto:${moderatorAdresses.join(',')}?subject=[Docktor] For ${group.title} moderators`} className={mailtoModeratorAddressesClasses}>
-                <i className='mail icon' />Email moderators
-               </a>
-           </div>
-           <div className='flex layout horizontal wrap'>
-            { group.members.map(member => {
+      return <span><Icon loading name='notched circle' />Loading...</span>;
+    }
+    if (group.members && group.members.length > 0) {
+      const memberAddresses = this.getMembersEmail(group.members, users.items) || [];
+      const moderatorAdresses = this.getMembersEmail(group.members.filter(m => m.role === GROUP_MODERATOR_ROLE), users.items) || [];
+      const mailtoModeratorAddressesClasses = classNames('ui icon button', { 'disabled': moderatorAdresses.length === 0 });
+      return (
+        <div className='members-list'>
+          <div className='ui buttons'>
+              <a href={`mailto:${memberAddresses.join(',')}?subject=[Docktor] ${group.title}`} className='ui icon button'><Icon name='mail' />Email all</a>
+              <a href={`mailto:${moderatorAdresses.join(',')}?subject=[Docktor] For ${group.title} moderators`} className={mailtoModeratorAddressesClasses}>
+                <Icon name='mail' />Email moderators
+              </a>
+          </div>
+          <div className='flex layout horizontal wrap'>
+            {group.members.map(member => {
               const user = users.items[member.user];
               if (user) {
                 // Only displays users who still exist
                 return (
                   <div key={user.id} className='ui card member'>
                     <div className='content'>
-                      <Link to={`/users/${user.id}`}><i className='user icon' />{user.displayName}</Link>
+                      <Link to={`/users/${user.id}`}><Icon name='user' />{user.displayName}</Link>
                       <div className='ui tiny right floated provider label'>
                         {member.role.toUpperCase()}
                       </div>
                     </div>
                     <div className='extra content'>
                       <div className='email' title={user.email}>
-                        <i className='mail icon' /> <a href={`mailto:${user.email}?subject=[Docktor] ${group.title} - `}>{user.email}</a>
+                        <Icon name='mail' /> <a href={`mailto:${user.email}?subject=[Docktor] ${group.title} - `}>{user.email}</a>
                       </div>
                     </div>
                   </div>
                 );
-              } else {
-                '';
               }
-
             })}
-            </div>
           </div>
-        );
-      } else {
-        return 'No members';
-      }
+        </div>
+      );
     }
+    return <span>No members</span>;
   }
 
-  renderReadOnlyTags(group, tags) {
+  renderReadOnlyTags = (group, tags) => {
     if (tags.isFetching) {
-      return <span><i className='notched circle loading icon' />Loading...</span>;
-    } else {
-      if (group.tags && group.tags.length > 0) {
-        return group.tags.map(id => {
-          const tag = tags.items[id];
-          if (tag) {
-            const role = this.roles[tag.usageRights];
-            const classes = classNames('ui label', role.color);
-            const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be added or removed from group by '${role.value}s'`;
-            return (<span key={id} className={classes} title={title}><b>{tag.category.raw} : </b>{tag.name.raw}</span>);
-          } else {
-            return '';
-          }
-        });
-      } else {
-        return 'No tags';
-      }
-
+      return <span><Icon loading name='notched circle' />Loading...</span>;
     }
+    if (group.tags && group.tags.length > 0) {
+      return group.tags.map(id => {
+        const tag = tags.items[id];
+        if (tag) {
+          const role = this.roles[tag.usageRights];
+          const title = `Tag '${tag.name.raw}' from category '${tag.category.raw}' can be added or removed from group by '${role.value}s'`;
+          return (<Label key={id} className={role.color} title={title}><b>{tag.category.raw} : </b>{tag.name.raw}</Label>);
+        }
+      });
+    }
+    return 'No tags';
   }
 
-  render() {
+  render = () => {
     const { isFetching, group, daemons, tags, users } = this.props;
     return (
       <div className='flex layout vertical start-justified group-view-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
           <div className='flex layout horizontal around-justified'>
-            {
-              isFetching ?
-                <div className='ui active dimmer'>
-                  <div className='ui text loader'>Fetching</div>
+            {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
+            <div className='flex layout vertical start-justified group-view-details'>
+              <h1>
+                <Link to={'/groups'}>
+                  <Icon name='arrow left'/>
+                </Link>
+                {group.title}
+                <Button size='large' content='Edit' color='teal' labelPosition='left' icon='edit'
+                  disabled={!group.id} as={Link} to={`/groups/${group.id}/edit`} className='right-floated'
+                />
+              </h1>
+              <Segment padded>
+                <div className='labelised-field'>
+                  <Label size='large'>Description</Label>
+                  <span>{group.description}</span>
                 </div>
-                :
-                <div className='flex layout vertical start-justified group-view-details'>
-                  <h1>
-                    <Link to={'/groups'}>
-                      <i className='arrow left icon'/>
-                    </Link>
-                    {group.title}
-                    <Link disabled={!group.id} to={`/groups/${group.id}/edit`} title={`Edit ${group.title}`} className='ui labeled icon teal button right-floated'>
-                      <i className='edit icon'/> Edit
-                    </Link>
-                  </h1>
-                  <div className='ui tab segment padded active' data-tab='general'>
-                    <div className='labelised-field'>
-                      <span className='large ui label'>Description</span>
-                      <span>{group.description}</span>
-                    </div>
-                    <div className='labelised-field'>
-                      <span className='large ui label'>Tags</span>
-                      <span className='ui labels'>
-                        {this.renderReadOnlyTags(group, tags)}
-                      </span>
-                    </div>
-                    <HeadingBox stacked className='box-component ui form' icon='users icon' title='Members'>
-                      {this.renderMembers(group, users)}
-                    </HeadingBox>
-                    <HeadingBox className='box-component ui form' icon='cube icon' title='Containers'>
-                      <div className='ui buttons'>
-                        <div className='ui icon disabled button'><i className='stop icon' />Stop all</div>
-                        <div className='ui icon disabled button'><i className='play icon' />Start all</div>
-                        <div className='ui icon disabled button'><i className='repeat icon' />Restart all</div>
-                        <div className='ui icon disabled button'><i className='cloud upload icon' />Redeploy all</div>
-                        <div className='ui icon disabled button'><i className='trash icon' />Uninstall all</div>
-                      </div>
-                      <div className='flex layout center-justified horizontal wrap'>
-                        {group.containers.map(container => {
-                          return <ContainerCard key={container.id} daemons={daemons} container={container} />;
-                        })
-                        }
-                        </div>
-                    </HeadingBox>
+                <div className='labelised-field'>
+                  <Label size='large'>Tags</Label>
+                  <Label.Group as='span'>
+                    {this.renderReadOnlyTags(group, tags)}
+                  </Label.Group>
+                </div>
+                <Form as={HeadingBox} stacked className='box-componen' icon='users' title='Members'>
+                  {this.renderMembers(group, users)}
+                </Form>
+                <Form as={HeadingBox} className='box-component' icon='cube' title='Containers'>
+                  <Button.Group>
+                    <Button disabled icon='stop' content='Stop all'/>
+                    <Button disabled icon='play' content='Start all'/>
+                    <Button disabled icon='repeat' content='Restart all'/>
+                    <Button disabled icon='cloud upload' content='Redeploy all'/>
+                    <Button disabled icon='trash' content='Uninstall all'/>
+                  </Button.Group>
+                  <div className='flex layout center-justified horizontal wrap'>
+                    {group.containers.map(container => {
+                      return <ContainerCard key={container.id} daemons={daemons} container={container} />;
+                    })}
                   </div>
-                </div>
-            }
+                </Form>
+              </Segment>
+            </div>
           </div>
         </Scrollbars>
       </div>
     );
   }
 }
+
 GroupViewComponent.propTypes = {
   group: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
