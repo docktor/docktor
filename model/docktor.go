@@ -41,7 +41,10 @@ func Get() (*Docktor, error) {
 	s.SetSafe(&mgo.Safe{})
 	database := s.DB("docktor")
 	if username != "" && password != "" {
-		database.Login(username, password)
+		err := database.Login(username, password)
+		if err != nil {
+			return nil, err
+		}
 	}
 	context := appContext{database}
 	services := &services.Repo{Coll: context.db.C("services")}
