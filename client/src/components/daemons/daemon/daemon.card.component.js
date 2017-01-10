@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Card, Icon, Button, Label } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 // Components
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks.js';
@@ -40,6 +41,7 @@ class DaemonCard extends React.Component {
     const images = nbImages > 0 ? nbImages + (nbImages > 1 ? ' images' : ' image') : 'No images';
     const nbContainers = parseInt(info && info.nbContainers ? info.nbContainers : '0');
     const containers = nbContainers > 0 ? nbContainers + (nbContainers > 1 ? ' containers' : ' container') : 'No containers';
+    const daemonStatusClasses = classnames({ disabled: isFetching });
 
     return (
       <Card className='daemon-card'>
@@ -47,7 +49,7 @@ class DaemonCard extends React.Component {
           <Card.Header as={Link} to={'/daemons/' + daemon.id}>
             <Icon className='server' />{daemon.name}
           </Card.Header>
-          <Label attached='top right' title={info ? info.message : ''} color={this.getColor(info)} className={isFetching ? ' disabled' : ''}>
+          <Label attached='top right' title={info ? info.message : ''} color={this.getColor(info)} className={daemonStatusClasses}>
             {(info ? info.status : 'UNKNOWN')}
           </Label>
           <Card.Meta>{site.title}</Card.Meta>
