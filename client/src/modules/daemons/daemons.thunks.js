@@ -1,11 +1,11 @@
 import { push } from 'react-router-redux';
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
-import { generateEntitiesThunks } from '../utils/entities.js';
+import { generateEntitiesThunks } from '../utils/entities';
 
 // Daemons Actions
-import DaemonsActions from './daemons.actions.js';
+import DaemonsActions from './daemons.actions';
 
 /********** Thunk Functions **********/
 

@@ -1,6 +1,6 @@
 // import constants
-import GroupsConstants from './groups.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import GroupsConstants from './groups.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 // Change filter
 const changeFilter = (filterValue) => {

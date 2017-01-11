@@ -1,5 +1,5 @@
 // import constants
-import ExportConstants from './export.constants.js';
+import ExportConstants from './export.constants';
 
 // ==== Export all actions
 

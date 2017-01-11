@@ -1,11 +1,11 @@
 // Imports for fetch API
-import { generateEntitiesThunks } from '../utils/entities.js';
+import { generateEntitiesThunks } from '../utils/entities';
 import fetch from 'isomorphic-fetch';
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Tags Actions
-import TagsActions from './tags.actions.js';
+import TagsActions from './tags.actions';
 
 // Thunk to create new category containing tags
 const createTags = (form) => {

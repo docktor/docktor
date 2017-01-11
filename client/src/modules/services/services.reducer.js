@@ -1,6 +1,6 @@
 // import constants
-import ServicesConstants from './services.constants.js';
-import { generateEntitiesReducer } from '../utils/entities.js';
+import ServicesConstants from './services.constants';
+import { generateEntitiesReducer } from '../utils/entities';
 
 const servicesReducer = (state, action) => {
   const entitiesState = generateEntitiesReducer(state, action, 'services');

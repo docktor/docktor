@@ -1,6 +1,6 @@
 // import constants
-import SitesConstants from './sites.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import SitesConstants from './sites.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 // Request site deletion
 const requestDeleteSite = (id) => {

@@ -1,4 +1,4 @@
-import { generateEntitiesConstants } from '../utils/entities.js';
+import { generateEntitiesConstants } from '../utils/entities';
 
 export default {
   ...generateEntitiesConstants('daemons'),

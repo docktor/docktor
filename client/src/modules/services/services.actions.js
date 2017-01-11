@@ -1,6 +1,6 @@
 // import constants
-import ServicesConstants from './services.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import ServicesConstants from './services.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 // Change filter
 const changeFilter = (filterValue) => {

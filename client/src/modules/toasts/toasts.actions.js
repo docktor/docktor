@@ -1,5 +1,5 @@
 // import constants
-import ToastsConstants from './toasts.constants.js';
+import ToastsConstants from './toasts.constants';
 
 // Confirm site deletion
 const confirmDeletion = (title, callback) => {

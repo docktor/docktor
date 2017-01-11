@@ -1,6 +1,6 @@
 // import constants
-import AuthConstants from './auth.constants.js';
-import UsersConstants from '../users/users.constants.js';
+import AuthConstants from './auth.constants';
+import UsersConstants from '../users/users.constants';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
 

@@ -1,5 +1,5 @@
 // import constants
-import AuthConstants from './auth.constants.js';
+import AuthConstants from './auth.constants';
 
 // ==== Register actions
 

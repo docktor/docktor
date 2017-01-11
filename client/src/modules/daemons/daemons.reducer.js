@@ -1,6 +1,6 @@
 // import constants
-import DaemonsConstants from './daemons.constants.js';
-import { generateEntitiesReducer } from '../utils/entities.js';
+import DaemonsConstants from './daemons.constants';
+import { generateEntitiesReducer } from '../utils/entities';
 
 const createRequestDaemonInfo  = (state, action) => {
   let newItems = state.items;

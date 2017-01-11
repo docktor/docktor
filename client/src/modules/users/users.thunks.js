@@ -1,9 +1,9 @@
 import { push } from 'react-router-redux';
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
-import { generateEntitiesThunks } from '../utils/entities.js';
-import UsersActions from './users.actions.js';
+import { generateEntitiesThunks } from '../utils/entities';
+import UsersActions from './users.actions';
 
 /********** Thunk Functions **********/
 
