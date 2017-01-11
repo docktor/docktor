@@ -15,6 +15,17 @@ $thin: 300;
     padding: 2em;
     width: 70%;
 
+    .daemon-form {
+      .toggle-button {
+        margin-top: 2em;
+        label, input:checked~label {
+          color: rgba(255, 255, 255, 0.5) !important;
+          font-size: .92857143em;
+          font-weight: bold;
+        }
+      }
+    }
+
     h1 {
       color: white;
       font-weight: $thin;
