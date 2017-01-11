@@ -1,9 +1,9 @@
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, handleError } from '../utils/promises.js';
-import { download } from '../utils/files.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, handleError } from '../utils/promises';
+import { download } from '../utils/files';
 
 // Export actions
-import ExportActions from './export.actions.js';
+import ExportActions from './export.actions';
 
 
 // Calls the API to export Docktor

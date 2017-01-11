@@ -2,9 +2,7 @@ var gulp = require('gulp'),
   gulpgo = require('gulp-go'),
   clean = require('gulp-clean'),
   exec = require('child_process').exec,
-  tap = require('gulp-tap'),
   webpack = require('webpack'),
-  concat = require('gulp-concat'),
   inject = require('gulp-inject-string'),
   zip = require('gulp-zip'),
   docktor = require('./package.json'),
@@ -12,8 +10,8 @@ var gulp = require('gulp'),
   dateFormat = require('dateformat'),
   WebpackDevServer = require('webpack-dev-server');
 
-var devConfigWebpack = require('./dev.config.webpack.js'),
-  prodConfigWebpack = require('./prod.config.webpack.js');
+var devConfigWebpack = require('./webpack.config.dev.js'),
+  prodConfigWebpack = require('./webpack.config.prod.js');
 
 var watchFiles = {
   server: ['./main.go', './server/**/*.go', 'cmd/**/*.go', 'model/**/*.go']
@@ -63,7 +61,7 @@ gulp.task('bundle-html-dev', function() {
 });
 
 
-gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images'], function(callback) {
+gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images'], function() {
   var compiler = webpack(devConfigWebpack);
   new WebpackDevServer(compiler, {
     publicPath: '/js/',
@@ -109,7 +107,7 @@ gulp.task('bundle-images', function() {
 });
 
 gulp.task('bundle-client', function(doneCallBack) {
-  webpack(prodConfigWebpack, function(err, stats) {
+  webpack(prodConfigWebpack, function() {
     doneCallBack();
   });
 });
@@ -131,7 +129,7 @@ gulp.task('dist-server', ['clean-dist'], function() {
     `;
     const distServer = `go build -ldflags "${flags}"`;
     console.log(distServer);
-    exec(distServer, function(err, stdout, stderr) {
+    exec(distServer, function(err) {
       if (!err) {
         console.log('Docktor backend Build successfull');
         return gulp.src(distPath.binary)

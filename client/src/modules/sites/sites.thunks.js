@@ -1,9 +1,9 @@
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
-import { generateEntitiesThunks } from '../utils/entities.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
+import { generateEntitiesThunks } from '../utils/entities';
 
 // Site Actions
-import SitesActions from './sites.actions.js';
+import SitesActions from './sites.actions';
 
 /********** Thunk Functions **********/
 

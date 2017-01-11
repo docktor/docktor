@@ -1,6 +1,6 @@
 // import constants
-import DaemonsConstants from './daemons.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import DaemonsConstants from './daemons.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 // Request daemon info
 const requestDaemonInfo = (daemon) => {

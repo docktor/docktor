@@ -1,9 +1,9 @@
 // Imports for fetch API
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Auth Actions
-import AuthActions from './auth.actions.js';
+import AuthActions from './auth.actions';
 
 // Dispatch the action of switching between login and register panes
 // Could be used to reset information

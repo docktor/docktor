@@ -1,5 +1,5 @@
-import { transformFilterToObject } from '../utils/search.js';
-import { containsWithoutAccents } from '../utils/strings.js';
+import { transformFilterToObject } from '../utils/search';
+import { containsWithoutAccents } from '../utils/strings';
 
 export const getFilteredServices = (services, filterValue) => {
   if (!filterValue || filterValue === '') {

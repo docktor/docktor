@@ -2,7 +2,7 @@
 import React from 'react';
 
 // import constants
-import ModalConstants from './modal.constants.js';
+import ModalConstants from './modal.constants';
 
 // Close Modal
 const closeModal = () => {

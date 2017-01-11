@@ -8,41 +8,41 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 
 // Reducers
-import sites from './modules/sites/sites.reducer.js';
-import daemons from './modules/daemons/daemons.reducer.js';
-import groups from './modules/groups/groups.reducer.js';
-import services from './modules/services/services.reducer.js';
-import users from './modules/users/users.reducer.js';
-import tags from './modules/tags/tags.reducer.js';
-import toasts from './modules/toasts/toasts.reducer.js';
-import modal from './modules/modal/modal.reducer.js';
-import auth from './modules/auth/auth.reducer.js';
-import exportReducer from './modules/export/export.reducer.js';
+import sites from './modules/sites/sites.reducer';
+import daemons from './modules/daemons/daemons.reducer';
+import groups from './modules/groups/groups.reducer';
+import services from './modules/services/services.reducer';
+import users from './modules/users/users.reducer';
+import tags from './modules/tags/tags.reducer';
+import toasts from './modules/toasts/toasts.reducer';
+import modal from './modules/modal/modal.reducer';
+import auth from './modules/auth/auth.reducer';
+import exportReducer from './modules/export/export.reducer';
 
 // Components
-import App from './components/app/app.layout.js';
-import Home from './components/app/home.page.js';
-import DaemonsPage from './components/daemons/daemons.page.js';
-import DaemonPage from './components/daemons/daemon/daemon.page.js';
-import GroupsPage from './components/groups/groups.page.js';
-import GroupEditPage from './components/groups/group/group.edit.page.js';
-import GroupViewPage from './components/groups/group/group.view.page.js';
-import ServicesPage from './components/services/services.page.js';
-import ServicePage from './components/services/service/service.page.js';
-import SettingsPage from './components/settings/settings.page.js';
-import UsersPage from './components/users/users.page.js';
-import UserPage from './components/users/user/user.page.js';
-import TagsPage from './components/tags/tags.page.js';
-import AuthPage from './components/auth/auth.page.js';
-import ChangeResetPasswordPage from './components/auth/auth.change-reset-password.page.js';
-import ResetPasswordPage from './components/auth/auth.reset-password.page.js';
-import { requireAuthorization } from './components/auth/auth.isAuthorized.js';
+import App from './components/app/app.layout';
+import Home from './components/app/home.page';
+import DaemonsPage from './components/daemons/daemons.page';
+import DaemonPage from './components/daemons/daemon/daemon.page';
+import GroupsPage from './components/groups/groups.page';
+import GroupEditPage from './components/groups/group/group.edit.page';
+import GroupViewPage from './components/groups/group/group.view.page';
+import ServicesPage from './components/services/services.page';
+import ServicePage from './components/services/service/service.page';
+import SettingsPage from './components/settings/settings.page';
+import UsersPage from './components/users/users.page';
+import UserPage from './components/users/user/user.page';
+import TagsPage from './components/tags/tags.page';
+import AuthPage from './components/auth/auth.page';
+import ChangeResetPasswordPage from './components/auth/auth.change-reset-password.page';
+import ResetPasswordPage from './components/auth/auth.reset-password.page';
+import { requireAuthorization } from './components/auth/auth.isAuthorized';
 
 // Thunks
-import AuthThunks from './modules/auth/auth.thunk.js';
+import AuthThunks from './modules/auth/auth.thunk';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.constants.js';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.constants';
 
 const loggerMiddleware = createLogger();
 const rMiddleware = routerMiddleware(browserHistory);

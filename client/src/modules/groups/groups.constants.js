@@ -1,4 +1,4 @@
-import { generateEntitiesConstants } from '../utils/entities.js';
+import { generateEntitiesConstants } from '../utils/entities';
 
 export const GROUP_MEMBER_ROLE = 'member';
 export const GROUP_MODERATOR_ROLE = 'moderator';

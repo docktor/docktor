@@ -4,8 +4,7 @@ import {
   generateEntitiesConstants,
   generateEntitiesActions,
   generateEntitiesReducer,
-
-} from '../../../src/modules/utils/entities.js';
+} from '../../../src/modules/utils/entities';
 
 describe('Utilities for entities', () => {
   //entity

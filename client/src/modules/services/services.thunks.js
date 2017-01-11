@@ -1,14 +1,14 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { push } from 'react-router-redux';
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Service Actions
-import ServicesActions from './services.actions.js';
+import ServicesActions from './services.actions';
 
 // Imports for fetch API
-import { generateEntitiesThunks } from '../utils/entities.js';
+import { generateEntitiesThunks } from '../utils/entities';
 
 // Thunk to fetch services
 const fetchService = (id) => {

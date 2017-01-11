@@ -1,6 +1,6 @@
 // import constants
-import SitesConstants from './sites.constants.js';
-import { generateEntitiesReducer } from '../utils/entities.js';
+import SitesConstants from './sites.constants';
+import { generateEntitiesReducer } from '../utils/entities';
 
 const createRequestSite = () => {
   return {

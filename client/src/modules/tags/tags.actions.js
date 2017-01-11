@@ -1,6 +1,6 @@
 // import constants
-import TagsConstants from './tags.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import TagsConstants from './tags.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 // Change filter
 const changeFilter = (filterValue) => {

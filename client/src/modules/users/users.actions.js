@@ -1,6 +1,6 @@
 // import constants
-import UsersConstants from './users.constants.js';
-import { generateEntitiesActions } from '../utils/entities.js';
+import UsersConstants from './users.constants';
+import { generateEntitiesActions } from '../utils/entities';
 
 
 // Change filter

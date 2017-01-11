@@ -2,11 +2,11 @@
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import { push } from 'react-router-redux';
-import { withAuth } from '../auth/auth.wrappers.js';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises.js';
+import { withAuth } from '../auth/auth.wrappers';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
-import { generateEntitiesThunks } from '../utils/entities.js';
-import GroupsActions from './groups.actions.js';
+import { generateEntitiesThunks } from '../utils/entities';
+import GroupsActions from './groups.actions';
 
 // Thunk to fetch groups
 const fetchGroup = (id) => {

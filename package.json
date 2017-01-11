@@ -21,7 +21,7 @@
     "test": "mocha --require babel-core/register --require babel-polyfill client/test/browser.js client/test/**/*.tests.js",
     "dist": "gulp dist",
     "archive": "gulp archive",
-    "lint": "eslint 'client/src/**/*.js' && sass-lint 'client/**/*.scss' ",
+    "lint": "eslint '*.js?' 'client/src/**/*.js?' 'client/test/**/*.js?' && sass-lint 'client/**/*.scss' ",
     "golint": "gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .",
     "formatJS": "eslint --fix 'client/src/**/*.js'"
   },

@@ -1,6 +1,6 @@
 // import constants
-import TagsConstants from './tags.constants.js';
-import { generateEntitiesReducer } from '../utils/entities.js';
+import TagsConstants from './tags.constants';
+import { generateEntitiesReducer } from '../utils/entities';
 
 const createRequestCreateTag = () => {
   return {
