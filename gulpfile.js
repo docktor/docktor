@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
   gulpgo = require('gulp-go'),
   clean = require('gulp-clean'),
+  gutil = require('gulp-util'),
   exec = require('child_process').exec,
   webpack = require('webpack'),
   inject = require('gulp-inject-string'),
@@ -85,8 +86,7 @@ gulp.task('go-run', function() {
 });
 
 gulp.task('watch-server', ['go-run'], function() {
-  gulp.watch(watchFiles.server).on('change', function() {
-    gulp.run('bundle-html-dev');
+  gulp.watch(watchFiles.server, ['bundle-html-dev']).on('change', function() {
     go.restart();
   });
 });
@@ -107,14 +107,8 @@ gulp.task('bundle-images', function() {
 });
 
 gulp.task('bundle-client', function(doneCallBack) {
-<<<<<<< HEAD
-  webpack(prodConfigWebpack, function() {
-=======
-  return webpack(prodConfigWebpack, function(err, stats) {
-    if (err) {
-      console.log(err);
-    }
->>>>>>> ea4f558... feat(dockerfile) : real dist prod with optimisation + alpine docker image
+  webpack(prodConfigWebpack, function(err) {
+    if(err) {throw new gutil.PluginError("webpack", err);}
     doneCallBack();
   });
 });
@@ -127,7 +121,7 @@ gulp.task('dist-client', ['bundle'], function() {
 
 /*====== Server =========*/
 
-gulp.task('dist-server', ['clean-dist'], function() {
+gulp.task('dist-server', function() {
   git.long(function (gitHash) {
     const flags = `
       -X github.com/soprasteria/docktor/cmd.Version=${docktor.version}
@@ -148,8 +142,8 @@ gulp.task('dist-server', ['clean-dist'], function() {
   });
 });
 
-gulp.task('clean-dist', function() {
-  return gulp.src([distPath.dist + '/*', distPath.binary], {
+gulp.task('clean', function() {
+  return gulp.src(['./client/dist', distPath.dist, distPath.binary], {
     read: false
   }).pipe(clean());
 });
