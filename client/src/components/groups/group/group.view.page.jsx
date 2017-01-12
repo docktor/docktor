@@ -11,6 +11,7 @@ import TagsThunks from '../../../modules/tags/tags.thunks';
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks';
 import GroupsThunks from '../../../modules/groups/groups.thunks';
 import UsersThunks from '../../../modules/users/users.thunks';
+import ServicesThunks from '../../../modules/services/services.thunks';
 
 // Selectors
 import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors';
@@ -19,7 +20,7 @@ import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.constants';
 
 // Components
 import HeadingBox from '../../common/boxes/box/heading.box.component';
-import ContainerCard from './container/container.card.component';
+import ContainersBox from './containers/containers.box.component';
 
 // Style
 import './group.view.page.scss';
@@ -56,6 +57,7 @@ class GroupViewComponent extends React.Component {
       this.props.fetchTags();
       this.props.fetchDaemons();
       this.props.fetchUsers(); // TODO : replace by fetchMembers thunk (that does not get all users)
+      this.props.fetchServices(); // TODO : replace by fetchContainerServices thunk (that does not get all users)
     }
   }
 
@@ -114,7 +116,7 @@ class GroupViewComponent extends React.Component {
     return <span>No members</span>;
   }
 
-  renderReadOnlyTags = (group, tags) => {
+  renderTags = (group, tags) => {
     if (tags.isFetching) {
       return <span><Icon loading name='notched circle' />Loading...</span>;
     }
@@ -132,7 +134,7 @@ class GroupViewComponent extends React.Component {
   }
 
   render = () => {
-    const { isFetching, group, daemons, tags, users } = this.props;
+    const { isFetching, group, daemons, tags, users, services } = this.props;
     return (
       <div className='flex layout vertical start-justified group-view-page'>
         <Scrollbars ref='scrollbars' className='flex ui dimmable'>
@@ -156,26 +158,13 @@ class GroupViewComponent extends React.Component {
                 <div className='labelised-field'>
                   <Label size='large'>Tags</Label>
                   <Label.Group as='span'>
-                    {this.renderReadOnlyTags(group, tags)}
+                    {this.renderTags(group, tags)}
                   </Label.Group>
                 </div>
-                <Form as={HeadingBox} stacked className='box-componen' icon='users' title='Members'>
+                <Form as={HeadingBox} stacked className='box-component' icon='users' title='Members'>
                   {this.renderMembers(group, users)}
                 </Form>
-                <Form as={HeadingBox} className='box-component' icon='cube' title='Containers'>
-                  <Button.Group>
-                    <Button disabled icon='stop' content='Stop all'/>
-                    <Button disabled icon='play' content='Start all'/>
-                    <Button disabled icon='repeat' content='Restart all'/>
-                    <Button disabled icon='cloud upload' content='Redeploy all'/>
-                    <Button disabled icon='trash' content='Uninstall all'/>
-                  </Button.Group>
-                  <div className='flex layout center-justified horizontal wrap'>
-                    {group.containers.map(container => {
-                      return <ContainerCard key={container.id} daemons={daemons} container={container} />;
-                    })}
-                  </div>
-                </Form>
+                 <ContainersBox containers={group.containers || []} tags={tags || {}}  services={services || {}}daemons={daemons || []} />
               </Segment>
             </div>
           </div>
@@ -192,10 +181,12 @@ GroupViewComponent.propTypes = {
   daemons: React.PropTypes.array,
   tags: React.PropTypes.object,
   users: React.PropTypes.object,
+  services: React.PropTypes.object,
   fetchGroup: React.PropTypes.func.isRequired,
   fetchDaemons: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
   fetchUsers: React.PropTypes.func.isRequired,
+  fetchServices: React.PropTypes.func.isRequired,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func
 };
@@ -209,6 +200,7 @@ const mapStateToProps = (state, ownProps) => {
   const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
   const tags = state.tags;
   const users = state.users;
+  const services = state.services;
   const isFetching = paramId && (paramId !== group.id);
   return {
     group: groups.items[paramId] || emptyGroup,
@@ -216,7 +208,8 @@ const mapStateToProps = (state, ownProps) => {
     groupId: paramId,
     tags,
     daemons,
-    users
+    users,
+    services
   };
 };
 
@@ -226,7 +219,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded())
+    fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded()),
+    fetchServices: () => dispatch(ServicesThunks.fetchIfNeeded()),
   };
 };
 

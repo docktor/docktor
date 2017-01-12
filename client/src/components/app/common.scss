@@ -58,6 +58,11 @@ input {
   background-color: #f9d6d6 !important;
 }
 
+.ui.very.compact.table thead th {
+  padding-bottom: .5em !important;
+  padding-top: .5em !important;
+}
+
 .ui.form {
   & .error {
     ::-webkit-input-placeholder {
@@ -128,6 +133,10 @@ input {
   padding: 1px;
   .button .icon {
     margin-right: 2px;
+  }
+  .button {
+    padding-left: .8em;
+    padding-right: .8em;
   }
 }
 
