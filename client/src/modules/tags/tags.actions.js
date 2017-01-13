@@ -29,7 +29,9 @@ const receiveTagCreated = (tag) => {
 const createTagInvalid = (error) => {
   return {
     type: TagsConstants.CREATE_TAG_INVALID,
-    error
+    title: 'Unable to create tag',
+    message: error,
+    level: 'error'
   };
 };
 
@@ -56,7 +58,9 @@ const deleteTagInvalid = (tag) => {
     return {
       type: TagsConstants.DELETE_TAG_INVALID,
       tag,
-      error
+      title: `Unable to delete tag "${tag.name.raw}"`,
+      message: error,
+      level: 'error'
     };
   };
 };
@@ -85,7 +89,9 @@ const saveTagInvalid = (tag) => {
     return {
       type: TagsConstants.SAVE_TAG_INVALID,
       tag,
-      error
+      title: `Unable to save tag "${tag.name.raw}"`,
+      message: error,
+      level: 'error'
     };
   };
 };

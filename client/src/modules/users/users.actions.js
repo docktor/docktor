@@ -58,6 +58,20 @@ const invalidRequestUser = error => ({
   error
 });
 
+const invalidSaveUser = user => error => ({
+  type: UsersConstants.INVALID_SAVE_USER,
+  title: `Cannot save user ${user.username}`,
+  message: error,
+  level: 'error'
+});
+
+const invalidDeleteUser = user => error => ({
+  type: UsersConstants.INVALID_DELETE_USER,
+  title: `Can not delete user ${user.username}`,
+  message: error,
+  level: 'error',
+});
+
 export default {
   ...generateEntitiesActions('users'),
   changeFilter,
@@ -67,5 +81,7 @@ export default {
   receiveSavedUser,
   requestDeleteUser,
   receiveDeletedUser,
-  invalidRequestUser
+  invalidRequestUser,
+  invalidSaveUser,
+  invalidDeleteUser
 };

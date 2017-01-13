@@ -23,7 +23,9 @@ const receiveRegister = (register) => {
 const registerInvalidRequest = (error) => {
   return {
     type: AuthConstants.REGISTER_INVALID_REQUEST,
-    error
+    title: 'Cannot register because of technical error',
+    message: error,
+    level: 'error'
   };
 };
 
@@ -57,7 +59,9 @@ const receiveLogin = (login) => {
 const loginInvalidRequest = (error) => {
   return {
     type: AuthConstants.LOGIN_INVALID_REQUEST,
-    error
+    title: 'Cannot login because of technical error',
+    message: error,
+    level: 'error'
   };
 };
 
@@ -97,7 +101,10 @@ const requestChangePassword = () => {
 // Action when user successfully changed his password
 const receiveChangePassword = () => {
   return {
-    type: AuthConstants.CHANGE_PASSWORD_SUCCESS
+    type: AuthConstants.CHANGE_PASSWORD_SUCCESS,
+    title: 'Password change',
+    message: 'Your password has been changed successfully',
+    level: 'info'
   };
 };
 
@@ -105,7 +112,9 @@ const receiveChangePassword = () => {
 const changePasswordInvalidRequest = (error) => {
   return {
     type: AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST,
-    error
+    title: 'Cannot change password',
+    message: error,
+    level: 'error'
   };
 };
 
@@ -154,7 +163,10 @@ const requestResetPassword = () => {
 // Action when user successfully reset the password
 const receiveResetPassword = () => {
   return {
-    type: AuthConstants.RESET_PASSWORD_SUCCESS
+    type: AuthConstants.RESET_PASSWORD_SUCCESS,
+    title: 'Password successfuly reset',
+    message: 'Your password has been successfully reset. You should see an email coming with details to set a new one',
+    level: 'info'
   };
 };
 
@@ -162,7 +174,9 @@ const receiveResetPassword = () => {
 const resetPasswordInvalidRequest = (error) => {
   return {
     type: AuthConstants.RESET_PASSWORD_INVALID_REQUEST,
-    error
+    title: 'Cannot reset password because technical error happened',
+    message: error,
+    level: 'error'
   };
 };
 

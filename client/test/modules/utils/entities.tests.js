@@ -24,7 +24,7 @@ describe('Utilities for entities', () => {
     items: [item]
   };
   const error = { error: 'error' };
-  const invalidAction = { type: CONST_INVALID, error };
+  const invalidAction = { type: CONST_INVALID, level: 'error', message: error, title: `Error on ${entity} API` };
 
   describe('Generate generic constants', () => {
     const constants = generateEntitiesConstants(entity);
