@@ -16,135 +16,157 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
   case LOCATION_CHANGE:
-    return Object.assign({}, state, { errorMessage: '' });
+    return { ...state, errorMessage: '' };
   case AuthConstants.LOGIN_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true,
       isAuthenticated: false,
       user : {}
-    });
+    };
   case AuthConstants.LOGIN_SUCCESS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: true,
       errorMessage: '',
       user : action.user
-    });
+    };
   case AuthConstants.LOGIN_INVALID_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       user : {}
-    });
+    };
   case AuthConstants.LOGIN_NOT_AUTHORIZED:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       errorMessage: action.error,
       user : {}
-    });
+    };
   case AuthConstants.LOGOUT_SUCCESS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       user : {}
-    });
+    };
   case AuthConstants.PROFILE_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true,
-    });
+    };
   case AuthConstants.PROFILE_SUCCESS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: true,
       errorMessage: '',
       user : action.user
-    });
+    };
   case AuthConstants.PROFILE_FAILURE:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       errorMessage: action.message,
       user : {}
-    });
+    };
   case AuthConstants.REGISTER_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true,
       isAuthenticated: false,
       errorMessage : '',
       user : {}
-    });
+    };
   case AuthConstants.REGISTER_SUCCESS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: true,
       errorMessage : '',
       user : action.user
-    });
+    };
   case AuthConstants.REGISTER_INVALID_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       errorMessage : action.error,
       user : {}
-    });
+    };
   case AuthConstants.REGISTER_NOT_AUTHORIZED:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       isAuthenticated: false,
       errorMessage : action.error,
       user : {}
-    });
+    };
   case AuthConstants.SWITCH_FORM:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       errorMessage: ''
-    });
+    };
   case AuthConstants.RESET_PASSWORD_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true
-    });
+    };
   case AuthConstants.RESET_PASSWORD_SUCCESS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       errorMessage: ''
-    });
+    };
   case AuthConstants.RESET_PASSWORD_INVALID_REQUEST:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false
-    });
+    };
   case AuthConstants.RESET_PASSWORD_NOT_AUTHORIZED:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       errorMessage: action.error
-    });
+    };
   case AuthConstants.CHANGE_PASSWORD_REQUEST:
-    return Object.assign({}, state, {
-      user : Object.assign({}, state.user, { isFetching: true, passwordErrorMessage: '' })
-    });
+    return {
+      ...state,
+      user : { ...state.user, isFetching: true, passwordErrorMessage: '' }
+    };
   case AuthConstants.CHANGE_PASSWORD_SUCCESS:
-    return Object.assign({}, state, {
-      user : Object.assign({}, state.user, { isFetching: false, passwordErrorMessage: '' }),
+    return {
+      ...state,
+      user : { ...state.user, isFetching: false, passwordErrorMessage: '' },
       errorMessage: ''
-    });
+    };
   case AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST:
-    return Object.assign({}, state, {
-      user : Object.assign({}, state.user, { isFetching: false, passwordErrorMessage: action.error })
-    });
+    return {
+      ...state,
+      user : { ...state.user, isFetching: false, passwordErrorMessage: action.error }
+    };
   case AuthConstants.CHANGE_PASSWORD_NOT_AUTHORIZED:
-    return Object.assign({}, state, {
-      user : Object.assign({}, state.user, { isFetching: false, passwordErrorMessage: action.error }),
-    });
+    return {
+      ...state,
+      user : { ...state.user, isFetching: false, passwordErrorMessage: action.error },
+    };
   case UsersConstants.REQUEST_SAVE_USER:
-    return Object.assign({}, state, authenticatedUserIsFetching(state, action));
+    return { ...state, ...authenticatedUserIsFetching(state, action) };
   case UsersConstants.USER_SAVED:
-    return Object.assign({}, state, changeUserIfNeeded(state, action));
+    return { ...state, ...changeUserIfNeeded(state, action) };
   case UsersConstants.INVALID_SAVE_USER:
-    return Object.assign({}, state, authenticatedUserFetchingError(state, action));
+    return { ...state, ...authenticatedUserFetchingError(state, action) };
   case UsersConstants.REQUEST_DELETE_USER:
     if (action.id === state.user.id) {
-      return Object.assign({}, state, {
-        user : Object.assign({}, state.user, { isDeleting: true }),
-      });
+      return {
+        ...state,
+        user : { ...state.user, isDeleting: true },
+      };
     } else {
       return state;
     }
@@ -160,9 +182,10 @@ const authReducer = (state = initialState, action) => {
     }
   case UsersConstants.INVALID_DELETE_USER:
     if (action.user.id === state.user.id) {
-      return Object.assign({}, state, {
-        user : Object.assign({}, state.user, { isDeleting: false }),
-      });
+      return {
+        ...state,
+        user : { ...state.user, isDeleting: false },
+      };
     } else {
       return state;
     }
@@ -174,7 +197,7 @@ const authReducer = (state = initialState, action) => {
 const authenticatedUserIsFetching = (state, action) => {
   if (action.user.id === state.user.id) {
     return {
-      user: Object.assign({}, action.user, { isFetching: true, errorMessage: '' })
+      user: { ...action.user, isFetching: true, errorMessage: '' }
     };
   } else {
     return {};
@@ -184,7 +207,7 @@ const authenticatedUserIsFetching = (state, action) => {
 const authenticatedUserFetchingError = (state, action) => {
   if (action.user.id === state.user.id) {
     return {
-      user: Object.assign({}, action.user, { isFetching: false, errorMessage: action.error })
+      user: { ...action.user, isFetching: false, errorMessage: action.error }
     };
   } else {
     return {};
@@ -194,7 +217,7 @@ const authenticatedUserFetchingError = (state, action) => {
 const changeUserIfNeeded = (state, action) => {
   if (action.user.id === state.user.id) {
     return {
-      user: Object.assign({}, action.user, { isFetching: false, errorMessage: '' })
+      user: { ...action.user, isFetching: false, errorMessage: '' }
     };
   } else {
     return {};
