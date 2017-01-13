@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import thunkMiddleware from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -44,8 +44,14 @@ import AuthThunks from './modules/auth/auth.thunk';
 // Constants
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.constants';
 
-const loggerMiddleware = createLogger();
+// Configure middlewares
 const rMiddleware = routerMiddleware(browserHistory);
+let middlewares = [ thunkMiddleware, rMiddleware ];
+if (process.env.NODE_ENV !== 'production') {
+  // Dev dependencies
+  const loggerMiddleware = createLogger();
+  middlewares = [ ...middlewares, loggerMiddleware ];
+}
 
 // Add the reducer to your store on the `routing` key
 const store = createStore(
@@ -64,7 +70,7 @@ const store = createStore(
       routing: routerReducer,
     }
   ),
-  applyMiddleware(thunkMiddleware, loggerMiddleware, rMiddleware)
+  applyMiddleware(...middlewares)
 );
 
 const authToken = localStorage.getItem('id_token');

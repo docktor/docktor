@@ -24,6 +24,14 @@ Also some rules have been set for jsx, es6 and sass so please install the follow
 - eslint: https://atom.io/packages/linter-eslint
 - sass lint plugin: https://atom.io/packages/linter-sass-lint
 
+## With Docker
+
+Run container with following command :
+
+`docker run -d --name docktor -p 8080:8080 -v /home:/root docktor:latest`
+
+Map /home to load local `.docktor.toml` file.
+
 ## License
 GNU GENERAL PUBLIC LICENSE 3
 
