@@ -59,7 +59,7 @@ func New(version string) {
 	engine.Renderer = t
 
 	engine.GET("/ping", pong)
-	//test
+	
 	authAPI := engine.Group("/auth")
 	{
 		authAPI.Use(docktorAPI) // Enrich echo context with connexion to Docktor mongo API
