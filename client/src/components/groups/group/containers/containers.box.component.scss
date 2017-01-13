@@ -1,6 +1,9 @@
 .box-component {
   .group-by-view {
     margin-top: 1em;
+    .ui.label.circular {
+      margin-right: 1em;
+    }
   }
   .containers {
     padding-top: 1em;
