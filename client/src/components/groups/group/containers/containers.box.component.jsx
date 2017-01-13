@@ -12,30 +12,36 @@ import groupBy from 'lodash.groupby';
 import flatMap from 'lodash.flatmap';
 import sortBy from 'lodash.sortby';
 import differenceBy from 'lodash.differenceby';
+import set from 'lodash.set';
 
 import './containers.box.component.scss';
 
 // ContainersBox is a list of containers
 class ContainersBox extends React.Component {
 
-  state = {
-    groupBy: { value: '', text: '' }
-  }
   colors = ['orange', 'teal', 'blue', 'violet', 'purple', 'yellow'];
   dummyTag= {
     id: 'others',
     name: { raw: 'Others', slug: 'others' },
     category: { raw: 'Others', slug: 'others' }
   }
-/*
-  onChangeDisplay = (display) => {
-    replace({ query:{ display: display } });
-    //this.setState({ display: display });
-}*/
+  GRID_DISPLAY='grid'
+  LIST_DISPLAY='list'
+  displays = [this.GRID_DISPLAY, this.LIST_DISPLAY]
 
-  onChangeGroupBy= (e, { value, text }) => {
-    e.preventDefault();
-    this.setState({ groupBy: { text: text, value: value } });
+
+  onChangeDisplay = (groupId, display) => {
+    // Save choice to local storage
+    // When user comes displays again the box, default display will the one from his last choice
+    var settings = JSON.parse(localStorage.getItem('settings')) || {};
+    set(settings, `groups.${groupId}.display`, display);
+    localStorage.setItem('settings', JSON.stringify(settings));
+  }
+
+  onChangeGroupBy= (groupId, groupBy) => {
+    var settings = JSON.parse(localStorage.getItem('settings')) || {};
+    set(settings, `groups.${groupId}.groupBy`, groupBy);
+    localStorage.setItem('settings', JSON.stringify(settings));
   }
 
   // Renders a view grouped by the tags of a given category
@@ -122,21 +128,28 @@ class ContainersBox extends React.Component {
 
   componentWillMount = () => {
     const { display, groupBy } = this.props;
-    const disp = (display === 'grid' || display == 'list') ? display : 'grid';
-    //const gb = { value: groupBy, text: '' };
-    this.setState({ display: disp });
+    this.setDisplay(display);
+    this.setGroupBy(groupBy);
   }
 
   componentWillReceiveProps = (nextProps) => {
     const { display, groupBy } = nextProps;
-    const disp = (display === 'grid' || display == 'list') ? display : 'grid';
-    //const gb = { value: groupBy, text: '' };
+    this.setDisplay(display);
+    this.setGroupBy(groupBy);
+  }
+
+  setDisplay = (display) => {
+    const disp = this.displays.includes(display) ? display : 'grid';
     this.setState({ display: disp });
+  }
+
+  setGroupBy = (groupBy) => {
+    this.setState({ groupBy: groupBy });
   }
 
   render = () => {
     const { display, groupBy } = this.state;
-    const { containers, daemons, services, tags, group } = this.props;
+    const { containers, daemons, services, tags, group, loc } = this.props;
     const categories = this.getTagCategories(containers, services, tags);
     const colorCategories = this.getColorCategories(categories);
     const tagCategories = this.getTagCategoriesFromDropdown(categories, colorCategories);
@@ -151,26 +164,39 @@ class ContainersBox extends React.Component {
             <Button disabled icon='trash' content='Uninstall all' />
           </Button.Group>
           <div className='layout horizontal jusitified' >
-            <Dropdown text={groupBy.text || 'Group by'} value={groupBy.value || ''} floating labeled button className='icon' icon='filter'>
+            <Dropdown disabled={tagCategories.length == 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'} value={groupBy || ''} floating labeled button className='icon' icon='filter'>
               <Dropdown.Menu>
-                <Dropdown.Item value='' onClick={this.onChangeGroupBy}>
+                <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: loc.query.display } }} onClick={() => this.onChangeGroupBy(group.id, '')} >
                   <Button fluid compact content='Cancel'/>
                 </Dropdown.Item>
                 <Dropdown.Menu scrolling>
-                  {tagCategories.map((category) => <Dropdown.Item active={groupBy.value === category.value} onClick={this.onChangeGroupBy} key={category.value} {...category} />)}
+                  {tagCategories.map((category) => <Dropdown.Item
+                    as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, groupBy: category.value } }}
+                    active={groupBy === category.value}
+                    onClick={() => this.onChangeGroupBy(group.id, category.value)}
+                    key={category.value} {...category} />)
+                  }
                 </Dropdown.Menu>
               </Dropdown.Menu>
             </Dropdown>
             {' '}
             <Button.Group>
-              <Button toggle active={display === 'grid'} as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: 'grid' } }} title='Display services as cards' icon='grid layout'/>
-              <Button toggle active={display === 'list'} as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: 'list' } }} title='Display services as a list' icon='list layout'/>
+              <Button toggle
+                active={display === this.GRID_DISPLAY}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: this.GRID_DISPLAY } }}
+                onClick={() => this.onChangeDisplay(group.id, this.GRID_DISPLAY)}
+                title='Display services as cards' icon='grid layout'/>
+              <Button toggle
+                active={display === this.LIST_DISPLAY}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: this.LIST_DISPLAY } }}
+                onClick={() => this.onChangeDisplay(group.id, 'list')}
+                title='Display services as a list' icon='list layout'/>
             </Button.Group>
           </div>
         </div>
         <div className='containers'>
-          {groupBy.value === '' && <ContainersView daemons={daemons || []} containers={containers || []} colorTagCategories={colorCategories} display={display} services={services || {}} tags={tags || {}} />}
-          {groupBy.value !== '' && this.renderContainersGroupedBy(categories[groupBy.value] || [], containers || [], display, services || {}, daemons || [], tags || {}, colorCategories)}
+          {groupBy === '' && <ContainersView daemons={daemons || []} containers={containers || []} colorTagCategories={colorCategories} display={display} services={services || {}} tags={tags || {}} />}
+          {groupBy !== '' && this.renderContainersGroupedBy(categories[groupBy] || [], containers || [], display, services || {}, daemons || [], tags || {}, colorCategories)}
         </div>
       </Form>
     );
@@ -184,7 +210,8 @@ ContainersBox.propTypes = {
   daemons: React.PropTypes.array,
   display: React.PropTypes.string,
   groupBy: React.PropTypes.string,
-  group: React.PropTypes.object
+  group: React.PropTypes.object,
+  loc: React.PropTypes.object
 };
 
 export default ContainersBox;

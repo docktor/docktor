@@ -20,12 +20,10 @@ var prodConfig = {
       exclude: [nodeModules]
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('css!sass',
-      'css-loader?sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
+      loader: ExtractTextPlugin.extract('css-loader?sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('css',
- 'css-loader?sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true')
+      loader: ExtractTextPlugin.extract('css-loader?sourceMap')
     }, {
       test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
       loader: 'file',

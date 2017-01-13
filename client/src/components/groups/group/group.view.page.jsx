@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Segment, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import classNames from 'classnames';
+import get from 'lodash.get';
 
 // Thunks / Actions
 import TagsThunks from '../../../modules/tags/tags.thunks';
@@ -134,7 +135,7 @@ class GroupViewComponent extends React.Component {
   }
 
   render = () => {
-    const { isFetching, group, daemons, tags, users, services } = this.props;
+    const { isFetching, group, daemons, tags, users, services, loc } = this.props;
     const { display, groupBy } = this.props;
     return (
       <div className='flex layout vertical start-justified group-view-page'>
@@ -165,7 +166,7 @@ class GroupViewComponent extends React.Component {
                 <Form as={HeadingBox} stacked className='box-component' icon='users' title='Members'>
                   {this.renderMembers(group, users)}
                 </Form>
-                 <ContainersBox group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
+                 <ContainersBox loc={loc} group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
               </Segment>
             </div>
           </div>
@@ -191,14 +192,17 @@ GroupViewComponent.propTypes = {
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   display: React.PropTypes.string,
-  groupBy: React.PropTypes.string
+  groupBy: React.PropTypes.string,
+  loc: React.PropTypes.object
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
+  const localSettings = JSON.parse(localStorage.getItem('settings')) || {};
+  const loc = state.routing.locationBeforeTransitions;
   const paramId = ownProps.params.id;
-  const display = ownProps.loc.query.display;
-  const groupBy = ownProps.loc.query.groupBy;
+  const display = ownProps.loc.query.display || get(localSettings, `groups.${paramId}.display`);
+  const groupBy = ownProps.loc.query.groupBy || get(localSettings, `groups.${paramId}.groupBy`);
   const groups = state.groups;
   const group = groups.selected;
   const emptyGroup = { tags: [], filesystems: [], containers: [] };
@@ -216,7 +220,8 @@ const mapStateToProps = (state, ownProps) => {
     tags,
     daemons,
     users,
-    services
+    services,
+    loc
   };
 };
 
