@@ -34,7 +34,7 @@ const saveUser = user => {
         dispatch(push('/users'));
       })
       .catch(error => {
-        handleError(error, UsersActions.invalidRequestUser, dispatch);
+        handleError(error, UsersActions.invalidSaveUser(user), dispatch);
       });
   };
 };
@@ -58,7 +58,7 @@ const deleteUser = (user) => {
       dispatch(UsersActions.receiveDeletedUser(response));
     })
     .catch(error => {
-      handleError(error, UsersActions.invalidRequestUser, dispatch);
+      handleError(error, UsersActions.invalidDeleteUser(user), dispatch);
     });
   };
 };

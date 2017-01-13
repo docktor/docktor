@@ -36,7 +36,12 @@ export const generateEntitiesActions = (entitiesName) => {
       };
     },
     invalidRequest: (error) => {
-      return { type: CONST_INVALID, error };
+      return {
+        type: CONST_INVALID,
+        title: `Error on ${entitiesName.toLowerCase()} API`,
+        message: error,
+        level: 'error'
+      };
     }
   };
 };
@@ -45,11 +50,11 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
   const { CONST_REQUEST, CONST_RECEIVE, CONST_INVALID } = getConsts(entitiesName);
   switch (action.type) {
   case CONST_INVALID:
-    return Object.assign({}, state, initialState);
+    return { ...state, ...initialState };
   case CONST_REQUEST:
-    return Object.assign({}, state, createRequest());
+    return { ...state, ...createRequest() };
   case CONST_RECEIVE:
-    return Object.assign({}, state, createReceive(state, action));
+    return { ...state, ...createReceive(state, action) };
   default:
     return state;
   }
@@ -76,11 +81,11 @@ const createRequest = () => {
 
 const createReceive = (state, action) => {
   let items = {};
-  action.items.forEach(item => items[item.id] = Object.assign({}, state.items[item.id], item));
+  action.items.forEach(item => items[item.id] = { ...state.items[item.id], ...item });
   return {
     isFetching: false,
     didInvalidate: false,
-    items: items,
+    items,
     lastUpdated: action.receivedAt
   };
 };

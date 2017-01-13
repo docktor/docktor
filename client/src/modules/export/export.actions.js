@@ -21,7 +21,9 @@ const receiveExportAll = () => {
 const invalidRequestExportAll = (error) => {
   return {
     type: ExportConstants.EXPORT_ALL_INVALID_REQUEST,
-    error
+    title: 'Cannot generate an export because of technical error',
+    message: error,
+    level: 'error'
   };
 };
 

@@ -25,7 +25,9 @@ const invalidRequestDaemonInfo = (daemon) => {
     return {
       type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
       daemon,
-      error
+      title: 'Cannot retreiving daemon info for ' + daemon.name,
+      message: error,
+      level: 'error'
     };
   };
 };
