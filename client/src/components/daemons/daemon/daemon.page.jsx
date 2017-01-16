@@ -101,6 +101,8 @@ class DaemonComponent extends React.Component {
       daemon.volumes = volumesBox.state.volumes;
       daemon.variables = variablesBox.state.variables;
       daemon.tags = tagsSelector.state.tags;
+      daemon.port = parseInt(daemon.port);
+      daemon.timeout = parseInt(daemon.timeout);
       this.props.onSave(daemon);
     }
   }
@@ -204,7 +206,7 @@ class DaemonComponent extends React.Component {
                   </Form.Field>
                   <Form.Field width='fourteen'>
                     <label>Tags of the daemon</label>
-                    <TagsSelector selectedTags={daemon.tags || []} tags={tags} ref='tags' />
+                    <TagsSelector selectedTags={daemon.tags || []} tags={tags} onChange={this.handleChange} ref='tags' />
                   </Form.Field>
                 </Form.Group>
 
@@ -288,12 +290,12 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDaemon: id => dispatch(DaemonsThunks.fetchDaemon(id)),
+    fetchDaemon: id => dispatch(DaemonsThunks.fetch(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: daemon => dispatch(DaemonsThunks.saveDaemon(daemon)),
+    onSave: daemon => dispatch(DaemonsThunks.save(daemon)),
     onDelete: daemon => {
-      const callback = () => dispatch(DaemonsThunks.deleteDaemon(daemon.id));
+      const callback = () => dispatch(DaemonsThunks.delete(daemon.id));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
     }
   };

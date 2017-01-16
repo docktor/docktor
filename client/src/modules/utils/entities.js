@@ -4,7 +4,7 @@ import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 const getConsts = (entitiesName) => {
   const ENTITIES_NAME = entitiesName.toUpperCase();
-  const ENTITY_NAME = ENTITIES_NAME.splice(0, -1);
+  const ENTITY_NAME = ENTITIES_NAME.slice(0, -1);
   const CONST_REQUEST = 'REQUEST_' + ENTITIES_NAME;
   const CONST_RECEIVE = 'RECEIVE_' + ENTITIES_NAME;
   const CONST_INVALID = 'INVALID_REQUEST_' + ENTITIES_NAME;
@@ -95,7 +95,7 @@ export const generateEntitiesActions = (entitiesName) => {
       };
     },
     invalidRequestEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().splice(0, -1);
+      const entityName = entitiesName.toLowerCase().slice(0, -1);
       const title = entity.title || entity.name || entity.username;
       return {
         type: CONST_INVALID_ENTITY,
@@ -117,7 +117,7 @@ export const generateEntitiesActions = (entitiesName) => {
       };
     },
     invalidSaveEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().splice(0, -1);
+      const entityName = entitiesName.toLowerCase().slice(0, -1);
       const title = entity.title || entity.name || entity.username;
       return {
         type: CONST_INVALID_SAVE_ENTITY,
@@ -140,7 +140,7 @@ export const generateEntitiesActions = (entitiesName) => {
       };
     },
     invalidDeleteEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().splice(0, -1);
+      const entityName = entitiesName.toLowerCase().slice(0, -1);
       const title = entity.title || entity.name || entity.username;
       return {
         type: CONST_INVALID_DELETE_ENTITY,

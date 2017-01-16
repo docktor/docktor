@@ -114,7 +114,7 @@ func (u *Users) Delete(c echo.Context) error {
 		log.WithField("info", rmInfo).WithField("userId", id).Warn("Could not remove member from groups after deleting user")
 	}
 
-	return c.JSON(http.StatusOK, res)
+	return c.String(http.StatusOK, res.Hex())
 }
 
 // ChangePasswordOptions is a structure containing data used to change a password

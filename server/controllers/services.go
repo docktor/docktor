@@ -54,7 +54,7 @@ func (s *Services) Delete(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove service: %v", err))
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, res.Hex())
 }
 
 //Get service from docktor
