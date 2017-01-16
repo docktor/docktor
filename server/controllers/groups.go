@@ -3,10 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/users"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -88,4 +91,103 @@ func (g *Groups) Delete(c echo.Context) error {
 func (g *Groups) Get(c echo.Context) error {
 	group := c.Get("group").(types.Group)
 	return c.JSON(http.StatusOK, group)
+}
+
+// GetTags get all tags from a given group
+// It is able to get get tags from sub entities (like containers and services if needed)
+func (g *Groups) GetTags(c echo.Context) error {
+	withServices, _ := strconv.ParseBool(c.QueryParam("services"))     // Get all tags from a given daemon
+	withcontainers, _ := strconv.ParseBool(c.QueryParam("containers")) // Get all tags from a given Users
+
+	group := c.Get("group").(types.Group)
+	docktorAPI := c.Get("api").(*api.Docktor)
+
+	tagIds := group.Tags
+
+	// Get also tags from container instances of group
+	if withcontainers {
+		for _, c := range group.Containers {
+			tagIds = append(tagIds, c.Tags...)
+		}
+	}
+
+	// Get also tags from the type of containers (= service)
+	if withServices {
+		var serviceIds []bson.ObjectId
+		// Get services from containers
+		for _, c := range group.Containers {
+			serviceIds = append(serviceIds, c.ServiceID)
+		}
+		services, err := docktorAPI.Services().FindAllByIDs(serviceIds)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
+		}
+		// Get tags from services
+		for _, s := range services {
+			tagIds = append(tagIds, s.Tags...)
+		}
+	}
+
+	log.WithFields(log.Fields{"group": group.ID, "tags": tagIds}).Debug("Get all tags from Group")
+
+	tags, err := docktorAPI.Tags().FindAllByIDs(tagIds)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, tags)
+}
+
+// GetMembers get all users who are members of the group
+func (g *Groups) GetMembers(c echo.Context) error {
+	group := c.Get("group").(types.Group)
+	docktorAPI := c.Get("api").(*api.Docktor)
+
+	ur := users.Rest{Docktor: docktorAPI}
+	users, err := ur.GetUsersFromIds(group.Members.GetUsers())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
+
+// GetDaemons get all daemons used on the group (filesystem and containers)
+func (g *Groups) GetDaemons(c echo.Context) error {
+
+	group := c.Get("group").(types.Group)
+	docktorAPI := c.Get("api").(*api.Docktor)
+
+	var daemonIds []bson.ObjectId
+
+	for _, fs := range group.FileSystems {
+		daemonIds = append(daemonIds, fs.Daemon)
+	}
+	for _, c := range group.Containers {
+		daemonIds = append(daemonIds, c.DaemonID)
+	}
+
+	daemons, err := docktorAPI.Daemons().FindAllByIds(daemonIds)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, daemons)
+}
+
+// GetServices get all services used on the group (service from containers)
+func (g *Groups) GetServices(c echo.Context) error {
+	group := c.Get("group").(types.Group)
+	docktorAPI := c.Get("api").(*api.Docktor)
+
+	var serviceIds []bson.ObjectId
+	for _, c := range group.Containers {
+		serviceIds = append(serviceIds, c.ServiceID)
+	}
+
+	services, err := docktorAPI.Services().FindAllByIDs(serviceIds)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, services)
 }

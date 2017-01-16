@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
 // Components
 import HeadingBox from '../../../common/boxes/box/heading.box.component';
@@ -17,7 +18,7 @@ import set from 'lodash.set';
 import './containers.box.component.scss';
 
 // ContainersBox is a list of containers
-class ContainersBox extends React.Component {
+class ContainersBoxComponent extends React.Component {
 
   colors = ['orange', 'teal', 'blue', 'violet', 'purple', 'yellow'];
   dummyTag= {
@@ -139,7 +140,7 @@ class ContainersBox extends React.Component {
   }
 
   setDisplay = (display) => {
-    const disp = this.displays.includes(display) ? display : 'grid';
+    const disp = this.displays.includes(display) ? display : GRID_DISPLAY;
     this.setState({ display: disp });
   }
 
@@ -203,7 +204,7 @@ class ContainersBox extends React.Component {
   };
 }
 
-ContainersBox.propTypes = {
+ContainersBoxComponent.propTypes = {
   containers: React.PropTypes.array,
   services: React.PropTypes.object,
   tags: React.PropTypes.object,
@@ -213,5 +214,27 @@ ContainersBox.propTypes = {
   group: React.PropTypes.object,
   loc: React.PropTypes.object
 };
+
+// Function to map state to container props
+const mapStateToProps = (state, ownProps) => {
+  const loc = state.routing.locationBeforeTransitions;
+  const { containers, services, tags, daemons, display, groupBy, group } = ownProps;
+  return {
+    containers: containers || [],
+    services: services || {},
+    tags: tags || {},
+    daemons: daemons || [],
+    display,
+    groupBy,
+    group,
+    loc
+  };
+};
+
+// Redux container to component
+const ContainersBox = connect(
+  mapStateToProps,
+  null
+)(ContainersBoxComponent);
 
 export default ContainersBox;

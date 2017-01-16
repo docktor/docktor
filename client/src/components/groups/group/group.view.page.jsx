@@ -55,10 +55,10 @@ class GroupViewComponent extends React.Component {
 
     if (groupId) {
       this.props.fetchGroup(groupId);
-      this.props.fetchTags();
-      this.props.fetchDaemons();
-      this.props.fetchUsers(); // TODO : replace by fetchMembers thunk (that does not get all users)
-      this.props.fetchServices(); // TODO : replace by fetchContainerServices thunk (that does not get all users)
+      this.props.fetchTags(groupId);
+      this.props.fetchDaemons(groupId);
+      this.props.fetchMembers(groupId);
+      this.props.fetchServices(groupId);
     }
   }
 
@@ -187,7 +187,7 @@ GroupViewComponent.propTypes = {
   fetchGroup: React.PropTypes.func.isRequired,
   fetchDaemons: React.PropTypes.func.isRequired,
   fetchTags: React.PropTypes.func.isRequired,
-  fetchUsers: React.PropTypes.func.isRequired,
+  fetchMembers: React.PropTypes.func.isRequired,
   fetchServices: React.PropTypes.func.isRequired,
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func,
@@ -228,11 +228,11 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
-    fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded()),
-    fetchServices: () => dispatch(ServicesThunks.fetchIfNeeded()),
+    fetchGroup: id => dispatch(GroupsThunks.fetchGroup(id)),
+    fetchDaemons: id => dispatch(DaemonsThunks.fetchGroupDaemons(id)),
+    fetchTags: id => dispatch(TagsThunks.fetchGroupTags(id)),
+    fetchMembers: id => dispatch(UsersThunks.fetchGroupMembers(id)),
+    fetchServices: id => dispatch(ServicesThunks.fetchGroupServices(id))
   };
 };
 

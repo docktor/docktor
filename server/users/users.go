@@ -117,6 +117,19 @@ func (s *Rest) GetAllUserRest() ([]UserRest, error) {
 	return GetUsersRest(users), nil
 }
 
+// GetUsersFromIds from their mongodb ids..
+func (s *Rest) GetUsersFromIds(ids []bson.ObjectId) ([]UserRest, error) {
+	if s.Docktor == nil {
+		return []UserRest{}, errors.New("Docktor API is not initialized")
+	}
+
+	users, err := s.Docktor.Users().FindAllByIds(ids)
+	if err != nil {
+		return []UserRest{}, errors.New("Can't retrieve users")
+	}
+	return GetUsersRest(users), nil
+}
+
 func updateUserAccountData(userFromDocktor types.User, email, displayName, firstName, lastName *string) types.User {
 	if userFromDocktor.Provider == types.LocalProvider {
 		// Can update personal data only if it's a local user

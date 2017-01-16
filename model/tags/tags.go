@@ -132,6 +132,15 @@ func (r *Repo) FindAll() ([]types.Tag, error) {
 	return results, err
 }
 
+// FindAllByIDs get all tags with id
+func (r *Repo) FindAllByIDs(ids []bson.ObjectId) ([]types.Tag, error) {
+	results := []types.Tag{}
+	err := r.Coll.Find(
+		bson.M{"_id": &bson.M{"$in": ids}},
+	).All(&results)
+	return results, err
+}
+
 // Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
