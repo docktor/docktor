@@ -154,7 +154,7 @@ export const generateEntitiesActions = (entitiesName) => {
   };
 };
 
-const initialState = {
+export const initialState = {
   isFetching: false,
   didInvalidate: true,
   items: {},
@@ -216,7 +216,8 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       },
       selected: {
         ...state.selected,
-        isFetching: false
+        isFetching: false,
+        id: newReceivedEntity.id
       }
     };
   case CONST_SAVE_ENTITY:
@@ -266,7 +267,8 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       selected : {
         ...state.selected,
         isFetching: false,
-        didInvalidate: true
+        didInvalidate: true,
+        id: action.entity.id
       }
     };
   default:
