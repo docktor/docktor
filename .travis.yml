@@ -22,8 +22,7 @@ install:
 - gometalinter -u -i -f
 - govendor sync -v
 - go get -u github.com/stretchr/testify
-- npm install -g yarn
-- yarn install
+- npm install
 
 script:
 - go build
