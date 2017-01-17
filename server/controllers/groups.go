@@ -98,10 +98,8 @@ func (g *Groups) Get(c echo.Context) error {
 func (g *Groups) GetTags(c echo.Context) error {
 	withServices, _ := strconv.ParseBool(c.QueryParam("services"))     // Get all tags from a given daemon
 	withcontainers, _ := strconv.ParseBool(c.QueryParam("containers")) // Get all tags from a given Users
-
 	group := c.Get("group").(types.Group)
 	docktorAPI := c.Get("api").(*api.Docktor)
-
 	tagIds := group.Tags
 
 	// Get also tags from container instances of group
@@ -110,7 +108,6 @@ func (g *Groups) GetTags(c echo.Context) error {
 			tagIds = append(tagIds, c.Tags...)
 		}
 	}
-
 	// Get also tags from the type of containers (= service)
 	if withServices {
 		var serviceIds []bson.ObjectId
@@ -120,7 +117,8 @@ func (g *Groups) GetTags(c echo.Context) error {
 		}
 		services, err := docktorAPI.Services().FindAllByIDs(serviceIds)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, err)
+			log.WithError(err).WithField("group", group.ID).WithField("services.ids", serviceIds).Error("Can't get tags of service")
+			return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")
 		}
 		// Get tags from services
 		for _, s := range services {
@@ -128,11 +126,10 @@ func (g *Groups) GetTags(c echo.Context) error {
 		}
 	}
 
-	log.WithFields(log.Fields{"group": group.ID, "tags": tagIds}).Debug("Get all tags from Group")
-
 	tags, err := docktorAPI.Tags().FindAllByIDs(tagIds)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		log.WithError(err).WithField("group", group.ID).Error("Can't get tags of group")
+		return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")
 	}
 
 	return c.JSON(http.StatusOK, tags)
@@ -145,8 +142,10 @@ func (g *Groups) GetMembers(c echo.Context) error {
 
 	ur := users.Rest{Docktor: docktorAPI}
 	users, err := ur.GetUsersFromIds(group.Members.GetUsers())
+
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		log.WithError(err).WithField("group", group.ID).Error("Can't get members of group")
+		return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")
 	}
 
 	return c.JSON(http.StatusOK, users)
@@ -169,7 +168,8 @@ func (g *Groups) GetDaemons(c echo.Context) error {
 
 	daemons, err := docktorAPI.Daemons().FindAllByIds(daemonIds)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		log.WithError(err).WithField("group", group.ID).WithField("daemons.ids", daemonIds).Error("Can't get daemons of group")
+		return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")
 	}
 
 	return c.JSON(http.StatusOK, daemons)
@@ -187,7 +187,8 @@ func (g *Groups) GetServices(c echo.Context) error {
 
 	services, err := docktorAPI.Services().FindAllByIDs(serviceIds)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		log.WithError(err).WithField("group", group.ID).WithField("service.ids", serviceIds).Error("Can't get services of group")
+		return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")
 	}
 	return c.JSON(http.StatusOK, services)
 }

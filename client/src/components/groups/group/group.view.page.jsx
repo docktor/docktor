@@ -15,7 +15,6 @@ import UsersThunks from '../../../modules/users/users.thunks';
 import ServicesThunks from '../../../modules/services/services.thunks';
 
 // Selectors
-import { getDaemonsAsFSOptions } from '../../../modules/daemons/daemons.selectors';
 import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants';
 import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.constants';
 
@@ -31,13 +30,6 @@ class GroupViewComponent extends React.Component {
 
   state = { group: {} }
   roles = {}
-
-  constructor(props) {
-    super(props);
-    this.state = { ...props.group };
-    this.roles = {};
-
-  }
 
   componentWillMount = () => {
     ALL_ROLES.forEach(role => {
@@ -69,9 +61,12 @@ class GroupViewComponent extends React.Component {
   }
 
   getMembersEmail = (members, users) => {
-    return members.map(member => users[member.user]).map(member => member.email);
+    return members.map(member => users[member.user])
+                  .filter(member => Boolean(member))
+                  .map(member => member.email);
   }
 
+  // Render the members of the group
   renderMembers = (group, users) => {
     if(users.isFetching) {
       return <span><Icon loading name='notched circle' />Loading...</span>;
@@ -135,7 +130,7 @@ class GroupViewComponent extends React.Component {
   }
 
   render = () => {
-    const { isFetching, group, daemons, tags, users, services, loc } = this.props;
+    const { isFetching, group, daemons, tags, users, services } = this.props;
     const { display, groupBy } = this.props;
     return (
       <div className='flex layout vertical start-justified group-view-page'>
@@ -166,7 +161,7 @@ class GroupViewComponent extends React.Component {
                 <Form as={HeadingBox} stacked className='box-component' icon='users' title='Members'>
                   {this.renderMembers(group, users)}
                 </Form>
-                 <ContainersBox loc={loc} group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
+                 <ContainersBox isFetching={isFetching} group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
               </Segment>
             </div>
           </div>
@@ -180,7 +175,7 @@ GroupViewComponent.propTypes = {
   group: React.PropTypes.object,
   isFetching: React.PropTypes.bool,
   groupId: React.PropTypes.string,
-  daemons: React.PropTypes.array,
+  daemons: React.PropTypes.object,
   tags: React.PropTypes.object,
   users: React.PropTypes.object,
   services: React.PropTypes.object,
@@ -192,36 +187,37 @@ GroupViewComponent.propTypes = {
   onSave: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   display: React.PropTypes.string,
-  groupBy: React.PropTypes.string,
-  loc: React.PropTypes.object
+  groupBy: React.PropTypes.string
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
   const localSettings = JSON.parse(localStorage.getItem('settings')) || {};
-  const loc = state.routing.locationBeforeTransitions;
-  const paramId = ownProps.params.id;
-  const display = ownProps.loc.query.display || get(localSettings, `groups.${paramId}.display`);
-  const groupBy = ownProps.loc.query.groupBy || get(localSettings, `groups.${paramId}.groupBy`);
+  const groupId = ownProps.params.id;
+  const display = ownProps.loc.query.display || get(localSettings, `groups.${groupId}.display`);
+  const groupBy = ownProps.loc.query.groupBy || get(localSettings, `groups.${groupId}.groupBy`);
   const groups = state.groups;
   const group = groups.selected;
   const emptyGroup = { tags: [], filesystems: [], containers: [] };
-  const daemons = getDaemonsAsFSOptions(state.daemons.items) || [];
-  const tags = state.tags;
-  const users = state.users;
-  const services = state.services;
-  const isFetching = paramId && (paramId !== group.id);
+  const isFetching = groupId && (groupId !== group.id);
+
+  // External dependencies
+  const daemons = state.daemons || [];
+  const tags = state.tags || {};
+  const users = state.users || {};
+  const services = state.services || {};
+
+  // Props
   return {
+    groupId,
+    group: groups.items[groupId] || emptyGroup,
     display,
     groupBy,
-    group: groups.items[paramId] || emptyGroup,
     isFetching,
-    groupId: paramId,
     tags,
     daemons,
     users,
-    services,
-    loc
+    services
   };
 };
 

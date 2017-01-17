@@ -5,108 +5,39 @@ import { connect } from 'react-redux';
 
 // Components
 import HeadingBox from '../../../common/boxes/box/heading.box.component';
-import { Form,  Button, Dropdown, Label } from 'semantic-ui-react';
+import { Form,  Button, Dropdown, Label, Loader, Dimmer } from 'semantic-ui-react';
 import ContainersView from './containers.view.component';
 
-import uniqBy from 'lodash.uniqby';
-import groupBy from 'lodash.groupby';
-import flatMap from 'lodash.flatmap';
-import sortBy from 'lodash.sortby';
-import differenceBy from 'lodash.differenceby';
 import set from 'lodash.set';
+
+import TagsSelectors from '../../../../modules/tags/tags.selectors.js';
 
 import './containers.box.component.scss';
 
 // ContainersBox is a list of containers
 class ContainersBoxComponent extends React.Component {
 
+  // Available colors for tags
   colors = ['orange', 'teal', 'blue', 'violet', 'purple', 'yellow'];
-  dummyTag= {
-    id: 'others',
-    name: { raw: 'Others', slug: 'others' },
-    category: { raw: 'Others', slug: 'others' }
-  }
+  // Available displays
   GRID_DISPLAY='grid'
   LIST_DISPLAY='list'
   displays = [this.GRID_DISPLAY, this.LIST_DISPLAY]
 
+  // Save choice to local storage
+  // When user comes displays again the box, default display will the one from his last choice
+  saveToLocalStorage = (groupId, property, value) => {
+    var settings = JSON.parse(localStorage.getItem('settings')) || {};
+    set(settings, `groups.${groupId}.${property}`, value);
+    localStorage.setItem('settings', JSON.stringify(settings));
+  }
 
   onChangeDisplay = (groupId, display) => {
-    // Save choice to local storage
-    // When user comes displays again the box, default display will the one from his last choice
-    var settings = JSON.parse(localStorage.getItem('settings')) || {};
-    set(settings, `groups.${groupId}.display`, display);
-    localStorage.setItem('settings', JSON.stringify(settings));
+    this.saveToLocalStorage(groupId, 'display', display);
   }
 
   onChangeGroupBy= (groupId, groupBy) => {
-    var settings = JSON.parse(localStorage.getItem('settings')) || {};
-    set(settings, `groups.${groupId}.groupBy`, groupBy);
-    localStorage.setItem('settings', JSON.stringify(settings));
-  }
-
-  // Renders a view grouped by the tags of a given category
-  // If container does not have a tag with given category, it's set in a OTHERS category.
-  renderContainersGroupedBy = (tagsFromCategory, allContainers, display, services, daemons, tags, colorTagCategories) => {
-    // Iterate through all tags from given category
-    const containersByTag = tagsFromCategory.map(tag => {
-      // Keep only containers with given tag
-      const containersWithTag = allContainers.filter(container => {
-        const tags = container.tags || [];
-        return tags.includes(tag.id);
-      });
-      // Keep only services with given tag
-      const servicesWithTag = allContainers.map(container => services.items[container.serviceId])
-                                           .filter(service => Boolean(service))
-                                           .filter(service => service.tags.includes(tag.id));
-      // Keep only containers of a type of service containing given tag
-      const containersFromServicesWithTags = allContainers.filter(container => servicesWithTag.filter( service => service.id === container.serviceId).length > 0);
-
-      // Merge
-      return { tag: tag, containers: uniqBy(containersWithTag.concat(containersFromServicesWithTags), 'id') };
-    });
-
-    const containersContainingTags = flatMap(containersByTag, (container) => container.containers);
-    const containersWithoutTags = differenceBy(allContainers, containersContainingTags, 'id');
-
-    const c = containersByTag.concat({ tag : this.dummyTag, containers: containersWithoutTags });
-
-    return c.map(containersByTag => {
-      return (
-        <div className='group-by-view' key={containersByTag.tag.id}>
-          <h4 className='ui horizontal divider header'>
-            <Label circular empty color={containersByTag.tag && colorTagCategories[containersByTag.tag.category.slug]}/>
-            {containersByTag.tag.name.raw}
-          </h4>
-          <ContainersView daemons={daemons || []} containers={containersByTag.containers || []} colorTagCategories={colorTagCategories}
-                          display={display} services={services} tags={tags} tagToFilter={containersByTag.tag}
-          />
-        </div>
-      );
-    });
-
-  }
-
-  getTagCategories = (containers, services, tags) => {
-
-    // Get tag ids from containers
-    const containersTagsIds = flatMap(containers, (container) => container.tags);
-
-    // Get tags ids from services
-    const containerServices = containers.map(container => services.items[container.serviceId])
-                                        .filter(service => Boolean(service));
-    const containerServicesTagsIds = flatMap(containerServices, (container) => container.tags);
-
-    // Merge tags
-    const allTagIds = containersTagsIds.concat(containerServicesTagsIds);
-    const allTags = allTagIds.map(tagId => tags.items[tagId]).filter(tag => Boolean(tag));
-    const uniqAllTags = uniqBy(allTags, 'id');
-    const sortedAllTags = sortBy(uniqAllTags, 'name.slug');
-
-    // Get categories from tags
-    const categories = groupBy(sortedAllTags, (tag) => tag.category.slug);
-
-    return categories;
+    this.saveToLocalStorage(groupId, 'groupBy', groupBy);
   }
 
   getColorCategories = (categories) => {
@@ -117,7 +48,8 @@ class ContainersBoxComponent extends React.Component {
     return colors;
   }
 
-  getTagCategoriesFromDropdown = (categories, colorCategories) => {
+  // Create options for groupBy dropdown
+  groupByOptions = (categories, colorCategories) => {
     return Object.keys(categories).sort().map(categorySlug => {
       return {
         value: categorySlug || '',
@@ -140,7 +72,7 @@ class ContainersBoxComponent extends React.Component {
   }
 
   setDisplay = (display) => {
-    const disp = this.displays.includes(display) ? display : GRID_DISPLAY;
+    const disp = this.displays.includes(display) ? display : this.GRID_DISPLAY;
     this.setState({ display: disp });
   }
 
@@ -148,12 +80,46 @@ class ContainersBoxComponent extends React.Component {
     this.setState({ groupBy: groupBy });
   }
 
+
+  renderContainers = (isFetching, groupBy, categories, containers, display, services, daemons, tags, colorCategories) => {
+    if (isFetching) {
+      return <Dimmer inverted active><Loader size='big' content='Loading'/></Dimmer>;
+    }
+    if (containers.length === 0 ) {
+      return <span>No container</span>;
+    }
+    if (groupBy === '' || !categories[groupBy]) {
+      return <ContainersView daemons={daemons} containers={containers} colorTagCategories={colorCategories} display={display} services={services} tags={tags} />;
+    } else {
+       // Renders a view grouped by the tags of a given category
+      // If container does not have a tag with given category, it's set in a OTHERS category.
+      const c = TagsSelectors.getContainersGroupedByCategory(categories[groupBy], containers, services);
+      return c.map(containersByTag => {
+        if (containersByTag.containers.length === 0) {
+          return '';
+        }
+        return (
+          <div className='group-by-view' key={containersByTag.tag.id}>
+            <h4 className='ui horizontal divider header'>
+              <Label circular empty color={containersByTag.tag && colorCategories[containersByTag.tag.category.slug]}/>
+              {containersByTag.tag.name.raw}
+            </h4>
+            <ContainersView daemons={daemons} containers={containersByTag.containers} colorTagCategories={colorCategories}
+                            display={display} services={services} tags={tags} tagToFilter={containersByTag.tag}
+            />
+          </div>
+        );
+      });
+    }
+  }
+
   render = () => {
     const { display, groupBy } = this.state;
-    const { containers, daemons, services, tags, group, loc } = this.props;
-    const categories = this.getTagCategories(containers, services, tags);
+    const { containers, daemons, services, tags, group, loc, isFetching } = this.props;
+    const categories = TagsSelectors.getTagCategories(containers, services, tags);
     const colorCategories = this.getColorCategories(categories);
-    const tagCategories = this.getTagCategoriesFromDropdown(categories, colorCategories);
+    const groupByOptions = this.groupByOptions(categories, colorCategories);
+
     return (
       <Form as={HeadingBox} className='box-component' icon='cube' title='Containers'>
        <div className='layout horizontal justified'>
@@ -165,13 +131,15 @@ class ContainersBoxComponent extends React.Component {
             <Button disabled icon='trash' content='Uninstall all' />
           </Button.Group>
           <div className='layout horizontal jusitified' >
-            <Dropdown disabled={tagCategories.length == 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'} value={groupBy || ''} floating labeled button className='icon' icon='filter'>
+            <Dropdown disabled={groupByOptions.length == 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'}
+                      value={groupBy || ''} floating labeled button className='icon' icon='filter'>
               <Dropdown.Menu>
-                <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: loc.query.display } }} onClick={() => this.onChangeGroupBy(group.id, '')} >
+                <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: loc.query.display } }}
+                                onClick={() => this.onChangeGroupBy(group.id, '')} >
                   <Button fluid compact content='Cancel'/>
                 </Dropdown.Item>
                 <Dropdown.Menu scrolling>
-                  {tagCategories.map((category) => <Dropdown.Item
+                  {groupByOptions.map((category) => <Dropdown.Item
                     as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, groupBy: category.value } }}
                     active={groupBy === category.value}
                     onClick={() => this.onChangeGroupBy(group.id, category.value)}
@@ -195,9 +163,8 @@ class ContainersBoxComponent extends React.Component {
             </Button.Group>
           </div>
         </div>
-        <div className='containers'>
-          {groupBy === '' && <ContainersView daemons={daemons || []} containers={containers || []} colorTagCategories={colorCategories} display={display} services={services || {}} tags={tags || {}} />}
-          {groupBy !== '' && this.renderContainersGroupedBy(categories[groupBy] || [], containers || [], display, services || {}, daemons || [], tags || {}, colorCategories)}
+        <div className='ui dimmable containers'>
+          {this.renderContainers(isFetching, groupBy, categories, containers, display, services, daemons, tags, colorCategories)}
         </div>
       </Form>
     );
@@ -205,28 +172,30 @@ class ContainersBoxComponent extends React.Component {
 }
 
 ContainersBoxComponent.propTypes = {
-  containers: React.PropTypes.array,
-  services: React.PropTypes.object,
-  tags: React.PropTypes.object,
-  daemons: React.PropTypes.array,
+  containers: React.PropTypes.array.isRequired,
+  services: React.PropTypes.object.isRequired,
+  tags: React.PropTypes.object.isRequired,
+  daemons: React.PropTypes.object.isRequired,
   display: React.PropTypes.string,
   groupBy: React.PropTypes.string,
-  group: React.PropTypes.object,
-  loc: React.PropTypes.object
+  group: React.PropTypes.object.isRequired,
+  loc: React.PropTypes.object.isRequired,
+  isFetching: React.PropTypes.bool.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
   const loc = state.routing.locationBeforeTransitions;
-  const { containers, services, tags, daemons, display, groupBy, group } = ownProps;
+  const { containers, services, tags, daemons, display, groupBy, group, isFetching } = ownProps;
   return {
+    isFetching: isFetching || services.isFetching || tags.isFetching,
     containers: containers || [],
     services: services || {},
     tags: tags || {},
-    daemons: daemons || [],
+    daemons: daemons || {},
     display,
-    groupBy,
-    group,
+    groupBy: groupBy || '',
+    group: group || {},
     loc
   };
 };

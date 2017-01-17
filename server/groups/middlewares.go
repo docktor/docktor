@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 	api "github.com/soprasteria/docktor/model"
 )
@@ -17,7 +18,9 @@ func RetrieveGroup(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.String(http.StatusBadRequest, GroupInvalidID)
 		}
 		group, err := docktorAPI.Groups().FindByID(groupID)
-		if err != nil {
+		log.Debug(group)
+		if err != nil || group.ID.Hex() == "" {
+			log.WithField("group", groupID).Error("Unable to fetch group")
 			return c.String(http.StatusNotFound, fmt.Sprintf(GroupNotFound, groupID))
 		}
 		c.Set("group", group)
