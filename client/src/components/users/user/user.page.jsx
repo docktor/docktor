@@ -52,12 +52,8 @@ class UserComponent extends React.Component {
 
   onSave = (e) => {
     e.preventDefault();
-    const tagsSelector = this.refs.tags;
     if (this.isFormValid()) {
-      const user = {
-        ...this.state.user,
-        tags: [...tagsSelector.state.tags]
-      };
+      const user = { ...this.state.user };
       this.props.onSave(user);
     }
   }
@@ -138,7 +134,7 @@ class UserComponent extends React.Component {
                   </Form.Field>
                   <Form.Field width='fourteen'>
                     <label>Tags of the daemon</label>
-                    <TagsSelector selectedTags={user.tags || []} tags={tags} ref='tags' />
+                    <TagsSelector selectedTags={user.tags || []} tags={tags} onChange={this.handleChange} />
                   </Form.Field>
                 </Form.Group>
 
@@ -179,9 +175,9 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: id => dispatch(UsersThunks.fetchUser(id)),
+  fetchUser: id => dispatch(UsersThunks.fetch(id)),
   fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-  onSave: user => dispatch(UsersThunks.saveUser(user))
+  onSave: user => dispatch(UsersThunks.save(user))
 });
 
 const UserPage = connect(

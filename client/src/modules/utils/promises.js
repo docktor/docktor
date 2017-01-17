@@ -18,6 +18,11 @@ export const parseJSON = response => {
   return response.json();
 };
 
+// Convert the response body as text
+export const parseText = response => {
+  return response.text();
+};
+
 // Handle error whether it's
 // - a server error (= error message is send a a string in the body)
 // - a client error (= javascript error while parsing json or anything else)

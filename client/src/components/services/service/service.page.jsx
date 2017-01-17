@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Input, Button, Dimmer, Loader, Label, Icon, Menu, Segment } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -93,7 +94,6 @@ class ServiceComponent extends React.Component {
     const urlsBox = this.refs.urls;
     const jobsBox = this.refs.jobs;
     const imagesBoxes = this.refs.images;
-    const tagsSelector = this.refs.tags;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
     let formValid = this.isFormValid() & commandsBox.isFormValid() & urlsBox.isFormValid() & jobsBox.isFormValid() & imagesBoxes.isFormValid();
     if (formValid) {
@@ -101,7 +101,6 @@ class ServiceComponent extends React.Component {
       service.urls = urlsBox.state.urls;
       service.jobs = jobsBox.state.jobs;
       service.commands = commandsBox.state.commands;
-      service.tags = tagsSelector.state.tags;
       service.images = imagesBoxes.getImages();
       this.props.onSave(service);
     }
@@ -125,7 +124,7 @@ class ServiceComponent extends React.Component {
             </Form.Field>
             <Form.Field width='fourteen'>
               <label>Tags of the service</label>
-              <TagsSelector selectedTags={service.tags || []} tags={tags} ref='tags' />
+              <TagsSelector selectedTags={service.tags || []} tags={tags} onChange={this.handleChange} ref='tags' />
             </Form.Field>
           </Form.Group>
         </Form>
@@ -226,11 +225,11 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchService: id => dispatch(ServicesThunks.fetchService(id)),
+    fetchService: id => dispatch(ServicesThunks.fetch(id)),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: service => dispatch(ServicesThunks.saveService(service)),
+    onSave: service => dispatch(ServicesThunks.save(service, push('/services'))),
     onDelete: service => {
-      const callback = () => dispatch(ServicesThunks.deleteService(service.id));
+      const callback = () => dispatch(ServicesThunks.delete(service, push('/services')));
       dispatch(ToastsActions.confirmDeletion(service.title, callback));
     }
   };

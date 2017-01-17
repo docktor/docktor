@@ -1,15 +1,20 @@
-var gulp = require('gulp'),
-  gulpgo = require('gulp-go'),
-  clean = require('gulp-clean'),
-  gutil = require('gulp-util'),
-  exec = require('child_process').exec,
-  webpack = require('webpack'),
-  inject = require('gulp-inject-string'),
-  zip = require('gulp-zip'),
-  docktor = require('./package.json'),
-  git = require('git-rev'),
-  dateFormat = require('dateformat'),
-  WebpackDevServer = require('webpack-dev-server');
+var gulp            = require('gulp'),
+  util              = require('gulp-util'),
+  notifier          = require('node-notifier'),
+  sync              = require('gulp-sync')(gulp).sync,
+  runSequence       = require('run-sequence'),
+  del               = require('del'),
+  child             = require('child_process'),
+  os                = require('os'),
+  inject            = require('gulp-inject-string'),
+  webpack           = require('webpack'),
+  zip               = require('gulp-zip'),
+  docktor           = require('./package.json'),
+  git               = require('git-rev'),
+  dateFormat        = require('dateformat'),
+  WebpackDevServer  = require('webpack-dev-server');
+
+var server = null;
 
 var devConfigWebpack = require('./webpack.config.dev.js'),
   prodConfigWebpack = require('./webpack.config.prod.js');
@@ -28,10 +33,11 @@ var dependenciesPath = {
   images: [
     './client/src/components/app/images/*',
     './client/src/components/users/user/images/*',
-    './node_modules/leaflet/dist/images/*',
-    './node_modules/semantic-ui-css/themes/default/assets/images/*'
+    './node_modules/semantic-ui-css/themes/default/assets/images/*',
+    './node_modules/leaflet/dist/images/*'
   ]
 };
+
 var injectedPath = {
   dev: 'http://localhost:8081/js/bundle.js',
   prod: '/js/bundle.js'
@@ -39,7 +45,7 @@ var injectedPath = {
 
 var distPath = {
   binary: './docktor',
-  client: './client/dist/**/*',
+  client: './client/dist',
   dist: './dist',
   zipname: `docktor-${docktor.version}.zip`
 };
@@ -48,21 +54,13 @@ const now = () => {
   return dateFormat(new Date(), 'isoDateTime');
 };
 
-/*===================== DEV =====================*/
+
+gulp.task('clean', function() {
+  return del([distPath.dist, distPath.client, distPath.binary]);
+});
 
 /*====== Client ======*/
-gulp.task('clean-js', function() {
-  return gulp.src('./client/dist/js/*', {
-    read: false
-  }).pipe(clean());
-});
-
-gulp.task('bundle-html-dev', function() {
-  return gulp.src(dependenciesPath.templates).pipe(inject.replace('REACT_APP', injectedPath.dev)).pipe(gulp.dest('./client/dist/'));
-});
-
-
-gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 'bundle-images'], function() {
+gulp.task('client:webpackDevServer', function() {
   var compiler = webpack(devConfigWebpack);
   new WebpackDevServer(compiler, {
     publicPath: '/js/',
@@ -76,86 +74,123 @@ gulp.task('webpack-dev-server', ['clean-js', 'bundle-html-dev', 'bundle-fonts', 
 });
 
 /*====== Server ======*/
-
-gulp.task('go-run', function() {
+gulp.task('server:build', function() {
   const flags = `-X github.com/soprasteria/docktor/cmd.Version=${docktor.version}`;
-  go = gulpgo.run(['-ldflags', `${flags}`, 'main.go'], ['serve', '-e', 'dev', '--redis-addr', 'localhost:6379', '--level', 'debug'], {
-    cwd: __dirname,
-    stdio: 'inherit'
-  });
+  const build = child.spawnSync('go', ['install', '-ldflags', `${flags}`]);
+  if (build.stderr.length) {
+    util.log(util.colors.red('Something wrong with this version :'));
+    const lines = build.stderr.toString();
+    util.log(util.colors.red(lines));
+    notifier.notify({
+      title: 'Error (go install)',
+      message: lines
+    });
+  }
+  return build;
 });
 
-gulp.task('watch-server', ['go-run'], function() {
-  gulp.watch(watchFiles.server, ['bundle-html-dev']).on('change', function() {
-    go.restart();
-  });
+gulp.task('server:spawn', function() {
+  // Arrêt du serveur
+  if (server && server !== 'null') {
+    server.kill();
+  }
+  if (os.platform() == 'win32') {
+    var path_folder = __dirname.split('\\');
+  } else {
+    var path_folder = __dirname.split('/');
+  }
+  var length = path_folder.length;
+  var app    = path_folder[length - parseInt(1)];
+  if (os.platform() == 'win32') {
+    server = child.spawn(app + '.exe', ['serve', '-e', 'dev', '-l', 'debug'], { stdio: 'inherit' });
+  } else {
+    server = child.spawn(app, ['serve', '-e', 'dev', '-l', 'debug'], { stdio: 'inherit' });
+  }
 });
 
-/*===================== PROD =====================*/
-
-/*====== Client ======*/
-gulp.task('bundle-html', function() {
-  return gulp.src(dependenciesPath.templates).pipe(inject.replace('REACT_APP', injectedPath.prod)).pipe(gulp.dest('./client/dist/'));
+gulp.task('server:watch', function() {
+  return gulp.watch(watchFiles.server, sync([
+    'server:html',
+    'server:build',
+    'server:spawn'
+  ], 'server'));
 });
 
-gulp.task('bundle-fonts', function() {
-  return gulp.src(dependenciesPath.fonts).pipe(gulp.dest('./client/dist/fonts/'));
+gulp.task('server:html', function() {
+  return gulp.src(dependenciesPath.templates).pipe(inject.replace('REACT_APP', injectedPath.dev)).pipe(gulp.dest(distPath.client));
 });
 
-gulp.task('bundle-images', function() {
-  return gulp.src(dependenciesPath.images).pipe(gulp.dest('./client/dist/images/'));
+/*====== Dist ======*/
+gulp.task('dist:html', function() {
+  return gulp.src(dependenciesPath.templates).pipe(inject.replace('REACT_APP', injectedPath.prod)).pipe(gulp.dest(distPath.client));
 });
 
-gulp.task('bundle-client', function(doneCallBack) {
+gulp.task('dist:fonts', function() {
+  return gulp.src(dependenciesPath.fonts).pipe(gulp.dest(distPath.client + '/fonts/'));
+});
+
+gulp.task('dist:images', function() {
+  return gulp.src(dependenciesPath.images).pipe(gulp.dest(distPath.client + '/images/'));
+});
+
+gulp.task('dist:webpack', function(callback) {
   webpack(prodConfigWebpack, function(err) {
-    if(err) {throw new gutil.PluginError("webpack", err);}
-    doneCallBack();
+    if(err) {throw new gutil.PluginError('webpack', err);}
+    callback();
   });
 });
 
-gulp.task('bundle', ['clean-js', 'bundle-html', 'bundle-fonts', 'bundle-images', 'bundle-client']);
-
-gulp.task('dist-client', ['bundle'], function() {
-  return gulp.src(distPath.client).pipe(gulp.dest(distPath.dist + '/client/dist'));
+gulp.task('dist:copy', function() {
+  return gulp.src(distPath.client + '/**/*').pipe(gulp.dest(distPath.dist + '/client/dist'));
 });
 
-/*====== Server =========*/
+gulp.task('dist:client', function(callback) {
+  runSequence('dist:html', 'dist:fonts', 'dist:images', 'dist:webpack', 'dist:copy', callback);
+});
 
-gulp.task('dist-server', function() {
-  git.long(function (gitHash) {
+gulp.task('dist:server', function(callback) {
+  return git.long(function (gitHash) {
     const flags = `
       -X github.com/soprasteria/docktor/cmd.Version=${docktor.version}
       -X github.com/soprasteria/docktor/cmd.BuildDate=${now()}
       -X github.com/soprasteria/docktor/cmd.GitHash=${gitHash}
     `;
-    const distServer = `go build -ldflags "${flags}"`;
-    console.log(distServer);
-    exec(distServer, function(err) {
-      if (!err) {
-        console.log('Docktor backend Build successfull');
-        return gulp.src(distPath.binary)
-                .pipe(gulp.dest(distPath.dist));
-      } else {
-        console.log(err);
-      }
-    });
+    const build = child.spawnSync('go', ['build', '-ldflags', `${flags}`]);
+    if (build.stderr.length) {
+      util.log(util.colors.red('Something wrong with this version :'));
+      const lines = build.stderr.toString();
+      util.log(util.colors.red(lines));
+      notifier.notify({
+        title: 'Error (go install)',
+        message: lines
+      });
+    } else {
+      gulp.src(distPath.binary)
+        .pipe(gulp.dest(distPath.dist));
+      callback();
+    }
   });
 });
 
-gulp.task('clean', function() {
-  return gulp.src(['./client/dist', distPath.dist, distPath.binary], {
-    read: false
-  }).pipe(clean());
-});
+
+/*====== Server =========*/
+
+
 
 /*===================== TASKS =====================*/
 
-gulp.task('start-dev', ['webpack-dev-server', 'watch-server', 'go-run']);
-gulp.task('dist', ['dist-server', 'dist-client']);
+gulp.task('dev', function(callback) {
+  runSequence('clean', 'dist:fonts', 'dist:images', 'client:webpackDevServer', 'server:html', 'server:build', 'server:watch', 'server:spawn', callback);
+});
+
+gulp.task('dist', function(callback) {
+  runSequence('clean', 'dist:client', 'dist:server', callback);
+});
+
 gulp.task('archive', ['dist'], function() {
   console.log('Archiving docktor in zip : ' + distPath.zipname);
   return gulp.src([distPath.dist + '/**/*'])
     .pipe(zip(distPath.zipname))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(distPath.dist));
 });
-gulp.task('default', ['start-dev']);
+gulp.task('default', ['dev']);

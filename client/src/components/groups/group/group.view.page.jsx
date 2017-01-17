@@ -223,7 +223,7 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
+    fetchGroup: (id) => dispatch(GroupsThunks.fetch(id)),
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
     fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded())

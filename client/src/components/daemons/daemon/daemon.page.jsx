@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Input, Button, Dimmer, Loader, Label, Icon, Popup, Grid } from 'semantic-ui-react';
 import Joi from 'joi-browser';
@@ -38,11 +39,15 @@ class DaemonComponent extends React.Component {
   })
 
   componentWillMount = () => {
-    this.setState({ daemon: { ...this.props.daemon }, errors: { details: [], fields:{} } });
+    const daemon = this.props.daemon;
+    const active = typeof daemon.active !== 'undefined' ? daemon.active : true;
+    this.setState({ daemon: { ...daemon, active }, errors: { details: [], fields:{} } });
   }
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({ daemon: { ...nextProps.daemon }, errors: { details: [], fields:{} } });
+    const daemon = nextProps.daemon;
+    const active = typeof daemon.active !== 'undefined' ? daemon.active : true;
+    this.setState({ daemon: { ...daemon, active }, errors: { details: [], fields:{} } });
   }
 
   componentDidMount = () => {
@@ -93,14 +98,12 @@ class DaemonComponent extends React.Component {
     e.preventDefault();
     const volumesBox = this.refs.volumes;
     const variablesBox = this.refs.variables;
-    const tagsSelector = this.refs.tags;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
     let formValid = this.isFormValid() & volumesBox.isFormValid() & variablesBox.isFormValid();
     if (formValid) {
       const daemon = { ...this.state.daemon };
       daemon.volumes = volumesBox.state.volumes;
       daemon.variables = variablesBox.state.variables;
-      daemon.tags = tagsSelector.state.tags;
       daemon.port = parseInt(daemon.port);
       daemon.timeout = parseInt(daemon.timeout);
       this.props.onSave(daemon);
@@ -157,9 +160,6 @@ class DaemonComponent extends React.Component {
         Docktor recommends to have a cAdvisor instance for each daemon.
       </div>
     );
-
-    const daemonActive = typeof daemon.active !== 'undefined' ? daemon.active : true;
-
     return (
       <div className='flex layout vertical start-justified daemon-page'>
         <Scrollbars autoHide ref='scrollbars' className='flex ui dimmable'>
@@ -183,7 +183,7 @@ class DaemonComponent extends React.Component {
                     <Grid.Column>
                       <Form.Input required label='Name' name='name' value={daemon.name || ''} onChange={this.handleChange}
                         type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['name']} />
-                      <Form.Checkbox label='Mark this daemon as active' name='active' toggle checked={daemonActive} className='field toggle-button' onChange={this.handleChange} />
+                      <Form.Checkbox label='Mark this daemon as active' name='active' toggle checked={daemon.active} className='field toggle-button' onChange={this.handleChange} />
                     </Grid.Column>
 
                     <Grid.Column>
@@ -293,9 +293,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchDaemon: id => dispatch(DaemonsThunks.fetch(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: daemon => dispatch(DaemonsThunks.save(daemon)),
+    onSave: daemon => dispatch(DaemonsThunks.save(daemon, push('/daemons'))),
     onDelete: daemon => {
-      const callback = () => dispatch(DaemonsThunks.delete(daemon.id));
+      const callback = () => dispatch(DaemonsThunks.delete(daemon, push('/daemons')));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
     }
   };

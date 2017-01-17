@@ -83,7 +83,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveUser: (user) => {
-      dispatch(UsersThunks.saveUser(user));
+      dispatch(UsersThunks.save(user));
     }
   };
 };

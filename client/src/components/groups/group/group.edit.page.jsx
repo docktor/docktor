@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import Joi from 'joi-browser';
@@ -91,14 +92,12 @@ class GroupEditComponent extends React.Component {
 
   onSave = (e) => {
     e.preventDefault();
-    const tagsSelector = this.refs.tags;
     const filesystemsBox = this.refs.filesystems;
     const membersBox = this.refs.members;
     // isFormValid validate the form and return the status so all the forms must be validated before doing anything
     let formValid = this.isFormValid() & filesystemsBox.isFormValid() & membersBox.isFormValid();
     if (formValid) {
       const group = { ...this.state.group };
-      group.tags = tagsSelector.state.tags;
       group.filesystems = filesystemsBox.state.filesystems;
       group.members = membersBox.state.members;
       this.props.onSave(group);
@@ -115,7 +114,7 @@ class GroupEditComponent extends React.Component {
             {isFetching && <Dimmer active><Loader size='big' content='Fetching'/></Dimmer>}
             <div className='flex layout vertical start-justified group-details'>
               <h1>
-                <Link to={group.id ? `/groups/${group.id}` : '/groups'}>
+                <Link to={'/groups'}>
                   <Icon name='arrow left' fitted/>
                 </Link>
                 {this.props.group.title || 'New Group'}
@@ -139,7 +138,7 @@ class GroupEditComponent extends React.Component {
                   </Form.Field>
                   <Form.Field width='fourteen'>
                     <label>Tags of the group</label>
-                    <TagsSelector selectedTags={group.tags || []} tags={tags} ref='tags' />
+                    <TagsSelector selectedTags={group.tags || []} tags={tags} onChange={this.handleChange} ref='tags' />
                   </Form.Field>
                 </Form.Group>
               </Form>
@@ -201,13 +200,13 @@ const mapStateToProps = (state, ownProps) => {
 // Function to map dispatch to container props
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchGroup: (id) => dispatch(GroupsThunks.fetchGroup(id)),
+    fetchGroup: (id) => dispatch(GroupsThunks.fetch(id)),
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
     fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: (group) => dispatch(GroupsThunks.saveGroup(group)),
+    onSave: (group) => dispatch(GroupsThunks.save(group, push('/groups'))),
     onDelete: group => {
-      const callback = () => dispatch(GroupsThunks.deleteGroup(group.id));
+      const callback = () => dispatch(GroupsThunks.delete(group, push('/groups')));
       dispatch(ToastsActions.confirmDeletion(group.title, callback));
     }
   };

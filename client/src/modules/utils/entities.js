@@ -1,6 +1,5 @@
-import { push, goBack } from 'react-router-redux';
 import { withAuth } from '../auth/auth.wrappers';
-import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
+import { checkHttpStatus, parseJSON, parseText, handleError } from '../utils/promises';
 
 const getConsts = (entitiesName) => {
   const ENTITIES_NAME = entitiesName.toUpperCase();
@@ -101,7 +100,8 @@ export const generateEntitiesActions = (entitiesName) => {
         type: CONST_INVALID_ENTITY,
         title: `Cannot fetch ${entityName} ${title}`,
         message: error,
-        level: 'error'
+        level: 'error',
+        entity
       };
     },
     requestSave: (entity) => {
@@ -118,12 +118,13 @@ export const generateEntitiesActions = (entitiesName) => {
     },
     invalidSaveEntity: (entity) => (error) => {
       const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.name || entity.username;
+      const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
       return {
         type: CONST_INVALID_SAVE_ENTITY,
         title: `Cannot save ${entityName} ${title}`,
         message: error,
-        level: 'error'
+        level: 'error',
+        entity
       };
     },
     requestDelete: (id) => {
@@ -141,12 +142,13 @@ export const generateEntitiesActions = (entitiesName) => {
     },
     invalidDeleteEntity: (entity) => (error) => {
       const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.name || entity.username;
+      const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
       return {
         type: CONST_INVALID_DELETE_ENTITY,
         title: `Cannot delete ${entityName} ${title}`,
         message: error,
-        level: 'error'
+        level: 'error',
+        entity
       };
     }
   };
@@ -167,10 +169,9 @@ const initialState = {
 export const generateEntitiesReducer = (state = initialState, action, entitiesName) => {
   const {
     CONST_REQUEST, CONST_RECEIVE, CONST_INVALID,
-    CONST_REQUEST_ENTITY, CONST_RECEIVE_ENTITY,
-    CONST_SAVE_ENTITY, CONST_ENTITY_SAVED,
-    CONST_DELETE_ENTITY, CONST_ENTITY_DELETED,
-    CONST_INVALID_ENTITY
+    CONST_REQUEST_ENTITY, CONST_RECEIVE_ENTITY, CONST_INVALID_ENTITY,
+    CONST_SAVE_ENTITY, CONST_ENTITY_SAVED, CONST_INVALID_SAVE_ENTITY,
+    CONST_DELETE_ENTITY, CONST_ENTITY_DELETED, CONST_INVALID_DELETE_ENTITY
   } = getConsts(entitiesName);
   switch (action.type) {
   case CONST_INVALID:
@@ -241,7 +242,7 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
         ...state.selected,
         isFetching: false,
         didInvalidate: false,
-        id: ''
+        id: newSavedEntity.id
       }
     };
     return newEntityState;
@@ -258,6 +259,8 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
     delete deletedEntityState.items[action.id];
     return deletedEntityState;
   case CONST_INVALID_ENTITY:
+  case CONST_INVALID_SAVE_ENTITY:
+  case CONST_INVALID_DELETE_ENTITY:
     return {
       ...state,
       selected : {
@@ -325,7 +328,7 @@ export const generateEntitiesThunks = (entitiesName) => {
         });
     };
   };
-  const saveFunc = (form) => {
+  const saveFunc = (form, postAction) => {
     let entity = { ...form };
     entity.created = entity.created ? new Date(entity.created) : new Date();
     const endpoint = entity.id || 'new';
@@ -346,25 +349,25 @@ export const generateEntitiesThunks = (entitiesName) => {
         .then(parseJSON)
         .then(response => {
           dispatch(Actions.saved(response));
-          dispatch(goBack());
+          postAction && dispatch(postAction);
         })
         .catch(error => {
           handleError(error, Actions.invalidSaveEntity(entity), dispatch);
         });
     };
   };
-  const deleteFunc = (id) => {
+  const deleteFunc = (entity, postAction) => {
     return function (dispatch) {
-      dispatch(Actions.requestDelete(id));
-      let request = new Request(`/api/${entitiesName}/${id}`, withAuth({
+      dispatch(Actions.requestDelete(entity.id));
+      let request = new Request(`/api/${entitiesName}/${entity.id}`, withAuth({
         method: 'DELETE'
       }));
       return fetch(request)
         .then(checkHttpStatus)
-        .then(parseJSON)
+        .then(parseText)
         .then(response => {
           dispatch(Actions.deleted(response));
-          dispatch(push(`/${entitiesName}`));
+          postAction && dispatch(postAction);
         })
         .catch(error => {
           handleError(error, Actions.invalidDeleteEntity(entity), dispatch);
