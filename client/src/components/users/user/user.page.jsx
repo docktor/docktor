@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Button, Dimmer, Loader, Label, Icon, Dropdown } from 'semantic-ui-react';
 
@@ -105,7 +106,7 @@ class UserComponent extends React.Component {
                     <Label size='large' className='form-label' content={user.provider && user.provider.toUpperCase()} />
                   </Form.Field>
 
-                  <Form.Field width='two'>
+                  <Form.Field width='fourteen'>
                     {this.renderRoleDropdown(user, isFetching)}
                   </Form.Field>
                 </Form.Group>
@@ -177,7 +178,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   fetchUser: id => dispatch(UsersThunks.fetch(id)),
   fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-  onSave: user => dispatch(UsersThunks.save(user))
+  onSave: user => dispatch(UsersThunks.save(user, push('/users')))
 });
 
 const UserPage = connect(

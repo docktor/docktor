@@ -266,8 +266,7 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       selected : {
         ...state.selected,
         isFetching: false,
-        didInvalidate: true,
-        id: ''
+        didInvalidate: true
       }
     };
   default:
