@@ -28,6 +28,27 @@ const fetchService = (id) => {
   };
 };
 
+// Thunk to get all daemons used on a group:
+const fetchGroupServices = (groupId) => {
+  return function (dispatch) {
+
+    dispatch(ServicesActions.requestAll());
+
+    let request = new Request(`/api/groups/${groupId}/services`, withAuth({
+      method: 'GET',
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(ServicesActions.received(response));
+      })
+      .catch(error => {
+        handleError(error, ServicesActions.invalidRequest, dispatch);
+      });
+  };
+};
+
 // Thunk to save services
 const saveService = (form) => {
 
@@ -88,6 +109,7 @@ const deleteService = (id) => {
 export default {
   ...generateEntitiesThunks('services'),
   fetchService,
+  fetchGroupServices,
   saveService,
   deleteService
 };

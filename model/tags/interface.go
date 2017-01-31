@@ -19,6 +19,8 @@ type RepoTags interface {
 	Find(name string, category string) (types.Tag, error)
 	// FindAll get all tags
 	FindAll() ([]types.Tag, error)
+	// FindAllByIDs get all tags with id
+	FindAllByIDs([]bson.ObjectId) ([]types.Tag, error)
 	// Drop drops the content of the collection
 	Drop() error
 }

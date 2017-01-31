@@ -145,6 +145,10 @@ func New(version string) {
 			{
 				groupAPI.Use(isValidID("groupID"), hasRole(types.AdminRole))
 				groupAPI.GET("", groupsC.Get, groups.RetrieveGroup)
+				groupAPI.GET("/tags", groupsC.GetTags, groups.RetrieveGroup)
+				groupAPI.GET("/members", groupsC.GetMembers, groups.RetrieveGroup)
+				groupAPI.GET("/daemons", groupsC.GetDaemons, groups.RetrieveGroup)
+				groupAPI.GET("/services", groupsC.GetServices, groups.RetrieveGroup)
 				groupAPI.DELETE("", groupsC.Delete)
 				groupAPI.PUT("", groupsC.Save)
 			}

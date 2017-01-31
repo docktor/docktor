@@ -24,6 +24,8 @@ type RepoDaemons interface {
 	FindAllByHostRegex(hostregex string) ([]types.Daemon, error)
 	// FindAll get all daemons
 	FindAll() ([]types.Daemon, error)
+	// FindAllByIds get all daemons with ids
+	FindAllByIds(ids []bson.ObjectId) ([]types.Daemon, error)
 	// Drop drops the content of the collection
 	Drop() error
 	// RemoveTag remove a tag from a service

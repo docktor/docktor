@@ -18,6 +18,8 @@ type RepoServices interface {
 	Find(title string) (types.Service, error)
 	// FindAll get all services
 	FindAll() ([]types.Service, error)
+	// FindAllByIDs get all services with ids
+	FindAllByIDs(ids []bson.ObjectId) ([]types.Service, error)
 	// FindAllByRegex get all services by the regex name
 	FindAllByRegex(nameRegex string) ([]types.Service, error)
 	// IsExist checks that the service exists with given title

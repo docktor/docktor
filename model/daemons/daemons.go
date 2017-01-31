@@ -70,6 +70,13 @@ func (r *Repo) FindAll() ([]types.Daemon, error) {
 	return results, err
 }
 
+// FindAllByIds get all daemons with ids
+func (r *Repo) FindAllByIds(ids []bson.ObjectId) ([]types.Daemon, error) {
+	results := []types.Daemon{}
+	err := r.Coll.Find(bson.M{"_id": bson.M{"$in": ids}}).All(&results)
+	return results, err
+}
+
 // Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
