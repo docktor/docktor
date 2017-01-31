@@ -2,13 +2,13 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import set from 'lodash.set';
 
 // Components
 import HeadingBox from '../../../common/boxes/box/heading.box.component';
 import { Form,  Button, Dropdown, Label, Loader, Dimmer } from 'semantic-ui-react';
 import ContainersView from './containers.view.component';
-
-import set from 'lodash.set';
+import { GRID_DISPLAY, LIST_DISPLAY, DISPLAYS, TAG_COLORS } from './containers.component.constants.js';
 
 import TagsSelectors from '../../../../modules/tags/tags.selectors.js';
 
@@ -17,17 +17,10 @@ import './containers.box.component.scss';
 // ContainersBox is a list of containers
 class ContainersBoxComponent extends React.Component {
 
-  // Available colors for tags
-  colors = ['orange', 'teal', 'blue', 'violet', 'purple', 'yellow'];
-  // Available displays
-  GRID_DISPLAY='grid'
-  LIST_DISPLAY='list'
-  displays = [this.GRID_DISPLAY, this.LIST_DISPLAY]
-
   // Save choice to local storage
   // When user comes displays again the box, default display will the one from his last choice
   saveToLocalStorage = (groupId, property, value) => {
-    var settings = JSON.parse(localStorage.getItem('settings')) || {};
+    const settings = JSON.parse(localStorage.getItem('settings')) || {};
     set(settings, `groups.${groupId}.${property}`, value);
     localStorage.setItem('settings', JSON.stringify(settings));
   }
@@ -41,9 +34,9 @@ class ContainersBoxComponent extends React.Component {
   }
 
   getColorCategories = (categories) => {
-    var colors = {};
+    const colors = {};
     Object.keys(categories).forEach((catslug, index) => {
-      colors[catslug] = this.colors[index % this.colors.length];
+      colors[catslug] = TAG_COLORS[index % TAG_COLORS.length];
     });
     return colors;
   }
@@ -72,7 +65,7 @@ class ContainersBoxComponent extends React.Component {
   }
 
   setDisplay = (display) => {
-    const disp = this.displays.includes(display) ? display : this.GRID_DISPLAY;
+    const disp = DISPLAYS.includes(display) ? display : GRID_DISPLAY;
     this.setState({ display: disp });
   }
 
@@ -95,20 +88,19 @@ class ContainersBoxComponent extends React.Component {
       // If container does not have a tag with given category, it's set in a OTHERS category.
       const c = TagsSelectors.getContainersGroupedByCategory(categories[groupBy], containers, services);
       return c.map(containersByTag => {
-        if (containersByTag.containers.length === 0) {
-          return '';
+        if (containersByTag.containers.length !== 0) {
+          return (
+            <div className='group-by-view' key={containersByTag.tag.id}>
+              <h4 className='ui horizontal divider header'>
+                <Label circular empty color={containersByTag.tag && colorCategories[containersByTag.tag.category.slug]}/>
+                {containersByTag.tag.name.raw}
+              </h4>
+              <ContainersView daemons={daemons} containers={containersByTag.containers} colorTagCategories={colorCategories}
+                              display={display} services={services} tags={tags} tagToFilter={containersByTag.tag}
+              />
+            </div>
+          );
         }
-        return (
-          <div className='group-by-view' key={containersByTag.tag.id}>
-            <h4 className='ui horizontal divider header'>
-              <Label circular empty color={containersByTag.tag && colorCategories[containersByTag.tag.category.slug]}/>
-              {containersByTag.tag.name.raw}
-            </h4>
-            <ContainersView daemons={daemons} containers={containersByTag.containers} colorTagCategories={colorCategories}
-                            display={display} services={services} tags={tags} tagToFilter={containersByTag.tag}
-            />
-          </div>
-        );
       });
     }
   }
@@ -130,8 +122,8 @@ class ContainersBoxComponent extends React.Component {
             <Button disabled icon='cloud upload' content='Redeploy all' />
             <Button disabled icon='trash' content='Uninstall all' />
           </Button.Group>
-          <div className='layout horizontal jusitified' >
-            <Dropdown disabled={groupByOptions.length == 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'}
+          <div className='layout horizontal justified' >
+            <Dropdown disabled={groupByOptions.length === 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'}
                       value={groupBy || ''} floating labeled button className='icon' icon='filter'>
               <Dropdown.Menu>
                 <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query:{ display: loc.query.display } }}
@@ -151,13 +143,13 @@ class ContainersBoxComponent extends React.Component {
             {' '}
             <Button.Group>
               <Button toggle
-                active={display === this.GRID_DISPLAY}
-                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: this.GRID_DISPLAY } }}
-                onClick={() => this.onChangeDisplay(group.id, this.GRID_DISPLAY)}
+                active={display === GRID_DISPLAY}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: GRID_DISPLAY } }}
+                onClick={() => this.onChangeDisplay(group.id, GRID_DISPLAY)}
                 title='Display services as cards' icon='grid layout'/>
               <Button toggle
-                active={display === this.LIST_DISPLAY}
-                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: this.LIST_DISPLAY } }}
+                active={display === LIST_DISPLAY}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query:{ ...loc.query, display: LIST_DISPLAY } }}
                 onClick={() => this.onChangeDisplay(group.id, 'list')}
                 title='Display services as a list' icon='list layout'/>
             </Button.Group>

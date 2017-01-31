@@ -3,6 +3,8 @@ import React from 'react';
 import { Table, Label, Button, Icon } from 'semantic-ui-react';
 import sortBy from 'lodash.sortby';
 
+import { GRID_DISPLAY, LIST_DISPLAY } from './containers.component.constants.js';
+
 import ContainerCard from './container.card.component';
 
 // ContainersView Component
@@ -78,8 +80,8 @@ class ContainersView extends React.Component {
     const sortedContainers = sortBy(containers, [ c => c.serviceTitle.toLowerCase(), c => c.name.toLowerCase()]);
     return (
       <div className='flex layout center-justified horizontal wrap'>
-        {display === 'grid' && this.renderAsGrid(sortedContainers, daemons, tagToFilter)}
-        {display === 'list' && this.renderAsList(sortedContainers, tags, services, tagToFilter, colorTagCategories)}
+        {display === GRID_DISPLAY && this.renderAsGrid(sortedContainers, daemons, tagToFilter)}
+        {display === LIST_DISPLAY && this.renderAsList(sortedContainers, tags, services, tagToFilter, colorTagCategories)}
       </div>
     );
   }

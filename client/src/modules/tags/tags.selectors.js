@@ -54,16 +54,21 @@ const availableCategories = (tags) => {
   return new_categories;
 };
 
+// Get tags ids from all type of structure containing tags
+const getTagIdsFromEntities = (entities) => {
+  return flatMap(entities, (entity) => entity.tags);
+};
+
 // Get tags ids from all containers instances
 const getTagIdsFromContainers = (containers) => {
-  return flatMap(containers, (container) => container.tags);
+  return getTagIdsFromEntities(containers);
 };
 
 // Get tag ids from all containers (= services)
 const getTagsIdsFromServices = (containers, services) => {
   const containerServices = containers.map(container => services.items[container.serviceId])
                                         .filter(service => Boolean(service));
-  return flatMap(containerServices, (container) => container.tags);
+  return getTagIdsFromEntities(containerServices);
 };
 
 // Get tag categories from containers and services
