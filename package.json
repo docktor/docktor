@@ -6,7 +6,9 @@
   "contributors": [
     "Yvonnick Esnault - yesnault",
     "François Samin - fsamin",
-    "Gwendal Leclerc - gwleclerc"
+    "Gwendal Leclerc - gwleclerc",
+    "Mathieu Cornic - macornic",
+    "Thibaut Rousseau - Thiht"
   ],
   "repository": {
     "type": "git",
@@ -15,7 +17,7 @@
   "engines": {
     "node": "0.10.x",
     "npm": "1.4.x",
-    "go": "1.6"
+    "go": "1.7"
   },
   "scripts": {
     "test": "mocha --require babel-core/register --require babel-polyfill client/test/browser.js client/test/**/*.tests.js",
