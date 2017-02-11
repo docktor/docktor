@@ -3,6 +3,8 @@
 Docktor is a platform for administrating and deploying SaaS services based on Docker.
 
 [![Build Status](https://travis-ci.org/soprasteria/docktor.svg?branch=golang)](https://travis-ci.org/soprasteria/docktor)
+[![Dependencies Status](https://david-dm.org/soprasteria/docktor.svg)](https://david-dm.org/soprasteria/docktor)
+[![devDependency Status](https://david-dm.org/soprasteria/docktor/dev-status.svg)](https://david-dm.org/soprasteria/docktor#info=devDependencies)
 
 ## Development
 
