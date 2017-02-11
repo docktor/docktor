@@ -153,7 +153,7 @@ class DaemonComponent extends React.Component {
     const certificates = daemon.protocol === 'https';
     const popup = (
       <div>
-        Example: <strong>http://host:port/api/v1.x</strong>
+        e.g., <strong>http://host:port/api/v1.x</strong>
         <br/>
         cAdvisor is used to retrieve monitoring stats (CPU, RAM, FS) on host where docker's daemon is running.
         <hr/>
@@ -182,13 +182,13 @@ class DaemonComponent extends React.Component {
                   <Grid.Row>
                     <Grid.Column>
                       <Form.Input required label='Name' name='name' value={daemon.name || ''} onChange={this.handleChange}
-                        type='text' placeholder='A unique name' autoComplete='off' error={errors.fields['name']} />
+                        type='text' placeholder='e.g., myDaemon' autoComplete='off' error={errors.fields['name']} />
                       <Form.Checkbox label='Mark this daemon as active' name='active' toggle checked={daemon.active} className='field toggle-button' onChange={this.handleChange} />
                     </Grid.Column>
 
                     <Grid.Column>
                       <Form.TextArea label='Description' name='description' value={daemon.description || ''} onChange={this.handleChange}
-                        rows='4' placeholder='A description of the daemon' autoComplete='off' />
+                        rows='4' placeholder='e.g., This daemon is used for...' autoComplete='off' />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -196,7 +196,7 @@ class DaemonComponent extends React.Component {
                 <Form.Group>
                   {this.renderSites(sites, daemon, errors)}
                   <Form.Input required label='Default data mounting point' name='mountingPoint' value={daemon.mountingPoint || ''} onChange={this.handleChange}
-                    type='text' placeholder='/data' autoComplete='off' error={errors.fields['mountingPoint']} width='twelve'
+                    type='text' placeholder='e.g., /data' autoComplete='off' error={errors.fields['mountingPoint']} width='twelve'
                   />
                 </Form.Group>
 
@@ -216,8 +216,8 @@ class DaemonComponent extends React.Component {
                   </Form.Field>
                   <Form.Input label='cAdvisor API URL' name='cadvisorApi' value={daemon.cadvisorApi || ''} onChange={this.handleChange}
                     type='text' autoComplete='off' labelPosition='right corner' width='fourteen'>
-                    <input placeholder='http://host:port/api/v1.x' />
-                    <Popup trigger={<Label corner='right'><Icon link name='help circle'/></Label>} inverted wide='very'>{popup}</Popup>
+                    <input placeholder='e.g., http://host:port/api/v1.x' />
+                    <Popup hoverable='true' trigger={<Label corner='right'><Icon link name='help circle'/></Label>} inverted wide='very'>{popup}</Popup>
                   </Form.Input>
                 </Form.Group>
 
@@ -226,14 +226,14 @@ class DaemonComponent extends React.Component {
                     <div className='large ui label form-label'>Docker</div>
                   </div>
                   {this.renderProtocol(daemon, errors)}
-                  <Form.Input required label='Hostname' name='host' value={daemon.host || ''} onChange={this.handleChange}
-                    type='text' placeholder='Hostname or IP' autoComplete='off' error={errors.fields['host']} width='five'
+                  <Form.Input required label='Hostname or IP' name='host' value={daemon.host || ''} onChange={this.handleChange}
+                    type='text' placeholder='e.g., localhost or 127.0.0.1' autoComplete='off' error={errors.fields['host']} width='five'
                   />
                   <Form.Input required label='Port' min='0' name='port' value={daemon.port || ''} onChange={this.handleChange}
-                    type='number' placeholder='Port' autoComplete='off' error={errors.fields['port']} width='three'
+                    type='number' placeholder='e.g., 2375' autoComplete='off' error={errors.fields['port']} width='three'
                   />
-                  <Form.Input required label='Timeout' min='0' name='timeout' value={daemon.timeout || ''} onChange={this.handleChange}
-                    type='number' placeholder='Timeout' autoComplete='off' error={errors.fields['timeout']} width='three'
+                  <Form.Input required label='Timeout (in sec)' min='0' name='timeout' value={daemon.timeout || ''} onChange={this.handleChange}
+                    type='number' placeholder='e.g., 3000' autoComplete='off' error={errors.fields['timeout']} width='three'
                   />
                 </Form.Group>
                 {certificates && this.renderCertificates(daemon, errors)}

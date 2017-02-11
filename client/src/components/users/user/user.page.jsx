@@ -134,7 +134,7 @@ class UserComponent extends React.Component {
                     <Label size='large' className='form-label' content='Tags' />
                   </Form.Field>
                   <Form.Field width='fourteen'>
-                    <label>Tags of the daemon</label>
+                    <label>Tags of the user</label>
                     <TagsSelector selectedTags={user.tags || []} tags={tags} onChange={this.handleChange} />
                   </Form.Field>
                 </Form.Group>
