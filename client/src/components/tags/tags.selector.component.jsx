@@ -6,25 +6,10 @@ import sortBy from 'lodash.sortby';
 
 class TagsSelector extends React.Component {
 
-  state = { tags: [] };
-
-  componentWillMount = () => {
-    this.setState({ tags: this.props.selectedTags });
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({ tags: nextProps.selectedTags });
-  }
-
-  handleChange = (e, { value }) => {
-    const state = { tags:[...value] };
-    this.setState(state);
-  }
-
   // TODO: add isFormValid method
 
   render = () => {
-    const { tags } = this.props;
+    const { tags, selectedTags, onChange } = this.props;
 
     // Create an object indexing the tags by their category
     // This allows to easily add a divider with the name of the category in the dropdown
@@ -41,8 +26,8 @@ class TagsSelector extends React.Component {
     });
     const loading = tags.isFetching || tags.didInvalidate;
     return (
-      <Dropdown placeholder={loading ? 'Loading tags…' : 'Tags'} loading={loading} value={this.state.tags} options={dropdownItems}
-        multiple search fluid className='fluid multiple search selection dropdown optgroup' selection onChange={this.handleChange}
+      <Dropdown placeholder={loading ? 'Loading tags…' : 'Tags'} name='tags' loading={loading} value={selectedTags} options={dropdownItems}
+        multiple search fluid className='fluid multiple search selection dropdown optgroup' selection onChange={onChange}
       />
     );
   }
@@ -50,7 +35,8 @@ class TagsSelector extends React.Component {
 
 TagsSelector.propTypes = {
   tags: React.PropTypes.object,
-  selectedTags: React.PropTypes.array
+  selectedTags: React.PropTypes.array,
+  onChange: React.PropTypes.func
 };
 
 export default TagsSelector;

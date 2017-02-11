@@ -75,13 +75,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveProfile: (user) => {
-      dispatch(UsersThunks.saveUser(user));
+      dispatch(UsersThunks.save(user));
     },
     changePassword: (account) => {
       dispatch(AuthTunks.changePassword(account));
     },
     deleteAccount: (user) => {
-      dispatch(UsersThunks.deleteUser(user));
+      dispatch(UsersThunks.delete(user));
     }
   };
 };

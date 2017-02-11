@@ -84,7 +84,7 @@ func (g *Groups) Delete(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove group: %v", err))
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.String(http.StatusOK, res.Hex())
 }
 
 //Get group from docktor

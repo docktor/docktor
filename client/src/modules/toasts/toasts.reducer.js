@@ -19,17 +19,30 @@ const initialState = {};
 const toastsReducer = (state = initialState, action) => {
   switch (action.type) {
   case SitesConstants.INVALID_REQUEST_SITES:
+  case SitesConstants.INVALID_REQUEST_SITE:
+  case SitesConstants.INVALID_SAVE_SITE:
+  case SitesConstants.INVALID_DELETE_SITE:
   case DaemonsConstants.INVALID_REQUEST_DAEMONS:
+  case DaemonsConstants.INVALID_REQUEST_DAEMON:
+  case DaemonsConstants.INVALID_SAVE_DAEMON:
+  case DaemonsConstants.INVALID_DELETE_DAEMON:
   case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
   case ServicesConstants.INVALID_REQUEST_SERVICES:
+  case ServicesConstants.INVALID_REQUEST_SERVICE:
+  case ServicesConstants.INVALID_SAVE_SERVICE:
+  case ServicesConstants.INVALID_DELETE_SERVICE:
   case GroupsConstants.INVALID_REQUEST_GROUPS:
+  case GroupsConstants.INVALID_REQUEST_GROUP:
+  case GroupsConstants.INVALID_SAVE_GROUP:
+  case GroupsConstants.INVALID_DELETE_GROUP:
   case UsersConstants.INVALID_REQUEST_USERS:
+  case UsersConstants.INVALID_REQUEST_USER:
   case UsersConstants.INVALID_SAVE_USER:
   case UsersConstants.INVALID_DELETE_USER:
   case TagsConstants.INVALID_REQUEST_TAGS:
-  case TagsConstants.CREATE_TAG_INVALID:
-  case TagsConstants.SAVE_TAG_INVALID:
-  case TagsConstants.DELETE_TAG_INVALID:
+  case TagsConstants.INVALID_REQUEST_TAG:
+  case TagsConstants.INVALID_SAVE_TAG:
+  case TagsConstants.INVALID_DELETE_TAG:
   case AuthConstants.LOGIN_INVALID_REQUEST:
   case AuthConstants.REGISTER_INVALID_REQUEST:
   case AuthConstants.RESET_PASSWORD_SUCCESS:

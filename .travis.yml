@@ -8,7 +8,6 @@ env:
 
 cache:
   directories:
-  - bower_components
   - node_modules
 
 before_install:

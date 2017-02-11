@@ -109,10 +109,15 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(ModalActions.openNewTagsModal(availableRights, availableCategories, callback));
     },
     onDelete: (tag) => {
-      dispatch(TagsThunks.deleteTag(tag));
+      dispatch(TagsThunks.delete(tag));
     },
     onEdit: (tag, availableRights, availableCategories) => {
-      const callback = (tagForm) => dispatch(TagsThunks.saveTag(tagForm));
+      const callback = (tagForm) => {
+        tagForm.name = { raw: tagForm.name };
+        tagForm.category = { raw: tagForm.category };
+        tagForm.usageRights = tagForm.rights;
+        dispatch(TagsThunks.save(tagForm));
+      };
       dispatch(ModalActions.openEditTagModal(tag, availableRights, availableCategories, callback));
     },
     onChangeFilter: (filterValue) => dispatch(TagsActions.changeFilter(filterValue))

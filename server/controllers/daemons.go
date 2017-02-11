@@ -56,7 +56,7 @@ func (d *Daemons) Delete(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove daemon: %v", err))
 	}
-	return c.JSON(http.StatusOK, RestResponse{ID: res.Hex()})
+	return c.String(http.StatusOK, res.Hex())
 }
 
 //Get daemon from docktor

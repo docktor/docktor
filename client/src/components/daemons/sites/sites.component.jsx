@@ -79,17 +79,17 @@ const mapStateToSitesProps = (state) => {
 const mapDispatchToSitesProps = (dispatch) => {
   return {
     onDelete: site => {
-      const callback = () => dispatch(SitesThunks.deleteSite(site.id));
+      const callback = () => dispatch(SitesThunks.delete(site));
       dispatch(ToastsActions.confirmDeletion(site.title, callback));
     },
     onCreate: position => {
-      const callback = (siteForm) => dispatch(SitesThunks.saveSite(siteForm));
+      const callback = (siteForm) => dispatch(SitesThunks.save(siteForm));
       dispatch(ModalActions.openNewSiteModal(position, callback));
     },
     onEdit: (site, closePopup) => {
       const callback = (siteForm) => {
         closePopup();
-        dispatch(SitesThunks.saveSite(siteForm));
+        dispatch(SitesThunks.save(siteForm));
       };
       dispatch(ModalActions.openEditSiteModal(site, callback));
     },
