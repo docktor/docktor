@@ -84,7 +84,7 @@ func OverwriteUserFromRest(userToOverwrite types.User, userWithNewData UserRest)
 
 // GetUsersRest returns a slice of Docktor users, amputed of sensible data
 func GetUsersRest(users []types.User) []UserRest {
-	var usersRest []UserRest
+	usersRest := []UserRest{}
 	for _, v := range users {
 		usersRest = append(usersRest, GetUserRest(v))
 	}
@@ -113,6 +113,18 @@ func (s *Rest) GetAllUserRest() ([]UserRest, error) {
 	users, err := s.Docktor.Users().FindAll()
 	if err != nil {
 		return []UserRest{}, errors.New("Can't retrieve all users")
+	}
+	return GetUsersRest(users), nil
+}
+
+// GetUsersFromIds from their mongodb ids..
+func (s *Rest) GetUsersFromIds(ids []bson.ObjectId) ([]UserRest, error) {
+	if s.Docktor == nil {
+		return []UserRest{}, errors.New("Docktor API is not initialized")
+	}
+	users, err := s.Docktor.Users().FindAllByIds(ids)
+	if err != nil {
+		return []UserRest{}, errors.New("Can't retrieve users")
 	}
 	return GetUsersRest(users), nil
 }

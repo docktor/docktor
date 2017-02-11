@@ -46,11 +46,11 @@ class Box extends React.Component {
     this.setState(state);
   }
 
-  onChangeLine = (index, property) => (e, { value }) => {
+  onChangeLine = (index, property, fieldType) => (e, { value }) => {
     e.preventDefault();
     const { lines, errors } = this.state;
     const state = { lines: [...lines], errors: { details: [...errors.details], fields: { ...errors.fields } } };
-    state.lines[index][property] = value;
+    state.lines[index][property] = fieldType === 'number' ? Number(value) : value;
     state.errors.fields[index] && delete state.errors.fields[index][property];
     this.setState(state);
   }
@@ -93,10 +93,11 @@ class Box extends React.Component {
 
   renderInput = (line, index, field, popup, errors) => {
     const error = errors[index] && errors[index][field.name];
+    const fieldType = field.type || 'text';
     return (
       <Form.Input key={field.name + index} name={field.name} label={<label className='hidden'>{field.label}</label>}
-        title={popup} type={field.type || 'text'} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
-        required={field.required} onChange={this.onChangeLine(index, field.name)} className={field.class} error={error}
+        title={popup} type={fieldType} value={line[field.name]} placeholder={field.placeholder} autoComplete='off'
+        required={field.required} onChange={this.onChangeLine(index, field.name, fieldType)} className={field.class} error={error}
       />
     );
   }

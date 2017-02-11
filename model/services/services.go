@@ -50,6 +50,15 @@ func (r *Repo) FindAll() ([]types.Service, error) {
 	return results, err
 }
 
+// FindAllByIDs get all services with id
+func (r *Repo) FindAllByIDs(ids []bson.ObjectId) ([]types.Service, error) {
+	results := []types.Service{}
+	err := r.Coll.Find(
+		bson.M{"_id": &bson.M{"$in": ids}},
+	).All(&results)
+	return results, err
+}
+
 // FindAllByRegex get all services by the regex name
 func (r *Repo) FindAllByRegex(nameRegex string) ([]types.Service, error) {
 	results := []types.Service{}

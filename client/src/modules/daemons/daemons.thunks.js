@@ -27,7 +27,29 @@ const fetchDaemonInfo = (daemon, force) => {
   };
 };
 
+// Thunk to get all daemons used on a group:
+const fetchGroupDaemons = (groupId) => {
+  return function (dispatch) {
+
+    dispatch(DaemonsActions.requestAll());
+
+    let request = new Request(`/api/groups/${groupId}/daemons`, withAuth({
+      method: 'GET',
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(DaemonsActions.received(response));
+      })
+      .catch(error => {
+        handleError(error, DaemonsActions.invalidRequest, dispatch);
+      });
+  };
+};
+
 export default {
   ...generateEntitiesThunks('daemons'),
-  fetchDaemonInfo
+  fetchDaemonInfo,
+  fetchGroupDaemons
 };

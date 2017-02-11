@@ -8,9 +8,19 @@ import './container.card.component.scss';
 
 // ContainerCard Component
 class ContainerCard extends React.Component {
+
+  // Get the daemon where container is deployed
+  getDaemon() {
+    const container = this.props.container;
+    const daemons = this.props.daemons || { items:[] };
+    const daemon = daemons.items[container.daemonId] || { 'name': 'Unknown' };
+
+    return daemon;
+  }
+
   render() {
-    const { container, daemons } = this.props;
-    const daemon = daemons.find(daemon => container.daemonId === daemon.value) || { 'name': 'Unknown' };
+    const container = this.props.container;
+    const daemon = this.getDaemon();
     const statusMessage = `Container is up on daemon '${daemon.name}'`;
     return (
       <div className='container'>
@@ -38,6 +48,9 @@ class ContainerCard extends React.Component {
     );
   }
 }
-ContainerCard.propTypes = { container: React.PropTypes.object, daemons: React.PropTypes.array };
+ContainerCard.propTypes = {
+  container: React.PropTypes.object.isRequired,
+  daemons: React.PropTypes.object.isRequired
+};
 
 export default ContainerCard;

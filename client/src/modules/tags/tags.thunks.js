@@ -49,7 +49,31 @@ const createTags = (form) => {
   };
 };
 
+// Thunk to get all tags used on a group:
+// - from group itself
+// - from containers and services
+const fetchGroupTags = (groupId) => {
+  return function (dispatch) {
+
+    dispatch(TagsActions.requestAll());
+
+    let request = new Request(`/api/groups/${groupId}/tags?containers=true&services=true`, withAuth({
+      method: 'GET',
+    }));
+    return fetch(request)
+      .then(checkHttpStatus)
+      .then(parseJSON)
+      .then(response => {
+        dispatch(TagsActions.received(response));
+      })
+      .catch(error => {
+        handleError(error, TagsActions.invalidRequest, dispatch);
+      });
+  };
+};
+
 export default {
   ...generateEntitiesThunks('tags'),
-  createTags
+  createTags,
+  fetchGroupTags
 };
