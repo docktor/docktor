@@ -44,7 +44,9 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (types.User, error) {
 // Find get the first user with a given username
 func (r *Repo) Find(username string) (types.User, error) {
 	result := types.User{}
-	err := r.Coll.Find(bson.M{"username": username}).One(&result)
+	err := r.Coll.Find(bson.M{
+		"username": bson.RegEx{Pattern: username, Options: "i"},
+	}).One(&result)
 	return result, err
 }
 
