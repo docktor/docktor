@@ -11,3 +11,4 @@ bower_components/
 vendor/*/
 debug
 logs/
+.DS_Store

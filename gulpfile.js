@@ -9,7 +9,7 @@ var gulp            = require('gulp'),
   inject            = require('gulp-inject-string'),
   webpack           = require('webpack'),
   zip               = require('gulp-zip'),
-  docktor           = require('./package.json'),
+  docktor               = require('./package.json'),
   git               = require('git-rev'),
   dateFormat        = require('dateformat'),
   WebpackDevServer  = require('webpack-dev-server');
@@ -33,8 +33,7 @@ var dependenciesPath = {
   images: [
     './client/src/components/app/images/*',
     './client/src/components/users/user/images/*',
-    './node_modules/semantic-ui-css/themes/default/assets/images/*',
-    './node_modules/leaflet/dist/images/*'
+    './node_modules/semantic-ui-css/themes/default/assets/images/*'
   ]
 };
 
@@ -90,7 +89,6 @@ gulp.task('server:build', function() {
 });
 
 gulp.task('server:spawn', function() {
-  // Arrêt du serveur
   if (server && server !== 'null') {
     server.kill();
   }
@@ -102,9 +100,9 @@ gulp.task('server:spawn', function() {
   var length = path_folder.length;
   var app    = path_folder[length - parseInt(1)];
   if (os.platform() == 'win32') {
-    server = child.spawn(app + '.exe', ['serve', '-e', 'dev', '-l', 'debug'], { stdio: 'inherit' });
+    server = child.spawn(app + '.exe', ['serve', '--level', 'debug'], { stdio: 'inherit' });
   } else {
-    server = child.spawn(app, ['serve', '-e', 'dev', '-l', 'debug'], { stdio: 'inherit' });
+    server = child.spawn(app, ['serve', '--level', 'debug'], { stdio: 'inherit' });
   }
 });
 
@@ -135,7 +133,7 @@ gulp.task('dist:images', function() {
 
 gulp.task('dist:webpack', function(callback) {
   webpack(prodConfigWebpack, function(err) {
-    if(err) {throw new gutil.PluginError('webpack', err);}
+    if(err) {throw new util.PluginError('webpack', err);}
     callback();
   });
 });
@@ -145,7 +143,11 @@ gulp.task('dist:copy', function() {
 });
 
 gulp.task('dist:client', function(callback) {
-  runSequence('dist:html', 'dist:fonts', 'dist:images', 'dist:webpack', 'dist:copy', callback);
+  runSequence('dist:fonts', 'dist:images', 'dist:webpack', 'dist:html', 'dist:copy', callback);
+});
+
+gulp.task('dist:binary', function() {
+  return gulp.src(distPath.binary).pipe(gulp.dest(distPath.dist));
 });
 
 gulp.task('dist:server', function(callback) {
@@ -165,26 +167,34 @@ gulp.task('dist:server', function(callback) {
         message: lines
       });
     } else {
-      gulp.src(distPath.binary)
-        .pipe(gulp.dest(distPath.dist));
       callback();
     }
   });
 });
 
-
-/*====== Server =========*/
-
-
-
-/*===================== TASKS =====================*/
-
+/*====== Tasks ======*/
 gulp.task('dev', function(callback) {
-  runSequence('clean', 'dist:fonts', 'dist:images', 'client:webpackDevServer', 'server:html', 'server:build', 'server:watch', 'server:spawn', callback);
+  runSequence(
+    'clean',
+    'dist:images',
+    'dist:fonts',
+    'client:webpackDevServer',
+    'server:html',
+    'server:build',
+    'server:watch',
+    'server:spawn',
+    callback
+  );
 });
 
 gulp.task('dist', function(callback) {
-  runSequence('clean', 'dist:client', 'dist:server', callback);
+  runSequence(
+    'clean',
+    'dist:client',
+    'dist:server',
+    'dist:binary',
+    callback
+  );
 });
 
 gulp.task('archive', ['dist'], function() {
