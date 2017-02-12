@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
@@ -34,7 +35,6 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 
 //New instane of the server
 func New(version string) {
-
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     viper.GetString("server.redis.addr"),
 		Password: viper.GetString("server.redis.password"), // no password set
@@ -181,7 +181,9 @@ func New(version string) {
 	engine.Static("/fonts", "client/dist/fonts")
 
 	engine.GET("/*", GetIndex(version))
+	log.WithField("version", version).Info("Starting server...")
 	if err := engine.Start(":8080"); err != nil {
+		log.WithError(err).Fatal("Can't start server")
 		engine.Logger.Fatal(err.Error())
 	}
 }

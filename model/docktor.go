@@ -5,6 +5,7 @@ import (
 	"gopkg.in/mgo.v2"
 
 	"strings"
+	"time"
 
 	"github.com/soprasteria/docktor/model/daemons"
 	"github.com/soprasteria/docktor/model/groups"
@@ -15,21 +16,26 @@ import (
 	"github.com/spf13/viper"
 )
 
+const mongoTimeout = 10 * time.Second
+
 // Session stores mongo session
 var session *mgo.Session
 
 // Connect connects to mongodb
 func Connect() {
 	uri := viper.GetString("server.mongo.addr")
+	log.WithField("uris", uri).WithField("timeout", mongoTimeout).Info("Connecting to Mongo cluster...")
 	s, err := mgo.DialWithInfo(&mgo.DialInfo{
-		Addrs: strings.Split(uri, ","),
+		Addrs:   strings.Split(uri, ","),
+		Timeout: mongoTimeout,
 	})
 
 	if err != nil {
 		log.WithError(err).Fatal("Can't connect to mongo")
 	}
+
 	s.SetSafe(&mgo.Safe{})
-	log.Info("Connected to ", uri)
+	log.WithField("uris", uri).Info("Connecting to Mongo cluster [OK]")
 	session = s
 }
 

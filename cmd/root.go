@@ -55,7 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initLogger, initConfig)
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.docktor.yaml)")
-	RootCmd.PersistentFlags().StringP("level", "l", "warning", "Choose the logger level: debug, info, warning, error, fatal, panic")
+	RootCmd.PersistentFlags().StringP("level", "l", "info", "Choose the logger level: debug, info, warning, error, fatal, panic")
 	RootCmd.PersistentFlags().Int("log-max-size", 100, "Max log file size in megabytes")
 	RootCmd.PersistentFlags().Int("log-max-age", 30, "Max log file age in days")
 	RootCmd.PersistentFlags().Int("log-max-backups", 3, "Max backup files to keep")

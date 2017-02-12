@@ -53,29 +53,39 @@ Here is an example file:
 env = "dev"
 
 [server]
-mongo-addr = "localhost:27017"
+  [server.mongo]
+    addr = "localhost:27017"
+    username = ""
+    password = ""
+  [server.redis]
+    addr = "localhost:6379"
+    password = ""
 
 [auth]
-jwt-secret = "a-unique-secret-for-secure-password-hosting"
+  jwt-secret = "a-unique-secret-for-secure-password-hosting"
+  reset-pwd-secret = "a-unique-secret-for-reset-password-token-generation"
+  bcrypt-pepper = "a-pepper-used-when-storing-password-to-db"
 
 [smtp]
-server = ""
-user = ""
-identity = ""
+  server = ""
+  user = ""
+  identity = ""
+  password = ""
+  sender = ""
 
 [ldap]
-address = ""
-baseDN = ""
-bindDN = ""
-bindPassword = ""
-searchFilter = ""
+  address = ""
+  baseDN = ""
+  bindDN = ""
+  bindPassword = ""
+  searchFilter = ""
 
-[ldap.attr]
-username = ""
-firstname = ""
-lastname = ""
-realname = ""
-email = ""
+  [ldap.attr]
+  username = ""
+  firstname = ""
+  lastname = ""
+  realname = ""
+  email = ""
 ```
 
 Then, you can run Docktor in dev mode, with live reload, with the command:
