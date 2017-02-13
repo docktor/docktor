@@ -40,7 +40,7 @@ const fetchGroupDaemons = (groupId) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(DaemonsActions.received(response));
+        dispatch(DaemonsActions.receiveSome(response));
       })
       .catch(error => {
         handleError(error, DaemonsActions.invalidRequest, dispatch);

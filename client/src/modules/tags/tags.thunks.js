@@ -64,7 +64,7 @@ const fetchGroupTags = (groupId) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(TagsActions.received(response));
+        dispatch(TagsActions.receiveSome(response));
       })
       .catch(error => {
         handleError(error, TagsActions.invalidRequest, dispatch);

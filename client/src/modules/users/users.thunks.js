@@ -1,5 +1,7 @@
+import { withAuth } from '../auth/auth.wrappers';
 import { generateEntitiesThunks } from '../utils/entities';
-
+import UsersActions from './users.actions';
+import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Thunk to get all tags used on a group:
 // - from group itself
@@ -16,7 +18,7 @@ const fetchGroupMembers = (groupId) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(UsersActions.received(response));
+        dispatch(UsersActions.receiveSome(response));
       })
       .catch(error => {
         handleError(error, UsersActions.invalidRequest, dispatch);
