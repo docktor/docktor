@@ -18,7 +18,15 @@ const closeNotification = (id) => {
   };
 };
 
+const confirmSave = (name) => {
+  return {
+    type: ToastsConstants.COMFIRM_SAVE,
+    name
+  };
+};
+
 export default {
   confirmDeletion,
-  closeNotification
+  closeNotification,
+  confirmSave
 };

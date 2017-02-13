@@ -8,6 +8,7 @@ import Details from './profile/settings.details.component';
 import ChangePassword from './profile/settings.password.component';
 import UsersThunks from '../../modules/users/users.thunks';
 import AuthTunks from '../../modules/auth/auth.thunk';
+import ToastsActions from '../../modules/toasts/toasts.actions';
 
 // Style
 import './settings.page.scss';
@@ -75,7 +76,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveProfile: (user) => {
-      dispatch(UsersThunks.save(user));
+      dispatch(UsersThunks.save(user, null, ToastsActions.confirmSave(`User "${user.displayName}"`)));
     },
     changePassword: (account) => {
       dispatch(AuthTunks.changePassword(account));

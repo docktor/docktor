@@ -53,6 +53,8 @@ const toastsReducer = (state = initialState, action) => {
     return { ...state, ...createGenericToast(action) };
   case ToastsConstants.COMFIRM_DELETION:
     return { ...state, ...createConfirmDelToast(action) };
+  case ToastsConstants.COMFIRM_SAVE:
+    return { ...state, ...createConfirmSaveToast(action.name) };
   case ToastsConstants.CLOSE_NOTIFICATION:
     let resState = { ...state };
     delete resState[action.id];
@@ -82,7 +84,7 @@ const createConfirmDelToast = (action) => {
   const id = MD5(action.title);
   res[id] = {
     title: 'Confirm Suppression',
-    message: 'Remove ' + action.title + ' ?',
+    message: 'Remove ' + action.title + '?',
     autoDismiss: 0,
     level: 'error',
     position: 'bl',
@@ -91,6 +93,20 @@ const createConfirmDelToast = (action) => {
       label: 'Remove',
       callback: action.callback
     }
+  };
+  return res;
+};
+
+const createConfirmSaveToast = (name) => {
+  let res = {};
+  const uuid = UUID.create(4).hex;
+  res[uuid] = {
+    title: 'Saved successfully',
+    message: name + ' was successfully saved',
+    level: 'success',
+    autoDismiss: 5,
+    position: 'br',
+    uid: uuid
   };
   return res;
 };

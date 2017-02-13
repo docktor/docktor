@@ -204,7 +204,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
     fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: (group) => dispatch(GroupsThunks.save(group, push('/groups'))),
+    onSave: (group) => dispatch(
+      GroupsThunks.save(group, (id) => push('/groups/' + id), ToastsActions.confirmSave(`Group "${group.title}"`))
+    ),
     onDelete: group => {
       const callback = () => dispatch(GroupsThunks.delete(group, push('/groups')));
       dispatch(ToastsActions.confirmDeletion(group.title, callback));

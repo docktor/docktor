@@ -227,7 +227,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchService: id => dispatch(ServicesThunks.fetch(id)),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: service => dispatch(ServicesThunks.save(service, push('/services'))),
+    onSave: service => dispatch(
+      ServicesThunks.save(service, (id) => push('/services/' + id), ToastsActions.confirmSave(`Service "${service.title}"`))
+    ),
     onDelete: service => {
       const callback = () => dispatch(ServicesThunks.delete(service, push('/services')));
       dispatch(ToastsActions.confirmDeletion(service.title, callback));

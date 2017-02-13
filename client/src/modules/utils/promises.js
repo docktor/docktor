@@ -1,4 +1,3 @@
-
 import AuthActions from '../auth/auth.actions';
 import { push } from 'react-router-redux';
 
@@ -23,20 +22,26 @@ export const parseText = response => {
   return response.text();
 };
 
+const dispatchError = (status, action, text, dispatch) => {
+  if (status === 401 || status === 403) {
+    // When JWT Token expired or is invalid, redirect to auth
+    dispatch(AuthActions.loginNotAuthorized(text));
+    dispatch(push('/login'));
+  } else {
+    dispatch(action(text));
+  }
+};
+
 // Handle error whether it's
 // - a server error (= error message is send a a string in the body)
 // - a client error (= javascript error while parsing json or anything else)
 export const handleError = (error, action, dispatch) => {
-  if (error.response) {
-    error.response.text().then(text => {
-      if(error.response.status === 401) {
-        // When JWT Token expired or is invalid, redirect to auth
-        dispatch(AuthActions.loginNotAuthorized(text));
-        dispatch(push('/login'));
-      } else {
-        dispatch(action(text));
-      }
-    });
+  const response = error.response;
+  if (response) {
+    const status = response.status;
+    response.json()
+      .then(json => dispatchError(status, action, json.message, dispatch ))
+      .catch(() => response.text().then(text => dispatchError(status, action, text, dispatch )));
   } else {
     dispatch(action(error.message));
   }

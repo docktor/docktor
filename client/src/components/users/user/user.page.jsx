@@ -11,6 +11,7 @@ import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../mod
 // Thunks / Actions
 import UsersThunks from '../../../modules/users/users.thunks';
 import TagsThunks from '../../../modules/tags/tags.thunks';
+import ToastsActions from '../../../modules/toasts/toasts.actions';
 
 // Components
 import TagsSelector from '../../tags/tags.selector.component';
@@ -178,7 +179,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   fetchUser: id => dispatch(UsersThunks.fetch(id)),
   fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-  onSave: user => dispatch(UsersThunks.save(user, push('/users')))
+  onSave: user => dispatch(UsersThunks.save(user, () => push('/users'), ToastsActions.confirmSave(`User "${user.displayName}"`)))
 });
 
 const UserPage = connect(

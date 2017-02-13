@@ -13,6 +13,7 @@ import TagsThunks from '../../modules/tags/tags.thunks';
 import TagsActions from '../../modules/tags/tags.actions';
 import TagsSelectors from '../../modules/tags/tags.selectors';
 import ModalActions from '../../modules/modal/modal.actions';
+import ToastsActions from '../../modules/toasts/toasts.actions';
 
 import CategoryCard from './category/category.card';
 
@@ -116,7 +117,7 @@ const mapDispatchToProps = (dispatch) => {
         tagForm.name = { raw: tagForm.name };
         tagForm.category = { raw: tagForm.category };
         tagForm.usageRights = tagForm.rights;
-        dispatch(TagsThunks.save(tagForm));
+        dispatch(TagsThunks.save(tagForm, null, ToastsActions.confirmSave(`Tag "${tagForm.name.raw}"`)));
       };
       dispatch(ModalActions.openEditTagModal(tag, availableRights, availableCategories, callback));
     },

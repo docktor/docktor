@@ -1,5 +1,5 @@
 import { withAuth } from '../auth/auth.wrappers';
-import { checkHttpStatus, parseJSON, parseText, handleError } from '../utils/promises';
+import { checkHttpStatus, handleError, parseJSON, parseText } from '../utils/promises';
 
 const getConsts = (entitiesName) => {
   const ENTITIES_NAME = entitiesName.toUpperCase();
@@ -95,7 +95,7 @@ export const generateEntitiesActions = (entitiesName) => {
     },
     invalidRequestEntity: (entity) => (error) => {
       const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.name || entity.username;
+      const title = entity.title || entity.name || entity.username || entity.id;
       return {
         type: CONST_INVALID_ENTITY,
         title: `Cannot fetch ${entityName} ${title}`,
@@ -177,7 +177,8 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
   case CONST_INVALID:
     return {
       ...state,
-      ...initialState
+      ...initialState,
+      items: { ...state.items }
     };
   case CONST_REQUEST:
     return {
@@ -196,13 +197,21 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       lastUpdated: action.receivedAt
     };
   case CONST_REQUEST_ENTITY:
+    let requestEntityItems = { ...state.items };
+    if (action.id) {
+      requestEntityItems = {
+        ...requestEntityItems,
+        [action.id]: { ...requestEntityItems[action.id], isFetching: true },
+      };
+    }
     return {
       ...state,
+      items: requestEntityItems,
       selected : {
         ...state.selected,
         isFetching: true,
         didInvalidate: false,
-        id: action.id
+        id: action.id || ''
       }
     };
   case CONST_RECEIVE_ENTITY:
@@ -212,7 +221,7 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       ...state,
       items: {
         ...state.items,
-        [newReceivedEntity.id]: { ...oldEntityReceived, ...newReceivedEntity }
+        [newReceivedEntity.id]: { ...oldEntityReceived, ...newReceivedEntity, isFetching: false }
       },
       selected: {
         ...state.selected,
@@ -222,8 +231,17 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
     };
   case CONST_SAVE_ENTITY:
   case CONST_DELETE_ENTITY:
+    const idModifyEntity = action.id || action.entity.id;
+    let modifyEntityItems = { ...state.items };
+    if (idModifyEntity) {
+      modifyEntityItems = {
+        ...modifyEntityItems,
+        [idModifyEntity]: { ...modifyEntityItems[idModifyEntity], isFetching: true },
+      };
+    }
     return {
       ...state,
+      items: modifyEntityItems,
       selected: {
         ...state.selected,
         isFetching: true,
@@ -237,7 +255,7 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
       ...state,
       items: {
         ...state.items,
-        [newSavedEntity.id]: { ...oldEntitySaved, ...newSavedEntity }
+        [newSavedEntity.id]: { ...oldEntitySaved, ...newSavedEntity, isFetching: false }
       },
       selected : {
         ...state.selected,
@@ -262,8 +280,16 @@ export const generateEntitiesReducer = (state = initialState, action, entitiesNa
   case CONST_INVALID_ENTITY:
   case CONST_INVALID_SAVE_ENTITY:
   case CONST_INVALID_DELETE_ENTITY:
+    let invalidEntityItems = { ...state.items };
+    if (action.entity.id) {
+      invalidEntityItems = {
+        ...invalidEntityItems,
+        [action.entity.id]: { ...invalidEntityItems[action.entity.id], isFetching: false },
+      };
+    }
     return {
       ...state,
+      items: invalidEntityItems,
       selected : {
         ...state.selected,
         isFetching: false,
@@ -325,11 +351,11 @@ export const generateEntitiesThunks = (entitiesName) => {
           dispatch(Actions.receiveOne(response));
         })
         .catch(error => {
-          handleError(error, Actions.invalidRequestEntity, dispatch);
+          handleError(error, Actions.invalidRequestEntity({ id }), dispatch);
         });
     };
   };
-  const saveFunc = (form, postAction) => {
+  const saveFunc = (form, postActionRedirect, postActionToast) => {
     let entity = { ...form };
     entity.created = entity.created ? new Date(entity.created) : new Date();
     const endpoint = entity.id || 'new';
@@ -350,7 +376,8 @@ export const generateEntitiesThunks = (entitiesName) => {
         .then(parseJSON)
         .then(response => {
           dispatch(Actions.saved(response));
-          postAction && dispatch(postAction);
+          postActionRedirect && dispatch(postActionRedirect(response.id));
+          postActionToast && dispatch(postActionToast);
         })
         .catch(error => {
           handleError(error, Actions.invalidSaveEntity(entity), dispatch);
