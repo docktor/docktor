@@ -20,6 +20,8 @@ class Settings extends React.Component {
   selectTab = () => {
     const location = this.props.location;
     if (location && location.hash === '#change-password') {
+      return 2;
+    } else if (location && location.hash === '#details') {
       return 1;
     } else {
       return 0;

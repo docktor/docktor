@@ -185,7 +185,7 @@ const requestResetPassword = () => ({ type: AuthConstants.RESET_PASSWORD_REQUEST
 const receiveResetPassword = () => ({
   type: AuthConstants.RESET_PASSWORD_SUCCESS,
   title: 'Password successfuly reset',
-  message: 'Your password has been successfully reset. You should see an email coming with details to set a new one',
+  message: 'Check your inbox for an e-mail from Docktor with all details to set a new password',
   level: 'info'
 });
 
@@ -201,7 +201,6 @@ const resetPasswordInvalidRequest = (error) => ({
 
 // Action when user is not authorized to reset password (wrong information given)
 const resetPasswordNotAuthorized = (error) => ({ type: AuthConstants.RESET_PASSWORD_NOT_AUTHORIZED, error });
-
 
 //=================================================
 // Profile actions
