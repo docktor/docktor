@@ -33,7 +33,8 @@ var dependenciesPath = {
   images: [
     './client/src/components/app/images/*',
     './client/src/components/users/user/images/*',
-    './node_modules/semantic-ui-css/themes/default/assets/images/*'
+    './node_modules/semantic-ui-css/themes/default/assets/images/*',
+    './node_modules/leaflet/dist/images/*'
   ]
 };
 
