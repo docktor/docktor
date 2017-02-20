@@ -6,6 +6,7 @@ import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
 
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants';
 import UsersThunks from '../../../modules/users/users.thunks';
+import ToastsActions from '../../../modules/toasts/toasts.actions';
 
 // Style
 import './user.card.component.scss';
@@ -83,7 +84,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveUser: (user) => {
-      dispatch(UsersThunks.save(user));
+      dispatch(UsersThunks.save(user, null, ToastsActions.confirmSave(`User "${user.displayName}"`)));
     }
   };
 };

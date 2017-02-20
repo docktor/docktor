@@ -197,7 +197,11 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: {
+          testId: {
+            isFetching: true
+          }
+        },
         lastUpdated: undefined,
         selected: {
           isFetching: true,
@@ -224,7 +228,7 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: { [item.id]: item },
+        items: { [item.id]: { ...item, isFetching: false } },
         lastUpdated: undefined,
         selected: {
           isFetching: false,
@@ -251,7 +255,11 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: {
+          testId: {
+            isFetching: false
+          }
+        },
         lastUpdated: undefined,
         selected: {
           isFetching: false,
@@ -278,7 +286,11 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: {
+          testId: {
+            isFetching: true
+          }
+        },
         lastUpdated: undefined,
         selected: {
           isFetching: true,
@@ -305,7 +317,7 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: { [item.id]: item },
+        items: { [item.id]: { ...item, isFetching: false } },
         lastUpdated: undefined,
         selected: {
           isFetching: false,
@@ -332,7 +344,11 @@ describe('Using utilities for entities ->', () => {
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: {
+          testId: {
+            isFetching: false
+          }
+        },
         lastUpdated: undefined,
         selected: {
           isFetching: false,
@@ -355,11 +371,12 @@ describe('Using utilities for entities ->', () => {
     });
 
     describe('and dispatching a requestDeleteAction action,', () => {
-      const res = generateEntitiesReducer(initialState, requestDeleteAction, entities);
+      const initState = { ...initialState, items: { [item.id]: item } };
+      const res = generateEntitiesReducer(initState, requestDeleteAction, entities);
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: { [item.id]: { ...item, isFetching: true } },
         lastUpdated: undefined,
         selected: {
           isFetching: true,
@@ -410,11 +427,12 @@ describe('Using utilities for entities ->', () => {
     });
 
     describe('and dispatching an invalidDeleteAction action,', () => {
-      const res = generateEntitiesReducer(initialState, invalidDeleteAction, entities);
+      const initState = { ...initialState, items: { [item.id]: item } };
+      const res = generateEntitiesReducer(initState, invalidDeleteAction, entities);
       const expectedState = {
         isFetching: false,
         didInvalidate: true,
-        items: {},
+        items: { [item.id]: { ...item, isFetching: false } },
         lastUpdated: undefined,
         selected: {
           isFetching: false,

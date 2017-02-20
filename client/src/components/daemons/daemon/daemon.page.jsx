@@ -217,7 +217,7 @@ class DaemonComponent extends React.Component {
                   <Form.Input label='cAdvisor API URL' name='cadvisorApi' value={daemon.cadvisorApi || ''} onChange={this.handleChange}
                     type='text' autoComplete='off' labelPosition='right corner' width='fourteen'>
                     <input placeholder='e.g., http://host:port/api/v1.x' />
-                    <Popup hoverable='true' trigger={<Label corner='right'><Icon link name='help circle'/></Label>} inverted wide='very'>{popup}</Popup>
+                    <Popup hoverable={true} trigger={<Label corner='right'><Icon link name='help circle'/></Label>} inverted wide='very'>{popup}</Popup>
                   </Form.Input>
                 </Form.Group>
 
@@ -239,11 +239,11 @@ class DaemonComponent extends React.Component {
                 {certificates && this.renderCertificates(daemon, errors)}
               </Form>
 
-              <VolumesBox volumes={daemon.volumes} ref='volumes'>
+              <VolumesBox volumes={daemon.volumes || []} ref='volumes'>
                 <p>These volumes are used to have common volumes mapping on all services deployed on this daemon. You can add / remove / modify volumes mapping when you deploy a new service on a group.</p>
               </VolumesBox>
 
-              <VariablesBox variables={daemon.variables} ref='variables'>
+              <VariablesBox variables={daemon.variables || []} ref='variables'>
                 <p>These variables are used to have common variables environment into all services deployed on this daemon (Proxy, LDAP,...). You can add / remove / modify variables when you deploy a new service on a group.</p>
               </VariablesBox>
 
@@ -293,9 +293,11 @@ const mapDispatchToProps = (dispatch) => {
     fetchDaemon: id => dispatch(DaemonsThunks.fetch(id)),
     fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
     fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
-    onSave: daemon => dispatch(DaemonsThunks.save(daemon, push('/daemons'))),
+    onSave: daemon => dispatch(
+      DaemonsThunks.save(daemon, (id) => push('/daemons/' + id), ToastsActions.confirmSave(`Daemon "${daemon.name}"`))
+    ),
     onDelete: daemon => {
-      const callback = () => dispatch(DaemonsThunks.delete(daemon, push('/daemons')));
+      const callback = () => dispatch(DaemonsThunks.delete(daemon, () => push('/daemons')));
       dispatch(ToastsActions.confirmDeletion(daemon.name, callback));
     }
   };

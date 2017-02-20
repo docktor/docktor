@@ -83,13 +83,15 @@ const mapDispatchToSitesProps = (dispatch) => {
       dispatch(ToastsActions.confirmDeletion(site.title, callback));
     },
     onCreate: position => {
-      const callback = (siteForm) => dispatch(SitesThunks.save(siteForm));
+      const callback = (siteForm) => dispatch(
+        SitesThunks.save(siteForm, null, ToastsActions.confirmSave(`Site "${siteForm.title}"`))
+      );
       dispatch(ModalActions.openNewSiteModal(position, callback));
     },
     onEdit: (site, closePopup) => {
       const callback = (siteForm) => {
         closePopup();
-        dispatch(SitesThunks.save(siteForm));
+        dispatch(SitesThunks.save(siteForm, null, ToastsActions.confirmSave(`Site "${siteForm.title}"`)));
       };
       dispatch(ModalActions.openEditSiteModal(site, callback));
     },
