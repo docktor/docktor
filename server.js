@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var init = require('./config/init')(),
+const init = require('./config/init')(),
     config = require('./config/config'),
     mongoose = require('mongoose'),
     scheduler = require('./config/scheduler'),
@@ -13,10 +13,10 @@ var init = require('./config/init')(),
 // Code to run if we're in the master process
 if (config.cluster && cluster.isMaster) {
     // Count the machine's CPUs
-    var cpuCount = os.cpus().length;
+    const cpuCount = os.cpus().length;
 
     // Create a worker for each CPU
-    for (var i = 0; i < cpuCount; i += 1) {
+    for (const i = 0; i < cpuCount; i += 1) {
         cluster.fork();
     }
 
@@ -24,7 +24,7 @@ if (config.cluster && cluster.isMaster) {
 } else {
 
     // Bootstrap db connection
-    var db = mongoose.connect(config.db, function (err) {
+    const db = mongoose.connect(config.db, function (err) {
         if (err) {
             console.error('\x1b[31m', 'Could not connect to MongoDB!');
             console.log(err);
@@ -34,13 +34,36 @@ if (config.cluster && cluster.isMaster) {
     scheduler.start();
 
     // Init the express application
-    var app = require('./config/express')(db);
+    const app = require('./config/express')(db);
 
     // Bootstrap passport config
     require('./config/passport')();
 
     // Start the app by listening on <port>
-    app.listen(config.port);
+    const https = require('https');
+    const http = require('http');
+
+    const fs = require('fs');
+    const privateKey = fs.readFileSync('/path/to/certs/key.pem', 'utf8');
+    const certificate = fs.readFileSync('/path/to/certs/cert.pem', 'utf8');
+    const credentials = { key: privateKey, cert: certificate };
+
+    const express = require('express');
+    const redirectApp = express();
+    const redirectServer = http.createServer(redirectApp);
+
+    redirectApp.use(function requireHTTPS(req, res, next) {
+        if (!req.secure) {
+            const host = req.headers.host || "localhost:" + config.port
+            const hostSplit = host.split(':');
+            console.log('redirect to https://' + hostSplit[0] + ':' + config.port + req.url)
+            return res.redirect('https://' + hostSplit[0] + ':' + config.port + req.url);
+        }
+        next();
+    })
+    redirectServer.listen(3001);
+
+    https.createServer(credentials, app).listen(config.port);
 
     // Expose app
     exports = module.exports = app;
