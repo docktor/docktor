@@ -6,7 +6,10 @@ module.exports = {
         description: 'Docker Monitoring',
         keywords: 'Docker, Monitoring, Administration'
     },
-    port: process.env.PORT || 3000,
+    httpsPort: process.env.HTTPS_PORT || 3000,
+    httpPort: process.env.HTTP_PORT || 3001,
+    httpsPrivateKey: process.env.HTTPS_PRIVATE_KEY,
+    httpsCertificate: process.env.HTTPS_CERTIFICATE,
     templateEngine: 'swig',
     sessionSecret: 'MEAN',
     sessionCollection: 'sessions',
