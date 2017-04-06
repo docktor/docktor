@@ -12,8 +12,10 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
     readonly certs_dir
     mkdir -p "$certs_dir"
     if [ -z "$(ls -A $certs_dir)" ]; then
+        cd "$certs_dir"
         echo "Generating certs"
         generate_certs
+        chown -R docktor:docktor "$certs_dir"
     else
         echo "Certs already exists"
     fi
