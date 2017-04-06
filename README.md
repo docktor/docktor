@@ -28,6 +28,20 @@ Yes, you can, even if there is not yet a 1.0 version. It is a simple tool for de
 ![capture2](/screenshots/capture2.png)
 ![capture3](/screenshots/capture3.png)
 
+## How to run [Docktor](https://github.com/docktor/docktor) with Docker 
+
+```
+docker run -d --name docktormongodb  docktor/mongodb:latest
+
+docker run -d  -p 3000:3000 -p 3001:3001 --link mongo:db_1 docktor/docktor:latest
+```
+
+You can add `-v <pathOnYouHost>:/data` for mongoDB data.
+You can add `-v <pathOnYouHost>:/opt/backups` for mongoDB backups (collections of Docktor).
+
+
+Go to http://<ipOfYourContainer>:3000 to view Docktor
+
 ## License
 GNU GENERAL PUBLIC LICENSE 3
 

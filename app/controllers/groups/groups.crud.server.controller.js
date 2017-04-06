@@ -63,7 +63,8 @@ exports.read = function (req, res) {
     // push the container to the containerQueue
     var daemonWorker = function (daemon, callback) {
         //console.log('Processing daemon ' + daemon.name);
-        var daemonDocker = daemon.getDaemonDocker();
+        if (daemon) {
+	var daemonDocker = daemon.getDaemonDocker();
         //Call "docker ps"
         daemonDocker.listContainers(function (err, data) {
             //For every container running ons this daemon
@@ -77,6 +78,9 @@ exports.read = function (req, res) {
             }
             return callback();
         });
+        }else {
+		return callback();
+        }
     };
 
     // This worker will be called for every container pushed to the queue
@@ -132,7 +136,12 @@ exports.read = function (req, res) {
         //Loading daemon from database
         Daemon.findById(daemonId).exec(function (err, daemon) {
             //Push the dameon to the queue and start the magic !
-            queueDaemons.push(daemon);
+            if (err){
+		console.log("Failed to find daemon : "+daemonId);
+	    } else {
+		console.log(daemonId);
+		queueDaemons.push(daemon);
+            }
         });
     });
 };
