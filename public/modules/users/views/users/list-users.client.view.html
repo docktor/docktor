@@ -5,30 +5,22 @@
     </div>
 
     <table tr-ng-grid="" items="users" on-data-required=""
-           fields="['username', 'displayName', 'role', 'groups']"
+           fields="['username', 'displayName', 'role']"
            class="table" ng-if="users.$resolved && users.length">
         <thead>
         <th field-name="username" display-name="Username" enable-filtering="true"></th>
         <th field-name="displayName" display-name="Name" enable-filtering="true"></th>
-        <th field-name="groups"></th>
         </thead>
         <tbody>
         <tr>
             <td field-name="username">
                 <md-button class="md-accent md-hue-3" href="#!/admin/users/{{gridItem._id}}">{{gridItem.username}}</md-button>
             </td>
-            <td field-name="groups" layout="row">
-                <span ng-repeat="group in gridItem.groups">
-                    <md-button class="md-accent md-hue-3" href="/#!/groups/{{group._id}}">
-                        {{group.title}}
-                    </md-button>
-                </span>
-            </td>
         </tr>
         </tbody>
     </table>
 
     <md-toolbar class="md-accent md-hue-3" layout-align="center center" data-ng-if="users.$resolved && !users.length">
-        No users yet ?!
+        No users yet
     </md-toolbar>
 </section>

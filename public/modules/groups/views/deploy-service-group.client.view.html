@@ -41,7 +41,8 @@
             <md-select-label>
                 {{ services.selectImage.name ? services.selectImage.name : 'choose an image' }}
             </md-select-label>
-            <md-option ng-value="image" ng-repeat="image in services.select.images | orderBy:'name'">
+            <!-- Images are ordered from most recent to oldest -->
+            <md-option ng-value="image" ng-repeat="image in services.select.images | orderBy:'created':true">
                 {{ image.name }}
             </md-option>
         </md-select>
