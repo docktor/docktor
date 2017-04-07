@@ -15,9 +15,10 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
         cd "$certs_dir"
         echo "Generating certs"
         generate_certs
-        chown -R docktor:docktor "$certs_dir"
     else
         echo "Certs already exists"
     fi
+    echo "Changing $certs_dir owner to docktor"
+    chown -R docktor:docktor "$certs_dir"
 fi
 
