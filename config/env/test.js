@@ -2,7 +2,7 @@
 
 module.exports = {
 	db: 'mongodb://localhost/docktor-test',
-	port: 3001,
+	port: 3002,
 	app: {
 		title: 'Docktor - Test Environment'
 	},

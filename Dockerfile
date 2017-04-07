@@ -1,10 +1,11 @@
 FROM debian:jessie
 
 # Proxy variables, only for build
+ARG HTTP_PROXY="http://renn.proxy.corp.sopra:8080/"
 ARG http_proxy=${HTTP_PROXY}
 ARG HTTPS_PROXY=${HTTP_PROXY}
 ARG https_proxy=${HTTP_PROXY}
-ARG NO_PROXY="localhost,127.0.0.1,*.sopra"
+ARG NO_PROXY="127.0.0.1,localhost,*.sopra,.sopra"
 ARG no_proxy=${NO_PROXY}
 
 ENV DEBIAN_FRONTEND noninteractive

@@ -40,7 +40,7 @@ You can add `-v <pathOnYouHost>:/data` for mongoDB data.
 You can add `-v <pathOnYouHost>:/opt/backups` for mongoDB backups (collections of Docktor).
 
 
-Go to http://<ipOfYourContainer>:3000 to view Docktor
+Go to https://<ipOfYourContainer>:3001 to view Docktor
 
 ## License
 GNU GENERAL PUBLIC LICENSE 3
