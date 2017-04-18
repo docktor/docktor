@@ -1,0 +1,26 @@
+.map-container {
+  position: relative !important;
+  .map {
+    border: 1px lightgrey solid;
+    position: relative;
+    a:hover {
+      cursor: pointer;
+      i {
+        opacity: 1;
+      }
+    }
+    a {
+      i {
+        opacity: .5;
+      }
+    }
+  }
+  .leaflet-popup-content-wrapper {
+    border-radius: 0 !important;
+  }
+  .popup-actions {
+    margin-left: 5px;
+  }
+}
+
+

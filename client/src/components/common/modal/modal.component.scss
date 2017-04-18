@@ -1,0 +1,64 @@
+.ui.modal {
+  background-color: #2c3e50 !important;
+  color: white !important;
+  position: absolute;
+  transform: translateY(-50%);
+  z-index: 1100 !important;
+  .header {
+    background-color: inherit !important;
+    color: inherit !important;
+    .label {
+      background-color: #00948d !important;
+      font-size: 1em !important;
+    }
+  }
+  .content {
+    background-color: inherit !important;
+    color: inherit !important;
+    max-height: 60vh;
+    width: initial !important;
+    overflow-y: inherit !important;
+    .field input,
+    .form {
+      .label,
+      label {
+        color: inherit;
+      }
+      width: initial !important;
+    }
+  }
+  .actions {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+  .close {
+    right: .5rem !important;
+    top: .5rem !important;
+  }
+  .ui.teal.button {
+    background-color: #00948d !important;
+  }
+  .ui.teal.button:hover {
+    background-color: #008c85 !important;
+  }
+  .ui.teal.button:active {
+    background-color: #00827c !important;
+  }
+  .help {
+    float : right;
+    margin: 0;
+  }
+}
+.rodal-dialog {
+  background-color: transparent !important;
+  height: 0 !important;
+  left: 50%;
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 50%;
+  width: 0 !important;
+  z-index: 1100 !important;
+}
+.rodal-mask {
+  z-index: 1000 !important;
+}

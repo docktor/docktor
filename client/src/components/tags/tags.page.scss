@@ -1,0 +1,9 @@
+$tags-bar-background-color: #2c3e50 !default;
+
+.tags-page {
+  .tags-bar {
+    background-color: $tags-bar-background-color;
+    min-height: 3em;
+    padding: .5em 1em;
+  }
+}

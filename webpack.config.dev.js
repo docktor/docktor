@@ -1,0 +1,58 @@
+var webpack = require('webpack'),
+  path = require('path');
+
+var nodeModules = path.resolve(__dirname, 'node_modules'),
+  build = path.resolve(__dirname, './client/dist/js'),
+  src = path.resolve(__dirname, './client/src/main.js');
+
+var devConfig = {
+  devtool: 'source-map',
+  entry: [
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://localhost:8081',
+    src
+  ],
+  output: {
+    path: build,
+    filename: 'bundle.js',
+    publicPath: '/js/'
+  },
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      loader: 'babel',
+      exclude: [nodeModules]
+    }, {
+      test: /\.scss$/,
+      loaders: ['style', 'css', 'sass']
+    }, {
+      test: /\.css$/,
+      loaders: ['style', 'css']
+    }, {
+      test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
+      loader: 'file',
+      query: {
+        name: '../fonts/[name].[ext]'
+      }
+    }, {
+      test: /\.png?$|\.jpe?g$|\.ico$/,
+      loader: 'file',
+      query: {
+        name: '../images/[name].[ext]'
+      }
+    }]
+  },
+  preLoaders: [
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      { test: /\.jsx?$/, loader: 'source-map' },
+  ],
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    modulesDirectories: ['node_modules']
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
+};
+
+module.exports = devConfig;

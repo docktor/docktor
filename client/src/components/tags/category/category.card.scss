@@ -1,0 +1,21 @@
+.category-card {
+  margin: 1em !important;
+  .ui.label {
+    margin-left: 0;
+    margin-bottom: .2em;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+
+  .content:first-of-type {
+    height: 3.5em;
+    max-height: 3.5em;
+  }
+
+  .content .header {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+}

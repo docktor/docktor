@@ -1,0 +1,41 @@
+$form-bg: #2c3e50;
+
+$main: #00948d;
+$main-dark: darken($main, 5%);
+
+$thin: 300;
+
+.group-page {
+
+  .group-details {
+    background: rgba($form-bg, .9);
+    margin: 2em;
+    max-width: 70%;
+    min-width: 450px;
+    padding: 2em;
+    width: 70%;
+
+    h1 {
+      color: white;
+      font-weight: $thin;
+      margin: 0 0 -.25em;
+      text-transform: uppercase;
+
+      .right-floated {
+        float: right !important;
+        margin: 0;
+      }
+
+      a {
+        margin-right: .5em;
+        color: $main;
+        text-decoration: none;
+        transition: .5s ease;
+        &:hover {
+          color: $main-dark;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

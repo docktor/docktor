@@ -1,34 +1,147 @@
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/docktor/?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Docktor
 
-[![Build Status](https://travis-ci.org/docktor/docktor.svg?branch=master)](https://travis-ci.org/docktor/docktor)
-[![Dependencies Status](https://david-dm.org/docktor/docktor.svg)](https://david-dm.org/docktor/docktor)
-[![devDependency Status](https://david-dm.org/docktor/docktor/dev-status.svg)](https://david-dm.org/docktor/docktor#info=devDependencies)
+Docktor is a platform for administrating and deploying SaaS services based on Docker.
 
-[![wercker status](https://app.wercker.com/status/aa752d73aaa88276a33d3911d2c11043/m "wercker status")](https://app.wercker.com/project/bykey/aa752d73aaa88276a33d3911d2c11043)
+[![Build Status](https://travis-ci.org/soprasteria/docktor.svg?branch=golang)](https://travis-ci.org/soprasteria/docktor)
+[![Dependencies Status](https://david-dm.org/soprasteria/docktor.svg)](https://david-dm.org/soprasteria/docktor)
+[![devDependencies Status](https://david-dm.org/soprasteria/docktor/dev-status.svg)](https://david-dm.org/soprasteria/docktor?type=dev)
 
+## Development
 
-## Roadmap
-See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
+Tools and dependencies:
+* Golang 1.7+
+  * [govendor](https://github.com/kardianos/govendor)
+* NodeJS 7.2.0
+  * npm
+  * [gulp](https://github.com/gulpjs/gulp)
+* Docker
 
-## Run 
-See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
+Get the dependencies:
 
-## Integration with Docktor Monitoring Stack
-Stack : cAdvisor - goryCadvisor - Riemann - InfluxDB - Grafana
+```sh
+npm install
+govendor sync
+```
 
-There is an issue for a complete integration of monitoring stack here : https://github.com/docktor/docktor/issues/64 
-But, all images (Riemann, etc...) may be already deployed with Docktor Images. See https://github.com/docktor/dockerfiles
+Run a MongoDB database:
 
-## Use in "production"
-Yes, you can, even if there is not yet a 1.0 version. It is a simple tool for deploy and monitor Docker Containers over many servers. But Docktor does not aim being as powerful as other orchestration tools such Kubernetes for example.
+```sh
+docker run --name mongo -p 27017:27017 -v /data/mongo:/data/db -d mongo
+```
 
-## Screenshots
-![capture4](/screenshots/capture4.png)
-![capture1](/screenshots/capture1.png)
-![capture2](/screenshots/capture2.png)
-![capture3](/screenshots/capture3.png)
+Run a Redis cache:
+
+```sh
+docker run --name redis -p 6379:6379 -d redis
+```
+
+Docktor allows three ways of configuration:
+
+1. Use a config file as described above. By default : `~/.docktor.toml`
+2. Use environment variables (e.g., `server.mongo.addr` becomes `MONGO_SERVER_MONGO_ADDR`)
+3. Use CLI parameters (`--server.mongo.addr`)
+
+You can see all the available settings and their defaults with:
+
+```sh
+go run main.go serve --help
+```
+
+Here is an example file:
+
+```toml
+env = "dev"
+
+[server]
+  [server.mongo]
+    addr = "localhost:27017"
+    username = ""
+    password = ""
+  [server.redis]
+    addr = "localhost:6379"
+    password = ""
+
+[auth]
+  jwt-secret = "a-unique-secret-for-secure-password-hosting"
+  reset-pwd-secret = "a-unique-secret-for-reset-password-token-generation"
+  bcrypt-pepper = "a-pepper-used-when-storing-password-to-db"
+
+[smtp]
+  server = ""
+  user = ""
+  identity = ""
+  password = ""
+  sender = ""
+
+[ldap]
+  address = ""
+  baseDN = ""
+  bindDN = ""
+  bindPassword = ""
+  searchFilter = ""
+
+  [ldap.attr]
+  username = ""
+  firstname = ""
+  lastname = ""
+  realname = ""
+  email = ""
+```
+
+Then, you can run Docktor in dev mode, with live reload, with the command:
+
+```sh
+gulp
+```
+
+You can then browse Docktor at [http://localhost:8080/](http://localhost:8080/)
+
+## Production
+
+You can generate the binaries with:
+
+```sh
+npm run dist
+```
+
+The relevant files are in `./dist` folder.
+
+You can generate an archive of these files with:
+
+```sh
+npm run archive
+```
+
+## Contributing
+
+Docktor is open to contribution.
+
+### Install plugins for guidelines
+
+Docktor have his own code guideline. Please install:
+- Editor config: [Atom](https://atom.io/packages/editorconfig) [VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+- ESLint for Javascript ES6 and JSX [Atom](https://atom.io/packages/linter-eslint) [VSCode](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- Sasslint for Saas [Atom](https://atom.io/packages/linter-sass-lint) [VSCode](https://marketplace.visualstudio.com/items?itemName=glen-84.sass-lint)
+
+### Lint checks
+
+Run the following commands to check lint errors
+
+```bash
+# Get Gometalinter
+go get -u github.com/alecthomas/gometalinter
+# Run go lint (with gometalinter)
+npm run golint
+# Run eslint
+npm run lint
+```
+
+If you need to lint inplace your Javascript files afterwards, run:
+
+```bash
+npm run formatJS
+```
 
 ## License
-GNU GENERAL PUBLIC LICENSE 3
 
-See License File.
+See the [LICENSE](./LICENSE) file.

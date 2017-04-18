@@ -1,0 +1,15 @@
+npm-debug.log
+yarn-error.log
+node_modules/
+dist/
+client/dist/
+.idea/
+docktor
+docktor.zip
+vendor
+!vendor/vendor.json
+bower_components/
+.vscode/
+debug
+logs/
+.git
