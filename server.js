@@ -22,7 +22,11 @@ if (config.cluster && cluster.isMaster) {
 
     // Code to run if we're in a worker process
 } else {
-
+    
+    // Authorize Docktor to fetch HTTPS resources with self signed certificates (i.e. Docker daemon protected with TLS config)
+    // Needed only when Docktor is itself hosted with HTTPS
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    
     // Bootstrap db connection
     var db = mongoose.connect(config.db, function (err) {
         if (err) {
