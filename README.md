@@ -91,7 +91,7 @@ env = "dev"
 Then, you can run Docktor in dev mode, with live reload, with the command:
 
 ```sh
-gulp
+npm start
 ```
 
 You can then browse Docktor at [http://localhost:8080/](http://localhost:8080/)
@@ -101,15 +101,7 @@ You can then browse Docktor at [http://localhost:8080/](http://localhost:8080/)
 You can generate the binaries with:
 
 ```sh
-npm run dist
-```
-
-The relevant files are in `./dist` folder.
-
-You can generate an archive of these files with:
-
-```sh
-npm run archive
+npm run package
 ```
 
 ## Contributing
@@ -131,15 +123,15 @@ Run the following commands to check lint errors
 # Get Gometalinter
 go get -u github.com/alecthomas/gometalinter
 # Run go lint (with gometalinter)
-npm run golint
+npm run server:lint
 # Run eslint
-npm run lint
+npm run client:lint
 ```
 
 If you need to lint inplace your Javascript files afterwards, run:
 
 ```bash
-npm run formatJS
+npm run client:fix
 ```
 
 ## License
