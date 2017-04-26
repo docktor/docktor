@@ -14,7 +14,7 @@ before_install:
 
 install:
 - go get -u github.com/alecthomas/gometalinter
-- go get -v github.com/kardianos/govendor
+- go get -u github.com/kardianos/govendor
 - gometalinter -u -i -f
 - govendor sync -v
 - go get -u github.com/stretchr/testify
