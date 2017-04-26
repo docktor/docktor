@@ -18,4 +18,4 @@ test:
 	go test ./cmd/... ./model/... ./server/...
 
 lint:
-	gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
+	gometalinter --install --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
