@@ -16,6 +16,8 @@ run:
 
 test:
 	go get github.com/stretchr/testify
+	go get github.com/onsi/ginkgo/ginkgo
+	go get github.com/onsi/gomega
 	go test ./cmd/... ./model/... ./server/...
 
 lint:
