@@ -41,7 +41,7 @@ class UserCardComponent extends React.Component {
     return (
       <Card className='user-card'>
         <Card.Content>
-          <Image avatar alt='Avatar' src='/images/avatar.jpg' />
+          <Image avatar alt='Avatar' src={require('./images/avatar.jpg')} />
           {
             canGoToProfile ?
               <Link to={`/users/${user.id}`}>

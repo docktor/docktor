@@ -16,7 +16,7 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		email.InitSMTPConfiguration()
 		docktor.Connect()
-		server.New(Version)
+		server.New()
 	},
 }
 

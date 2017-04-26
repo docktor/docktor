@@ -1,8 +1,6 @@
 package server
 
 import (
-	"html/template"
-	"io"
 	"net/http"
 
 	log "github.com/Sirupsen/logrus"
@@ -23,18 +21,8 @@ import (
 // JSON type
 type JSON map[string]interface{}
 
-// Template : template struct
-type Template struct {
-	Templates *template.Template
-}
-
-// Render : render template
-func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.Templates.ExecuteTemplate(w, name, data)
-}
-
 //New instane of the server
-func New(version string) {
+func New() {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     viper.GetString("server.redis.addr"),
 		Password: viper.GetString("server.redis.password"), // no password set
@@ -55,9 +43,6 @@ func New(version string) {
 	engine.Use(middleware.Recover())
 	engine.Use(middleware.Gzip())
 
-	t := &Template{Templates: template.Must(template.ParseFiles("./client/dist/index.tmpl"))}
-	engine.Renderer = t
-
 	engine.GET("/ping", pong)
 
 	authAPI := engine.Group("/auth")
@@ -70,7 +55,7 @@ func New(version string) {
 		authAPI.POST("/register", authC.Register)
 		authAPI.POST("/reset_password", authC.ResetPassword)              // Reset the forgotten password
 		authAPI.POST("/change_reset_password", authC.ChangeResetPassword) // Change password that has been reset
-		authAPI.GET("/*", GetIndex(version))
+		authAPI.GET("/*", GetIndex)
 	}
 
 	api := engine.Group("/api")
@@ -180,8 +165,8 @@ func New(version string) {
 	engine.Static("/images", "client/dist/images")
 	engine.Static("/fonts", "client/dist/fonts")
 
-	engine.GET("/*", GetIndex(version))
-	log.WithField("version", version).Info("Starting server...")
+	engine.GET("/*", GetIndex)
+	log.Info("Starting server...")
 	if err := engine.Start(":8080"); err != nil {
 		log.WithError(err).Fatal("Can't start server")
 		engine.Logger.Fatal(err.Error())
@@ -196,10 +181,6 @@ func pong(c echo.Context) error {
 }
 
 // GetIndex handler which render the index.html of mom
-func GetIndex(version string) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		data := make(map[string]interface{})
-		data["Version"] = version
-		return c.Render(http.StatusOK, "index", data)
-	}
+func GetIndex(c echo.Context) error {
+	return c.File("client/dist/index.html")
 }
