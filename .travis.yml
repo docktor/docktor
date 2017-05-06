@@ -3,6 +3,8 @@ language: go
 go:
 - 1.8.1
 
+go_import_path: github.com/soprasteria/docktor
+
 cache:
   directories:
   - node_modules

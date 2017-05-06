@@ -11,11 +11,14 @@ build:
 	go build $(ldflags)
 
 run:
-	go get -u github.com/skelterjohn/rerun \
-	&& rerun github.com/soprasteria/docktor serve
+	go get github.com/skelterjohn/rerun
+	rerun github.com/soprasteria/docktor serve
 
 test:
+	go get github.com/stretchr/testify
 	go test ./cmd/... ./model/... ./server/...
 
 lint:
-	gometalinter --install --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
+	go get github.com/alecthomas/gometalinter
+	gometalinter --install
+	gometalinter --vendor --deadline=60m --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
