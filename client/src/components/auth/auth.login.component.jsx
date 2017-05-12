@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
@@ -12,7 +13,7 @@ import '../common/tabform/tabform.component.scss';
 // Signin Pane containing fields to log in the application
 class SigninPane extends React.Component {
 
-  state = { errors: { details: [], fields: {} } }
+  state = { errors: { details: [], fields: {} }, auth: {} }
 
   schema = Joi.object().keys({
     username: Joi.string().trim().alphanum().required().label('Username'),
@@ -22,25 +23,36 @@ class SigninPane extends React.Component {
   componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields:{} }, auth: {} });
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields:{} }, auth: {} });
     }
   }
 
-  handleSubmit = (e, { formData }) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    const { auth } = this.state;
+    const { error } = Joi.validate(auth, this.schema, { abortEarly: false });
     if (error) {
       this.setState({ errors: parseError(error) });
     } else {
-      this.props.onLoginClick(formData);
+      this.props.onLoginClick(auth);
     }
+  }
+
+  handleChange = (e, { name, value }) => {
+    const { auth, errors } = this.state;
+    const state = {
+      auth: { ...auth, [name]: value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
+    };
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
   render = () => {
@@ -50,10 +62,10 @@ class SigninPane extends React.Component {
       <div id='login'>
         <Header as='h1'>{this.props.title}</Header>
         <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
-          <Form.Input required error={fields['username']} label='Username'
+          <Form.Input required error={fields['username']} label='Username' onChange={this.handleChange}
             type='text' name='username' autoComplete='off' placeholder='Registered/LDAP username'
           />
-          <Form.Input required error={fields['password']} label='Password'
+          <Form.Input required error={fields['password']} label='Password' onChange={this.handleChange}
             type='password' name='password' autoComplete='off' placeholder='Password'
           />
           <Message error list={details}/>
@@ -66,11 +78,11 @@ class SigninPane extends React.Component {
 };
 
 SigninPane.propTypes = {
-  onLoginClick: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-  title: React.PropTypes.string.isRequired,
-  submit: React.PropTypes.string.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  onLoginClick: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  submit: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired
 };
 
 export default SigninPane;

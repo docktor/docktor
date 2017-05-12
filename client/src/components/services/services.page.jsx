@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
@@ -62,11 +63,11 @@ class Services extends React.Component {
 }
 
 Services.propTypes = {
-  services: React.PropTypes.array,
-  filterValue: React.PropTypes.string,
-  isFetching: React.PropTypes.bool,
-  fetchServices: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func.isRequired
+  services: PropTypes.array,
+  filterValue: PropTypes.string,
+  isFetching: PropTypes.bool,
+  fetchServices: PropTypes.func.isRequired,
+  changeFilter: PropTypes.func.isRequired
 };
 
 // Function to map state to container props

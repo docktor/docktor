@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 
 // Components
@@ -90,8 +91,8 @@ class ImageTab extends React.Component {
 }
 
 ImageTab.propTypes = {
-  images: React.PropTypes.array,
-  scrollbars: React.PropTypes.object
+  images: PropTypes.array,
+  scrollbars: PropTypes.object
 };
 
 export default ImageTab;

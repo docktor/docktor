@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -49,9 +50,9 @@ export function requireAuthorization(Component, Roles) {
   }
 
   AuthenticatedComponent.propTypes = {
-    redirect: React.PropTypes.func.isRequired,
-    auth: React.PropTypes.object,
-    loc: React.PropTypes.object
+    redirect: PropTypes.func.isRequired,
+    auth: PropTypes.object,
+    loc: PropTypes.object
   };
 
   const mapStateToProps = (state) => ({

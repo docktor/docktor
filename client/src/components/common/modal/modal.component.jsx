@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Header, Form, Button, Modal, Message, Icon, Popup, Input, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames';
@@ -147,7 +148,7 @@ class ModalComponent extends React.Component {
   }
 }
 
-ModalComponent.propTypes = { modal: React.PropTypes.object, onClose: React.PropTypes.func };
+ModalComponent.propTypes = { modal: PropTypes.object, onClose: PropTypes.func };
 
 // Function to map state to container props
 const mapStateToModalProps = (state) => {

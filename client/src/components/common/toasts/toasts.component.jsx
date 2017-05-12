@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import NotificationSystem from 'react-notification-system';
 import { connect } from 'react-redux';
 
@@ -52,7 +53,7 @@ class Toasts extends React.Component {
   }
 }
 
-Toasts.propTypes = { toasts: React.PropTypes.object, onClose:React.PropTypes.func };
+Toasts.propTypes = { toasts: PropTypes.object, onClose:PropTypes.func };
 
 // Function to map state to container props
 const mapStateToNotificationsProps = (state) => {

@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
@@ -11,7 +12,7 @@ import '../common/tabform/tabform.component.scss';
 // Register Pane containg fields to create an account
 class RegisterPane extends React.Component {
 
-  state = { errors: { details: [], fields: {} } }
+  state = { errors: { details: [], fields: {} }, auth: {} }
 
   schema = Joi.object().keys({
     username: Joi.string().trim().alphanum().required().label('Username'),
@@ -24,25 +25,36 @@ class RegisterPane extends React.Component {
   componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields:{} }, auth: {} });
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields:{} }, auth: {} });
     }
   }
 
-  handleSubmit = (e, { formData }) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    const { auth } = this.state;
+    const { error } = Joi.validate(auth, this.schema, { abortEarly: false });
     if (error) {
       this.setState({ errors: parseError(error) });
     } else {
-      this.props.onRegisterClick(formData);
+      this.props.onRegisterClick(auth);
     }
+  }
+
+  handleChange = (e, { name, value }) => {
+    const { auth, errors } = this.state;
+    const state = {
+      auth: { ...auth, [name]: value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
+    };
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
   render = () => {
@@ -53,22 +65,22 @@ class RegisterPane extends React.Component {
         <Header as='h1'>{this.props.title}</Header>
         <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
           <Form.Group widths='equal'>
-            <Form.Input required error={fields['username']} label='Username'
+            <Form.Input required error={fields['username']} label='Username' onChange={this.handleChange}
               type='text' name='username' autoComplete='off' placeholder='A unique username'
             />
-            <Form.Input required error={fields['password']} label='Password'
+            <Form.Input required error={fields['password']} label='Password' onChange={this.handleChange}
               type='password' name='password' autoComplete='off' placeholder='Set a password'
             />
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.Input required error={fields['firstname']} label='First Name'
+            <Form.Input required error={fields['firstname']} label='First Name' onChange={this.handleChange}
               type='text' name='firstname' autoComplete='off' placeholder='First Name'
             />
-            <Form.Input required error={fields['lastname']} label='Last Name'
+            <Form.Input required error={fields['lastname']} label='Last Name' onChange={this.handleChange}
               type='text' name='lastname' autoComplete='off' placeholder='Last Name'
             />
           </Form.Group>
-          <Form.Input required error={fields['email']} label='Email'
+          <Form.Input required error={fields['email']} label='Email' onChange={this.handleChange}
             type='text' name='email' autoComplete='off' placeholder='A valid email address'
           />
           <Message error list={details}/>
@@ -80,13 +92,13 @@ class RegisterPane extends React.Component {
 };
 
 RegisterPane.propTypes = {
-  onRegisterClick: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-  label: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  submit: React.PropTypes.string.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
-  link: React.PropTypes.string.isRequired
+  onRegisterClick: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  label: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  submit: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  link: PropTypes.string.isRequired
 };
 
 export default RegisterPane;

@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import { connect } from 'react-redux';
 
@@ -71,11 +72,11 @@ class SitesComponent extends React.Component {
 }
 
 SitesComponent.propTypes = {
-  sites: React.PropTypes.array,
-  onCreate: React.PropTypes.func,
-  onEdit: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  changeFilter: React.PropTypes.func
+  sites: PropTypes.array,
+  onCreate: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  changeFilter: PropTypes.func
 };
 
 

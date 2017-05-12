@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import set from 'lodash.set';
@@ -164,15 +165,15 @@ class ContainersBoxComponent extends React.Component {
 }
 
 ContainersBoxComponent.propTypes = {
-  containers: React.PropTypes.array.isRequired,
-  services: React.PropTypes.object.isRequired,
-  tags: React.PropTypes.object.isRequired,
-  daemons: React.PropTypes.object.isRequired,
-  display: React.PropTypes.string,
-  groupBy: React.PropTypes.string,
-  group: React.PropTypes.object.isRequired,
-  loc: React.PropTypes.object.isRequired,
-  isFetching: React.PropTypes.bool.isRequired
+  containers: PropTypes.array.isRequired,
+  services: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  daemons: PropTypes.object.isRequired,
+  display: PropTypes.string,
+  groupBy: PropTypes.string,
+  group: PropTypes.object.isRequired,
+  loc: PropTypes.object.isRequired,
+  isFetching: PropTypes.bool.isRequired
 };
 
 // Function to map state to container props

@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Card, Icon, Label, Popup } from 'semantic-ui-react';
 
@@ -56,10 +57,10 @@ class CategoryCard extends React.Component {
 }
 
 CategoryCard.propTypes = {
-  category: React.PropTypes.object.isRequired,
-  tags: React.PropTypes.array.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  onEdit: React.PropTypes.func.isRequired
+  category: PropTypes.object.isRequired,
+  tags: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
 };
 
 export default CategoryCard;

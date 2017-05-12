@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -258,16 +259,16 @@ class DaemonComponent extends React.Component {
   }
 }
 DaemonComponent.propTypes = {
-  daemon: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  daemonId: React.PropTypes.string,
-  sites: React.PropTypes.array,
-  tags: React.PropTypes.object,
-  fetchDaemon: React.PropTypes.func.isRequired,
-  fetchSites: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func,
-  onDelete: React.PropTypes.func
+  daemon: PropTypes.object,
+  isFetching: PropTypes.bool,
+  daemonId: PropTypes.string,
+  sites: PropTypes.array,
+  tags: PropTypes.object,
+  fetchDaemon: PropTypes.func.isRequired,
+  fetchSites: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+  onDelete: PropTypes.func
 };
 
 // Function to map state to container props

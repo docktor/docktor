@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const env = process.env.NODE_ENV || 'development';
 const production = env === 'production';
@@ -25,7 +25,7 @@ let plugins = [
     title: 'Docktor v' + process.env.npm_package_version,
     hash: true
   }),
-  new WriteFilePlugin(),
+  new HtmlWebpackHarddiskPlugin(),
   new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/) // https://stackoverflow.com/a/25426019
 ];
 
@@ -58,13 +58,17 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     open: true,
-    port: developmentPort
+    port: developmentPort,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   entry: [
     path.join(projectRoot, 'client/src/main.js')
   ],
   output: {
     path: path.join(projectRoot, 'client/dist'),
+    publicPath: production ? '/' : `http://localhost:${developmentPort}/`,
     filename: 'js/bundle.js'
   },
   resolve: {
@@ -107,14 +111,14 @@ module.exports = {
         test: /.ttf$|.eot$|.woff2?$|\.svg$/,
         loader: 'file-loader',
         query: {
-          name: '/fonts/[name].[ext]'
+          name: 'fonts/[name].[ext]'
         }
       },
       {
         test: /.png$|.jpe?g$|.ico$/,
         loader: 'file-loader',
         query: {
-          name: '/images/[name].[ext]'
+          name: 'images/[name].[ext]'
         }
       }
     ]

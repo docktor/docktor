@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Input, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
@@ -59,11 +60,11 @@ class Users extends React.Component {
 }
 
 Users.propTypes = {
-  users: React.PropTypes.array,
-  filterValue: React.PropTypes.string,
-  isFetching: React.PropTypes.bool,
-  fetchUsers: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func.isRequired
+  users: PropTypes.array,
+  filterValue: PropTypes.string,
+  isFetching: PropTypes.bool,
+  fetchUsers: PropTypes.func.isRequired,
+  changeFilter: PropTypes.func.isRequired
 };
 
 // Function to map state to container props

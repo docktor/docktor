@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -153,13 +154,13 @@ class UserComponent extends React.Component {
 }
 
 UserComponent.propTypes = {
-  user: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  userId: React.PropTypes.string.isRequired,
-  tags: React.PropTypes.object,
-  fetchUser: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func.isRequired
+  user: PropTypes.object,
+  isFetching: PropTypes.bool,
+  userId: PropTypes.string.isRequired,
+  tags: PropTypes.object,
+  fetchUser: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {

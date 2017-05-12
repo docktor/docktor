@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import AuthPage from '../auth/auth.page';
@@ -22,7 +23,7 @@ class HomeComponent extends React.Component {
 }
 
 HomeComponent.propTypes = {
-  isAuthenticated : React.PropTypes.bool.isRequired
+  isAuthenticated : PropTypes.bool.isRequired
 };
 
 // Function to map state to container props

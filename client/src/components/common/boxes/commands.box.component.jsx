@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Box from './box/box.component';
 
@@ -82,11 +83,11 @@ class CommandsBox extends React.Component {
 }
 
 CommandsBox.propTypes = {
-  commands: React.PropTypes.array,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  commands: PropTypes.array,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ])
 };
 

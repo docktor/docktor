@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
@@ -13,7 +14,7 @@ import '../../common/tabform/tabform.component.scss';
 // ChangePasswordPane containg fields to change password
 class ChangePasswordPane extends React.Component {
 
-  state = { errors: { details: [], fields: {} } }
+  state = { errors: { details: [], fields: {} }, auth: {} }
 
   schema = Joi.object().keys({
     oldPassword: Joi.string().trim().required().label('Old Password'),
@@ -24,20 +25,31 @@ class ChangePasswordPane extends React.Component {
     return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
   }
 
-  handleSubmit = (e, { formData }) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    const { auth } = this.state;
+    const { error } = Joi.validate(auth, this.schema, { abortEarly: false });
     if (error) {
       this.setState({ errors: parseError(error) });
     } else {
       const account = {
         id: this.props.user.id,
-        oldPassword: formData.oldPassword,
-        newPassword: formData.newPassword
+        oldPassword: auth.oldPassword,
+        newPassword: auth.newPassword
       };
       this.props.onChangePassword(account);
-      this.setState({ errors: { details: [], fields: {} } });
+      this.setState({ errors: { details: [], fields: {} }, auth: {} });
     }
+  }
+
+  handleChange = (e, { name, value }) => {
+    const { auth, errors } = this.state;
+    const state = {
+      auth: { ...auth, [name]: value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
+    };
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
   render = () => {
@@ -51,12 +63,12 @@ class ChangePasswordPane extends React.Component {
           <Form.Input required
             error={fields['oldPassword']} label='Old Password' type='password'
             name='oldPassword' autoComplete='off' placeholder='Your old password'
-            disabled={isDisabled}
+            disabled={isDisabled} onChange={this.handleChange}
           />
           <Form.Input required
             error={fields['newPassword']} label='New Password' type='password'
             name='newPassword' autoComplete='off' placeholder='Your new password'
-            disabled={isDisabled}
+            disabled={isDisabled} onChange={this.handleChange}
           />
           <Message warning content="You can't change your password here because your user comes from a LDAP provider" />
           {!user.isFetching && user.passwordErrorMessage &&
@@ -71,12 +83,12 @@ class ChangePasswordPane extends React.Component {
 };
 
 ChangePasswordPane.propTypes = {
-  onChangePassword: React.PropTypes.func,
-  label: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  submit: React.PropTypes.string,
-  link: React.PropTypes.string.isRequired,
-  user: React.PropTypes.object.isRequired
+  onChangePassword: PropTypes.func,
+  label: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  submit: PropTypes.string,
+  link: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default ChangePasswordPane;

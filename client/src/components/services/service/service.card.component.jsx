@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Card, Icon } from 'semantic-ui-react';
 
@@ -32,6 +33,6 @@ class ServiceCard extends React.Component {
   }
 }
 
-ServiceCard.propTypes = { service: React.PropTypes.object };
+ServiceCard.propTypes = { service: PropTypes.object };
 
 export default ServiceCard;

@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
@@ -48,15 +49,15 @@ class LoginP extends React.Component {
 };
 
 LoginP.propTypes = {
-  isAuthenticated: React.PropTypes.bool.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
-  logUser: React.PropTypes.func.isRequired,
-  regUser : React.PropTypes.func.isRequired,
-  onSwitch: React.PropTypes.func.isRequired,
-  redirect: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-  redirectTo : React.PropTypes.string,
-  location: React.PropTypes.object
+  isAuthenticated: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  logUser: PropTypes.func.isRequired,
+  regUser : PropTypes.func.isRequired,
+  onSwitch: PropTypes.func.isRequired,
+  redirect: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  redirectTo : PropTypes.string,
+  location: PropTypes.object
 };
 
 // Function to map state to container props

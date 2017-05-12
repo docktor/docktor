@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Button, Icon } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
@@ -158,16 +159,16 @@ class Box extends React.Component {
 };
 
 Box.propTypes = {
-  title: React.PropTypes.string.isRequired,
-  icon: React.PropTypes.string.isRequired,
-  lines: React.PropTypes.array.isRequired,
-  form: React.PropTypes.object.isRequired,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  lines: PropTypes.array.isRequired,
+  form: PropTypes.object.isRequired,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ]),
-  onChange: React.PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired
 };
 
 export default Box;

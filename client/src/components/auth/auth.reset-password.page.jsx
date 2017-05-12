@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
@@ -11,7 +12,7 @@ import { parseError } from '../../modules/utils/forms';
 
 class ResetPwdComponent extends React.Component {
 
-  state = { errors: { details: [], fields: {} } }
+  state = { errors: { details: [], fields: {} }, auth: {} }
 
   schema = Joi.object().keys({
     username: Joi.string().trim().alphanum().required().label('Username')
@@ -20,25 +21,36 @@ class ResetPwdComponent extends React.Component {
   componentWillMount = () => {
     const errorMessage = this.props.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields: {} }, auth: {} });
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     const errorMessage = nextProps.errorMessage;
     if (errorMessage) {
-      this.setState({ errors: { details: [errorMessage], fields:{} } });
+      this.setState({ errors: { details: [errorMessage], fields: {} }, auth: {} });
     }
   }
 
-  handleSubmit = (e, { formData }) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const { error } = Joi.validate(formData, this.schema, { abortEarly: false });
+    const { auth } = this.state;
+    const { error } = Joi.validate(auth, this.schema, { abortEarly: false });
     if (error) {
       this.setState({ errors: parseError(error) });
     } else {
-      this.props.resetPassword(formData.username);
+      this.props.resetPassword(auth.username);
     }
+  }
+
+  handleChange = (e, { name, value }) => {
+    const { auth, errors } = this.state;
+    const state = {
+      auth: { ...auth, [name]: value },
+      errors: { details: [...errors.details], fields: { ...errors.fields } }
+    };
+    delete state.errors.fields[name];
+    this.setState(state);
   }
 
   render = () => {
@@ -48,10 +60,10 @@ class ResetPwdComponent extends React.Component {
       <div id='reset-password'>
         <Header as='h1'>Reset your password</Header>
         <Form error={Boolean(details.length)} onSubmit={this.handleSubmit}>
-          <Form.Input required error={fields['username']} label='Username'
+          <Form.Input required error={fields['username']} label='Username' onChange={this.handleChange}
             type='text' name='username' autoComplete='off' placeholder='Username of user with forgotten password'
           />
-          <Message error list={details}/>
+          <Message error list={details} />
           <Button className={'button-block submit'} loading={isFetching}>Reset it!</Button>
         </Form>
       </div>
@@ -60,22 +72,22 @@ class ResetPwdComponent extends React.Component {
 }
 
 ResetPwdComponent.propTypes = {
-  resetPassword: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-  isFetching: React.PropTypes.bool.isRequired,
-  isAuthenticated: React.PropTypes.bool
+  resetPassword: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  isFetching: PropTypes.bool.isRequired,
+  isAuthenticated: PropTypes.bool
 };
 
 class ResetPasswordP extends React.Component {
 
   componentWillMount = () => {
-    if(this.props.isAuthenticated && !this.props.errorMessage) {
+    if (this.props.isAuthenticated && !this.props.errorMessage) {
       this.props.redirect('/');
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if(nextProps.isAuthenticated && !nextProps.errorMessage) {
+    if (nextProps.isAuthenticated && !nextProps.errorMessage) {
       this.props.redirect('/');
     }
   }
@@ -84,18 +96,18 @@ class ResetPasswordP extends React.Component {
     const { errorMessage, isFetching } = this.props;
     return (
       <TabForm>
-        <ResetPwdComponent errorMessage={errorMessage} resetPassword={this.props.resetPassword} isFetching={isFetching}/>
+        <ResetPwdComponent errorMessage={errorMessage} resetPassword={this.props.resetPassword} isFetching={isFetching} />
       </TabForm>
     );
   }
 };
 
 ResetPasswordP.propTypes = {
-  resetPassword: React.PropTypes.func.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
-  errorMessage: React.PropTypes.string,
-  isAuthenticated: React.PropTypes.bool,
-  redirect: React.PropTypes.func
+  resetPassword: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string,
+  isAuthenticated: PropTypes.bool,
+  redirect: PropTypes.func
 };
 
 // Function to map state to container props
@@ -114,7 +126,7 @@ const mapDispatchToProps = (dispatch) => {
     resetPassword: (username) => {
       dispatch(AuthThunks.resetPassword(username));
     },
-    redirect : (path) => {
+    redirect: (path) => {
       dispatch(push(path));
     }
   };

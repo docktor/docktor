@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Box from './box/box.component';
 
@@ -76,12 +77,12 @@ class MembersBox extends React.Component {
 }
 
 MembersBox.propTypes = {
-  members: React.PropTypes.array,
-  users: React.PropTypes.array,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  members: PropTypes.array,
+  users: PropTypes.array,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ])
 };
 

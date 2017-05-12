@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -164,18 +165,18 @@ class GroupEditComponent extends React.Component {
 }
 
 GroupEditComponent.propTypes = {
-  group: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  groupId: React.PropTypes.string,
-  daemons: React.PropTypes.array,
-  users: React.PropTypes.array,
-  tags: React.PropTypes.object,
-  fetchGroup: React.PropTypes.func.isRequired,
-  fetchDaemons: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  fetchUsers: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func,
-  onDelete: React.PropTypes.func
+  group: PropTypes.object,
+  isFetching: PropTypes.bool,
+  groupId: PropTypes.string,
+  daemons: PropTypes.array,
+  users: PropTypes.array,
+  tags: PropTypes.object,
+  fetchGroup: PropTypes.func.isRequired,
+  fetchDaemons: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+  onDelete: PropTypes.func
 };
 
 // Function to map state to container props

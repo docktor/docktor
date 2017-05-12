@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Box from './box/box.component';
 
@@ -75,12 +76,12 @@ class FilesystemsBox extends React.Component {
 }
 
 FilesystemsBox.propTypes = {
-  filesystems: React.PropTypes.array,
-  daemons: React.PropTypes.array,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  filesystems: PropTypes.array,
+  daemons: PropTypes.array,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ])
 };
 

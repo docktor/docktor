@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
@@ -68,9 +69,9 @@ class UserCardComponent extends React.Component {
 }
 
 UserCardComponent.propTypes = {
-  user: React.PropTypes.object,
-  auth: React.PropTypes.object,
-  saveUser: React.PropTypes.func.isRequired
+  user: PropTypes.object,
+  auth: PropTypes.object,
+  saveUser: PropTypes.func.isRequired
 };
 
 // Function to map state to container props

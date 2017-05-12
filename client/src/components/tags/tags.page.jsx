@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
@@ -79,15 +80,15 @@ class Tags extends React.Component {
 }
 
 Tags.propTypes = {
-  tags: React.PropTypes.array,
-  availableCategories: React.PropTypes.array,
-  filterValue: React.PropTypes.string,
-  isFetching: React.PropTypes.bool,
-  fetchTags: React.PropTypes.func.isRequired,
-  onCreate: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  onEdit: React.PropTypes.func.isRequired,
-  onChangeFilter: React.PropTypes.func.isRequired
+  tags: PropTypes.array,
+  availableCategories: PropTypes.array,
+  filterValue: PropTypes.string,
+  isFetching: PropTypes.bool,
+  fetchTags: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onChangeFilter: PropTypes.func.isRequired
 };
 
 // Function to map state to container props
