@@ -86,7 +86,7 @@ class ProfilePane extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { user, errors } = this.state;
     const state = {
       user: { ...user, [name]: value },

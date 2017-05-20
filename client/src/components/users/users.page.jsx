@@ -78,7 +78,7 @@ const mapStateToUsersProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToUsersProps = (dispatch) => {
   return {
-    fetchUsers : () => dispatch(UsersThunks.fetchIfNeeded()),
+    fetchUsers : () => dispatch(UsersThunks.fetchAll()),
     changeFilter: filterValue => dispatch(UsersActions.changeFilter(filterValue))
   };
 };

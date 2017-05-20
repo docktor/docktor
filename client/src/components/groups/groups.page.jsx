@@ -81,7 +81,7 @@ const mapStateToGroupsProps = (state) => {
 const mapDispatchToGroupsProps = (dispatch) => {
   return {
     fetchGroups : () => {
-      dispatch(GroupsThunks.fetchIfNeeded());
+      dispatch(GroupsThunks.fetchAll());
     },
     changeFilter: (filterValue) => dispatch(GroupsActions.changeFilter(filterValue))
   };

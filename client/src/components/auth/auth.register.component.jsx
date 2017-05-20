@@ -47,7 +47,7 @@ class RegisterPane extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { auth, errors } = this.state;
     const state = {
       auth: { ...auth, [name]: value },

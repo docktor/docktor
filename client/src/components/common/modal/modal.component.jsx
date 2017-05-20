@@ -44,7 +44,7 @@ class ModalComponent extends React.Component {
     this.setState({ schema:createSchemaModal(modal), form, errors: { details: [], fields: {} }, options });
   }
 
-  handleAddition = (e, { name, value }) => {
+  handleAddition = (_, { name, value }) => {
     const options = this.state.options;
     const opts = options[name] || [];
     const state = {
@@ -53,7 +53,7 @@ class ModalComponent extends React.Component {
     this.setState(state);
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     this.setState({ form: { ...this.state.form, [name]:value } });
   }
 
@@ -75,29 +75,29 @@ class ModalComponent extends React.Component {
     const { form, options } = this.state;
     const opts = options[field.name] || [];
     switch (field.type) {
-    case 'dropdown':
-    case 'autocomplete':
-    case 'tags':
-      const search = field.type === 'autocomplete' || field.type === 'tags';
-      const multiple = field.type === 'tags';
-      const dropdownOptions = opts.map(option => {
-        return {
-          icon: option.icon && <Icon name={option.icon} color={option.color || null}/>,
-          value: field.type == 'dropdown' ? option.id : option.value,
-          text: option.value
-        };
-      });
-      const value = multiple ? (form[field.name] || []) : form[field.name];
-      return (
+      case 'dropdown':
+      case 'autocomplete':
+      case 'tags':
+        const search = field.type === 'autocomplete' || field.type === 'tags';
+        const multiple = field.type === 'tags';
+        const dropdownOptions = opts.map(option => {
+          return {
+            icon: option.icon && <Icon name={option.icon} color={option.color || null}/>,
+            value: field.type == 'dropdown' ? option.id : option.value,
+            text: option.value
+          };
+        });
+        const value = multiple ? (form[field.name] || []) : form[field.name];
+        return (
         <Dropdown placeholder={field.placeholder} name={field.name} value={value} allowAdditions={search} onAddItem={this.handleAddition}
           fluid search={search} multiple={multiple} selection options={dropdownOptions} onChange={this.handleChange}
         />
-      );
-    default:
+        );
+      default:
       // Default component for text/email/numbers...
-      return (
+        return (
         <Input fluid type={field.type} name={field.name} placeholder={field.placeholder} defaultValue={form[field.name]} onChange={this.handleChange}/>
-      );
+        );
     }
   }
 

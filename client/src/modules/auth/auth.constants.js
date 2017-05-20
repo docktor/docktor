@@ -5,38 +5,38 @@ export const ALL_ROLES = [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, AUTH_USER_ROLE]
 
 export const getRoleLabel = role => {
   switch (role) {
-  case AUTH_ADMIN_ROLE:
-    return 'Admin';
-  case AUTH_SUPERVISOR_ROLE:
-    return 'Supervisor';
-  case AUTH_USER_ROLE:
-    return 'User';
-  default:
-    return 'Unknown';
+    case AUTH_ADMIN_ROLE:
+      return 'Admin';
+    case AUTH_SUPERVISOR_ROLE:
+      return 'Supervisor';
+    case AUTH_USER_ROLE:
+      return 'User';
+    default:
+      return 'Unknown';
   }
 };
 
 export const getRoleColor = role => {
   switch (role) {
-  case AUTH_ADMIN_ROLE:
-    return 'teal';
-  case AUTH_SUPERVISOR_ROLE:
-    return 'yellow';
-  default:
-    return null;
+    case AUTH_ADMIN_ROLE:
+      return 'teal';
+    case AUTH_SUPERVISOR_ROLE:
+      return 'yellow';
+    default:
+      return null;
   }
 };
 
 export const getRoleIcon = role => {
   switch (role) {
-  case AUTH_ADMIN_ROLE:
-    return 'unlock';
-  case AUTH_SUPERVISOR_ROLE:
-    return 'unlock alternate';
-  case AUTH_USER_ROLE:
-    return 'lock';
-  default:
-    return 'warning sign';
+    case AUTH_ADMIN_ROLE:
+      return 'unlock';
+    case AUTH_SUPERVISOR_ROLE:
+      return 'unlock alternate';
+    case AUTH_USER_ROLE:
+      return 'lock';
+    default:
+      return 'warning sign';
   }
 };
 

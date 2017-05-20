@@ -68,7 +68,7 @@ class ServiceComponent extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { service, errors } = this.state;
     const state = {
       service: { ...service, [name]:value },
@@ -227,7 +227,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchService: id => dispatch(ServicesThunks.fetch(id)),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+    fetchTags: () => dispatch(TagsThunks.fetchAll()),
     onSave: service => dispatch(
       ServicesThunks.save(service, (id) => push('/services/' + id), ToastsActions.confirmSave(`Service "${service.title}"`))
     ),

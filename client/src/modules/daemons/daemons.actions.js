@@ -32,18 +32,9 @@ const invalidRequestDaemonInfo = (daemon) => {
   };
 };
 
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: DaemonsConstants.CHANGE_FILTER,
-    filterValue
-  };
-};
-
 export default {
   ...generateEntitiesActions('daemons'),
   requestDaemonInfo,
   receiveDaemonInfo,
-  invalidRequestDaemonInfo,
-  changeFilter
+  invalidRequestDaemonInfo
 };

@@ -75,7 +75,7 @@ class GroupEditComponent extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { group, errors } = this.state;
     const state = {
       group: { ...group, [name]:value },
@@ -202,9 +202,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchGroup: (id) => dispatch(GroupsThunks.fetch(id)),
-    fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
-    fetchUsers: () => dispatch(UsersThunks.fetchIfNeeded()),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+    fetchDaemons: () => dispatch(DaemonsThunks.fetchAll()),
+    fetchUsers: () => dispatch(UsersThunks.fetchAll()),
+    fetchTags: () => dispatch(TagsThunks.fetchAll()),
     onSave: (group) => dispatch(
       GroupsThunks.save(group, (id) => push('/groups/' + id), ToastsActions.confirmSave(`Group "${group.title}"`))
     ),

@@ -8,12 +8,12 @@ const initialState = {
 
 const modalReducer = (state = initialState, action) => {
   switch (action.type) {
-  case ModalConstants.CLOSE_MODAL:
-    return { ...initialState };
-  case ModalConstants.OPEN_MODAL:
-    return { ...initModal(action) };
-  default:
-    return state;
+    case ModalConstants.CLOSE_MODAL:
+      return { ...initialState };
+    case ModalConstants.OPEN_MODAL:
+      return { ...initModal(action) };
+    default:
+      return state;
   }
 };
 

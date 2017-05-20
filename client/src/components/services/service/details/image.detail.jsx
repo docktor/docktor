@@ -27,7 +27,7 @@ class ImageDetails extends React.Component {
     this.setState((prevState) => {return { opened: !prevState.opened };});
   }
 
-  onEdit = (e, { value }) => {
+  onEdit = (_, { value }) => {
     this.setState({ image: { name: value }, error: false });
   }
 

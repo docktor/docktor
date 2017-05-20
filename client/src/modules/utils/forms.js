@@ -17,18 +17,18 @@ const createSchema = (fields) => {
   fields.forEach(field => {
     let rule;
     switch (field.type) {
-    case 'email':
-      rule = Joi.string().email().trim();
-      break;
-    case 'number':
-      rule = Joi.number();
-      break;
-    case 'tags':
-      rule = Joi.array();
-      break;
-    default:
-      rule = Joi.string().trim();
-      break;
+      case 'email':
+        rule = Joi.string().email().trim();
+        break;
+      case 'number':
+        rule = Joi.number();
+        break;
+      case 'tags':
+        rule = Joi.array();
+        break;
+      default:
+        rule = Joi.string().trim();
+        break;
     }
     if (field.required) {
       rule = rule.required();

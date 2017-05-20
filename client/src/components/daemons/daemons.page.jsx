@@ -87,8 +87,8 @@ const mapStateToDaemonsProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToDaemonsProps = (dispatch) => {
   return {
-    fetchSite: () => dispatch(SitesThunks.fetchIfNeeded()),
-    fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
+    fetchSite: () => dispatch(SitesThunks.fetchAll()),
+    fetchDaemons: () => dispatch(DaemonsThunks.fetchAll()),
     changeFilter: (filterValue) => dispatch(DaemonsActions.changeFilter(filterValue))
   };
 };

@@ -79,7 +79,7 @@ class DaemonComponent extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value, checked }) => {
+  handleChange = (_, { name, value, checked }) => {
     const { daemon, errors } = this.state;
     const state = {
       daemon: { ...daemon, [name]:value || checked },
@@ -292,8 +292,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchDaemon: id => dispatch(DaemonsThunks.fetch(id)),
-    fetchSites: () => dispatch(SitesThunks.fetchIfNeeded()),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+    fetchSites: () => dispatch(SitesThunks.fetchAll()),
+    fetchTags: () => dispatch(TagsThunks.fetchAll()),
     onSave: daemon => dispatch(
       DaemonsThunks.save(daemon, (id) => push('/daemons/' + id), ToastsActions.confirmSave(`Daemon "${daemon.name}"`))
     ),

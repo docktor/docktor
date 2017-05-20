@@ -17,16 +17,16 @@ const getFilteredTags = (tags, filterValue) => {
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
-        case 'text':
-          match &= containsWithoutAccents(JSON.stringify(Object.values(tag)), value);
-          return;
-        case 'name':
-        case 'title':
-          match &= containsWithoutAccents(tag.name, value);
-          return;
-        default:
-          match = false;
-          return;
+          case 'text':
+            match &= containsWithoutAccents(JSON.stringify(Object.values(tag)), value);
+            return;
+          case 'name':
+          case 'title':
+            match &= containsWithoutAccents(tag.name, value);
+            return;
+          default:
+            match = false;
+            return;
         }
       });
       return match;

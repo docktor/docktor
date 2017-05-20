@@ -1,14 +1,12 @@
 // import constants
-import ServicesConstants from './services.constants';
 import { generateEntitiesReducer } from '../utils/entities';
 
 const servicesReducer = (state, action) => {
-  const entitiesState = generateEntitiesReducer(state, action, 'services');
+  const reducer = generateEntitiesReducer('services');
+  const entitiesState = reducer(state, action);
   switch (action.type) {
-  case ServicesConstants.CHANGE_FILTER:
-    return { ...entitiesState, filterValue: action.filterValue };
-  default:
-    return entitiesState;
+    default:
+      return entitiesState;
   }
 };
 

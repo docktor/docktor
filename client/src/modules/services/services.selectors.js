@@ -11,20 +11,20 @@ export const getFilteredServices = (services, filterValue) => {
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
-        case 'text':
-          match &= containsWithoutAccents(JSON.stringify(Object.values(service)), value);
-          return;
-        case 'name':
-        case 'title':
-          match &= containsWithoutAccents(service.title, value);
-          return;
-        case 'tags':
-          const tags = service.tags || [];
-          match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
-          return;
-        default:
-          match = false;
-          return;
+          case 'text':
+            match &= containsWithoutAccents(JSON.stringify(Object.values(service)), value);
+            return;
+          case 'name':
+          case 'title':
+            match &= containsWithoutAccents(service.title, value);
+            return;
+          case 'tags':
+            const tags = service.tags || [];
+            match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
+            return;
+          default:
+            match = false;
+            return;
         }
       });
       return match;

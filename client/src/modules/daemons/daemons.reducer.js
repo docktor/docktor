@@ -40,18 +40,17 @@ const createInvalidDaemonInfo = (state, action) => {
 };
 
 const daemonsReducer = (state, action) => {
-  const entitiesState = generateEntitiesReducer(state, action, 'daemons');
+  const reducer = generateEntitiesReducer('daemons');
+  const entitiesState = reducer(state, action);
   switch (action.type) {
-  case DaemonsConstants.REQUEST_DAEMON_INFO:
-    return { ...entitiesState, ...createRequestDaemonInfo(state, action) };
-  case DaemonsConstants.RECEIVE_DAEMON_INFO:
-    return { ...entitiesState, ...createReceiveDaemonInfo(state, action) };
-  case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
-    return { ...entitiesState, ...createInvalidDaemonInfo(state, action) };
-  case DaemonsConstants.CHANGE_FILTER:
-    return { ...entitiesState, filterValue: action.filterValue };
-  default:
-    return entitiesState;
+    case DaemonsConstants.REQUEST_DAEMON_INFO:
+      return { ...entitiesState, ...createRequestDaemonInfo(state, action) };
+    case DaemonsConstants.RECEIVE_DAEMON_INFO:
+      return { ...entitiesState, ...createReceiveDaemonInfo(state, action) };
+    case DaemonsConstants.INVALID_REQUEST_DAEMON_INFO:
+      return { ...entitiesState, ...createInvalidDaemonInfo(state, action) };
+    default:
+      return entitiesState;
   }
 };
 

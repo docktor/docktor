@@ -25,7 +25,7 @@ class TagsSelector extends React.Component {
         dropdownItems.push({ key:tag.id, value:tag.id, text:tag.name.raw });
       });
     });
-    const loading = tags.isFetching || tags.didInvalidate;
+    const loading = tags.isFetching;
     return (
       <Dropdown placeholder={loading ? 'Loading tags…' : 'Tags'} name='tags' loading={loading} value={selectedTags} options={dropdownItems}
         multiple search fluid className='fluid multiple search selection dropdown optgroup' selection onChange={onChange}

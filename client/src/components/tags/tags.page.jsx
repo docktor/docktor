@@ -104,7 +104,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchTags: () => {
-      dispatch(TagsThunks.fetchIfNeeded());
+      dispatch(TagsThunks.fetchAll());
     },
     onCreate: (availableRights, availableCategories) => {
       const callback = (tagForm) => dispatch(TagsThunks.createTags(tagForm));

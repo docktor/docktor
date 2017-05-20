@@ -15,7 +15,7 @@ import './user.card.component.scss';
 // UserCard Component
 class UserCardComponent extends React.Component {
 
-  handleChange = (e, { value }) => {
+  handleChange = (_, { value }) => {
     const oldUser = this.props.user;
     const userToSave = {
       ...oldUser,

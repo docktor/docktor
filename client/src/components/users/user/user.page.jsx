@@ -41,7 +41,7 @@ class UserComponent extends React.Component {
       .then(() => this.props.fetchUser(userId));
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { user } = this.state;
     const state = {
       user: { ...user, [name]: value },
@@ -179,7 +179,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchUser: id => dispatch(UsersThunks.fetch(id)),
-  fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+  fetchTags: () => dispatch(TagsThunks.fetchAll()),
   onSave: user => dispatch(UsersThunks.save(user, () => push('/users'), ToastsActions.confirmSave(`User "${user.displayName}"`)))
 });
 

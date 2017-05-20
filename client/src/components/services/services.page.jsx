@@ -82,7 +82,7 @@ const mapStateToServicesProps = (state) => {
 const mapDispatchToServicesProps = (dispatch) => {
   return {
     fetchServices : () => {
-      dispatch(ServicesThunks.fetchIfNeeded());
+      dispatch(ServicesThunks.fetchAll());
     },
     changeFilter: (filterValue) => dispatch(ServicesActions.changeFilter(filterValue))
   };
