@@ -35,8 +35,8 @@ var _ = Describe("Service", func() {
 		Context("When I try to get the last image", func() {
 			image, err := service.GetLatestImage()
 			It("Then I should get the latest created", func() {
-				Ω(err).ShouldNot(HaveOccurred())
-				Ω(image.Name).Should(Equal("Image2016"))
+				Expect(err).ShouldNot(HaveOccurred())
+				Expect(image.Name).Should(Equal("Image2016"))
 			})
 		})
 	})

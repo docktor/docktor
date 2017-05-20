@@ -45,7 +45,7 @@ var _ = Describe("Group", func() {
 					{User: "superman", Role: types.MemberUserRole},
 					{User: "robin", Role: types.MemberModeratorRole},
 				}
-				Ω(actualMembers).Should(Equal(expectedMembers))
+				Expect(actualMembers).Should(Equal(expectedMembers))
 			})
 		})
 	})

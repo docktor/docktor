@@ -68,7 +68,7 @@ var _ = Describe("Image", func() {
 				}
 			})
 			It("Then EqualsInConf should be true", func() {
-				Ω(firstImage.EqualsInConf(secondImage)).Should(BeTrue())
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeTrue())
 			})
 		})
 
@@ -96,7 +96,7 @@ var _ = Describe("Image", func() {
 				}
 			})
 			It("Then EqualsInConf should be false", func() {
-				Ω(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
 			})
 		})
 
@@ -125,7 +125,7 @@ var _ = Describe("Image", func() {
 				}
 			})
 			It("Then EqualsInConf should be false", func() {
-				Ω(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
 			})
 		})
 
@@ -154,7 +154,7 @@ var _ = Describe("Image", func() {
 				}
 			})
 			It("Then EqualsInConf should be false", func() {
-				Ω(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
 			})
 		})
 
@@ -182,7 +182,7 @@ var _ = Describe("Image", func() {
 				}
 			})
 			It("Then EqualsInConf should be false", func() {
-				Ω(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
 			})
 		})
 	})
