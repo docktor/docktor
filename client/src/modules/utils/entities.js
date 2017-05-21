@@ -184,9 +184,19 @@ const generateEntitiesItems = (csts) => (state = {}, action) => {
       const { [action.id]: item, ...restState } = state;
       return { [action.id]: { ...item, isFetching: true }, ...restState };
     }
-    case csts.CONST_INVALID_ENTITY: {
+    case csts.CONST_SAVE_ENTITY: {
+      const { [action.entity.id]: item, ...restState } = state;
+      return { [action.entity.id]: { ...item, isFetching: true }, ...restState };
+    }
+    case csts.CONST_DELETE_ENTITY: {
       const { [action.id]: item, ...restState } = state;
-      return { [action.id]: { ...item, isFetching: false }, ...restState };
+      return { [action.id]: { ...item, isFetching: true }, ...restState };
+    }
+    case csts.CONST_INVALID_ENTITY:
+    case csts.CONST_INVALID_SAVE_ENTITY:
+    case csts.CONST_INVALID_DELETE_ENTITY: {
+      const { [action.entity.id]: item, ...restState } = state;
+      return { [action.entity.id]: { ...item, isFetching: false }, ...restState };
     }
     case csts.CONST_ENTITY_DELETED: {
       const { [action.id]: _, ...newState } = state;
