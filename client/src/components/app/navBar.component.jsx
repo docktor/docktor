@@ -7,7 +7,7 @@ import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
 import AuthThunks from '../../modules/auth/auth.thunk';
 import ExportThunks from '../../modules/export/export.thunk';
-import { isRoleAuthorized } from '../../modules/auth/auth.wrappers';
+import { isRoleAuthorized } from '../../modules/utils/auth';
 
 // Constants
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../../modules/auth/auth.constants';

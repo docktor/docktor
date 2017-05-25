@@ -1,35 +1,35 @@
+import { combineReducers } from 'redux';
+
 // import constants
 import ExportConstants from './export.constants';
 
-const initialState = {
-  isFetching: false,
-  errorMessage: ''
-};
-
-// The export reducer
-const exportReducer = (state = initialState, action) => {
+const isFetching = (state = false, action) => {
   switch (action.type) {
     case ExportConstants.EXPORT_ALL_REQUEST:
-      return {
-        ...state,
-        isFetching: true,
-        errorMessage: '',
-      };
+      return true;
     case ExportConstants.EXPORT_ALL_SUCCESS:
-      return {
-        ...state,
-        isFetching: false,
-        errorMessage: '',
-      };
     case ExportConstants.EXPORT_ALL_INVALID_REQUEST:
-      return {
-        ...state,
-        isFetching: false,
-        errorMessage: action.error,
-      };
+      return false;
     default:
       return state;
   }
 };
+
+const errorMessage = (state = '', action) => {
+  switch (action.type) {
+    case ExportConstants.EXPORT_ALL_REQUEST:
+    case ExportConstants.EXPORT_ALL_SUCCESS:
+      return '';
+    case ExportConstants.EXPORT_ALL_INVALID_REQUEST:
+      return action.error;
+    default:
+      return state;
+  }
+};
+
+const exportReducer = combineReducers({
+  isFetching,
+  errorMessage,
+});
 
 export default exportReducer;

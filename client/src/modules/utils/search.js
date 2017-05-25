@@ -1,3 +1,5 @@
+import deburr from 'lodash.deburr';
+
 const CRITERIA_SEPARATOR = ',';
 const CRITERION_SEPARATOR = ':';
 
@@ -15,4 +17,8 @@ export const transformFilterToObject = (filter) => {
     }
   });
   return result;
+};
+
+export const contains = (str1 = '', str2 = '') => {
+  return deburr(str1).toLowerCase().indexOf(deburr(str2).toLowerCase()) !== -1;
 };

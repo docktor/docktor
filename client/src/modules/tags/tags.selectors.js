@@ -1,5 +1,5 @@
 import { transformFilterToObject } from '../utils/search';
-import { containsWithoutAccents } from '../utils/strings';
+import { contains } from '../utils/search';
 
 import groupBy from 'lodash.groupby';
 import flatMap from 'lodash.flatmap';
@@ -18,11 +18,11 @@ const getFilteredTags = (tags, filterValue) => {
         const value = query[key];
         switch(key) {
           case 'text':
-            match &= containsWithoutAccents(JSON.stringify(Object.values(tag)), value);
+            match &= contains(JSON.stringify(Object.values(tag)), value);
             return;
           case 'name':
           case 'title':
-            match &= containsWithoutAccents(tag.name, value);
+            match &= contains(tag.name, value);
             return;
           default:
             match = false;

@@ -1,4 +1,4 @@
-import { withAuth } from '../auth/auth.wrappers';
+import { withAuth } from '../utils/auth';
 import { checkHttpStatus, handleError } from '../utils/promises';
 import { download } from '../utils/files';
 

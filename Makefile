@@ -18,7 +18,12 @@ test:
 	go get github.com/stretchr/testify
 	go get github.com/onsi/ginkgo/ginkgo
 	go get github.com/onsi/gomega
-	go test ./cmd/... ./model/... ./server/...
+	go get github.com/wadey/gocovmerge
+	ginkgo -race -v -coverpkg=./model/... ./cmd/... ./model/... ./server/...
+	$(shell [ ! -d dist ] && mkdir dist)
+	gocovmerge ./model/**/*.coverprofile > dist/cover.out
+	go tool cover -html=dist/cover.out -o=dist/cover.html
+	rm -f ./**/*.coverprofile
 
 lint:
 	go get github.com/alecthomas/gometalinter

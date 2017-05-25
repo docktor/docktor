@@ -11,3 +11,4 @@ vendor/*/
 debug
 logs/
 .DS_Store
+*.coverprofile

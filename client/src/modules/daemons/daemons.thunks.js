@@ -1,4 +1,4 @@
-import { withAuth } from '../auth/auth.wrappers';
+import { withAuth } from '../utils/auth';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 import { generateEntitiesThunks } from '../utils/entities';

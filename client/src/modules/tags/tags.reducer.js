@@ -3,11 +3,7 @@ import { generateEntitiesReducer } from '../utils/entities';
 
 const tagsReducer = (state, action) => {
   const reducer = generateEntitiesReducer('tags');
-  const entitiesState = reducer(state, action);
-  switch (action.type) {
-    default:
-      return entitiesState;
-  }
+  return reducer(state, action);
 };
 
 export default tagsReducer;
