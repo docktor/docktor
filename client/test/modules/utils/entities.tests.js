@@ -96,7 +96,6 @@ describe('Using utilities for entities ->', () => {
       // All
       expect(actions.requestAll(), 'request actions').to.be.deep.equal(requestAction);
       const receivedActionInstance = actions.receiveSome(normalize([item], entitiesSchema));
-      receivedAction.receivedAt = receivedActionInstance.receivedAt;
       expect(receivedActionInstance, 'received action').to.deep.equals(receivedAction);
       expect(actions.invalidRequest(error), 'invalid action').to.be.deep.equal(invalidAction);
 
@@ -113,7 +112,6 @@ describe('Using utilities for entities ->', () => {
       // Delete
       expect(actions.requestDelete(item.id), 'delete action').to.be.deep.equal(requestDeleteAction);
       const deletedActionInstance = actions.deleted(item.id);
-      receivedDeletedAction.receivedAt = deletedActionInstance.receivedAt;
       expect(deletedActionInstance, 'deleted action').to.be.deep.equal(receivedDeletedAction);
       expect(actions.invalidDeleteEntity(item)(error), 'invalid delete action').to.be.deep.equal(invalidDeleteAction);
 
