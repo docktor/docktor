@@ -1,11 +1,8 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { Header, Form, Message, Button, Icon, Modal } from 'semantic-ui-react';
 import Joi from 'joi-browser';
-
-import Rodal from 'rodal';
 
 import { UsersConstants } from '../../../modules/users/users.actions';
 import { parseError } from '../../../modules/utils/forms';
@@ -100,7 +97,6 @@ class ProfilePane extends React.Component {
     const { user, submit } = this.props;
     const { fields, details } = this.state.errors;
     const isDisabled = this.isDisabled(user);
-    const modalClasses = classNames('ui', { active: this.state.isRemovalModalVisible }, 'small modal');
     return (
       <div id='profile'>
         <Header as='h1'>{this.props.title}</Header>
@@ -133,21 +129,18 @@ class ProfilePane extends React.Component {
           <Message error list={details} />
           <Button className={'button-block submit'} loading={user.isFetching} disabled={isDisabled}>{submit}</Button>
         </Form>
-        <Rodal visible={this.state.isRemovalModalVisible}
-          onClose={this.closeRemoveAccountModal}>
-          <div className={modalClasses}>
-            <Icon name='close' onClick={this.closeRemoveAccountModal} />
-            <Header icon='trash' content='Remove your account' />
-            <Modal.Content>
-              <h2>Are you sure to delete your account ?</h2>
-              <p>This action is irreversible and you will lose all your data</p>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button content='No' color='black' onClick={this.closeRemoveAccountModal} />
-              <Button content='Yes' icon='trash' labelPosition='right' color='teal' onClick={this.validateRemoval} />
-            </Modal.Actions>
-          </div>
-        </Rodal>
+        <Modal open={this.state.isRemovalModalVisible} onClose={this.closeRemoveAccountModal}>
+          <Icon name='close' onClick={this.closeRemoveAccountModal} />
+          <Header icon='trash' content='Remove your account' />
+          <Modal.Content>
+            <h2>Are you sure to delete your account ?</h2>
+            <p>This action is irreversible and you will lose all your data</p>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button content='No' color='black' onClick={this.closeRemoveAccountModal} />
+            <Button content='Yes' icon='trash' labelPosition='right' color='red' onClick={this.validateRemoval} />
+          </Modal.Actions>
+        </Modal>
       </div>
     );
   }

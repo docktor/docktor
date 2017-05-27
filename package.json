@@ -104,7 +104,6 @@
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
-    "rodal": "1.5.0",
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.2",
     "uuid-js": "^0.7.5"
