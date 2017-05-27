@@ -1,8 +1,8 @@
 // import constants
-import DaemonsConstants from './daemons.constants';
+import { DaemonsConstants } from './daemons.actions';
 import { generateEntitiesReducer } from '../utils/entities';
 
-const daemonInfoReducer = (items, action) => {
+const daemonInfoReducer = (items = {}, action) => {
   switch (action.type) {
     case DaemonsConstants.REQUEST_DAEMON_INFO: {
       const { [action.daemon.id]: item, ...restItems } = items;

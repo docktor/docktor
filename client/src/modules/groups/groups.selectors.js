@@ -1,5 +1,4 @@
-import { transformFilterToObject } from '../utils/search';
-import { contains } from '../utils/search';
+import { transformFilterToObject, contains } from '../utils/utils';
 
 export const getFilteredGroups = (groups, filterValue) => {
   if (!filterValue || filterValue === '') {

@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
-
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants';
+import {
+  AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES,
+  getRoleLabel, getRoleColor, getRoleIcon
+} from '../../../modules/auth/auth.actions';
 import UsersThunks from '../../../modules/users/users.thunks';
 import ToastsActions from '../../../modules/toasts/toasts.actions';
 

@@ -1,6 +1,18 @@
-// import constants
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
+
+//=================================================
+// Tags constants
+//=================================================
+
+export const TagsConstants = {
+  ...generateEntitiesConstants('tags')
+};
+
+
+//=================================================
+// Tags actions
+//=================================================
 
 export default {
-  ...generateEntitiesActions('tags'),
+  ...generateEntitiesActions('tags')
 };

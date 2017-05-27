@@ -1,5 +1,17 @@
-// import constants
-import ToastsConstants from './toasts.constants';
+//=================================================
+// Toasts constants
+//=================================================
+
+export const ToastsConstants = {
+  COMFIRM_DELETION: 'COMFIRM_DELETION',
+  COMFIRM_SAVE: 'COMFIRM_SAVE',
+  CLOSE_NOTIFICATION: 'CLOSE_NOTIFICATION'
+};
+
+
+//=================================================
+// Toasts actions
+//=================================================
 
 // Confirm site deletion
 const confirmDeletion = (title, callback) => {

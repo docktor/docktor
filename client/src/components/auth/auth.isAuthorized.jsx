@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { isRoleAuthorized } from '../../modules/utils/auth';
+import { isRoleAuthorized } from '../../modules/utils/utils';
 
 // Wrapper rendering the child component only when authenticated and authorized
 export function requireAuthorization(Component, Roles) {

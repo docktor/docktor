@@ -7,7 +7,7 @@ import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // Roles
-import { ALL_ROLES, getRoleData } from '../../modules/auth/auth.constants';
+import { ALL_ROLES, getRoleData } from '../../modules/auth/auth.actions';
 
 // API Fetching
 import TagsThunks from '../../modules/tags/tags.thunks';

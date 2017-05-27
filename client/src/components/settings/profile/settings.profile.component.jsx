@@ -7,7 +7,7 @@ import Joi from 'joi-browser';
 
 import Rodal from 'rodal';
 
-import UserConstants from '../../../modules/users/users.constants';
+import { UsersConstants } from '../../../modules/users/users.actions';
 import { parseError } from '../../../modules/utils/forms';
 
 // Style
@@ -49,7 +49,7 @@ class ProfilePane extends React.Component {
   }
 
   isDisabled = (user) => {
-    return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
+    return user.provider !== UsersConstants.USER_LOCAL_PROVIDER;
   }
 
   removeAccount = (e) => {

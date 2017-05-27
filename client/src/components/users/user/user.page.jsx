@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Button, Dimmer, Loader, Label, Icon, Dropdown } from 'semantic-ui-react';
 
-import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants';
+import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.actions';
 
 // Thunks / Actions
 import UsersThunks from '../../../modules/users/users.thunks';

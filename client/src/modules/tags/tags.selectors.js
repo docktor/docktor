@@ -1,5 +1,4 @@
-import { transformFilterToObject } from '../utils/search';
-import { contains } from '../utils/search';
+import { transformFilterToObject, contains } from '../utils/utils';
 
 import groupBy from 'lodash.groupby';
 import flatMap from 'lodash.flatmap';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
 import Joi from 'joi-browser';
 
-import UserConstants from '../../../modules/users/users.constants';
+import { UsersConstants } from '../../../modules/users/users.actions';
 import { parseError } from '../../../modules/utils/forms';
 
 
@@ -22,7 +22,7 @@ class ChangePasswordPane extends React.Component {
   })
 
   isDisabled = (user) => {
-    return user.provider !== UserConstants.USER_LOCAL_PROVIDER;
+    return user.provider !== UsersConstants.USER_LOCAL_PROVIDER;
   }
 
   handleSubmit = (e) => {

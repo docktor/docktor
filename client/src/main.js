@@ -25,7 +25,7 @@ import ResetPasswordPage from './components/auth/auth.reset-password.page';
 import { requireAuthorization } from './components/auth/auth.isAuthorized';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.constants';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.actions';
 
 import store from './store';
 

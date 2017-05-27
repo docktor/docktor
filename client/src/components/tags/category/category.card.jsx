@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Card, Icon, Label, Popup } from 'semantic-ui-react';
 
-import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants';
+import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.actions';
 
 // Style
 import './category.card.scss';

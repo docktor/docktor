@@ -1,5 +1,5 @@
 import { normalize } from 'normalizr';
-import { withAuth } from '../utils/auth';
+import { withAuth } from '../utils/utils';
 import { generateEntitiesThunks, entitiesSchema } from '../utils/entities';
 import UsersActions from './users.actions';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';

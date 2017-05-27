@@ -1,5 +1,17 @@
-// import constants
-import ExportConstants from './export.constants';
+//=================================================
+// Export constants
+//=================================================
+
+export const ExportConstants = {
+  EXPORT_ALL_REQUEST : 'EXPORT_ALL_REQUEST',
+  EXPORT_ALL_SUCCESS : 'EXPORT_ALL_SUCCESS',
+  EXPORT_ALL_INVALID_REQUEST : 'EXPORT_ALL_INVALID_REQUEST'
+};
+
+
+//=================================================
+// Export actions
+//=================================================
 
 // Action when requesting the generation of an export
 const requestExportAll = () => ({ type: ExportConstants.EXPORT_ALL_REQUEST });

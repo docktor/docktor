@@ -1,8 +1,18 @@
 // React
 import React from 'react';
 
-// import constants
-import ModalConstants from './modal.constants';
+//=================================================
+// Modal constants
+//=================================================
+
+export const ModalConstants = {
+  OPEN_MODAL: 'OPEN_MODAL',
+  CLOSE_MODAL: 'CLOSE_MODAL'
+};
+
+//=================================================
+// Modal actions
+//=================================================
 
 // Close Modal
 const closeModal = () => {
@@ -51,7 +61,7 @@ const openEditSiteModal = (site, callback) => {
 const tagRightsHelp = (
   <div>
     Rights defines who is able to add or remove the tag <b>from groups or containers</b>, depending on his role. Be aware that only admins are able to create or delete tags on Docktor.
-    <hr/>
+    <hr />
     For example :
     <ul>
       <li>a user who is classical user can only add or remove a tag with 'user' role</li>
@@ -96,10 +106,4 @@ const openEditTagModal = (tag, availableRights, availableCategories, callback) =
   };
 };
 
-export default {
-  closeModal,
-  openNewSiteModal,
-  openEditSiteModal,
-  openNewTagsModal,
-  openEditTagModal
-};
+export default { closeModal, openNewSiteModal, openEditSiteModal, openNewTagsModal, openEditTagModal };

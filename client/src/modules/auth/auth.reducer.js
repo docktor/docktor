@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 
 // import constants
-import AuthConstants from './auth.constants';
-import UsersConstants from '../users/users.constants';
+import { AuthConstants } from './auth.actions';
+import { UsersConstants } from '../users/users.actions';
 
 const isFetching = (state = false, action) => {
   switch (action.type) {

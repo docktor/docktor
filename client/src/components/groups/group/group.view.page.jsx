@@ -16,8 +16,8 @@ import UsersThunks from '../../../modules/users/users.thunks';
 import ServicesThunks from '../../../modules/services/services.thunks';
 
 // Selectors
-import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants';
-import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.constants';
+import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.actions';
+import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.actions';
 
 // Components
 import HeadingBox from '../../common/boxes/box/heading.box.component';

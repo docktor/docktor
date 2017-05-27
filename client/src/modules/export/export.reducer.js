@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 // import constants
-import ExportConstants from './export.constants';
+import { ExportConstants } from './export.actions';
 
 const isFetching = (state = false, action) => {
   switch (action.type) {

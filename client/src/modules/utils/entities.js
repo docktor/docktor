@@ -1,7 +1,7 @@
 import { normalize, schema } from 'normalizr';
 import { combineReducers } from 'redux';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { withAuth } from '../utils/auth';
+import { withAuth } from '../utils/utils';
 import { checkHttpStatus, handleError, parseJSON, parseText } from '../utils/promises';
 
 export const entitySchema = new schema.Entity('all');

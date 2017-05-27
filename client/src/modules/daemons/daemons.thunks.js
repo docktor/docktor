@@ -1,4 +1,4 @@
-import { withAuth } from '../utils/auth';
+import { withAuth } from '../utils/utils';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 import { generateEntitiesThunks } from '../utils/entities';

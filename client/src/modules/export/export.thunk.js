@@ -1,6 +1,5 @@
-import { withAuth } from '../utils/auth';
+import { withAuth, download } from '../utils/utils';
 import { checkHttpStatus, handleError } from '../utils/promises';
-import { download } from '../utils/files';
 
 // Export actions
 import ExportActions from './export.actions';

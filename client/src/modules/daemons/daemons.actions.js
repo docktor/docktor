@@ -1,6 +1,21 @@
 // import constants
-import DaemonsConstants from './daemons.constants';
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
+
+//=================================================
+// Daemons constants
+//=================================================
+
+export const DaemonsConstants = {
+  ...generateEntitiesConstants('daemons'),
+  REQUEST_DAEMON_INFO: 'REQUEST_DAEMON_INFO',
+  RECEIVE_DAEMON_INFO: 'RECEIVE_DAEMON_INFO',
+  INVALID_REQUEST_DAEMON_INFO: 'INVALID_REQUEST_DAEMON_INFO',
+};
+
+
+//=================================================
+// Daemons actions
+//=================================================
 
 // Request daemon info
 const requestDaemonInfo = (daemon) => ({ type: DaemonsConstants.REQUEST_DAEMON_INFO, daemon });

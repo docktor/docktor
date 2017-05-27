@@ -4,15 +4,15 @@ import MD5 from 'md5';
 
 //Actions
 import { LOCATION_CHANGE } from 'react-router-redux';
-import SitesConstants from '../sites/sites.constants';
-import DaemonsConstants from '../daemons/daemons.constants';
-import UsersConstants from '../users/users.constants';
-import GroupsConstants from '../groups/groups.constants';
-import ServicesConstants from '../services/services.constants';
-import AuthConstants from '../auth/auth.constants';
-import ExportConstants from '../export/export.constants';
-import ToastsConstants from './toasts.constants';
-import TagsConstants from '../tags/tags.constants';
+import { SitesConstants } from '../sites/sites.actions';
+import { DaemonsConstants } from '../daemons/daemons.actions';
+import { UsersConstants } from '../users/users.actions';
+import { GroupsConstants } from '../groups/groups.actions';
+import { ServicesConstants } from '../services/services.actions';
+import { AuthConstants } from '../auth/auth.actions';
+import { ExportConstants } from '../export/export.actions';
+import { ToastsConstants } from './toasts.actions';
+import { TagsConstants } from '../tags/tags.actions';
 
 const initialState = {};
 

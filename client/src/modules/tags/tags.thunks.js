@@ -1,7 +1,7 @@
+import fetch from 'isomorphic-fetch';
 import { normalize } from 'normalizr';
 import { generateEntitiesThunks, entitySchema, entitiesSchema } from '../utils/entities';
-import fetch from 'isomorphic-fetch';
-import { withAuth } from '../utils/auth';
+import { withAuth } from '../utils/utils';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Tags Actions

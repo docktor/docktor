@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Box from './box/box.component';
 
 // Roles
-import { ALL_GROUP_ROLES, getGroupRoleData } from '../../../modules/groups/groups.constants';
+import { ALL_GROUP_ROLES, getGroupRoleData } from '../../../modules/groups/groups.actions';
 
 // CommandsBox is a list of commands
 class CommandsBox extends React.Component {
