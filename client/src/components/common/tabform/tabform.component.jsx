@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Style
@@ -69,11 +70,11 @@ class TabForm extends React.Component {
 };
 
 TabForm.propTypes = {
-  selected: React.PropTypes.number,
-  children: React.PropTypes
-    .oneOfType([React.PropTypes.array, React.PropTypes.element])
+  selected: PropTypes.number,
+  children: PropTypes
+    .oneOfType([PropTypes.array, PropTypes.element])
     .isRequired,
-  onSwitch: React.PropTypes.func
+  onSwitch: PropTypes.func
 };
 
 TabForm.defaultProps = {

@@ -1,12 +1,13 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Button, Dimmer, Loader, Label, Icon, Dropdown } from 'semantic-ui-react';
 
-import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants';
+import { ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.actions';
 
 // Thunks / Actions
 import UsersThunks from '../../../modules/users/users.thunks';
@@ -40,7 +41,7 @@ class UserComponent extends React.Component {
       .then(() => this.props.fetchUser(userId));
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { user } = this.state;
     const state = {
       user: { ...user, [name]: value },
@@ -153,13 +154,13 @@ class UserComponent extends React.Component {
 }
 
 UserComponent.propTypes = {
-  user: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  userId: React.PropTypes.string.isRequired,
-  tags: React.PropTypes.object,
-  fetchUser: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func.isRequired
+  user: PropTypes.object,
+  isFetching: PropTypes.bool,
+  userId: PropTypes.string.isRequired,
+  tags: PropTypes.object,
+  fetchUser: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -178,7 +179,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchUser: id => dispatch(UsersThunks.fetch(id)),
-  fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+  fetchTags: () => dispatch(TagsThunks.fetchAll()),
   onSave: user => dispatch(UsersThunks.save(user, () => push('/users'), ToastsActions.confirmSave(`User "${user.displayName}"`)))
 });
 

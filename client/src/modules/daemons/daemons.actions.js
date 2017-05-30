@@ -1,49 +1,40 @@
 // import constants
-import DaemonsConstants from './daemons.constants';
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
+
+//=================================================
+// Daemons constants
+//=================================================
+
+export const DaemonsConstants = {
+  ...generateEntitiesConstants('daemons'),
+  REQUEST_DAEMON_INFO: 'REQUEST_DAEMON_INFO',
+  RECEIVE_DAEMON_INFO: 'RECEIVE_DAEMON_INFO',
+  INVALID_REQUEST_DAEMON_INFO: 'INVALID_REQUEST_DAEMON_INFO',
+};
+
+
+//=================================================
+// Daemons actions
+//=================================================
 
 // Request daemon info
-const requestDaemonInfo = (daemon) => {
-  return {
-    type: DaemonsConstants.REQUEST_DAEMON_INFO,
-    daemon
-  };
-};
+const requestDaemonInfo = (daemon) => ({ type: DaemonsConstants.REQUEST_DAEMON_INFO, daemon });
 
 // Daemon info are received
-const receiveDaemonInfo = (daemon, info) => {
-  return {
-    type: DaemonsConstants.RECEIVE_DAEMON_INFO,
-    daemon,
-    info
-  };
-};
+const receiveDaemonInfo = (daemon, info) => ({ type: DaemonsConstants.RECEIVE_DAEMON_INFO, daemon, info });
 
 // Daemon info API returns an Error
-const invalidRequestDaemonInfo = (daemon) => {
-  return function(error) {
-    return {
-      type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
-      daemon,
-      title: 'Cannot retreiving daemon info for ' + daemon.name,
-      message: error,
-      level: 'error'
-    };
-  };
-};
-
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: DaemonsConstants.CHANGE_FILTER,
-    filterValue
-  };
-};
+const invalidRequestDaemonInfo = (daemon) => (error) => ({
+  type: DaemonsConstants.INVALID_REQUEST_DAEMON_INFO,
+  daemon,
+  title: 'Cannot retreiving daemon info for ' + daemon.name,
+  message: error,
+  level: 'error'
+});
 
 export default {
   ...generateEntitiesActions('daemons'),
   requestDaemonInfo,
   receiveDaemonInfo,
-  invalidRequestDaemonInfo,
-  changeFilter
+  invalidRequestDaemonInfo
 };

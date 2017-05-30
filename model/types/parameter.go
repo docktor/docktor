@@ -47,11 +47,13 @@ func (ps Parameters) Equals(b Parameters) bool {
 
 	var aMap = map[string]Parameter{}
 	for _, v := range ps {
-		aMap[v.Name] = v
+		key := v.Name + v.Value + v.Description
+		aMap[key] = v
 	}
 
 	for _, v := range b {
-		_, ok := aMap[v.Name]
+		key := v.Name + v.Value + v.Description
+		_, ok := aMap[key]
 		if !ok {
 			return false
 		}

@@ -1,10 +1,13 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
-
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES, getRoleLabel, getRoleColor, getRoleIcon } from '../../../modules/auth/auth.constants';
+import {
+  AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES,
+  getRoleLabel, getRoleColor, getRoleIcon
+} from '../../../modules/auth/auth.actions';
 import UsersThunks from '../../../modules/users/users.thunks';
 import ToastsActions from '../../../modules/toasts/toasts.actions';
 
@@ -14,7 +17,7 @@ import './user.card.component.scss';
 // UserCard Component
 class UserCardComponent extends React.Component {
 
-  handleChange = (e, { value }) => {
+  handleChange = (_, { value }) => {
     const oldUser = this.props.user;
     const userToSave = {
       ...oldUser,
@@ -41,7 +44,7 @@ class UserCardComponent extends React.Component {
     return (
       <Card className='user-card'>
         <Card.Content>
-          <Image avatar alt='Avatar' src='/images/avatar.jpg' />
+          <Image avatar alt='Avatar' src={require('./images/avatar.jpg')} />
           {
             canGoToProfile ?
               <Link to={`/users/${user.id}`}>
@@ -68,9 +71,9 @@ class UserCardComponent extends React.Component {
 }
 
 UserCardComponent.propTypes = {
-  user: React.PropTypes.object,
-  auth: React.PropTypes.object,
-  saveUser: React.PropTypes.func.isRequired
+  user: PropTypes.object,
+  auth: PropTypes.object,
+  saveUser: PropTypes.func.isRequired
 };
 
 // Function to map state to container props

@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
@@ -61,11 +62,11 @@ class Groups extends React.Component {
   }
 }
 Groups.propTypes = {
-  groups: React.PropTypes.array,
-  filterValue: React.PropTypes.string,
-  isFetching: React.PropTypes.bool,
-  fetchGroups: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func.isRequired
+  groups: PropTypes.array,
+  filterValue: PropTypes.string,
+  isFetching: PropTypes.bool,
+  fetchGroups: PropTypes.func.isRequired,
+  changeFilter: PropTypes.func.isRequired
 };
 
 // Function to map state to container props
@@ -80,7 +81,7 @@ const mapStateToGroupsProps = (state) => {
 const mapDispatchToGroupsProps = (dispatch) => {
   return {
     fetchGroups : () => {
-      dispatch(GroupsThunks.fetchIfNeeded());
+      dispatch(GroupsThunks.fetchAll());
     },
     changeFilter: (filterValue) => dispatch(GroupsActions.changeFilter(filterValue))
   };

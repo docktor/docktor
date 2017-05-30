@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Box from './box/box.component';
 
@@ -73,12 +74,12 @@ class ParametersBox extends React.Component {
 }
 
 ParametersBox.propTypes = {
-  parameters: React.PropTypes.array,
-  allowEmpty: React.PropTypes.bool,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  parameters: PropTypes.array,
+  allowEmpty: PropTypes.bool,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ])
 };
 

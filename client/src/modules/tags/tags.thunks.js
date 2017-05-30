@@ -1,7 +1,7 @@
-// Imports for fetch API
-import { generateEntitiesThunks } from '../utils/entities';
 import fetch from 'isomorphic-fetch';
-import { withAuth } from '../auth/auth.wrappers';
+import { normalize } from 'normalizr';
+import { generateEntitiesThunks, entitySchema, entitiesSchema } from '../utils/entities';
+import { withAuth } from '../utils/utils';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
 // Tags Actions
@@ -35,7 +35,8 @@ const createTags = (form) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(TagsActions.saved(response));
+        const normalizedResponse = normalize(response, entitySchema);
+        dispatch(TagsActions.saved(normalizedResponse));
       })
       .catch(error => {
         handleError(error, TagsActions.invalidSaveEntity(tag), dispatch);
@@ -64,7 +65,8 @@ const fetchGroupTags = (groupId) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(TagsActions.receiveSome(response));
+        const normalizedResponse = normalize(response, entitiesSchema);
+        dispatch(TagsActions.receiveSome(normalizedResponse));
       })
       .catch(error => {
         handleError(error, TagsActions.invalidRequest, dispatch);

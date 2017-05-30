@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Card, Button } from 'semantic-ui-react';
 
@@ -49,8 +50,8 @@ class ContainerCard extends React.Component {
   }
 }
 ContainerCard.propTypes = {
-  container: React.PropTypes.object.isRequired,
-  daemons: React.PropTypes.object.isRequired
+  container: PropTypes.object.isRequired,
+  daemons: PropTypes.object.isRequired
 };
 
 export default ContainerCard;

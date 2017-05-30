@@ -1,340 +1,266 @@
-import { withAuth } from '../auth/auth.wrappers';
+import { normalize, schema } from 'normalizr';
+import { combineReducers } from 'redux';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { withAuth } from '../utils/utils';
 import { checkHttpStatus, handleError, parseJSON, parseText } from '../utils/promises';
 
-const getConsts = (entitiesName) => {
+export const entitySchema = new schema.Entity('all');
+export const entitiesSchema = new schema.Array(entitySchema);
+
+//=================================================
+// Generate keys for entities
+//=================================================
+const getKeys = (entitiesName) => {
   const ENTITIES_NAME = entitiesName.toUpperCase();
   const ENTITY_NAME = ENTITIES_NAME.slice(0, -1);
-  const CONST_REQUEST = 'REQUEST_' + ENTITIES_NAME;
-  const CONST_RECEIVE = 'RECEIVE_' + ENTITIES_NAME;
-  const CONST_INVALID = 'INVALID_REQUEST_' + ENTITIES_NAME;
-  const CONST_REQUEST_ENTITY = 'REQUEST_' + ENTITY_NAME;
-  const CONST_RECEIVE_ENTITY = 'RECEIVE_' + ENTITY_NAME;
-  const CONST_INVALID_ENTITY = 'INVALID_REQUEST_' + ENTITY_NAME;
-  const CONST_SAVE_ENTITY = 'REQUEST_SAVE_' + ENTITY_NAME;
-  const CONST_ENTITY_SAVED = ENTITY_NAME + '_SAVED';
-  const CONST_INVALID_SAVE_ENTITY = 'INVALID_SAVE_' + ENTITY_NAME;
-  const CONST_DELETE_ENTITY = 'REQUEST_DELETE_' + ENTITY_NAME;
-  const CONST_ENTITY_DELETED = ENTITY_NAME + '_DELETED';
-  const CONST_INVALID_DELETE_ENTITY = 'INVALID_DELETE_' + ENTITY_NAME;
   return {
-    CONST_REQUEST,
-    CONST_RECEIVE,
-    CONST_INVALID,
-    CONST_REQUEST_ENTITY,
-    CONST_RECEIVE_ENTITY,
-    CONST_INVALID_ENTITY,
-    CONST_SAVE_ENTITY,
-    CONST_ENTITY_SAVED,
-    CONST_INVALID_SAVE_ENTITY,
-    CONST_DELETE_ENTITY,
-    CONST_ENTITY_DELETED,
-    CONST_INVALID_DELETE_ENTITY
+    CONST_REQUEST: 'REQUEST_' + ENTITIES_NAME,
+    CONST_RECEIVE: 'RECEIVE_' + ENTITIES_NAME,
+    CONST_INVALID: 'INVALID_REQUEST_' + ENTITIES_NAME,
+    CONST_REQUEST_ENTITY: 'REQUEST_' + ENTITY_NAME,
+    CONST_RECEIVE_ENTITY: 'RECEIVE_' + ENTITY_NAME,
+    CONST_INVALID_ENTITY: 'INVALID_REQUEST_' + ENTITY_NAME,
+    CONST_SAVE_ENTITY: 'REQUEST_SAVE_' + ENTITY_NAME,
+    CONST_ENTITY_SAVED: ENTITY_NAME + '_SAVED',
+    CONST_INVALID_SAVE_ENTITY: 'INVALID_SAVE_' + ENTITY_NAME,
+    CONST_DELETE_ENTITY: 'REQUEST_DELETE_' + ENTITY_NAME,
+    CONST_ENTITY_DELETED: ENTITY_NAME + '_DELETED',
+    CONST_INVALID_DELETE_ENTITY: 'INVALID_DELETE_' + ENTITY_NAME,
+    CHANGE_FILTER: 'CHANGE_FILTER_' + ENTITIES_NAME,
   };
 };
 
+//=================================================
+// Generate constants for entities
+//=================================================
 export const generateEntitiesConstants = (entitiesName) => {
-  const {
-    CONST_REQUEST, CONST_RECEIVE, CONST_INVALID,
-    CONST_REQUEST_ENTITY, CONST_RECEIVE_ENTITY, CONST_INVALID_ENTITY,
-    CONST_SAVE_ENTITY, CONST_ENTITY_SAVED, CONST_INVALID_SAVE_ENTITY,
-    CONST_DELETE_ENTITY, CONST_ENTITY_DELETED, CONST_INVALID_DELETE_ENTITY
-  } = getConsts(entitiesName);
-  const constants = {};
-  constants[CONST_REQUEST] = CONST_REQUEST;
-  constants[CONST_RECEIVE] = CONST_RECEIVE;
-  constants[CONST_INVALID] = CONST_INVALID;
-  constants[CONST_REQUEST_ENTITY] = CONST_REQUEST_ENTITY;
-  constants[CONST_RECEIVE_ENTITY] = CONST_RECEIVE_ENTITY;
-  constants[CONST_INVALID_ENTITY] = CONST_INVALID_ENTITY;
-  constants[CONST_SAVE_ENTITY] = CONST_SAVE_ENTITY;
-  constants[CONST_ENTITY_SAVED] = CONST_ENTITY_SAVED;
-  constants[CONST_INVALID_SAVE_ENTITY] = CONST_INVALID_SAVE_ENTITY;
-  constants[CONST_DELETE_ENTITY] = CONST_DELETE_ENTITY;
-  constants[CONST_ENTITY_DELETED] = CONST_ENTITY_DELETED;
-  constants[CONST_INVALID_DELETE_ENTITY] = CONST_INVALID_DELETE_ENTITY;
-  return constants;
-};
-
-export const generateEntitiesActions = (entitiesName) => {
-  const {
-    CONST_REQUEST, CONST_RECEIVE, CONST_INVALID,
-    CONST_REQUEST_ENTITY, CONST_RECEIVE_ENTITY, CONST_INVALID_ENTITY,
-    CONST_SAVE_ENTITY, CONST_ENTITY_SAVED, CONST_INVALID_SAVE_ENTITY,
-    CONST_DELETE_ENTITY, CONST_ENTITY_DELETED, CONST_INVALID_DELETE_ENTITY
-  } = getConsts(entitiesName);
+  const csts = getKeys(entitiesName);
   return {
-    requestAll: () => {
-      return { type: CONST_REQUEST };
-    },
-    receiveSome: (items) => {
-      return {
-        type: CONST_RECEIVE,
-        items,
-        receivedAt: Date.now()
-      };
-    },
-    invalidRequest: (error) => {
-      return {
-        type: CONST_INVALID,
-        title: `Error on ${entitiesName.toLowerCase()} API`,
-        message: error,
-        level: 'error'
-      };
-    },
-    requestOne: (id) => {
-      return {
-        type: CONST_REQUEST_ENTITY,
-        id
-      };
-    },
-    receiveOne: (entity) => {
-      return {
-        type: CONST_RECEIVE_ENTITY,
-        entity
-      };
-    },
-    invalidRequestEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.name || entity.username || entity.id;
-      return {
-        type: CONST_INVALID_ENTITY,
-        title: `Cannot fetch ${entityName} ${title}`,
-        message: error,
-        level: 'error',
-        entity
-      };
-    },
-    requestSave: (entity) => {
-      return {
-        type: CONST_SAVE_ENTITY,
-        entity
-      };
-    },
-    saved: (entity) => {
-      return {
-        type: CONST_ENTITY_SAVED,
-        entity
-      };
-    },
-    invalidSaveEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
-      return {
-        type: CONST_INVALID_SAVE_ENTITY,
-        title: `Cannot save ${entityName} ${title}`,
-        message: error,
-        level: 'error',
-        entity
-      };
-    },
-    requestDelete: (id) => {
-      return {
-        type: CONST_DELETE_ENTITY,
-        id
-      };
-    },
-    deleted: (id) => {
-      return {
-        type: CONST_ENTITY_DELETED,
-        id,
-        receivedAt: Date.now()
-      };
-    },
-    invalidDeleteEntity: (entity) => (error) => {
-      const entityName = entitiesName.toLowerCase().slice(0, -1);
-      const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
-      return {
-        type: CONST_INVALID_DELETE_ENTITY,
-        title: `Cannot delete ${entityName} ${title}`,
-        message: error,
-        level: 'error',
-        entity
-      };
-    }
+    [csts.CONST_REQUEST]: csts.CONST_REQUEST,
+    [csts.CONST_RECEIVE]: csts.CONST_RECEIVE,
+    [csts.CONST_INVALID]: csts.CONST_INVALID,
+    [csts.CONST_REQUEST_ENTITY]: csts.CONST_REQUEST_ENTITY,
+    [csts.CONST_RECEIVE_ENTITY]: csts.CONST_RECEIVE_ENTITY,
+    [csts.CONST_INVALID_ENTITY]: csts.CONST_INVALID_ENTITY,
+    [csts.CONST_SAVE_ENTITY]: csts.CONST_SAVE_ENTITY,
+    [csts.CONST_ENTITY_SAVED]: csts.CONST_ENTITY_SAVED,
+    [csts.CONST_INVALID_SAVE_ENTITY]: csts.CONST_INVALID_SAVE_ENTITY,
+    [csts.CONST_DELETE_ENTITY]: csts.CONST_DELETE_ENTITY,
+    [csts.CONST_ENTITY_DELETED]: csts.CONST_ENTITY_DELETED,
+    [csts.CONST_INVALID_DELETE_ENTITY]: csts.CONST_INVALID_DELETE_ENTITY,
+    [csts.CHANGE_FILTER]: csts.CHANGE_FILTER,
   };
 };
 
-export const initialState = {
-  isFetching: false,
-  didInvalidate: true,
-  items: {},
-  selected: {
-    isFetching: false,
-    didInvalidate: true,
-    id: ''
-  },
-  lastUpdated: undefined
+//=================================================
+// Generate actions for entities
+//=================================================
+export const generateEntitiesActions = (entitiesName) => {
+  const csts = getKeys(entitiesName);
+  const requestAll = () => ({ type: csts.CONST_REQUEST });
+  const receiveSome = (response) => ({ type: csts.CONST_RECEIVE, response });
+  const requestOne = (id) => ({ type: csts.CONST_REQUEST_ENTITY, id });
+  const receiveOne = (response) => ({ type: csts.CONST_RECEIVE_ENTITY, response });
+  const requestSave = (entity) => ({ type: csts.CONST_SAVE_ENTITY, entity });
+  const saved = (response) => ({ type: csts.CONST_ENTITY_SAVED, response });
+  const requestDelete = (id) => ({ type: csts.CONST_DELETE_ENTITY, id });
+  const deleted = (id) => ({ type: csts.CONST_ENTITY_DELETED, id });
+  const changeFilter = (filterValue) => ({ type: csts.CHANGE_FILTER, filterValue });
+  const invalidRequest = (error) => ({
+    type: csts.CONST_INVALID,
+    title: `Error on ${entitiesName.toLowerCase()} API`,
+    message: error,
+    level: 'error'
+  });
+  const invalidRequestEntity = (entity) => (error) => {
+    const entityName = entitiesName.toLowerCase().slice(0, -1);
+    const title = entity.title || entity.name || entity.username || entity.id;
+    return {
+      type: csts.CONST_INVALID_ENTITY,
+      title: `Cannot fetch ${entityName} ${title}`,
+      message: error,
+      level: 'error',
+      entity
+    };
+  };
+  const invalidSaveEntity = (entity) => (error) => {
+    const entityName = entitiesName.toLowerCase().slice(0, -1);
+    const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
+    return {
+      type: csts.CONST_INVALID_SAVE_ENTITY,
+      title: `Cannot save ${entityName} ${title}`,
+      message: error,
+      level: 'error',
+      entity
+    };
+  };
+  const invalidDeleteEntity = (entity) => (error) => {
+    const entityName = entitiesName.toLowerCase().slice(0, -1);
+    const title = entity.title || entity.username || entity.name && (entity.name.raw || entity.name);
+    return {
+      type: csts.CONST_INVALID_DELETE_ENTITY,
+      title: `Cannot delete ${entityName} ${title}`,
+      message: error,
+      level: 'error',
+      entity
+    };
+  };
+  return {
+    requestAll, receiveSome, invalidRequest, requestOne, receiveOne, invalidRequestEntity,
+    requestSave, saved, invalidSaveEntity, requestDelete, deleted, invalidDeleteEntity, changeFilter,
+  };
 };
 
-export const generateEntitiesReducer = (state = initialState, action, entitiesName) => {
-  const {
-    CONST_REQUEST, CONST_RECEIVE, CONST_INVALID,
-    CONST_REQUEST_ENTITY, CONST_RECEIVE_ENTITY, CONST_INVALID_ENTITY,
-    CONST_SAVE_ENTITY, CONST_ENTITY_SAVED, CONST_INVALID_SAVE_ENTITY,
-    CONST_DELETE_ENTITY, CONST_ENTITY_DELETED, CONST_INVALID_DELETE_ENTITY
-  } = getConsts(entitiesName);
+//=================================================
+// Generate reducers for entities
+//=================================================
+const filterReducer = (csts) => (filterValue = '', action) => {
   switch (action.type) {
-  case CONST_INVALID:
-    return {
-      ...state,
-      ...initialState,
-      items: { ...state.items }
-    };
-  case CONST_REQUEST:
-    return {
-      ...state,
-      isFetching: true,
-      didInvalidate: false
-    };
-  case CONST_RECEIVE:
-    let items = {};
-    action.items.forEach(item => items[item.id] = { ...state.items[item.id], ...item });
-    return {
-      ...state,
-      isFetching: false,
-      didInvalidate: false,
-      items,
-      lastUpdated: action.receivedAt
-    };
-  case CONST_REQUEST_ENTITY:
-    let requestEntityItems = { ...state.items };
-    if (action.id) {
-      requestEntityItems = {
-        ...requestEntityItems,
-        [action.id]: { ...requestEntityItems[action.id], isFetching: true },
-      };
-    }
-    return {
-      ...state,
-      items: requestEntityItems,
-      selected : {
-        ...state.selected,
-        isFetching: true,
-        didInvalidate: false,
-        id: action.id || ''
-      }
-    };
-  case CONST_RECEIVE_ENTITY:
-    const newReceivedEntity = action.entity;
-    const oldEntityReceived = state.items[newReceivedEntity.id];
-    return {
-      ...state,
-      items: {
-        ...state.items,
-        [newReceivedEntity.id]: { ...oldEntityReceived, ...newReceivedEntity, isFetching: false }
-      },
-      selected: {
-        ...state.selected,
-        isFetching: false,
-        id: newReceivedEntity.id
-      }
-    };
-  case CONST_SAVE_ENTITY:
-  case CONST_DELETE_ENTITY:
-    const idModifyEntity = action.id || action.entity.id;
-    let modifyEntityItems = { ...state.items };
-    if (idModifyEntity) {
-      modifyEntityItems = {
-        ...modifyEntityItems,
-        [idModifyEntity]: { ...modifyEntityItems[idModifyEntity], isFetching: true },
-      };
-    }
-    return {
-      ...state,
-      items: modifyEntityItems,
-      selected: {
-        ...state.selected,
-        isFetching: true,
-        didInvalidate: false
-      }
-    };
-  case CONST_ENTITY_SAVED:
-    const newSavedEntity = action.entity;
-    const oldEntitySaved = state.items[newSavedEntity.id];
-    let newEntityState = {
-      ...state,
-      items: {
-        ...state.items,
-        [newSavedEntity.id]: { ...oldEntitySaved, ...newSavedEntity, isFetching: false }
-      },
-      selected : {
-        ...state.selected,
-        isFetching: false,
-        didInvalidate: false,
-        id: newSavedEntity.id
-      }
-    };
-    return newEntityState;
-  case CONST_ENTITY_DELETED:
-    let deletedEntityState = {
-      ...state,
-      items: { ...state.items },
-      selected : {
-        isFetching: false,
-        didInvalidate: true,
-        id : ''
-      }
-    };
-    delete deletedEntityState.items[action.id];
-    return deletedEntityState;
-  case CONST_INVALID_ENTITY:
-  case CONST_INVALID_SAVE_ENTITY:
-  case CONST_INVALID_DELETE_ENTITY:
-    let invalidEntityItems = { ...state.items };
-    if (action.entity.id) {
-      invalidEntityItems = {
-        ...invalidEntityItems,
-        [action.entity.id]: { ...invalidEntityItems[action.entity.id], isFetching: false },
-      };
-    }
-    return {
-      ...state,
-      items: invalidEntityItems,
-      selected : {
-        ...state.selected,
-        isFetching: false,
-        didInvalidate: true,
-        id: action.entity.id
-      }
-    };
-  default:
-    return state;
+    case csts.CHANGE_FILTER:
+      return action.filterValue;
+    default:
+      return filterValue;
   }
 };
 
-// Check that if entities should be fetched
-const shouldFetch = (state, entitiesName) => {
-  const entities = state[entitiesName.toLowerCase()];
-  if (!entities || entities.didInvalidate) {
-    return true;
-  } else if (entities.isFetching) {
-    return false;
-  } else {
-    return true;
+const isFetchingReducer = (csts) => (isFetching = false, action) => {
+  switch (action.type) {
+    case csts.CONST_REQUEST:
+      return true;
+    case csts.CONST_RECEIVE:
+    case csts.CONST_INVALID:
+    case LOCATION_CHANGE:
+      return false;
+    default:
+      return isFetching;
   }
 };
 
-// Thunk to fech only if needed
-const fetchIfNeeded = (entitiesName, fetchFunc) => {
-  return (dispatch, getState) => {
-    if (shouldFetch(getState(), entitiesName)) {
-      return dispatch(fetchFunc());
-    } else {
-      return Promise.resolve();
+const itemsReducer = (csts) => (items = {}, action) => {
+  switch (action.type) {
+    case csts.CONST_RECEIVE:
+    case csts.CONST_RECEIVE_ENTITY:
+    case csts.CONST_ENTITY_SAVED:
+      if (!action.response.entities) {
+        return items;
+      }
+      return {
+        ...items,
+        ...action.response.entities.all
+      };
+    case csts.CONST_REQUEST_ENTITY: {
+      const { [action.id]: item, ...restState } = items;
+      return { [action.id]: { ...item, isFetching: true }, ...restState };
     }
-  };
+    case csts.CONST_SAVE_ENTITY: {
+      const { [action.entity.id]: item, ...restState } = items;
+      return { [action.entity.id]: { ...item, isFetching: true }, ...restState };
+    }
+    case csts.CONST_DELETE_ENTITY: {
+      const { [action.id]: item, ...restState } = items;
+      return { [action.id]: { ...item, isFetching: true }, ...restState };
+    }
+    case csts.CONST_INVALID_ENTITY:
+    case csts.CONST_INVALID_SAVE_ENTITY:
+    case csts.CONST_INVALID_DELETE_ENTITY: {
+      const { [action.entity.id]: item, ...restState } = items;
+      return { [action.entity.id]: { ...item, isFetching: false }, ...restState };
+    }
+    case csts.CONST_ENTITY_DELETED: {
+      const { [action.id]: _, ...newState } = items;
+      return newState;
+    }
+    default:
+      return items;
+  }
 };
 
+const listReducer = (csts) => (list = [], action) => {
+  switch (action.type) {
+    case csts.CONST_RECEIVE:
+      if (!action.response.result) {
+        return list;
+      }
+      return [...list, ...action.response.result];
+    case csts.CONST_RECEIVE_ENTITY:
+    case csts.CONST_ENTITY_SAVED:
+      if (!action.response.result) {
+        return list;
+      }
+      return [...list, action.response.result];
+    case csts.CONST_ENTITY_DELETED:
+      return list.filter(id => id != action.id);
+    default:
+      return list;
+  }
+};
+
+const selectedIsFetchingReducer = (csts) => (isFetching = false, action) => {
+  switch (action.type) {
+    case csts.CONST_REQUEST_ENTITY:
+    case csts.CONST_SAVE_ENTITY:
+    case csts.CONST_DELETE_ENTITY:
+      return true;
+    case csts.CONST_RECEIVE_ENTITY:
+    case csts.CONST_INVALID_ENTITY:
+    case csts.CONST_ENTITY_SAVED:
+    case csts.CONST_INVALID_SAVE_ENTITY:
+    case csts.CONST_ENTITY_DELETED:
+    case csts.CONST_INVALID_DELETE_ENTITY:
+    case LOCATION_CHANGE:
+      return false;
+    default:
+      return isFetching;
+  }
+};
+
+const selectedIdReducer = (csts) => (id = '', action) => {
+  switch (action.type) {
+    case csts.CONST_REQUEST_ENTITY:
+      return action.id || '';
+    case csts.CONST_RECEIVE_ENTITY:
+    case csts.CONST_ENTITY_SAVED:
+      return action.response.result || '';
+    case csts.CONST_ENTITY_DELETED:
+      return '';
+    case csts.CONST_INVALID_ENTITY:
+    case csts.CONST_INVALID_SAVE_ENTITY:
+    case csts.CONST_INVALID_DELETE_ENTITY:
+      return action.entity.id || '';
+    default:
+      return id;
+  }
+};
+
+export const generateEntitiesReducer = (entitiesName) => {
+  const csts = getKeys(entitiesName);
+  const selected = combineReducers({
+    isFetching: selectedIsFetchingReducer(csts),
+    id: selectedIdReducer(csts),
+  });
+  return combineReducers({
+    filterValue: filterReducer(csts),
+    isFetching: isFetchingReducer(csts),
+    items: itemsReducer(csts),
+    list: listReducer(csts),
+    selected,
+  });
+};
+
+//=================================================
+// Generate thunks for entities
+//=================================================
 export const generateEntitiesThunks = (entitiesName) => {
   const Actions = generateEntitiesActions(entitiesName);
   const fetchAllFunc = () => {
     return (dispatch) => {
       dispatch(Actions.requestAll());
-      return fetch(`/api/${entitiesName}`, withAuth({ method:'GET' }))
+      return fetch(`/api/${entitiesName}`, withAuth({ method: 'GET' }))
         .then(checkHttpStatus)
         .then(parseJSON)
         .then(response => {
-          dispatch(Actions.receiveSome(response));
+          const normalizedResponse = normalize(response, entitiesSchema);
+          dispatch(Actions.receiveSome(normalizedResponse));
         })
         .catch(error => {
           handleError(error, Actions.invalidRequest, dispatch);
@@ -344,11 +270,12 @@ export const generateEntitiesThunks = (entitiesName) => {
   const fetchFunc = (id) => {
     return function (dispatch) {
       dispatch(Actions.requestOne(id));
-      return fetch(`/api/${entitiesName}/${id}`, withAuth({ method:'GET' }))
+      return fetch(`/api/${entitiesName}/${id}`, withAuth({ method: 'GET' }))
         .then(checkHttpStatus)
         .then(parseJSON)
         .then(response => {
-          dispatch(Actions.receiveOne(response));
+          const normalizedResponse = normalize(response, entitySchema);
+          dispatch(Actions.receiveOne(normalizedResponse));
         })
         .catch(error => {
           handleError(error, Actions.invalidRequestEntity({ id }), dispatch);
@@ -375,7 +302,8 @@ export const generateEntitiesThunks = (entitiesName) => {
         .then(checkHttpStatus)
         .then(parseJSON)
         .then(response => {
-          dispatch(Actions.saved(response));
+          const normalizedResponse = normalize(response, entitySchema);
+          dispatch(Actions.saved(normalizedResponse));
           postActionRedirect && dispatch(postActionRedirect(response.id));
           postActionToast && dispatch(postActionToast);
         })
@@ -402,11 +330,5 @@ export const generateEntitiesThunks = (entitiesName) => {
         });
     };
   };
-  return {
-    fetchAll: fetchAllFunc,
-    fetchIfNeeded: () => fetchIfNeeded(entitiesName, fetchAllFunc),
-    fetch: fetchFunc,
-    save: saveFunc,
-    delete: deleteFunc
-  };
+  return { fetchAll: fetchAllFunc, fetch: fetchFunc, save: saveFunc, delete: deleteFunc };
 };

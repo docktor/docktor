@@ -1,5 +1,6 @@
-import { withAuth } from '../auth/auth.wrappers';
-import { generateEntitiesThunks } from '../utils/entities';
+import { normalize } from 'normalizr';
+import { withAuth } from '../utils/utils';
+import { generateEntitiesThunks, entitiesSchema } from '../utils/entities';
 import UsersActions from './users.actions';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
 
@@ -18,7 +19,8 @@ const fetchGroupMembers = (groupId) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then(response => {
-        dispatch(UsersActions.receiveSome(response));
+        const normalizedResponse = normalize(response, entitiesSchema);
+        dispatch(UsersActions.receiveSome(normalizedResponse));
       })
       .catch(error => {
         handleError(error, UsersActions.invalidRequest, dispatch);

@@ -1,16 +1,19 @@
 // import constants
-import ServicesConstants from './services.constants';
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
 
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: ServicesConstants.CHANGE_FILTER,
-    filterValue
-  };
+//=================================================
+// Services constants
+//=================================================
+
+export const ServicesConstants = {
+  ...generateEntitiesConstants('services'),
 };
+
+
+//=================================================
+// Services actions
+//=================================================
 
 export default {
   ...generateEntitiesActions('services'),
-  changeFilter
 };

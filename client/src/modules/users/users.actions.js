@@ -1,17 +1,21 @@
 // import constants
-import UsersConstants from './users.constants';
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
 
+//=================================================
+// Toasts constants
+//=================================================
 
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: UsersConstants.CHANGE_FILTER,
-    filterValue
-  };
+export const UsersConstants = {
+  ...generateEntitiesConstants('users'),
+  USER_LDAP_PROVIDER: 'LDAP',
+  USER_LOCAL_PROVIDER: 'local',
 };
+
+
+//=================================================
+// Toasts actions
+//=================================================
 
 export default {
   ...generateEntitiesActions('users'),
-  changeFilter
 };

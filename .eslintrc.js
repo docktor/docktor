@@ -45,12 +45,12 @@ module.exports = {
   settings: {
     'import/resolver': {
       webpack: {
-        config: path.resolve("./webpack.config.dev.js")
+        config: path.resolve("./webpack.config.js")
       }
     }
   },
   rules: {
-    "indent": [2, 2],
+    "indent": [2, 2, {SwitchCase: 1}],
     "strict": [2, "never"],
     "quotes": [1, "single", { avoidEscape: true }],
     "semi": 1,
@@ -59,7 +59,7 @@ module.exports = {
     "comma-spacing": 1,
     "space-before-blocks": [1, "always"],
     "space-infix-ops": ["error", {int32Hint: false}],
-    "no-unused-vars": 2,
+    "no-unused-vars": [2, {"args": "all", "vars": "all", argsIgnorePattern: "^_", varsIgnorePattern: "^_"}],
     "jsx-quotes": [2, "prefer-single"],
     "react/jsx-curly-spacing": [2, "never"],
     "react/display-name": 0,

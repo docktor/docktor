@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import TabForm from '../common/tabform/tabform.component';
@@ -56,13 +57,13 @@ class Settings extends React.Component {
 };
 
 Settings.propTypes = {
-  user: React.PropTypes.object,
-  isAuthenticated: React.PropTypes.bool.isRequired,
-  location: React.PropTypes.object,
-  saveProfile: React.PropTypes.func.isRequired,
-  changePassword: React.PropTypes.func.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
-  deleteAccount: React.PropTypes.func.isRequired,
+  user: PropTypes.object,
+  isAuthenticated: PropTypes.bool.isRequired,
+  location: PropTypes.object,
+  saveProfile: PropTypes.func.isRequired,
+  changePassword: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
 };
 
 // Function to map state to container props

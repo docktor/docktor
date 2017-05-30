@@ -1,4 +1,5 @@
 $body-background-color: #28303a !default;
+$dimmer-background-color: rgba(40, 48, 58, .5) !default;
 
 $yellow-button-color: #d29c01 !default;
 $yellow-button-color-hover: #c79400 !default;
@@ -186,6 +187,10 @@ input {
 
 .ui.active.dimmer {
   background-color: $body-background-color;
+}
+
+.ui.page.modals.active.dimmer {
+  background-color: $dimmer-background-color;
 }
 
 .button-form {

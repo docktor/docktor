@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -15,8 +16,8 @@ import UsersThunks from '../../../modules/users/users.thunks';
 import ServicesThunks from '../../../modules/services/services.thunks';
 
 // Selectors
-import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.constants';
-import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.constants';
+import { ALL_ROLES, getRoleData } from '../../../modules/auth/auth.actions';
+import { GROUP_MODERATOR_ROLE } from '../../../modules/groups/groups.actions';
 
 // Components
 import HeadingBox from '../../common/boxes/box/heading.box.component';
@@ -172,22 +173,22 @@ class GroupViewComponent extends React.Component {
 }
 
 GroupViewComponent.propTypes = {
-  group: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  groupId: React.PropTypes.string,
-  daemons: React.PropTypes.object,
-  tags: React.PropTypes.object,
-  users: React.PropTypes.object,
-  services: React.PropTypes.object,
-  fetchGroup: React.PropTypes.func.isRequired,
-  fetchDaemons: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  fetchMembers: React.PropTypes.func.isRequired,
-  fetchServices: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  display: React.PropTypes.string,
-  groupBy: React.PropTypes.string
+  group: PropTypes.object,
+  isFetching: PropTypes.bool,
+  groupId: PropTypes.string,
+  daemons: PropTypes.object,
+  tags: PropTypes.object,
+  users: PropTypes.object,
+  services: PropTypes.object,
+  fetchGroup: PropTypes.func.isRequired,
+  fetchDaemons: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  fetchMembers: PropTypes.func.isRequired,
+  fetchServices: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+  onDelete: PropTypes.func,
+  display: PropTypes.string,
+  groupBy: PropTypes.string
 };
 
 // Function to map state to container props

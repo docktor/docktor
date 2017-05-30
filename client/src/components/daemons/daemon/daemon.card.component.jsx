@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Card, Icon, Button, Label } from 'semantic-ui-react';
@@ -106,9 +107,9 @@ class DaemonCard extends React.Component {
 
 
 DaemonCard.propTypes = {
-  daemon: React.PropTypes.object,
-  site: React.PropTypes.object,
-  fetchInfo: React.PropTypes.func
+  daemon: PropTypes.object,
+  site: PropTypes.object,
+  fetchInfo: PropTypes.func
 };
 
 // Function to map dispatch to container props

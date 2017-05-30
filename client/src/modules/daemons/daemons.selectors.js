@@ -1,5 +1,4 @@
-import { transformFilterToObject } from '../utils/search';
-import { containsWithoutAccents } from '../utils/strings';
+import { transformFilterToObject, contains } from '../utils/utils';
 
 export const getFilteredDaemons = (daemons, sites, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -11,25 +10,25 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
-        case 'text':
-          const d = { ...daemon, site:sites[daemon.site] };
-          match &= containsWithoutAccents(JSON.stringify(Object.values(d)), value);
-          return;
-        case 'name':
-        case 'title':
-          match &= containsWithoutAccents(daemon.name, value);
-          return;
-        case 'site':
-          const site = sites[daemon.site];
-          match &= site && containsWithoutAccents(site.title, value);
-          return;
-        case 'tags':
-          const tags = daemon.tags || [];
-          match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
-          return;
-        default:
-          match = false;
-          return;
+          case 'text':
+            const d = { ...daemon, site:sites[daemon.site] };
+            match &= contains(JSON.stringify(Object.values(d)), value);
+            return;
+          case 'name':
+          case 'title':
+            match &= contains(daemon.name, value);
+            return;
+          case 'site':
+            const site = sites[daemon.site];
+            match &= site && contains(site.title, value);
+            return;
+          case 'tags':
+            const tags = daemon.tags || [];
+            match &= tags.filter(tag => contains(tag, value)).length > 0;
+            return;
+          default:
+            match = false;
+            return;
         }
       });
       return match;

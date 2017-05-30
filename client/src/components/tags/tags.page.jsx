@@ -1,12 +1,13 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 
 // Roles
-import { ALL_ROLES, getRoleData } from '../../modules/auth/auth.constants';
+import { ALL_ROLES, getRoleData } from '../../modules/auth/auth.actions';
 
 // API Fetching
 import TagsThunks from '../../modules/tags/tags.thunks';
@@ -79,15 +80,15 @@ class Tags extends React.Component {
 }
 
 Tags.propTypes = {
-  tags: React.PropTypes.array,
-  availableCategories: React.PropTypes.array,
-  filterValue: React.PropTypes.string,
-  isFetching: React.PropTypes.bool,
-  fetchTags: React.PropTypes.func.isRequired,
-  onCreate: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  onEdit: React.PropTypes.func.isRequired,
-  onChangeFilter: React.PropTypes.func.isRequired
+  tags: PropTypes.array,
+  availableCategories: PropTypes.array,
+  filterValue: PropTypes.string,
+  isFetching: PropTypes.bool,
+  fetchTags: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onChangeFilter: PropTypes.func.isRequired
 };
 
 // Function to map state to container props
@@ -103,7 +104,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchTags: () => {
-      dispatch(TagsThunks.fetchIfNeeded());
+      dispatch(TagsThunks.fetchAll());
     },
     onCreate: (availableRights, availableCategories) => {
       const callback = (tagForm) => dispatch(TagsThunks.createTags(tagForm));

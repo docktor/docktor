@@ -1,16 +1,18 @@
-// import constants
-import TagsConstants from './tags.constants';
-import { generateEntitiesActions } from '../utils/entities';
+import { generateEntitiesActions, generateEntitiesConstants } from '../utils/entities';
 
-// Change filter
-const changeFilter = (filterValue) => {
-  return {
-    type: TagsConstants.CHANGE_FILTER,
-    filterValue
-  };
+//=================================================
+// Tags constants
+//=================================================
+
+export const TagsConstants = {
+  ...generateEntitiesConstants('tags')
 };
 
+
+//=================================================
+// Tags actions
+//=================================================
+
 export default {
-  ...generateEntitiesActions('tags'),
-  changeFilter
+  ...generateEntitiesActions('tags')
 };

@@ -1,5 +1,4 @@
-import { transformFilterToObject } from '../utils/search';
-import { containsWithoutAccents } from '../utils/strings';
+import { transformFilterToObject, contains } from '../utils/utils';
 
 export const getFilteredServices = (services, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -11,20 +10,20 @@ export const getFilteredServices = (services, filterValue) => {
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
-        case 'text':
-          match &= containsWithoutAccents(JSON.stringify(Object.values(service)), value);
-          return;
-        case 'name':
-        case 'title':
-          match &= containsWithoutAccents(service.title, value);
-          return;
-        case 'tags':
-          const tags = service.tags || [];
-          match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
-          return;
-        default:
-          match = false;
-          return;
+          case 'text':
+            match &= contains(JSON.stringify(Object.values(service)), value);
+            return;
+          case 'name':
+          case 'title':
+            match &= contains(service.title, value);
+            return;
+          case 'tags':
+            const tags = service.tags || [];
+            match &= tags.filter(tag => contains(tag, value)).length > 0;
+            return;
+          default:
+            match = false;
+            return;
         }
       });
       return match;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Dropdown, Divider } from 'semantic-ui-react';
 
 import groupBy from 'lodash.groupby';
@@ -24,7 +25,7 @@ class TagsSelector extends React.Component {
         dropdownItems.push({ key:tag.id, value:tag.id, text:tag.name.raw });
       });
     });
-    const loading = tags.isFetching || tags.didInvalidate;
+    const loading = tags.isFetching;
     return (
       <Dropdown placeholder={loading ? 'Loading tags…' : 'Tags'} name='tags' loading={loading} value={selectedTags} options={dropdownItems}
         multiple search fluid className='fluid multiple search selection dropdown optgroup' selection onChange={onChange}
@@ -34,9 +35,9 @@ class TagsSelector extends React.Component {
 }
 
 TagsSelector.propTypes = {
-  tags: React.PropTypes.object,
-  selectedTags: React.PropTypes.array,
-  onChange: React.PropTypes.func
+  tags: PropTypes.object,
+  selectedTags: PropTypes.array,
+  onChange: PropTypes.func
 };
 
 export default TagsSelector;

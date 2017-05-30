@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class DetailsPane extends React.Component {
   render() {
@@ -13,7 +14,7 @@ class DetailsPane extends React.Component {
 }
 
 DetailsPane.propTypes = {
-  title: React.PropTypes.string.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default DetailsPane;

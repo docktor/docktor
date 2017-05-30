@@ -4,11 +4,11 @@ node_modules/
 dist/
 client/dist/
 .idea/
-docktor
-docktor.zip
+docktor*
 bower_components/
 .vscode/
 vendor/*/
 debug
 logs/
 .DS_Store
+*.coverprofile

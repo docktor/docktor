@@ -1,5 +1,4 @@
-import { transformFilterToObject } from '../utils/search';
-import { containsWithoutAccents } from '../utils/strings';
+import { transformFilterToObject, contains } from '../utils/utils';
 
 export const getFilteredGroups = (groups, filterValue) => {
   if (!filterValue || filterValue === '') {
@@ -11,20 +10,20 @@ export const getFilteredGroups = (groups, filterValue) => {
       Object.keys(query).forEach(key => {
         const value = query[key];
         switch(key) {
-        case 'text':
-          match &= containsWithoutAccents(JSON.stringify(Object.values(group)), value);
-          return;
-        case 'name':
-        case 'title':
-          match &= containsWithoutAccents(group.title, value);
-          return;
-        case 'tags':
-          const tags = group.tags || [];
-          match &= tags.filter(tag => containsWithoutAccents(tag, value)).length > 0;
-          return;
-        default:
-          match = false;
-          return;
+          case 'text':
+            match &= contains(JSON.stringify(Object.values(group)), value);
+            return;
+          case 'name':
+          case 'title':
+            match &= contains(group.title, value);
+            return;
+          case 'tags':
+            const tags = group.tags || [];
+            match &= tags.filter(tag => contains(tag, value)).length > 0;
+            return;
+          default:
+            match = false;
+            return;
         }
       });
       return match;

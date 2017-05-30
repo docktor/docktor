@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Link } from 'react-router';
@@ -65,13 +66,13 @@ class Daemons extends React.Component {
   }
 }
 Daemons.propTypes = {
-  sites: React.PropTypes.object,
-  daemons: React.PropTypes.array,
-  isFetching: React.PropTypes.bool,
-  filterValue: React.PropTypes.string,
-  fetchSite: React.PropTypes.func.isRequired,
-  fetchDaemons: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func,
+  sites: PropTypes.object,
+  daemons: PropTypes.array,
+  isFetching: PropTypes.bool,
+  filterValue: PropTypes.string,
+  fetchSite: PropTypes.func.isRequired,
+  fetchDaemons: PropTypes.func.isRequired,
+  changeFilter: PropTypes.func,
 };
 
 // Function to map state to container props
@@ -86,8 +87,8 @@ const mapStateToDaemonsProps = (state) => {
 // Function to map dispatch to container props
 const mapDispatchToDaemonsProps = (dispatch) => {
   return {
-    fetchSite: () => dispatch(SitesThunks.fetchIfNeeded()),
-    fetchDaemons: () => dispatch(DaemonsThunks.fetchIfNeeded()),
+    fetchSite: () => dispatch(SitesThunks.fetchAll()),
+    fetchDaemons: () => dispatch(DaemonsThunks.fetchAll()),
     changeFilter: (filterValue) => dispatch(DaemonsActions.changeFilter(filterValue))
   };
 };

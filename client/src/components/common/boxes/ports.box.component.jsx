@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Box from './box/box.component';
 
@@ -78,11 +79,11 @@ class PortsBox extends React.Component {
 }
 
 PortsBox.propTypes = {
-  ports: React.PropTypes.array,
-  stacked: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.element
+  ports: PropTypes.array,
+  stacked: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.element
   ])
 };
 

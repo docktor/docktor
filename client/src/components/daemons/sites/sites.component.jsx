@@ -1,7 +1,17 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import { connect } from 'react-redux';
+
+import L from 'leaflet';
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 // Actions for redux container
 import SitesThunks from '../../../modules/sites/sites.thunks';
@@ -62,11 +72,11 @@ class SitesComponent extends React.Component {
 }
 
 SitesComponent.propTypes = {
-  sites: React.PropTypes.array,
-  onCreate: React.PropTypes.func,
-  onEdit: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  changeFilter: React.PropTypes.func
+  sites: PropTypes.array,
+  onCreate: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  changeFilter: PropTypes.func
 };
 
 

@@ -1,19 +1,20 @@
-package types
+package types_test
 
 import (
 	"fmt"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/soprasteria/docktor/model/types"
 
 	"gopkg.in/mgo.v2/bson"
 )
 
 func ExampleImage_EqualsInConf_withID() {
-	i := Image{
+	i := types.Image{
 		ID: bson.ObjectId("1"),
 	}
-	j := Image{
+	j := types.Image{
 		ID: bson.ObjectId("1"),
 	}
 	fmt.Println(i.EqualsInConf(j))
@@ -21,116 +22,168 @@ func ExampleImage_EqualsInConf_withID() {
 }
 
 func ExampleImage_EqualsInConf() {
-	i := Image{
+	i := types.Image{
 		ID:         bson.ObjectId("1"),
 		Name:       "temp",
-		Variables:  Variables{},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
+		Variables:  types.Variables{},
+		Ports:      types.Ports{},
+		Volumes:    types.Volumes{},
+		Parameters: types.Parameters{},
 	}
-	j := Image{
+	j := types.Image{
 		ID:         bson.ObjectId("2"),
 		Name:       "temp",
-		Variables:  Variables{},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
+		Variables:  types.Variables{},
+		Ports:      types.Ports{},
+		Volumes:    types.Volumes{},
+		Parameters: types.Parameters{},
 	}
 	fmt.Println(i.EqualsInConf(j))
 	// Output: true
 }
 
-func TestImageEquals(t *testing.T) {
-	i := Image{
-		ID:         bson.ObjectId("1"),
-		Name:       "temp",
-		Variables:  Variables{},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	j := Image{
-		ID:         bson.ObjectId("2"),
-		Name:       "temp",
-		Variables:  Variables{},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	assert.True(t, i.EqualsInConf(j), "Images should be equals")
-}
+var _ = Describe("Image", func() {
+	Context("Given two images", func() {
+		var (
+			firstImage  types.Image
+			secondImage types.Image
+		)
+		Context("If images are equals", func() {
+			BeforeEach(func() {
+				firstImage = types.Image{
+					ID:         bson.ObjectId("1"),
+					Name:       "temp",
+					Variables:  types.Variables{},
+					Ports:      types.Ports{},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+				secondImage = types.Image{
+					ID:         bson.ObjectId("2"),
+					Name:       "temp",
+					Variables:  types.Variables{},
+					Ports:      types.Ports{},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+			})
+			It("Then EqualsInConf should be true", func() {
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeTrue())
+			})
+		})
 
-func TestImageNotEquals(t *testing.T) {
-	i := Image{
-		ID:   bson.ObjectId("1"),
-		Name: "temp",
-		Variables: Variables{
-			{Name: "var"},
-		},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	j := Image{
-		ID:   bson.ObjectId("2"),
-		Name: "temp",
-		Variables: Variables{
-			{Name: "notthesame"}, // not the same variables
-		},
-		Ports:      Ports{},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	assert.False(t, i.EqualsInConf(j), "Images should not be equals")
-}
+		Context("If images are equals except from variables", func() {
+			BeforeEach(func() {
+				firstImage = types.Image{
+					ID:   bson.ObjectId("1"),
+					Name: "temp",
+					Variables: types.Variables{
+						{Name: "var"},
+					},
+					Ports:      types.Ports{},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+				secondImage = types.Image{
+					ID:   bson.ObjectId("2"),
+					Name: "temp",
+					Variables: types.Variables{
+						{Name: "notthesame"}, // not the same variables
+					},
+					Ports:      types.Ports{},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+			})
+			It("Then EqualsInConf should be false", func() {
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+			})
+		})
 
-func TestImageAddedPortsEquals(t *testing.T) {
-	i := Image{
-		ID:        bson.ObjectId("1"),
-		Name:      "temp",
-		Variables: Variables{},
-		Ports: Ports{
-			{Internal: 8080, Protocol: "tcp"},
-		},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	j := Image{
-		ID:        bson.ObjectId("2"),
-		Name:      "temp",
-		Variables: Variables{},
-		Ports: Ports{
-			{Internal: 8080, Protocol: "tcp"},
-			{Internal: 9090, Protocol: "tcp"},
-		},
-		Volumes:    Volumes{},
-		Parameters: Parameters{},
-	}
-	assert.False(t, i.EqualsInConf(j), "Images should not be equals")
-}
+		Context("If images are equals except from ports", func() {
+			BeforeEach(func() {
+				firstImage = types.Image{
+					ID:        bson.ObjectId("1"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports: types.Ports{
+						{Internal: 8080, Protocol: "tcp"},
+					},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+				secondImage = types.Image{
+					ID:        bson.ObjectId("2"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports: types.Ports{
+						{Internal: 8080, Protocol: "tcp"},
+						{Internal: 9090, Protocol: "tcp"},
+					},
+					Volumes:    types.Volumes{},
+					Parameters: types.Parameters{},
+				}
+			})
+			It("Then EqualsInConf should be false", func() {
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+			})
+		})
 
-func TestImageRemovedVolumeEquals(t *testing.T) {
-	i := Image{
-		ID:        bson.ObjectId("1"),
-		Name:      "temp",
-		Variables: Variables{},
-		Ports:     Ports{},
-		Volumes: Volumes{
-			{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
-			{Internal: "/data", External: "/external/data", Rights: "rw"},
-		},
-		Parameters: Parameters{},
-	}
-	j := Image{
-		ID:        bson.ObjectId("2"),
-		Name:      "temp",
-		Variables: Variables{},
-		Ports:     Ports{},
-		Volumes: Volumes{
-			{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
-		},
-		Parameters: Parameters{},
-	}
-	assert.False(t, i.EqualsInConf(j), "Images should not be equals")
-}
+		Context("If images are equals except from volumes", func() {
+			BeforeEach(func() {
+				firstImage = types.Image{
+					ID:        bson.ObjectId("1"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports:     types.Ports{},
+					Volumes: types.Volumes{
+						{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
+						{Internal: "/data", External: "/external/data", Rights: "rw"},
+					},
+					Parameters: types.Parameters{},
+				}
+				secondImage = types.Image{
+					ID:        bson.ObjectId("2"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports:     types.Ports{},
+					Volumes: types.Volumes{
+						{Internal: "/tmp", External: "/external/tmp", Rights: "rw"},
+					},
+					Parameters: types.Parameters{},
+				}
+			})
+			It("Then EqualsInConf should be false", func() {
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+			})
+		})
+
+		Context("If images are equals except from parameters", func() {
+			BeforeEach(func() {
+				firstImage = types.Image{
+					ID:        bson.ObjectId("1"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports:     types.Ports{},
+					Volumes:   types.Volumes{},
+					Parameters: types.Parameters{
+						{Name: "name", Value: "value1", Description: "description"},
+					},
+				}
+				secondImage = types.Image{
+					ID:        bson.ObjectId("2"),
+					Name:      "temp",
+					Variables: types.Variables{},
+					Ports:     types.Ports{},
+					Volumes:   types.Volumes{},
+					Parameters: types.Parameters{
+						{Name: "name", Value: "value2", Description: "description"},
+					},
+				}
+			})
+			It("Then EqualsInConf should be false", func() {
+				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+			})
+		})
+	})
+})

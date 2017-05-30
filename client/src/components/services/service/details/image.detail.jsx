@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Input } from 'semantic-ui-react';
 import classNames from 'classnames';
 
@@ -26,7 +27,7 @@ class ImageDetails extends React.Component {
     this.setState((prevState) => {return { opened: !prevState.opened };});
   }
 
-  onEdit = (e, { value }) => {
+  onEdit = (_, { value }) => {
     this.setState({ image: { name: value }, error: false });
   }
 
@@ -96,9 +97,9 @@ class ImageDetails extends React.Component {
 }
 
 ImageDetails.propTypes = {
-  image: React.PropTypes.object,
-  onCopy: React.PropTypes.func,
-  onRemove: React.PropTypes.func,
+  image: PropTypes.object,
+  onCopy: PropTypes.func,
+  onRemove: PropTypes.func,
 };
 
 export default ImageDetails;

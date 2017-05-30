@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Label, Button, Icon } from 'semantic-ui-react';
 import sortBy from 'lodash.sortby';
 
@@ -87,13 +88,13 @@ class ContainersView extends React.Component {
   }
 }
 ContainersView.propTypes = {
-  containers: React.PropTypes.array.isRequired,
-  daemons: React.PropTypes.object.isRequired,
-  display: React.PropTypes.string.isRequired,
-  tagToFilter: React.PropTypes.object,
-  services: React.PropTypes.object.isRequired,
-  tags : React.PropTypes.object.isRequired,
-  colorTagCategories: React.PropTypes.object.isRequired
+  containers: PropTypes.array.isRequired,
+  daemons: PropTypes.object.isRequired,
+  display: PropTypes.string.isRequired,
+  tagToFilter: PropTypes.object,
+  services: PropTypes.object.isRequired,
+  tags : PropTypes.object.isRequired,
+  colorTagCategories: PropTypes.object.isRequired
 };
 
 export default ContainersView;

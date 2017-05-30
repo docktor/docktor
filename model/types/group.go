@@ -25,7 +25,8 @@ type Member struct {
 // Members is a slice of multiple Member entities
 type Members []Member
 
-func removeDuplicatesMember(members Members) Members {
+// RemoveDuplicatesMember from a member list
+func RemoveDuplicatesMember(members Members) Members {
 	var result Members
 	seen := map[bson.ObjectId]bool{}
 	for _, member := range members {
@@ -87,7 +88,7 @@ type Group struct {
 // It helps setting default values, and cleaning duplicates
 func NewGroup(g Group) Group {
 	newGroup := g
-	newGroup.Members = removeDuplicatesMember(g.Members)
+	newGroup.Members = RemoveDuplicatesMember(g.Members)
 	newGroup.Tags = removeDuplicatesTags(g.Tags)
 	return newGroup
 }

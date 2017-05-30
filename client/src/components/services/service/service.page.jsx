@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -67,7 +68,7 @@ class ServiceComponent extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = (_, { name, value }) => {
     const { service, errors } = this.state;
     const state = {
       service: { ...service, [name]:value },
@@ -197,14 +198,14 @@ class ServiceComponent extends React.Component {
 }
 
 ServiceComponent.propTypes = {
-  service: React.PropTypes.object,
-  tags: React.PropTypes.object,
-  isFetching: React.PropTypes.bool,
-  serviceId: React.PropTypes.string,
-  fetchService: React.PropTypes.func.isRequired,
-  fetchTags: React.PropTypes.func.isRequired,
-  onSave: React.PropTypes.func,
-  onDelete: React.PropTypes.func
+  service: PropTypes.object,
+  tags: PropTypes.object,
+  isFetching: PropTypes.bool,
+  serviceId: PropTypes.string,
+  fetchService: PropTypes.func.isRequired,
+  fetchTags: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+  onDelete: PropTypes.func
 };
 
 // Function to map state to container props
@@ -226,7 +227,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchService: id => dispatch(ServicesThunks.fetch(id)),
-    fetchTags: () => dispatch(TagsThunks.fetchIfNeeded()),
+    fetchTags: () => dispatch(TagsThunks.fetchAll()),
     onSave: service => dispatch(
       ServicesThunks.save(service, (id) => push('/services/' + id), ToastsActions.confirmSave(`Service "${service.title}"`))
     ),

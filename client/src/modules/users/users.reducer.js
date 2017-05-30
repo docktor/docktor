@@ -1,14 +1,12 @@
 // import constants
-import UsersConstants from './users.constants';
 import { generateEntitiesReducer } from '../utils/entities';
 
 const usersReducer = (state, action) => {
-  const entitiesState = generateEntitiesReducer(state, action, 'users');
+  const reducer = generateEntitiesReducer('users');
+  const entitiesState = reducer(state, action);
   switch (action.type) {
-  case UsersConstants.CHANGE_FILTER:
-    return { ...entitiesState, filterValue: action.filterValue };
-  default:
-    return entitiesState;
+    default:
+      return entitiesState;
   }
 };
 

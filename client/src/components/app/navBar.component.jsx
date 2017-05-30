@@ -1,15 +1,16 @@
 // React
 import React from 'react';
+import PropTypes from 'prop-types';
 import { IndexLink, Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
 import AuthThunks from '../../modules/auth/auth.thunk';
 import ExportThunks from '../../modules/export/export.thunk';
-import { isRoleAuthorized } from '../../modules/auth/auth.wrappers';
+import { isRoleAuthorized } from '../../modules/utils/utils';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../../modules/auth/auth.constants';
+import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../../modules/auth/auth.actions';
 
 // Style
 import './navBar.component.scss';
@@ -72,11 +73,11 @@ class NavBarComponent extends React.Component {
 }
 
 NavBarComponent.propTypes = {
-  logout: React.PropTypes.func.isRequired,
-  exportDocktor: React.PropTypes.func.isRequired,
-  auth: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
-  isExportFetching: React.PropTypes.bool.isRequired
+  logout: PropTypes.func.isRequired,
+  exportDocktor: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  isExportFetching: PropTypes.bool.isRequired
 };
 
 // Function to map state to container props
