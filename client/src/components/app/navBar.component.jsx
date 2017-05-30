@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IndexLink, Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 
@@ -39,7 +39,7 @@ class NavBarComponent extends React.Component {
     const isAuthorized = this.isAuthorized;
     return (
       <Menu inverted className='navbar'>
-        <Menu.Item  as={IndexLink} to='/' className='brand'>
+        <Menu.Item  as={Link} to='/' className='brand'>
           <Icon fitted name='doctor' size='large'/>{' Docktor'}
         </Menu.Item>
         {isAuthorized(
@@ -84,7 +84,7 @@ NavBarComponent.propTypes = {
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
-    location: state.routing.locationBeforeTransitions,
+    location: state.routing.location,
     isExportFetching: state.export.isFetching
   };
 };

@@ -26,6 +26,6 @@ class App extends React.Component {
     </div>
   );
 }
-App.propTypes = { children: PropTypes.object };
+App.propTypes = { children: PropTypes.array };
 
 export default App;

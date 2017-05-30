@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Input, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
 import DebounceInput from 'react-debounce-input';
 

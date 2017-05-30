@@ -57,7 +57,7 @@ export function requireAuthorization(Component, Roles) {
 
   const mapStateToProps = (state) => ({
     auth: state.auth,
-    loc: state.routing.locationBeforeTransitions
+    loc: state.routing.location
   });
 
   // Function to map dispatch to container props

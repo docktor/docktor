@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
 import {
   AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES,

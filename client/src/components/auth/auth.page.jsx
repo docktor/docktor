@@ -64,7 +64,7 @@ LoginP.propTypes = {
 const mapStateToLoginPageProps = (state) => {
   const { auth } = state;
   const { isAuthenticated, errorMessage, isFetching } = auth;
-  const redirectTo = state.routing.locationBeforeTransitions.query.next || '/';
+  const redirectTo = state.routing.location.search || '/';
   return {
     isAuthenticated,
     errorMessage,

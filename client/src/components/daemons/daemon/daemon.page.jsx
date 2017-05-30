@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -122,8 +122,8 @@ class DaemonComponent extends React.Component {
 
   renderProtocol = (daemon, errors) => {
     const options = [
-      { text: 'HTTP', value: 'http' },
-      { text: 'HTTPS', value: 'https' }
+      { key: 'http', text: 'HTTP', value: 'http' },
+      { key: 'https', text: 'HTTPS', value: 'https' }
     ];
     return (
       <Form.Dropdown name='protocol' label='Protocol' fluid value={daemon.protocol} selection placeholder='Select a protocol...' autoComplete='off' options={options}
@@ -273,7 +273,7 @@ DaemonComponent.propTypes = {
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
-  const paramId = ownProps.params.id;
+  const paramId = ownProps.match.params.id;
   const daemons = state.daemons;
   const daemon = daemons.selected;
   const emptyDaemon = { volumes: [], variables: [], tags: [] };
