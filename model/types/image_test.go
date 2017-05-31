@@ -2,9 +2,9 @@ package types_test
 
 import (
 	"fmt"
+	"testing"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/smartystreets/goconvey/convey"
 	"github.com/soprasteria/docktor/model/types"
 
 	"gopkg.in/mgo.v2/bson"
@@ -41,15 +41,14 @@ func ExampleImage_EqualsInConf() {
 	fmt.Println(i.EqualsInConf(j))
 	// Output: true
 }
-
-var _ = Describe("Image", func() {
-	Context("Given two images", func() {
-		var (
-			firstImage  types.Image
-			secondImage types.Image
-		)
-		Context("If images are equals", func() {
-			BeforeEach(func() {
+func TestImages(t *testing.T) {
+	Convey("On Images types", t, func() {
+		Convey("Given two images", func() {
+			var (
+				firstImage  types.Image
+				secondImage types.Image
+			)
+			Convey("If images are equals", func() {
 				firstImage = types.Image{
 					ID:         bson.ObjectId("1"),
 					Name:       "temp",
@@ -66,14 +65,12 @@ var _ = Describe("Image", func() {
 					Volumes:    types.Volumes{},
 					Parameters: types.Parameters{},
 				}
+				Convey("Then EqualsInConf should be true", func() {
+					So(firstImage.EqualsInConf(secondImage), ShouldBeTrue)
+				})
 			})
-			It("Then EqualsInConf should be true", func() {
-				Expect(firstImage.EqualsInConf(secondImage)).Should(BeTrue())
-			})
-		})
 
-		Context("If images are equals except from variables", func() {
-			BeforeEach(func() {
+			Convey("If images are equals except from variables", func() {
 				firstImage = types.Image{
 					ID:   bson.ObjectId("1"),
 					Name: "temp",
@@ -94,14 +91,12 @@ var _ = Describe("Image", func() {
 					Volumes:    types.Volumes{},
 					Parameters: types.Parameters{},
 				}
+				Convey("Then EqualsInConf should be false", func() {
+					So(firstImage.EqualsInConf(secondImage), ShouldBeFalse)
+				})
 			})
-			It("Then EqualsInConf should be false", func() {
-				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
-			})
-		})
 
-		Context("If images are equals except from ports", func() {
-			BeforeEach(func() {
+			Convey("If images are equals except from ports", func() {
 				firstImage = types.Image{
 					ID:        bson.ObjectId("1"),
 					Name:      "temp",
@@ -123,14 +118,12 @@ var _ = Describe("Image", func() {
 					Volumes:    types.Volumes{},
 					Parameters: types.Parameters{},
 				}
+				Convey("Then EqualsInConf should be false", func() {
+					So(firstImage.EqualsInConf(secondImage), ShouldBeFalse)
+				})
 			})
-			It("Then EqualsInConf should be false", func() {
-				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
-			})
-		})
 
-		Context("If images are equals except from volumes", func() {
-			BeforeEach(func() {
+			Convey("If images are equals except from volumes", func() {
 				firstImage = types.Image{
 					ID:        bson.ObjectId("1"),
 					Name:      "temp",
@@ -152,14 +145,12 @@ var _ = Describe("Image", func() {
 					},
 					Parameters: types.Parameters{},
 				}
+				Convey("Then EqualsInConf should be false", func() {
+					So(firstImage.EqualsInConf(secondImage), ShouldBeFalse)
+				})
 			})
-			It("Then EqualsInConf should be false", func() {
-				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
-			})
-		})
 
-		Context("If images are equals except from parameters", func() {
-			BeforeEach(func() {
+			Convey("If images are equals except from parameters", func() {
 				firstImage = types.Image{
 					ID:        bson.ObjectId("1"),
 					Name:      "temp",
@@ -180,10 +171,10 @@ var _ = Describe("Image", func() {
 						{Name: "name", Value: "value2", Description: "description"},
 					},
 				}
-			})
-			It("Then EqualsInConf should be false", func() {
-				Expect(firstImage.EqualsInConf(secondImage)).Should(BeFalse())
+				Convey("Then EqualsInConf should be false", func() {
+					So(firstImage.EqualsInConf(secondImage), ShouldBeFalse)
+				})
 			})
 		})
 	})
-})
+}

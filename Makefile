@@ -16,14 +16,12 @@ run:
 
 test:
 	go get github.com/stretchr/testify
-	go get github.com/onsi/ginkgo/ginkgo
-	go get github.com/onsi/gomega
-	go get github.com/wadey/gocovmerge
-	ginkgo -race -v -coverpkg=./model/... ./cmd/... ./model/... ./server/...
-	$(shell [ ! -d dist ] && mkdir dist)
-	gocovmerge ./model/**/*.coverprofile > dist/cover.out
-	go tool cover -html=dist/cover.out -o=dist/cover.html
-	rm -f ./**/*.coverprofile
+	go get github.com/smartystreets/goconvey
+	go get github.com/go-playground/overalls
+	overalls -project=github.com/soprasteria/docktor -covermode=atomic -- -race -v
+	mkdir -p ./dist
+	go tool cover -html=overalls.coverprofile -o=dist/cover.html
+	rm -f ./*.coverprofile
 
 lint:
 	go get github.com/alecthomas/gometalinter

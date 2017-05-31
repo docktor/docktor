@@ -2,9 +2,9 @@ package types_test
 
 import (
 	"fmt"
+	"testing"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/smartystreets/goconvey/convey"
 	"github.com/soprasteria/docktor/model/types"
 )
 
@@ -26,27 +26,28 @@ func ExampleVolume_Format() {
 	// /brace/yourselves:/winter/is/coming:ro
 	// /brace/yourselves:/winter/is/coming:rw
 }
-
-var _ = Describe("Group", func() {
-	Context("Given a list of members", func() {
-		givenMembers := types.Members{
-			{User: "batman", Role: types.MemberModeratorRole},
-			{User: "batman", Role: types.MemberUserRole},
-			{User: "batman", Role: types.MemberModeratorRole},
-			{User: "superman", Role: types.MemberUserRole},
-			{User: "superman", Role: types.MemberUserRole},
-			{User: "robin", Role: types.MemberModeratorRole},
-		}
-		Context("When I remove duplicates", func() {
-			actualMembers := types.RemoveDuplicatesMember(givenMembers)
-			It("Then duplicates should haven been deleted", func() {
-				expectedMembers := types.Members{
-					{User: "batman", Role: types.MemberModeratorRole},
-					{User: "superman", Role: types.MemberUserRole},
-					{User: "robin", Role: types.MemberModeratorRole},
-				}
-				Expect(actualMembers).Should(Equal(expectedMembers))
+func TestGroups(t *testing.T) {
+	Convey("On Groups types", t, func() {
+		Convey("Given a list of members", func() {
+			givenMembers := types.Members{
+				{User: "batman", Role: types.MemberModeratorRole},
+				{User: "batman", Role: types.MemberUserRole},
+				{User: "batman", Role: types.MemberModeratorRole},
+				{User: "superman", Role: types.MemberUserRole},
+				{User: "superman", Role: types.MemberUserRole},
+				{User: "robin", Role: types.MemberModeratorRole},
+			}
+			Convey("When I remove duplicates", func() {
+				actualMembers := types.RemoveDuplicatesMember(givenMembers)
+				Convey("Then duplicates should haven been deleted", func() {
+					expectedMembers := types.Members{
+						{User: "batman", Role: types.MemberModeratorRole},
+						{User: "superman", Role: types.MemberUserRole},
+						{User: "robin", Role: types.MemberModeratorRole},
+					}
+					So(actualMembers, ShouldResemble, expectedMembers)
+				})
 			})
 		})
 	})
-})
+}
