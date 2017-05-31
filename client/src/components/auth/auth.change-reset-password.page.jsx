@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Header, Form, Message, Button } from 'semantic-ui-react';
@@ -97,8 +98,8 @@ ChangeResetPasswordP.propTypes = {
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
-
-  const token = ownProps.location.query.token;
+  const query = queryString.parse(ownProps.location.search);
+  const token = query.token;
   const auth = state.auth;
 
   return {

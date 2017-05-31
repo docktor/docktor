@@ -93,6 +93,7 @@
     "md5": "^2.2.1",
     "moment": "^2.18.1",
     "normalizr": "^3.2.3",
+    "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-custom-scrollbars": "^4.1.1",
     "react-debounce-input": "^3.0.0",

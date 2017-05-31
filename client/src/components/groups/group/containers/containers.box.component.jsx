@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import set from 'lodash.set';
@@ -108,7 +109,7 @@ class ContainersBoxComponent extends React.Component {
 
   render = () => {
     const { display, groupBy } = this.state;
-    const { containers, daemons, services, tags, group, loc, isFetching } = this.props;
+    const { containers, daemons, services, tags, group, query, isFetching } = this.props;
     const categories = TagsSelectors.getTagCategories(containers, services, tags);
     const colorCategories = this.getColorCategories(categories);
     const groupByOptions = this.groupByOptions(categories, colorCategories);
@@ -127,7 +128,7 @@ class ContainersBoxComponent extends React.Component {
             <Dropdown disabled={groupByOptions.length === 0} text={categories[groupBy] && categories[groupBy][0].category.raw || 'Group by'}
               value={groupBy || ''} floating labeled button className='icon' icon='filter'>
               <Dropdown.Menu>
-                <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query: { display: loc.query.display } }}
+                <Dropdown.Item value='' as={Link} to={{ pathname: `/groups/${group.id}`, query: { display: query.display } }}
                   onClick={() => this.onChangeGroupBy(group.id, '')} >
                   <Button fluid compact content='Cancel' />
                 </Dropdown.Item>
@@ -135,7 +136,7 @@ class ContainersBoxComponent extends React.Component {
                   {groupByOptions.map((category) => {
                     return (
                       <Dropdown.Item
-                        as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...loc.query, groupBy: category.value } }}
+                        as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...query, groupBy: category.value } }}
                         active={groupBy === category.value}
                         onClick={() => this.onChangeGroupBy(group.id, category.value)}
                         key={category.value} {...category} />
@@ -148,12 +149,12 @@ class ContainersBoxComponent extends React.Component {
             <Button.Group>
               <Button toggle
                 active={display === GRID_DISPLAY}
-                as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...loc.query, display: GRID_DISPLAY } }}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...query, display: GRID_DISPLAY } }}
                 onClick={() => this.onChangeDisplay(group.id, GRID_DISPLAY)}
                 title='Display services as cards' icon='grid layout' />
               <Button toggle
                 active={display === LIST_DISPLAY}
-                as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...loc.query, display: LIST_DISPLAY } }}
+                as={Link} to={{ pathname: `/groups/${group.id}`, query: { ...query, display: LIST_DISPLAY } }}
                 onClick={() => this.onChangeDisplay(group.id, 'list')}
                 title='Display services as a list' icon='list layout' />
             </Button.Group>
@@ -175,13 +176,13 @@ ContainersBoxComponent.propTypes = {
   display: PropTypes.string,
   groupBy: PropTypes.string,
   group: PropTypes.object.isRequired,
-  loc: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
-  const loc = state.routing.location;
+  const query = queryString.parse(state.routing.location.search);
   const { containers, services, tags, daemons, display, groupBy, group, isFetching } = ownProps;
   return {
     isFetching: isFetching || services.isFetching || tags.isFetching,
@@ -192,7 +193,7 @@ const mapStateToProps = (state, ownProps) => {
     display,
     groupBy: groupBy || '',
     group: group || {},
-    loc
+    query
   };
 };
 

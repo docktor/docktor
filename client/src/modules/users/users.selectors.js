@@ -1,8 +1,26 @@
 import { transformFilterToObject, contains } from '../utils/utils';
 
+
+export const sortUsers = (u1, u2) => {
+  let comp = 0;
+  if (u1.role === 'admin' && (u2.role === 'supervisor' || u2.role === 'user')) {
+    comp = -1;
+  } else if (u1.role === 'supervisor' && u2.role === 'user') {
+    comp = -1;
+  } else if (u1.role === 'supervisor' && u2.role === 'admin') {
+    comp = 1;
+  } else if (u1.role === 'user' && (u2.role === 'admin' || u2.role === 'supervisor')) {
+    comp = 1;
+  }
+  if (comp === 0) {
+    return `${u1.lastName} ${u1.firstName}`.localeCompare(`${u2.lastName} ${u2.firstName}`);
+  }
+  return comp;
+};
+
 export const getFilteredUsers = (users, filterValue) => {
   if (!filterValue || filterValue === '') {
-    return Object.values(users);
+    return Object.values(users).sort(sortUsers);
   } else {
     return Object.values(users).filter(user => {
       let match = true;
@@ -36,7 +54,8 @@ export const getFilteredUsers = (users, filterValue) => {
         }
       });
       return match;
-    });
+    })
+    .sort(sortUsers);
   }
 };
 
