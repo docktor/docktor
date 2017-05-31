@@ -23,6 +23,12 @@
 			"revisionTime": "2015-06-22T08:52:03Z"
 		},
 		{
+			"checksumSHA1": "lhi2xNJi7Jn/VGEpQw+4yMlfeXo=",
+			"path": "github.com/Masterminds/sprig",
+			"revision": "cd9291e11ed2b78cdc1991bdd3e8adf51d6236bb",
+			"revisionTime": "2017-03-23T21:47:59Z"
+		},
+		{
 			"checksumSHA1": "SgMa9iM1pf0gPCJ4YsV8UkXyp20=",
 			"origin": "github.com/docker/docker/vendor/github.com/Microsoft/go-winio",
 			"path": "github.com/Microsoft/go-winio",
@@ -278,6 +284,18 @@
 			"revisionTime": "2016-11-12T23:52:43Z"
 		},
 		{
+			"checksumSHA1": "hwGdeQbcfc2RvIQS5wAaYRKJDd4=",
+			"path": "github.com/imdario/mergo",
+			"revision": "50d4dbd4eb0e84778abe37cefef140271d96fade",
+			"revisionTime": "2016-05-17T06:44:35Z"
+		},
+		{
+			"checksumSHA1": "Rjp42PSAN8d1tprKSMNAR/1TAqo=",
+			"path": "github.com/jaytaylor/html2text",
+			"revision": "7c7a33a7a158a5ce395c803d2b6a209b2bbc14c8",
+			"revisionTime": "2017-05-30T23:22:55Z"
+		},
+		{
 			"checksumSHA1": "4RjdlDNjw1R4BdqTT6qC5+xxE3k=",
 			"path": "github.com/labstack/echo",
 			"revision": "f9e97332f3bebd2c26753f7dc679588a22cb387d",
@@ -374,6 +392,12 @@
 			"path": "github.com/rsc/letsencrypt",
 			"revision": "76104d26167d38b6a0010f42bfc8ec5487742e8b",
 			"revisionTime": "2016-09-29T13:28:05Z"
+		},
+		{
+			"checksumSHA1": "MnRnniTE94p6DieveIFQxx3PArg=",
+			"path": "github.com/russross/blackfriday",
+			"revision": "0ba0f2b6ed7c475a92e4df8641825cb7a11d1fa3",
+			"revisionTime": "2017-05-09T06:07:14Z"
 		},
 		{
 			"checksumSHA1": "379ek9wIVJLiiEcLeAsB7BiCvK0=",
