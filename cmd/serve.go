@@ -48,6 +48,7 @@ func init() {
 	serveCmd.Flags().String("smtp-password", "", "SMTP password for authentication.")
 	serveCmd.Flags().String("smtp-sender", "", "Email used as sender of emails")
 	serveCmd.Flags().String("smtp-identity", "", "Identity of the sender")
+	serveCmd.Flags().String("smtp-logo", "", "Link or data URI to a logo image that will be used in header of emails sent by Docktor. Default is Docktor logo.")
 
 	// Bind env variables.
 	_ = viper.BindPFlag("server.mongo.addr", serveCmd.Flags().Lookup("mongo-addr"))
@@ -74,6 +75,7 @@ func init() {
 	_ = viper.BindPFlag("smtp.password", serveCmd.Flags().Lookup("smtp-password"))
 	_ = viper.BindPFlag("smtp.sender", serveCmd.Flags().Lookup("smtp-sender"))
 	_ = viper.BindPFlag("smtp.identity", serveCmd.Flags().Lookup("smtp-identity"))
+	_ = viper.BindPFlag("smtp.logo", serveCmd.Flags().Lookup("smtp-logo"))
 	_ = viper.BindPFlag("env", serveCmd.Flags().Lookup("env"))
 	RootCmd.AddCommand(serveCmd)
 
