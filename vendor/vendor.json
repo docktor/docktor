@@ -42,6 +42,13 @@
 			"revisionTime": "2016-11-16T16:47:31Z"
 		},
 		{
+			"checksumSHA1": "JkTTSwt87QlBH+fnEx/Bu23j3LI=",
+			"origin": "github.com/docker/docker/vendor/github.com/Nvveen/Gotty",
+			"path": "github.com/Nvveen/Gotty",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
+		},
+		{
 			"checksumSHA1": "CujWu7+PWlZSX5+zAPJH91O5AVQ=",
 			"origin": "github.com/docker/docker/vendor/github.com/Sirupsen/logrus",
 			"path": "github.com/Sirupsen/logrus",
@@ -173,6 +180,12 @@
 			"path": "github.com/docker/docker/pkg/longpath",
 			"revision": "673c5ee559b05adb9ef6e0e1d6135ff83522e38d",
 			"revisionTime": "2016-11-16T16:47:31Z"
+		},
+		{
+			"checksumSHA1": "3u2xJnbqYSxOP3kOORetQD7P1Co=",
+			"path": "github.com/docker/docker/pkg/mount",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
 		},
 		{
 			"checksumSHA1": "oHqQiESBEfIJ+uu1+ue7PHvJ6CI=",
@@ -380,6 +393,27 @@
 			"revisionTime": "2016-01-15T11:10:02Z"
 		},
 		{
+			"checksumSHA1": "OUupkCHnh8e3RHRNcMFqQJqhaQI=",
+			"origin": "github.com/docker/docker/vendor/github.com/opencontainers/go-digest",
+			"path": "github.com/opencontainers/go-digest",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
+		},
+		{
+			"checksumSHA1": "qzsBSt0cnEYNIkYk7slHjmPl7o0=",
+			"origin": "github.com/docker/docker/vendor/github.com/opencontainers/image-spec/specs-go",
+			"path": "github.com/opencontainers/image-spec/specs-go",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
+		},
+		{
+			"checksumSHA1": "vp5gfnUG920xBY1genCCoppZILc=",
+			"origin": "github.com/docker/docker/vendor/github.com/opencontainers/image-spec/specs-go/v1",
+			"path": "github.com/opencontainers/image-spec/specs-go/v1",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
+		},
+		{
 			"checksumSHA1": "Ssz9STAL5P2+1poiM63klFjhqhE=",
 			"origin": "github.com/docker/docker/vendor/github.com/opencontainers/runc/libcontainer/system",
 			"path": "github.com/opencontainers/runc/libcontainer/system",
@@ -404,6 +438,13 @@
 			"path": "github.com/pelletier/go-toml",
 			"revision": "45932ad32dfdd20826f5671da37a5f3ce9f26a8d",
 			"revisionTime": "2016-09-20T07:07:15Z"
+		},
+		{
+			"checksumSHA1": "PdQm3s8DoVJ17Vk8n7o5iPa7PK0=",
+			"origin": "github.com/docker/docker/vendor/github.com/pkg/errors",
+			"path": "github.com/pkg/errors",
+			"revision": "555bd548cacfbe02447ebb055d3efa5eeaabe972",
+			"revisionTime": "2017-05-31T19:03:37Z"
 		},
 		{
 			"checksumSHA1": "Ox0Iqm2T0qlNFleYiDYHMXDbkqg=",
