@@ -204,14 +204,6 @@ func (a *Authentication) ResetPasswordUser(username string) (types.User, error) 
 		return types.User{}, fmt.Errorf("User %q has to be a local user and not a remote one (like LDAP)", username)
 	}
 
-	// TODO : check if JWT can be invalidated.
-
-	// Reset the password in DB, helping user to change password when hacker found it.
-	// Don't check if it fails because password change will be possible even if password is reset in DB.
-	user.Password = ""
-	user.Updated = time.Now()
-	_, _ = a.Docktor.Users().Save(user)
-
 	return user, nil
 }
 

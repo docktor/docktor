@@ -33,7 +33,7 @@
     "start": "npm run clean && npm run client:start & npm run server:start",
     "build": "npm run clean && npm run client:build && npm run server:build",
     "test": "npm run client:test && npm run server:test",
-    "prepackage": "npm run build && mkdir -p dist/client && mv client/dist dist/client && mv docktor dist",
+    "prepackage": "mkdir -p dist/client && mv client/dist dist/client && mv docktor dist",
     "package": "cd dist && tar zcvf ../docktor-${npm_package_version}.tar.gz docktor client && cd .."
   },
   "devDependencies": {
