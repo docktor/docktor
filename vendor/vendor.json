@@ -379,6 +379,12 @@
 			"revisionTime": "2017-05-06T16:25:42Z"
 		},
 		{
+			"checksumSHA1": "M/4iS6UiRR4OsxnJpNMoxHHCDVo=",
+			"path": "github.com/looplab/fsm",
+			"revision": "bcc3636384ce80a109a6039432b30ff5b82476ee",
+			"revisionTime": "2017-04-04T09:40:36Z"
+		},
+		{
 			"checksumSHA1": "UvboqgDDSAbGORdtr5tBpkwYR0A=",
 			"path": "github.com/magiconair/properties",
 			"revision": "51463bfca2576e06c62a8504b5c0f06d61312647",
@@ -456,7 +462,17 @@
 			"revisionTime": "2017-06-01T21:10:16Z"
 		},
 		{
+<<<<<<< HEAD
 			"checksumSHA1": "F1IYMLBLAZaTOWnmXsgaxTGvrWI=",
+=======
+			"checksumSHA1": "4sYO4T4ubmctwk2jyI3BTVTy4Tk=",
+			"path": "github.com/orcaman/concurrent-map",
+			"revision": "33c5bcbc98a8c1699b433720ec85c48dd6a62a6e",
+			"revisionTime": "2017-01-17T12:02:56Z"
+		},
+		{
+			"checksumSHA1": "8Y05Pz7onrQPcVWW6JStSsYRh6E=",
+>>>>>>> 74dba2d... feat: state machine
 			"path": "github.com/pelletier/go-buffruneio",
 			"revision": "c37440a7cf42ac63b919c752ca73a85067e05992",
 			"revisionTime": "2017-02-27T22:03:11Z"
@@ -475,18 +491,22 @@
 			"revisionTime": "2017-06-01T21:10:16Z"
 		},
 		{
+<<<<<<< HEAD
 			"checksumSHA1": "MnRnniTE94p6DieveIFQxx3PArg=",
 			"path": "github.com/russross/blackfriday",
 			"revision": "0ba0f2b6ed7c475a92e4df8641825cb7a11d1fa3",
 			"revisionTime": "2017-05-09T06:07:14Z"
 		},
 		{
+=======
+>>>>>>> 74dba2d... feat: state machine
 			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",
 			"path": "github.com/satori/go.uuid",
 			"revision": "5bf94b69c6b68ee1b541973bb8e1144db23a194b",
 			"revisionTime": "2017-03-21T23:07:31Z"
 		},
 		{
+<<<<<<< HEAD
 			"checksumSHA1": "AikWjAOvWHSJ8G1iU+wNReZnyCk=",
 			"path": "github.com/smartystreets/assertions",
 			"revision": "f8459f92181409546d2762c9e9c4bedc23c92d76",
@@ -524,6 +544,9 @@
 		},
 		{
 			"checksumSHA1": "No2E4qfQLhff05x9v5bfD2rGaUI=",
+=======
+			"checksumSHA1": "379ek9wIVJLiiEcLeAsB7BiCvK0=",
+>>>>>>> 74dba2d... feat: state machine
 			"path": "github.com/soprasteria/dockerapi",
 			"revision": "bd98a1d0594dae1c354d607ae6c2bd7eaf4ce223",
 			"revisionTime": "2017-05-09T16:02:36Z"
