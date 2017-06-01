@@ -1,17 +1,7 @@
 {
-  "DisableAll": true,
-  "Enable": [
-    "unused",
-    "vet",
-    "vetshadow",
-    "deadcode",
-    "gofmt",
-    "golint",
-    "ineffassign",
-    "goconst",
-    "gosimple",
-    "staticcheck",
-    "misspell"
+  "Disable": [
+    "gotype",
+    "gas"
   ],
   "Test": true
 }
