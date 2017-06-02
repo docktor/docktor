@@ -4,7 +4,8 @@ node_modules/
 dist/
 client/dist/
 .idea/
-docktor*
+docktor
+docktor-*
 bower_components/
 .vscode/
 vendor/*/
