@@ -1,4 +1,4 @@
-package redisw
+package utils
 
 import (
 	"encoding/json"
@@ -11,8 +11,8 @@ import (
 	"gopkg.in/redis.v3"
 )
 
-// Get the value if the client exist
-func Get(client *redis.Client, key string, value interface{}) error {
+// GetFromRedis the value if the client exist
+func GetFromRedis(client *redis.Client, key string, value interface{}) error {
 	if client == nil {
 		return errors.New("Redis is unavailable")
 	}
@@ -24,8 +24,8 @@ func Get(client *redis.Client, key string, value interface{}) error {
 	return err
 }
 
-// Set the value if the client exist
-func Set(client *redis.Client, key string, value interface{}, ttl time.Duration) {
+// SetIntoRedis the value if the client exist
+func SetIntoRedis(client *redis.Client, key string, value interface{}, ttl time.Duration) {
 	if client == nil {
 		log.Warning("Redis is unavailable")
 		return

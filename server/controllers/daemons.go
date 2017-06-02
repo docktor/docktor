@@ -8,7 +8,7 @@ import (
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/modules/daemons"
 	"github.com/soprasteria/docktor/server/types"
-	"github.com/soprasteria/docktor/server/wrappers/redisw"
+	"github.com/soprasteria/docktor/server/utils"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -69,7 +69,7 @@ func (d *Daemons) Get(c echo.Context) error {
 func (d *Daemons) GetInfo(c echo.Context) error {
 	daemon := c.Get("daemon").(types.Daemon)
 	forceParam := c.QueryParam("force")
-	redisClient := redisw.GetRedis(c)
+	redisClient := utils.GetRedis(c)
 
 	infos, err := daemons.GetInfo(daemon, redisClient, forceParam == "true")
 	if err != nil {

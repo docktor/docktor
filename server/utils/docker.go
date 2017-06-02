@@ -1,4 +1,4 @@
-package dockerw
+package utils
 
 import (
 	"strconv"
