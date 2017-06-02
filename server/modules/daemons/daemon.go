@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/soprasteria/docktor/server/types"
-	"github.com/soprasteria/docktor/server/dockerw"
-	"github.com/soprasteria/docktor/server/redisw"
+	"github.com/soprasteria/docktor/server/wrappers/dockerw"
+	"github.com/soprasteria/docktor/server/wrappers/redisw"
 	"gopkg.in/redis.v3"
 )
 

@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	"github.com/soprasteria/docktor/server/daemons"
 	"github.com/soprasteria/docktor/server/models"
-	"github.com/soprasteria/docktor/server/redisw"
+	"github.com/soprasteria/docktor/server/modules/daemons"
 	"github.com/soprasteria/docktor/server/types"
+	"github.com/soprasteria/docktor/server/wrappers/redisw"
 	"gopkg.in/mgo.v2/bson"
 )
 

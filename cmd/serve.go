@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/soprasteria/docktor/server"
-	"github.com/soprasteria/docktor/server/email"
 	"github.com/soprasteria/docktor/server/models"
+	"github.com/soprasteria/docktor/server/modules/email"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

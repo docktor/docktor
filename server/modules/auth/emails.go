@@ -6,8 +6,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/matcornic/hermes"
+	"github.com/soprasteria/docktor/server/modules/email"
 	"github.com/soprasteria/docktor/server/types"
-	"github.com/soprasteria/docktor/server/email"
 )
 
 // SendWelcomeEmail sends a welcome email after a user's registration

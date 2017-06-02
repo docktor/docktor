@@ -8,13 +8,13 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/soprasteria/docktor/server/types"
-	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
-	"github.com/soprasteria/docktor/server/daemons"
-	"github.com/soprasteria/docktor/server/groups"
-	"github.com/soprasteria/docktor/server/services"
-	"github.com/soprasteria/docktor/server/users"
+	"github.com/soprasteria/docktor/server/modules/auth"
+	"github.com/soprasteria/docktor/server/modules/daemons"
+	"github.com/soprasteria/docktor/server/modules/groups"
+	"github.com/soprasteria/docktor/server/modules/services"
+	"github.com/soprasteria/docktor/server/modules/users"
+	"github.com/soprasteria/docktor/server/types"
 	"github.com/spf13/viper"
 )
 

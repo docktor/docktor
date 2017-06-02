@@ -9,9 +9,9 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
-	"github.com/soprasteria/docktor/server/auth"
+	"github.com/soprasteria/docktor/server/modules/auth"
 	"github.com/soprasteria/docktor/server/models"
-	"github.com/soprasteria/docktor/server/users"
+	"github.com/soprasteria/docktor/server/modules/users"
 )
 
 // ErrNotAuthorized is an error when someone is trying to access unauthorized ressource for a given role

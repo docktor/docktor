@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/types"
-	"github.com/soprasteria/docktor/server/users"
+	"github.com/soprasteria/docktor/server/modules/users"
 	"gopkg.in/mgo.v2/bson"
 )
 
