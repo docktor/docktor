@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/models"
+	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -16,7 +16,7 @@ type Services struct {
 
 //GetAll services from docktor
 func (s *Services) GetAll(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	services, err := docktorAPI.Services().FindAll()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error while retreiving all services")
@@ -26,7 +26,7 @@ func (s *Services) GetAll(c echo.Context) error {
 
 //Save service into docktor
 func (s *Services) Save(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	var service types.Service
 	err := c.Bind(&service)
 
@@ -48,7 +48,7 @@ func (s *Services) Save(c echo.Context) error {
 
 //Delete service into docktor
 func (s *Services) Delete(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	id := c.Param("serviceID")
 	res, err := docktorAPI.Services().Delete(bson.ObjectIdHex(id))
 	if err != nil {
