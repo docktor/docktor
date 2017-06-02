@@ -1,26 +1,51 @@
-package tags
+package models
 
 import (
 	"fmt"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/soprasteria/docktor/model/types"
-	mgo "gopkg.in/mgo.v2"
+	"github.com/soprasteria/docktor/server/types"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // TagAlreadyExistErrMessage is an error message when a tag alread exists
 const TagAlreadyExistErrMessage string = "Tag %q already exists in category %q"
 
-// Repo is the repository for projects
-type Repo struct {
-	Coll *mgo.Collection
+// TagsRepo is the repo for tags
+type TagsRepo interface {
+	// Save a tag into database
+	Save(tag types.Tag) (types.Tag, error)
+	// Delete a tag in database
+	Delete(id bson.ObjectId) (bson.ObjectId, error)
+	// FindByID get the tag by its id
+	FindByID(id string) (types.Tag, error)
+	// FindByIDBson get the tag by its id
+	FindByIDBson(id bson.ObjectId) (types.Tag, error)
+	// Find get the first tag with a given name and category
+	Find(name string, category string) (types.Tag, error)
+	// FindAll get all tags
+	FindAll() ([]types.Tag, error)
+	// FindAllByIDs get all tags with id
+	FindAllByIDs([]bson.ObjectId) ([]types.Tag, error)
+	// Drop drops the content of the collection
+	Drop() error
+}
+
+// DefaultTagsRepo is the repository for tags
+type DefaultTagsRepo struct {
+	coll *mgo.Collection
+}
+
+// NewTagsRepo instantiate new RepoDaemons
+func NewTagsRepo(coll *mgo.Collection) TagsRepo {
+	return &DefaultTagsRepo{coll: coll}
 }
 
 // Save or create a tag into a database
 // Two different tags can not have the same name and category (unicity is checked on slugified name and category)
-func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
+func (r *DefaultTagsRepo) Save(tag types.Tag) (types.Tag, error) {
 
 	// Create a new tag from input one because
 	// we have to check each value and only update updatable fields (for example : created should not be changed)
@@ -87,61 +112,61 @@ func (r *Repo) Save(tag types.Tag) (types.Tag, error) {
 		return types.Tag{}, fmt.Errorf("Category should not be empty : %q (slug:%q)", resTag.Category.GetRaw(), resTag.Category.GetSlug())
 	}
 
-	_, err = r.Coll.UpsertId(resTag.ID, bson.M{"$set": resTag})
+	_, err = r.coll.UpsertId(resTag.ID, bson.M{"$set": resTag})
 	return resTag, err
 }
 
 // Delete a tag in database
-func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
-	err := r.Coll.RemoveId(id)
+func (r *DefaultTagsRepo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
+	err := r.coll.RemoveId(id)
 	return id, err
 }
 
 // FindByID get the tag by its id
-func (r *Repo) FindByID(id string) (types.Tag, error) {
+func (r *DefaultTagsRepo) FindByID(id string) (types.Tag, error) {
 	result := types.Tag{}
-	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
+	err := r.coll.FindId(bson.ObjectIdHex(id)).One(&result)
 	return result, err
 }
 
 // FindByIDBson get the tag by its id (as a bson object)
-func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Tag, error) {
+func (r *DefaultTagsRepo) FindByIDBson(id bson.ObjectId) (types.Tag, error) {
 	result := types.Tag{}
-	err := r.Coll.FindId(id).One(&result)
+	err := r.coll.FindId(id).One(&result)
 	return result, err
 }
 
 // findBySlug get tag identified by its name slugified
-func (r *Repo) findBySlug(slugName string, slugCategory string) (types.Tag, error) {
+func (r *DefaultTagsRepo) findBySlug(slugName string, slugCategory string) (types.Tag, error) {
 	result := types.Tag{}
-	err := r.Coll.Find(bson.M{"name.slug": slugName, "category.slug": slugCategory}).One(&result)
+	err := r.coll.Find(bson.M{"name.slug": slugName, "category.slug": slugCategory}).One(&result)
 	return result, err
 }
 
 // Find get the first tag with a given name
-func (r *Repo) Find(name string, category string) (types.Tag, error) {
+func (r *DefaultTagsRepo) Find(name string, category string) (types.Tag, error) {
 	tagName := types.NewTagName(name)
 	tagCategory := types.NewTagCategory(category)
 	return r.findBySlug(tagName.GetSlug(), tagCategory.GetSlug())
 }
 
 // FindAll get all tags
-func (r *Repo) FindAll() ([]types.Tag, error) {
+func (r *DefaultTagsRepo) FindAll() ([]types.Tag, error) {
 	results := []types.Tag{}
-	err := r.Coll.Find(bson.M{}).All(&results)
+	err := r.coll.Find(bson.M{}).All(&results)
 	return results, err
 }
 
 // FindAllByIDs get all tags with id
-func (r *Repo) FindAllByIDs(ids []bson.ObjectId) ([]types.Tag, error) {
+func (r *DefaultTagsRepo) FindAllByIDs(ids []bson.ObjectId) ([]types.Tag, error) {
 	results := []types.Tag{}
-	err := r.Coll.Find(
+	err := r.coll.Find(
 		bson.M{"_id": &bson.M{"$in": ids}},
 	).All(&results)
 	return results, err
 }
 
 // Drop drops the content of the collection
-func (r *Repo) Drop() error {
-	return r.Coll.DropCollection()
+func (r *DefaultTagsRepo) Drop() error {
+	return r.coll.DropCollection()
 }

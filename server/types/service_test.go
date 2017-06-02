@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/types"
 
 	. "github.com/smartystreets/goconvey/convey"
 )

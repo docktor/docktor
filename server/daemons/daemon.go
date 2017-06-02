@@ -3,7 +3,7 @@ package daemons
 import (
 	"time"
 
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/types"
 	"github.com/soprasteria/docktor/server/dockerw"
 	"github.com/soprasteria/docktor/server/redisw"
 	"gopkg.in/redis.v3"

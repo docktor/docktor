@@ -6,13 +6,13 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/server/models"
 )
 
 // RetrieveGroup find group using id param and put it in echo.Context
 func RetrieveGroup(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		docktorAPI := c.Get("api").(*api.Docktor)
+		docktorAPI := c.Get("api").(*models.Docktor)
 		groupID := c.Param("groupID")
 		if groupID == "" {
 			return c.String(http.StatusBadRequest, GroupInvalidID)

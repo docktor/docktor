@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/soprasteria/dockerapi"
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/types"
 )
 
 // InitDocker : create a docker instance using daemon

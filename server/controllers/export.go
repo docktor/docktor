@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
 	"github.com/soprasteria/docktor/server/export"
+	"github.com/soprasteria/docktor/server/models"
 )
 
 // Export contains all handlers for exporting data as csv/xlsx and so on
@@ -18,7 +18,7 @@ type Export struct {
 
 //ExportAll exports all the data as a file
 func (a *Export) ExportAll(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	exporter := export.Export{Docktor: docktorAPI}
 
 	data, err := exporter.ExportAll()

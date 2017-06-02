@@ -6,8 +6,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/models"
+	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -17,7 +17,7 @@ type Tags struct {
 
 //GetAll tags from docktor
 func (s *Tags) GetAll(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	tags, err := docktorAPI.Tags().FindAll()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error while retreiving all tags")
@@ -27,7 +27,7 @@ func (s *Tags) GetAll(c echo.Context) error {
 
 //Save or update tag into docktor
 func (s *Tags) Save(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	id := c.Param("id")
 
 	var tag types.Tag
@@ -56,7 +56,7 @@ func (s *Tags) Save(c echo.Context) error {
 //Delete tag into docktor
 func (s *Tags) Delete(c echo.Context) error {
 
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	id := c.Param("id")
 
 	collections := []types.UseTags{

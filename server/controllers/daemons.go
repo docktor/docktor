@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
-	"github.com/soprasteria/docktor/model/types"
 	"github.com/soprasteria/docktor/server/daemons"
+	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/redisw"
+	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -18,7 +18,7 @@ type Daemons struct {
 
 //GetAll daemons from docktor
 func (d *Daemons) GetAll(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	daemons, err := docktorAPI.Daemons().FindAll()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error while retreiving all daemons")
@@ -28,7 +28,7 @@ func (d *Daemons) GetAll(c echo.Context) error {
 
 //Save daemon into docktor
 func (d *Daemons) Save(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	var daemon types.Daemon
 	err := c.Bind(&daemon)
 
@@ -50,7 +50,7 @@ func (d *Daemons) Save(c echo.Context) error {
 
 //Delete daemon into docktor
 func (d *Daemons) Delete(c echo.Context) error {
-	docktorAPI := c.Get("api").(*api.Docktor)
+	docktorAPI := c.Get("api").(*models.Docktor)
 	id := c.Param("daemonID")
 	res, err := docktorAPI.Daemons().Delete(bson.ObjectIdHex(id))
 	if err != nil {

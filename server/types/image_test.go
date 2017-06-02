@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/types"
 
 	"gopkg.in/mgo.v2/bson"
 )

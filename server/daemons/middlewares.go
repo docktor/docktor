@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	api "github.com/soprasteria/docktor/model"
+	"github.com/soprasteria/docktor/server/models"
 )
 
 // RetrieveDaemon find daemon using id param and put it in echo.Context
 func RetrieveDaemon(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		docktorAPI := c.Get("api").(*api.Docktor)
+		docktorAPI := c.Get("api").(*models.Docktor)
 		daemonID := c.Param("daemonID")
 		if daemonID == "" {
 			return c.String(http.StatusBadRequest, DaemonInvalidID)

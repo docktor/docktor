@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/soprasteria/docktor/model/types"
+	"github.com/soprasteria/docktor/server/types"
 	"github.com/soprasteria/docktor/server/auth"
 	"github.com/soprasteria/docktor/server/controllers"
 	"github.com/soprasteria/docktor/server/daemons"
