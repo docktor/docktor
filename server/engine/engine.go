@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"context"
 	"fmt"
 
 	"errors"
@@ -12,6 +11,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// A concurrent map containing running engines, i.e. the ones that are currently in a transition
+// key: unique id of the deployable entity
+// value: simple bool
+var runningEngines = cmap.New()
+
+// CallbackEvent represents a callback of an event
 type CallbackEvent interface {
 	Name() string
 }
@@ -24,40 +29,56 @@ func after(c CallbackEvent) string {
 	return "after_" + c.Name()
 }
 
+// DeployableEntity is something that can deployed by Docktor
+// For example a container, a stack and so on.
 type DeployableEntity interface {
+	// GetInitialState returns the current state of the given entity. The engine needs this to know what is the initial state of the deployement
 	GetInitialState() State
+	// ID returns the unique ID of the deployable entity
 	ID() string
+	// Name returns a name
 	Name() string
-	Install(cancellingContext context.Context) error
+	// Install will install the entity (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	Install(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Start will start the entity (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// StoreMessage store the log in database
+	StoreMessage(message NotificationMessage) error
 }
 
-type EngineContext struct {
-	id               uuid.UUID
-	deployableEntity DeployableEntity // Can be a container, a stack and so on
-	cancelling       struct {
-		cancelTransition context.CancelFunc
-		ctx              context.Context
-	}
+// Abortable is channel handling aborting things
+type Abortable chan struct{}
+
+// Abort sends an abort signal. This signal has to be consumed for this function to return
+func (a Abortable) Abort() {
+	a <- struct{}{}
 }
 
-func (ec EngineContext) String() string {
+// Context is the context used in an Docktor engine
+type Context struct {
+	id               uuid.UUID        // Unique ID of the engine
+	deployableEntity DeployableEntity // Can be a container, a stack and so on. It contains data needed to deploy it
+	abortEngine      Abortable        // Channel used to handle abort. One message on this channel will abort the current transition
+	notifBus         NotificationBus  // A notification bus. Every transition will eventually push messages in this channel
+}
+
+func (ec Context) String() string {
 	return fmt.Sprintf("{ id:%s entity_id:%v entity_name:%v }", ec.id, ec.deployableEntity.ID(), ec.deployableEntity.Name())
 }
 
+// Engine defines the final state machine used to deploy entity like containers, stacks and so on.
+// It contains all possible transition from state to state and manages
 type Engine struct {
-	EngineContext
+	Context
 	stateMachine *fsm.FSM
 }
-
-// A concurrent map containing running engines, i.e. the ones that are currently in a transition
-// key: unique id of the deployable entity
-// value: simple bool
-var runningEngines = cmap.New()
 
 // NewEngine creates a new engine to manage transitions of a deployable entity
 // A deployable entity is something that can be deployed/stop/start, like a container or a stack
 // It manages the lifecycle with transition that can be run with the Run function
-func NewEngine(deployableEntity DeployableEntity) *Engine {
+func NewEngine(deployableEntity DeployableEntity, notifBus NotificationBus) *Engine {
 	stateMachine := fsm.NewFSM(
 		deployableEntity.GetInitialState().Name(),
 		fsm.Events{
@@ -112,9 +133,7 @@ func NewEngine(deployableEntity DeployableEntity) *Engine {
 					e.Err = err
 					return
 				}
-				cancelCtx, cancel := context.WithCancel(context.Background())
-				ctx.cancelling.ctx = cancelCtx
-				ctx.cancelling.cancelTransition = cancel
+				ctx.abortEngine = make(chan struct{})
 				runningEngines.Set(ctx.deployableEntity.ID(), ctx.id.String())
 			},
 			"after_event": func(e *fsm.Event) {
@@ -124,7 +143,9 @@ func NewEngine(deployableEntity DeployableEntity) *Engine {
 					e.Err = err
 					return
 				}
-				ctx.cancelling.cancelTransition() // Release resources if transition completes without a cancel
+				if ctx.abortEngine != nil {
+					close(ctx.abortEngine) // Release resources if transition completes without a cancel
+				}
 				runningEngines.Remove(ctx.deployableEntity.ID())
 			},
 			after(TransitionInstall): func(e *fsm.Event) {
@@ -161,7 +182,11 @@ func NewEngine(deployableEntity DeployableEntity) *Engine {
 					e.Err = err
 					return
 				}
-				start(e, ctx)
+				err = start(e, ctx)
+				if err != nil {
+					e.Err = err
+					return
+				}
 			},
 			after(TransitionStop): func(e *fsm.Event) {
 				ctx, err := getEventContext(e)
@@ -192,15 +217,16 @@ func NewEngine(deployableEntity DeployableEntity) *Engine {
 
 	return &Engine{
 		stateMachine: stateMachine,
-		EngineContext: EngineContext{
+		Context: Context{
 			id:               uuid.NewV4(),
 			deployableEntity: deployableEntity,
+			notifBus:         notifBus,
 		},
 	}
 }
 
 // getEventContext get the typed engine context from untyped one
-func getEventContext(e *fsm.Event) (*EngineContext, error) {
+func getEventContext(e *fsm.Event) (*Context, error) {
 
 	if e == nil {
 		return nil, errors.New("Unable to get engine context from event because event is nil")
@@ -213,8 +239,10 @@ func getEventContext(e *fsm.Event) (*EngineContext, error) {
 	return getContext(e.Args[0])
 }
 
-func getContext(c interface{}) (*EngineContext, error) {
-	ctx, ok := c.(*EngineContext)
+// getContext returns the interface as *EngineContext
+// Returns error if interface is not of the right type
+func getContext(c interface{}) (*Context, error) {
+	ctx, ok := c.(*Context)
 	if !ok {
 		return nil, fmt.Errorf("Unable to get engine context because it's not of right type. Expected *engine.EngineContext, obtained %T", c)
 	}
@@ -223,11 +251,15 @@ func getContext(c interface{}) (*EngineContext, error) {
 
 // Run launches the given transition on state machine for a given deployable entity.
 func (e *Engine) Run(transition Transition) error {
+	if e.notifBus == nil {
+		return errors.New("Notification bus should exist in engine context")
+	}
 	if _, ok := runningEngines.Get(e.deployableEntity.ID()); ok {
 		return fmt.Errorf("Unable to make transition because another one is already running for given deployable entity")
 	}
+
 	// Send event on state machine
-	return e.stateMachine.Event(transition.Name(), &e.EngineContext)
+	return e.stateMachine.Event(transition.Name(), &e.Context)
 }
 
 // CurrentState gets the current state of the machine
@@ -237,5 +269,13 @@ func (e *Engine) CurrentState() (State, error) {
 
 // Cancel cancels transition
 func (e *Engine) Cancel() {
-	e.cancelling.cancelTransition()
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("Transition is already finished: %v", r)
+		}
+	}()
+	if e.abortEngine != nil {
+		// Send signal to engine that the transition has to cancel
+		e.abortEngine.Abort()
+	}
 }

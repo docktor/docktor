@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"reflect"
@@ -11,10 +12,14 @@ import (
 )
 
 const (
-	processok = "PROCESS:OK"
-	processko = "PROCESS:KO"
-	rewindok  = "REWIND :OK"
-	rewindko  = "REWIND :KO"
+	processInProgress = "Process: In progress..."
+	processok         = "Process: ===== OK ====="
+	processko         = "Process: ===== KO ====="
+	processaborted    = "Process: == Aborted ==="
+	rewindInProgress  = "Rewind : In progress..."
+	rewindok          = "Rewind : ===== OK ====="
+	rewindko          = "Rewind : ===== KO ====="
+	rewindaborted     = "Reweind: == Aborted ==="
 )
 
 // ChainEngine allows to chain "up" steps
@@ -26,8 +31,39 @@ type ChainEngine struct {
 	workflows map[string]chainStep
 }
 
+// ErrOperationAborted is an error when an operation has been aborted
+// It can be an cancelled error, and timeout error and so on
+type ErrOperationAborted struct {
+	typ    string // Process, rewind
+	reason string // Cancelling, Timeout and so on
+}
+
+func (err *ErrOperationAborted) Error() string {
+	if err.reason != "" && err.typ != "" {
+		return fmt.Sprintf("%v operation has been aborted because %v", err.typ, err.reason)
+	}
+	if err.reason != "" {
+		return fmt.Sprintf("Operation has been aborted because %v", err.reason)
+	}
+	if err.typ != "" {
+		return fmt.Sprintf("%v operation has been aborted", err.typ)
+	}
+	return "Operation has been aborted"
+}
+
+func isAborted(err error) bool {
+	if err == nil {
+		return false
+	}
+	switch err.(type) {
+	case *ErrOperationAborted:
+		return true
+	}
+	return false
+}
+
 // Operate is a function run in upstream or downstream process, such as a forward or a rollback action
-type Operate func(*ChainerContext) (string, error)
+type Operate func(abortContext context.Context, ctx *ChainerContext) (string, error)
 
 // Step defines a step in a list of chained processes
 // It has to define a up and a down function. The classical use is a a chain of traitement that can rollback
@@ -56,7 +92,17 @@ type Operation struct {
 
 // ChainerContext defines all Data that could be used or modified across the steps
 type ChainerContext struct {
-	Data map[string]interface{}
+	Data             map[string]interface{} // Data shared between steps
+	AbortEngine      chan struct{}          // A message to this channel will abort the step
+	DeployableEntity DeployableEntity       // the entity that contains data needed for actions (e.g. container)
+	notifBus         NotificationBus        // A bus used to send notifications
+}
+
+// a simple result composed of a message and an error, both optional
+// It's used to send result to a channel
+type channelResult struct {
+	message string
+	err     error
 }
 
 // NewChainEngine initialises an Engine
@@ -113,9 +159,13 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 		//Up. Stops when an error occurs
 		for i, s := range w.Steps {
 			if s.Up != nil {
-				message, err := s.Up(c)
+				message, err := doOperate(s.Up, c)
 				if err != nil {
-					upOp.Errors <- stepErrorf(s.Up, processko, "%v", err)
+					var status = processko
+					if isAborted(err) {
+						status = processaborted
+					}
+					upOp.Errors <- stepErrorf(s.Up, status, "%v", err)
 					iStep = i
 					errorHappened = true
 					break
@@ -129,9 +179,13 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 			for i := iStep - 1; i >= 0; i-- {
 				s := w.Steps[i]
 				if s.Down != nil {
-					message, err := s.Down(c)
+					message, err := doOperate(s.Down, c)
 					if err != nil {
-						downOp.Errors <- stepErrorf(s.Down, rewindko, "%v", err)
+						var status = processko
+						if isAborted(err) {
+							status = processaborted
+						}
+						downOp.Errors <- stepErrorf(s.Down, status, "%v", err)
 					} else {
 						downOp.Status <- stepSWarnf(s.Down, rewindok, "%v", message)
 					}
@@ -148,6 +202,75 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 	close(downOp.Errors)
 	close(downOp.Status)
 	done <- true
+}
+
+// doOperate execute the operate with the context of execution
+// It creates an abort cancel policy that is triggered when the AbortEngine channel receives a message
+// Only the current step will be canceled when signal is received
+func doOperate(op Operate, ctx *ChainerContext) (string, error) {
+
+	if ctx.AbortEngine == nil {
+		return op(nil, ctx)
+	}
+
+	c := make(chan channelResult, 1)
+	ctxCancelStep, cancelStep := context.WithCancel(context.Background())
+	defer cancelStep() // Release resources
+
+	// Run the abortable operation
+	// And wait for its termination or a abort signal
+	go func() {
+		msg, err := execAbortableOperate(ctxCancelStep, op, ctx)
+		c <- channelResult{message: msg, err: err}
+	}()
+	select {
+	case <-ctx.AbortEngine:
+		cancelStep() // Send signal to Operate that the operation has te be cancelled
+		res := <-c   // Wait for Operate to return.
+		var reason = res.message
+		if res.err != nil {
+			reason = res.err.Error()
+		}
+		return "", &ErrOperationAborted{
+			typ:    getBaseNameFunction(op),
+			reason: reason,
+		}
+	case res := <-c:
+		// When nothing is cancel, operate ended successfully without abortinghe result is returned as is.
+		return res.message, res.err
+	}
+}
+
+// execAbortableOperate is executing operate function, by handling abort context automatically
+// As a consequence, Operate implementation does not need to handle aborting, except if it has to do something particular with it
+// Basically, Operate implementation just need to pass the abort context through its third party calls and handle the eventual errors
+func execAbortableOperate(abortCtx context.Context, op Operate, ctx *ChainerContext) (string, error) {
+
+	if abortCtx == nil {
+		return op(nil, ctx)
+	}
+
+	c := make(chan channelResult, 1)
+	go func() {
+		msg, err := op(abortCtx, ctx)
+		c <- channelResult{message: msg, err: err}
+	}()
+
+	select {
+	case <-abortCtx.Done():
+		res := <-c // Wait for operate to return.
+		if res.err != nil {
+			return "", res.err
+		}
+		return "", errors.New(res.message)
+	case res := <-c:
+		return res.message, res.err
+	}
+}
+
+func stepSInfof(s interface{}, status string, message string, interfaces ...interface{}) string {
+	blue := color.New(color.FgBlue).SprintFunc()
+	return fmt.Sprintf("[%v] %-45v > %v", blue(status), getBaseNameFunction(s), fmt.Sprintf(message, interfaces...))
 }
 
 // StepSWarnf prints a message prefixed by the step
@@ -179,6 +302,10 @@ func getBaseNameFunction(i interface{}) string {
 	var basename string
 	if len(partOfFunction) > 0 {
 		basename = partOfFunction[len(partOfFunction)-1]
+		partOfFunction = strings.Split(basename, ")")
+		if len(partOfFunction) > 0 {
+			return partOfFunction[0]
+		}
 	}
-	return basename
+	return ""
 }
