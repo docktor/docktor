@@ -7,9 +7,9 @@ client/dist/
 docktor
 docktor-*
 bower_components/
-.vscode/
 vendor/*/
 debug
 logs/
 .DS_Store
 *.coverprofile
+debug

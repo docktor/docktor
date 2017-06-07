@@ -96,6 +96,28 @@ npm start
 
 You can then browse Docktor at [http://localhost:8080/](http://localhost:8080/)
 
+## Debug
+
+It's possible to debug the docktor server using vscode and delve.
+In order to do that, just:
+
+* Install delve
+
+```shell
+go get github.com/derekparker/delve/cmd/dlv
+```
+
+* launch the client side in a terminal
+
+```shell
+npm run client:start
+```
+
+* use the vscode debugger with the 'Debug Package' profile which was commited
+
+Be careful, new endpoints will not be taken account until you restart the debugger
+
+
 ## Production
 
 You can generate the binaries with:

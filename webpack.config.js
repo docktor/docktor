@@ -57,7 +57,7 @@ if (production) {
 module.exports = {
   devtool: 'source-map',
   devServer: {
-    open: true,
+    open: false,
     port: developmentPort,
     headers: {
       'Access-Control-Allow-Origin': '*'

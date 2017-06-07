@@ -28,6 +28,7 @@ const isFetching = (state = false, action) => {
     case AuthConstants.CHANGE_PASSWORD_SUCCESS:
     case AuthConstants.CHANGE_PASSWORD_INVALID_REQUEST:
     case AuthConstants.CHANGE_PASSWORD_NOT_AUTHORIZED:
+    case UsersConstants.USER_SAVED:
       return false;
     default:
       return state;
