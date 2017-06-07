@@ -74,6 +74,10 @@ func (mock MockTransitionDeployableEntity) Start(previous State) (transitionEngi
 	return nil, nil, nil
 }
 
+func (mock MockTransitionDeployableEntity) Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	return nil, nil, nil
+}
+
 func (mock MockTransitionDeployableEntity) StoreMessage(message NotificationMessage) error {
 	switch message.Level {
 	case "info":

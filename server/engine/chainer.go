@@ -52,9 +52,6 @@ func (err *ErrOperationAborted) Error() string {
 }
 
 func isAborted(err error) bool {
-	if err == nil {
-		return false
-	}
 	switch err.(type) {
 	case *ErrOperationAborted:
 		return true
@@ -130,11 +127,11 @@ func (m *ChainEngine) Add(p string, steps ...Step) error {
 
 // Remove removes the named engine workflow
 func (m *ChainEngine) Remove(p string) error {
-	if p == "" {
-		return errors.New("Workflow's name is empty")
-	}
 	cs, ok := m.workflows[p]
-	if ok && cs.running {
+	if !ok {
+		return nil
+	}
+	if cs.running {
 		return fmt.Errorf("Can't remove workflow %v while it's running", p)
 	}
 	delete(m.workflows, p)
@@ -148,60 +145,67 @@ func (m *ChainEngine) Remove(p string) error {
 // - Error channel gives all the errors along the way until it closes
 // - Status channel gives all the message status along the way
 func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Operation, done chan bool) {
+
+	defer func() {
+		close(upOp.Errors)
+		close(upOp.Status)
+		close(downOp.Errors)
+		close(downOp.Status)
+		done <- true
+	}()
+
 	w, ok := m.workflows[p]
-	if ok {
-		var (
-			iStep         int
-			errorHappened bool
-		)
-		w.running = true
+	if !ok {
+		upOp.Errors <- fmt.Errorf("Workflow named %v does not exist", p)
+		return
+	}
+
+	w.running = true
+	m.workflows[p] = w
+	defer func() {
+		w.running = false
 		m.workflows[p] = w
-		//Up. Stops when an error occurs
-		for i, s := range w.Steps {
-			if s.Up != nil {
-				message, err := doOperate(s.Up, c)
+	}()
+
+	var iStep int
+	var errorHappened bool
+	//Up. Stops when an error occurs
+	for i, s := range w.Steps {
+		if s.Up != nil {
+			message, err := doOperate(s.Up, c)
+			if err != nil {
+				var status = processko
+				if isAborted(err) {
+					status = processaborted
+				}
+				upOp.Errors <- stepErrorf(s.Up, status, "%v", err)
+				iStep = i
+				errorHappened = true
+				break
+			} else {
+				upOp.Status <- stepSPrintf(s.Up, processok, "%v", message)
+			}
+		}
+	}
+	//Down, Continues even when errors occurs, but store them.
+	if errorHappened {
+		for i := iStep - 1; i >= 0; i-- {
+			s := w.Steps[i]
+			if s.Down != nil {
+				message, err := doOperate(s.Down, c)
 				if err != nil {
 					var status = processko
 					if isAborted(err) {
 						status = processaborted
 					}
-					upOp.Errors <- stepErrorf(s.Up, status, "%v", err)
-					iStep = i
-					errorHappened = true
-					break
+					downOp.Errors <- stepErrorf(s.Down, status, "%v", err)
 				} else {
-					upOp.Status <- stepSPrintf(s.Up, processok, "%v", message)
+					downOp.Status <- stepSWarnf(s.Down, rewindok, "%v", message)
 				}
 			}
 		}
-		//Down, Continues even when errors occurs, but store them.
-		if errorHappened {
-			for i := iStep - 1; i >= 0; i-- {
-				s := w.Steps[i]
-				if s.Down != nil {
-					message, err := doOperate(s.Down, c)
-					if err != nil {
-						var status = processko
-						if isAborted(err) {
-							status = processaborted
-						}
-						downOp.Errors <- stepErrorf(s.Down, status, "%v", err)
-					} else {
-						downOp.Status <- stepSWarnf(s.Down, rewindok, "%v", message)
-					}
-				}
-			}
-		}
-		w.running = false
-		m.workflows[p] = w
-	} else {
-		upOp.Errors <- fmt.Errorf("Workflow named %v does not exist", p)
 	}
-	close(upOp.Errors)
-	close(upOp.Status)
-	close(downOp.Errors)
-	close(downOp.Status)
-	done <- true
+
 }
 
 // doOperate execute the operate with the context of execution

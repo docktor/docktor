@@ -247,9 +247,9 @@ func TestChainerEngineRemoveWorkflow(t *testing.T) {
 			)
 			Convey("When I try to remove an empty workflow", func() {
 				err := chainer.Remove("")
-				Convey("Then I get an error telling the workflow is empty", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldContainSubstring, "is empty")
+				Convey("Then the result is not in error, and the existing workflow is still here", func() {
+					So(err, ShouldBeNil)
+					So(chainer.workflows, ShouldHaveLength, 1)
 				})
 			})
 			Convey("When I try to remove a workflow that does not exists", func() {

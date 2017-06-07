@@ -36,7 +36,7 @@ const (
 
 // doTransition runs the transition process with the chainer engine
 // It handles asynchronous returns from chainer engine
-func doTransition(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error {
+func doTransition(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error { // nolint: gocyclo
 
 	processing := Operation{
 		Errors: make(chan error),
@@ -119,19 +119,21 @@ func install(e *fsm.Event, ctx *Context) error {
 	return doTransition(ctx, engine, transitionContext)
 }
 
-func uninstall(e *fsm.Event, ctx *Context) {
+func uninstall(e *fsm.Event, ctx *Context) error {
 	// TODO switch on previous state
 	log.WithField("ctx", ctx).Debug("docker stop")
 	log.WithField("ctx", ctx).Debug("docker remove")
+	return nil
 }
 
-func reinstall(e *fsm.Event, ctx *Context) {
+func reinstall(e *fsm.Event, ctx *Context) error {
 	// TODO switch on previous state
 	log.WithField("ctx", ctx).Debug("docker stop")
 	log.WithField("ctx", ctx).Debug("docker remove")
 	log.WithField("ctx", ctx).Debug("docker pull")
 	log.WithField("ctx", ctx).Debug("docker create")
 	log.WithField("ctx", ctx).Debug("docker start")
+	return nil
 }
 
 func start(e *fsm.Event, ctx *Context) error {
@@ -143,25 +145,33 @@ func start(e *fsm.Event, ctx *Context) error {
 	if err != nil {
 		return err
 	}
-	if transitionContext.AbortEngine == nil {
-		transitionContext.AbortEngine = ctx.abortEngine
+
+	return doTransition(ctx, engine, transitionContext)
+}
+
+func stop(e *fsm.Event, ctx *Context) error {
+	// TODO switch on previous state
+	previous, err := getState(e.Src)
+	if err != nil {
+		log.WithError(err).Error("Unable to get previous state")
+	}
+	engine, transitionContext, err := ctx.deployableEntity.Stop(previous)
+	if err != nil {
+		return err
 	}
 
 	return doTransition(ctx, engine, transitionContext)
 }
 
-func stop(e *fsm.Event, ctx *Context) {
-	// TODO switch on previous state
-	log.WithField("ctx", ctx).Debug("docker start")
-}
-
-func restart(e *fsm.Event, ctx *Context) {
+func restart(e *fsm.Event, ctx *Context) error {
 	// TODO switch on previous state
 	log.WithField("ctx", ctx).Debug("docker stop")
 	log.WithField("ctx", ctx).Debug("docker start")
+	return nil
 }
 
-func remove(e *fsm.Event, ctx *Context) {
+func remove(e *fsm.Event, ctx *Context) error {
 	// TODO switch on previous state
 	log.WithField("ctx", ctx).Debug("delete on mongo")
+	return nil
 }

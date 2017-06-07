@@ -1,7 +1,9 @@
 package engine
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"errors"
 
@@ -9,6 +11,7 @@ import (
 	"github.com/looplab/fsm"
 	"github.com/orcaman/concurrent-map"
 	uuid "github.com/satori/go.uuid"
+	"github.com/spf13/viper"
 )
 
 // A concurrent map containing running engines, i.e. the ones that are currently in a transition
@@ -44,6 +47,9 @@ type DeployableEntity interface {
 	// Start will start the entity (e.g. container)
 	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
 	Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Stop will stop the entity (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// StoreMessage store the log in database
 	StoreMessage(message NotificationMessage) error
 }
@@ -72,148 +78,103 @@ func (ec Context) String() string {
 // It contains all possible transition from state to state and manages
 type Engine struct {
 	Context
-	stateMachine *fsm.FSM
+	stateMachine      *fsm.FSM
+	transitionTimeout time.Duration
+}
+
+// Events defines all possible transitions for a deployable entity
+var events = fsm.Events{
+	{
+		Name: TransitionInstall.Name(),
+		Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateStarted.Name(),
+	},
+	{
+		Name: TransitionUninstall.Name(),
+		Src:  []string{StateCreated.Name(), StateStarted.Name(), StateStopped.Name()},
+		Dst:  StateCreated.Name(),
+	},
+	{
+		Name: TransitionReinstall.Name(),
+		Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateStarted.Name(),
+	},
+	{
+		Name: TransitionStart.Name(),
+		Src:  []string{StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateStarted.Name(),
+	},
+	{
+		Name: TransitionStop.Name(),
+		Src:  []string{StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateStopped.Name(),
+	},
+	{
+		Name: TransitionRestart.Name(),
+		Src:  []string{StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateStarted.Name(),
+	},
+	{
+		Name: TransitionRemove.Name(),
+		Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
+		Dst:  StateInitial.Name(),
+	},
+}
+
+// callbacks defines handlers, called when arriving/leavin a state/transition
+var callbacks = fsm.Callbacks{
+	"enter_state": func(e *fsm.Event) {
+		log.WithFields(log.Fields{
+			"event":     e.Event,
+			"old_state": e.Src,
+			"new_state": e.Dst,
+		}).Debug("Docktor Engine - entering state")
+	},
+	after(TransitionInstall): func(e *fsm.Event) {
+		doAction(e, install)
+	},
+	after(TransitionUninstall): func(e *fsm.Event) {
+		doAction(e, uninstall)
+	},
+	after(TransitionReinstall): func(e *fsm.Event) {
+		doAction(e, reinstall)
+	},
+	after(TransitionStart): func(e *fsm.Event) {
+		doAction(e, start)
+	},
+	after(TransitionStop): func(e *fsm.Event) {
+		doAction(e, stop)
+	},
+	after(TransitionRestart): func(e *fsm.Event) {
+		doAction(e, restart)
+	},
+	after(TransitionRemove): func(e *fsm.Event) {
+		doAction(e, remove)
+	},
+}
+
+// doAction runs the given action from an fsm event
+func doAction(e *fsm.Event, action func(e *fsm.Event, ctx *Context) error) {
+	// it wraps the cast of the context, stored in the event
+	ctx, err := getEventContext(e)
+	if err != nil {
+		e.Err = err
+		return
+	}
+	e.Err = action(e, ctx)
 }
 
 // NewEngine creates a new engine to manage transitions of a deployable entity
 // A deployable entity is something that can be deployed/stop/start, like a container or a stack
 // It manages the lifecycle with transition that can be run with the Run function
 func NewEngine(deployableEntity DeployableEntity, notifBus NotificationBus) *Engine {
-	stateMachine := fsm.NewFSM(
-		deployableEntity.GetInitialState().Name(),
-		fsm.Events{
-			{
-				Name: TransitionInstall.Name(),
-				Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateStarted.Name(),
-			},
-			{
-				Name: TransitionUninstall.Name(),
-				Src:  []string{StateCreated.Name(), StateStarted.Name(), StateStopped.Name()},
-				Dst:  StateCreated.Name(),
-			},
-			{
-				Name: TransitionReinstall.Name(),
-				Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateStarted.Name(),
-			},
-			{
-				Name: TransitionStart.Name(),
-				Src:  []string{StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateStarted.Name(),
-			},
-			{
-				Name: TransitionStop.Name(),
-				Src:  []string{StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateStopped.Name(),
-			},
-			{
-				Name: TransitionRestart.Name(),
-				Src:  []string{StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateStarted.Name(),
-			},
-			{
-				Name: TransitionRemove.Name(),
-				Src:  []string{StateInitial.Name(), StateCreated.Name(), StateStopped.Name(), StateStarted.Name()},
-				Dst:  StateInitial.Name(),
-			},
-		},
-		fsm.Callbacks{
-			"enter_state": func(e *fsm.Event) {
-				log.WithFields(log.Fields{
-					"event":     e.Event,
-					"old_state": e.Src,
-					"new_state": e.Dst,
-				}).Debug("Docktor Engine - entering state")
-			},
-			"before_event": func(e *fsm.Event) {
-				// Before every event
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				ctx.abortEngine = make(chan struct{})
-				runningEngines.Set(ctx.deployableEntity.ID(), ctx.id.String())
-			},
-			"after_event": func(e *fsm.Event) {
-				// After every event
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				if ctx.abortEngine != nil {
-					close(ctx.abortEngine) // Release resources if transition completes without a cancel
-				}
-				runningEngines.Remove(ctx.deployableEntity.ID())
-			},
-			after(TransitionInstall): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				err = install(e, ctx)
-				if err != nil {
-					e.Err = err
-					return
-				}
-			},
-			after(TransitionUninstall): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				uninstall(e, ctx)
-			},
-			after(TransitionReinstall): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				reinstall(e, ctx)
-			},
-			after(TransitionStart): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				err = start(e, ctx)
-				if err != nil {
-					e.Err = err
-					return
-				}
-			},
-			after(TransitionStop): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				stop(e, ctx)
-			},
-			after(TransitionRestart): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				restart(e, ctx)
-			},
-			after(TransitionRemove): func(e *fsm.Event) {
-				ctx, err := getEventContext(e)
-				if err != nil {
-					e.Err = err
-					return
-				}
-				remove(e, ctx)
-			},
-		},
-	)
+
+	stateMachine := fsm.NewFSM(deployableEntity.GetInitialState().Name(), events, callbacks)
+
+	timeout := viper.GetDuration("engine-transitiontimeout")
+	if timeout <= 0 {
+		timeout = 2 * time.Hour
+	}
 
 	return &Engine{
 		stateMachine: stateMachine,
@@ -222,6 +183,7 @@ func NewEngine(deployableEntity DeployableEntity, notifBus NotificationBus) *Eng
 			deployableEntity: deployableEntity,
 			notifBus:         notifBus,
 		},
+		transitionTimeout: timeout,
 	}
 }
 
@@ -236,21 +198,17 @@ func getEventContext(e *fsm.Event) (*Context, error) {
 		return nil, errors.New("Unable to get engine context from event because no event arguments has been found")
 	}
 
-	return getContext(e.Args[0])
-}
-
-// getContext returns the interface as *EngineContext
-// Returns error if interface is not of the right type
-func getContext(c interface{}) (*Context, error) {
-	ctx, ok := c.(*Context)
+	ctx, ok := e.Args[0].(*Context)
 	if !ok {
-		return nil, fmt.Errorf("Unable to get engine context because it's not of right type. Expected *engine.EngineContext, obtained %T", c)
+		return nil, fmt.Errorf("Unable to get engine context because it's not of right type. Expected *engine.Context, obtained %T", e.Args[0])
 	}
+
 	return ctx, nil
 }
 
 // Run launches the given transition on state machine for a given deployable entity.
 func (e *Engine) Run(transition Transition) error {
+
 	if e.notifBus == nil {
 		return errors.New("Notification bus should exist in engine context")
 	}
@@ -258,8 +216,31 @@ func (e *Engine) Run(transition Transition) error {
 		return fmt.Errorf("Unable to make transition because another one is already running for given deployable entity")
 	}
 
-	// Send event on state machine
-	return e.stateMachine.Event(transition.Name(), &e.Context)
+	// Initialise the abort engine for this transition
+	e.abortEngine = make(chan struct{})
+	defer close(e.abortEngine) // Release resources if transition completes without a cancel
+
+	// Tells Docktor that this deployable entity is currently running in a transition
+	runningEngines.Set(e.deployableEntity.ID(), e.id.String())
+	defer runningEngines.Remove(e.deployableEntity.ID())
+
+	// With context.WithTimeout, the transition is automatically canceled when timeout has reached
+	ctx, cancel := context.WithTimeout(context.Background(), e.transitionTimeout)
+	defer cancel() // Force the cancel even when transition has timed out or not
+
+	c := make(chan error, 1)
+	go func() {
+		c <- e.stateMachine.Event(transition.Name(), &e.Context)
+	}()
+
+	select {
+	case <-ctx.Done():
+		e.abortEngine.Abort() // Sending the signal to engine that the transition has to stop
+		<-c
+		return fmt.Errorf("Transition has been canceled because it has reached the timeout of %s", e.transitionTimeout.String())
+	case err := <-c:
+		return err
+	}
 }
 
 // CurrentState gets the current state of the machine

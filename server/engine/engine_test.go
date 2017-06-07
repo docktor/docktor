@@ -6,8 +6,11 @@ import (
 	"sync"
 	"testing"
 
+	"time"
+
 	log "github.com/sirupsen/logrus"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/spf13/viper"
 )
 
 type MockDeployableEntity struct {
@@ -16,6 +19,7 @@ type MockDeployableEntity struct {
 	To               chan string // Channel used to synchronise behavior of two concurrent transitions
 	From             chan string // Channel used to synchronise behavior of two concurrent transitions
 	WaitingForCancel chan string
+	WaitingALongTime bool
 }
 
 func NewMockDeployableEntity(name string) MockDeployableEntity {
@@ -37,6 +41,9 @@ func NewMockConcurrentDeployableEntity(name string, to, from chan string) MockDe
 func (mock MockDeployableEntity) GetInitialState() State {
 	if mock.WaitingForCancel != nil {
 		return StateStopped
+	}
+	if mock.WaitingALongTime {
+		return StateStarted
 	}
 	return StateInitial
 }
@@ -67,6 +74,25 @@ func (mock MockDeployableEntity) upStep(abortContext context.Context, ctx *Chain
 
 func (mock MockDeployableEntity) upStepOK(abortContext context.Context, ctx *ChainerContext) (string, error) {
 	return "Forward test OK", nil
+}
+
+func (mock MockDeployableEntity) upStepWaitingALongTime(abortContext context.Context, ctx *ChainerContext) (string, error) {
+	do := func() channelResult {
+		time.Sleep(1 * time.Minute)
+		return channelResult{message: "Done"}
+	}
+
+	channel := make(chan channelResult, 1)
+	go func() {
+		channel <- do()
+	}()
+
+	select {
+	case <-abortContext.Done():
+		return "", fmt.Errorf("Down step cancelled")
+	case res := <-channel:
+		return res.message, nil
+	}
 }
 
 func (mock MockDeployableEntity) upStepAbort(abortContext context.Context, ctx *ChainerContext) (string, error) {
@@ -115,6 +141,21 @@ func (mock MockDeployableEntity) Start(previous State) (transitionEngine *ChainE
 		mock.ID(),
 		Step{Up: mock.upStepOK, Down: mock.downStep},
 		Step{Up: mock.upStepAbort, Down: mock.downStep},
+		Step{Up: mock.upStepOK, Down: mock.downStep},
+	)
+
+	return engine, context, nil
+}
+
+func (mock MockDeployableEntity) Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	engine := NewChainEngine()
+	context := &ChainerContext{
+		Data: map[string]interface{}{},
+	}
+	engine.Add(
+		mock.ID(),
+		Step{Up: mock.upStepOK, Down: mock.downStep},
+		Step{Up: mock.upStepWaitingALongTime, Down: mock.downStep},
 		Step{Up: mock.upStepOK, Down: mock.downStep},
 	)
 
@@ -273,6 +314,41 @@ func TestEngineCancellingRunningTransitions(t *testing.T) {
 
 				Convey("Then all transitions should be done", func() {
 					So(runningEngines.Items(), ShouldBeEmpty)
+				})
+			})
+		})
+	})
+}
+
+func TestEngineTimeoutRunningTransitions(t *testing.T) {
+	Convey("On a Docktor engine", t, func() {
+		Convey("Given a running transition on a deployable entity", func() {
+
+			viper.Set("engine-transitiontimeout", "1s") // transition should timeout at 1s
+
+			var (
+				notifs = make(NotificationBus)
+			)
+			defer func() {
+				close(notifs)
+			}()
+			go func() {
+				for msg := range notifs {
+					t.Log(msg)
+				}
+			}()
+
+			deployableEntity := NewMockDeployableEntity("test")
+			deployableEntity.WaitingALongTime = true
+
+			engine := NewEngine(deployableEntity, notifs)
+			errEngine := engine.Run(TransitionStop)
+
+			Convey("When the transition is too long", func() {
+
+				Convey("Then the transition should timeout", func() {
+					So(errEngine, ShouldNotBeNil)
+					So(errEngine.Error(), ShouldContainSubstring, "has reached the timeout")
 				})
 			})
 		})
