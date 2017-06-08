@@ -51,7 +51,7 @@ class Tags extends React.Component {
               onChange={(event) => onChangeFilter(event.target.value)}
               value={filterValue}
             />
-            <Icon link name='remove' onClick={() => changeFilter('')}/>
+            <Icon link name='remove' onClick={() => onChangeFilter('')}/>
           </Input>
           <div className='flex-2 layout horizontal end-justified'>
             <Button color='teal' content='New Tags' labelPosition='left' icon='plus'

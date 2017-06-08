@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
@@ -64,7 +65,8 @@ LoginP.propTypes = {
 const mapStateToLoginPageProps = (state) => {
   const { auth } = state;
   const { isAuthenticated, errorMessage, isFetching } = auth;
-  const redirectTo = state.routing.locationBeforeTransitions.query.next || '/';
+  const query = queryString.parse(state.routing.location.search);
+  const redirectTo = query.next || '/';
   return {
     isAuthenticated,
     errorMessage,

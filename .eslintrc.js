@@ -59,6 +59,7 @@ module.exports = {
     "comma-spacing": 1,
     "space-before-blocks": [1, "always"],
     "space-infix-ops": ["error", {int32Hint: false}],
+    "no-undef": [2],
     "no-unused-vars": [2, {"args": "all", "vars": "all", argsIgnorePattern: "^_", varsIgnorePattern: "^_"}],
     "jsx-quotes": [2, "prefer-single"],
     "react/jsx-curly-spacing": [2, "never"],

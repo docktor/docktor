@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Card, Icon, Image, Dropdown, Button, Label } from 'semantic-ui-react';
 import {
   AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE, ALL_ROLES,
@@ -39,7 +39,9 @@ class UserCardComponent extends React.Component {
     const user = this.props.user;
     const connectedUser = this.props.auth.user;
     const disabled = connectedUser.role !== AUTH_ADMIN_ROLE;
-    const options = ALL_ROLES.map(role => {return { icon: getRoleIcon(role), value: role, text: getRoleLabel(role) };});
+    const options = ALL_ROLES.map((role) => {
+      return { key: role, icon: <Icon name={getRoleIcon(role)} color={getRoleColor(role) || null} />, value: role, text: getRoleLabel(role) };
+    });
     const canGoToProfile = connectedUser.role === AUTH_ADMIN_ROLE || connectedUser.role === AUTH_SUPERVISOR_ROLE;
     return (
       <Card className='user-card'>

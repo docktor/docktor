@@ -1,7 +1,8 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Form, Segment, Button, Dimmer, Loader, Label, Icon } from 'semantic-ui-react';
@@ -194,9 +195,10 @@ GroupViewComponent.propTypes = {
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
   const localSettings = JSON.parse(localStorage.getItem('settings')) || {};
-  const groupId = ownProps.params.id;
-  const display = ownProps.loc.query.display || get(localSettings, `groups.${groupId}.display`);
-  const groupBy = ownProps.loc.query.groupBy || get(localSettings, `groups.${groupId}.groupBy`);
+  const groupId = ownProps.match.params.id;
+  const query = queryString.parse(ownProps.location.search);
+  const display = query.display || get(localSettings, `groups.${groupId}.display`);
+  const groupBy = query.groupBy || get(localSettings, `groups.${groupId}.groupBy`);
   const groups = state.groups;
   const group = groups.selected;
   const emptyGroup = { tags: [], filesystems: [], containers: [] };

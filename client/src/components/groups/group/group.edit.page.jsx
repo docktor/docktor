@@ -1,7 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -181,7 +181,7 @@ GroupEditComponent.propTypes = {
 
 // Function to map state to container props
 const mapStateToProps = (state, ownProps) => {
-  const paramId = ownProps.params.id;
+  const paramId = ownProps.match.params.id;
   const groups = state.groups;
   const group = groups.selected;
   const emptyGroup = { tags: [], filesystems: [], members: [] };

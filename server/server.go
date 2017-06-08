@@ -166,7 +166,8 @@ func New() {
 	engine.Static("/fonts", "client/dist/fonts")
 
 	engine.GET("/*", GetIndex)
-	log.Info("Starting server...")
+	engine.HideBanner = true
+	log.Info("Server started on port 8080")
 	if err := engine.Start(":8080"); err != nil {
 		log.WithError(err).Fatal("Can't start server")
 		engine.Logger.Fatal(err.Error())

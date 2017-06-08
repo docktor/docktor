@@ -2,8 +2,8 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { Route } from 'react-router-dom';
+import { ConnectedRouter } from 'react-router-redux';
 
 // Components
 import App from './components/app/app.layout';
@@ -27,47 +27,34 @@ import { requireAuthorization } from './components/auth/auth.isAuthorized';
 // Constants
 import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.actions';
 
-import store from './store';
-
-// Create an enhanced history that syncs navigation events with the store
-const history = syncHistoryWithStore(browserHistory, store);
+import { store, history } from './store';
 
 ReactDOM.render(
   <Provider store={store}>
     {/* Tell the Router to use our enhanced history */}
-    <Router history={history}>
-      <Route path='/' component={App}>
-        <IndexRoute component={Home} />
-        <Route path='daemons'>
-          <IndexRoute component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
-          <Route path='new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
-          <Route path=':id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
-        </Route>
-        <Route path='groups'>
-          <IndexRoute component={requireAuthorization(GroupsPage)} />
-          <Route path='new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
-          <Route path=':id'>
-            <IndexRoute component={requireAuthorization(GroupViewPage)} />
-            <Route path='view' component={requireAuthorization(GroupViewPage)} />
-            <Route path='edit' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
-          </Route>
-        </Route>
-        <Route path='services'>
-          <IndexRoute component={requireAuthorization(ServicesPage)} />
-          <Route path='new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
-          <Route path=':id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
-        </Route>
-        <Route path='users'>
-          <IndexRoute component={requireAuthorization(UsersPage)} />
-          <Route path=':id' component={requireAuthorization(UserPage, [AUTH_ADMIN_ROLE])} />
-        </Route>
-        <Route path='tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
-        <Route path='settings' component={requireAuthorization(SettingsPage)} />
-        <Route path='login' component={AuthPage} />
-        <Route path='change_reset_password' component={ChangeResetPasswordPage} />
-        <Route path='reset_password' component={ResetPasswordPage} />
-      </Route>
-    </Router>
+    <ConnectedRouter history={history}>
+      <App>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+        <Route exact path='/daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+        <Route exact path='/groups' component={requireAuthorization(GroupsPage)} />
+        <Route exact path='/groups/new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/groups/:id' component={requireAuthorization(GroupViewPage)} />
+        <Route exact path='/groups/:id/view' component={requireAuthorization(GroupViewPage)} />
+        <Route exact path='/groups/:id/edit' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/services' component={requireAuthorization(ServicesPage)} />
+        <Route exact path='/services/new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/services/:id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/users' component={requireAuthorization(UsersPage)} />
+        <Route exact path='/users/:id' component={requireAuthorization(UserPage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
+        <Route exact path='/settings' component={requireAuthorization(SettingsPage)} />
+        <Route exact path='/login' component={AuthPage} />
+        <Route exact path='/change_reset_password' component={ChangeResetPasswordPage} />
+        <Route exact path='/reset_password' component={ResetPasswordPage} />
+      </App>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );
