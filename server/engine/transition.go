@@ -1,7 +1,11 @@
 package engine
 
 import (
+	"bytes"
 	"fmt"
+	"reflect"
+	"runtime"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/looplab/fsm"
@@ -34,144 +38,141 @@ const (
 	TransitionRemove Transition = "remove"
 )
 
-// doTransition runs the transition process with the chainer engine
-// It handles asynchronous returns from chainer engine
-func doTransition(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error { // nolint: gocyclo
+func doTransition(e *fsm.Event, ctx *Context, action func(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)) error {
+	previous, err := getState(e.Src)
+	if err != nil {
+		log.WithError(err).Error("Unable to get previous state")
+	}
+	engine, transitionContext, err := action(previous)
+	if err != nil {
+		return err
+	}
 
-	processing := Operation{
-		Errors: make(chan error),
-		Status: make(chan string),
-	}
-	rollback := Operation{
-		Errors: make(chan error),
-		Status: make(chan string),
-	}
+	return handleTransitionResult(ctx, engine, transitionContext)
+}
+
+// handleTransitionResult runs the transition process with the chainer engine
+// It handles asynchronous returns from chainer engine
+func handleTransitionResult(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error { // nolint: gocyclo
+
 	done := make(chan bool)
 
-	if transitionCtx.AbortEngine == nil {
-		transitionCtx.AbortEngine = ctx.abortEngine
+	if transitionCtx.Canceler == nil {
+		transitionCtx.Canceler = ctx.canceler
 	}
-	if transitionCtx.notifBus == nil {
-		transitionCtx.notifBus = ctx.notifBus
-	}
+
 	transitionCtx.DeployableEntity = ctx.deployableEntity
 
-	go transitionEngine.Run(ctx.deployableEntity.ID(), transitionCtx, processing, rollback, done)
+	go transitionEngine.Run(ctx.deployableEntity.ID(), transitionCtx, ctx.notifier, done)
 
-	var gotRollbackErrors bool
-	var firstProcessError error
+	firstNotifInError := StepNotif{}
+	rollbackMessages := []StepNotif{}
 	run := true
 	for run {
 		select {
 		case <-done:
 			run = false
-		case message, ok := <-processing.Status:
-			if ok {
-				ctx.notifBus.Send(NotificationMessage{
-					Level:   log.InfoLevel.String(),
-					Message: message,
-				}, ctx.deployableEntity)
+		case message, ok := <-ctx.notifier:
+			if !ok {
+				break
 			}
-		case err, ok := <-processing.Errors:
-			if ok {
-				firstProcessError = err
-				ctx.notifBus.Send(NotificationMessage{
-					Level:   log.ErrorLevel.String(),
-					Message: err.Error(),
-				}, ctx.deployableEntity)
-			}
-		case message, ok := <-rollback.Status:
-			if ok {
-				ctx.notifBus.Send(NotificationMessage{
-					Level:   log.WarnLevel.String(),
-					Message: message,
-				}, ctx.deployableEntity)
-			}
-		case err, ok := <-rollback.Errors:
-			if ok {
-				gotRollbackErrors = true
-				ctx.notifBus.Send(NotificationMessage{
-					Level:   log.WarnLevel.String(),
-					Message: err.Error(),
-				}, ctx.deployableEntity)
+			if message.Error != nil {
+				switch message.Type {
+				case StepTypeProcess:
+					firstNotifInError = message
+				case StepTypeRewind:
+					rollbackMessages = append(rollbackMessages, message)
+				}
 			}
 		}
 	}
-	if firstProcessError != nil {
-		if gotRollbackErrors {
-			return fmt.Errorf("Error occured during transition (rollback has not ended correctly, though). Origin: %v", firstProcessError.Error())
+	if firstNotifInError.Error != nil {
+		if isCanceled(firstNotifInError.Error) {
+			return fmt.Errorf(
+				"Transition has been canceled while executing step %v (%v/%v) - %v",
+				getFunctionName(firstNotifInError.Operate),
+				firstNotifInError.StepNumber,
+				firstNotifInError.TotalSteps,
+				firstNotifInError.Error.Error(),
+			)
 		}
-		return fmt.Errorf("Error occured during transition( rollback ended correctly). Origin: %v", firstProcessError.Error())
+
+		if len(rollbackMessages) > 0 {
+			var rollbackErrors bytes.Buffer
+			for _, message := range rollbackMessages {
+				rollbackErrors.WriteString(fmt.Sprintf("Rollback failed: step %v (%v/%v) - %v\n",
+					getFunctionName(firstNotifInError.Operate),
+					message.StepNumber,
+					message.TotalSteps,
+					message.Error.Error(),
+				))
+			}
+			return fmt.Errorf(
+				"Transition failed at step %v (%v/%v), but rollback was not OK though - %v. Rollback errors:\n%v",
+				getFunctionName(firstNotifInError.Operate),
+				firstNotifInError.StepNumber,
+				firstNotifInError.TotalSteps,
+				firstNotifInError.Error.Error(),
+				rollbackErrors.String(),
+			)
+		}
+		return fmt.Errorf("Transition failed at step %v (%v/%v) but rollback is OK - %v",
+			getFunctionName(firstNotifInError.Operate),
+			firstNotifInError.StepNumber,
+			firstNotifInError.TotalSteps,
+			firstNotifInError.Error.Error(),
+		)
 	}
 	return nil
 }
 
-func install(e *fsm.Event, ctx *Context) error {
-	previous, err := getState(e.Src)
-	if err != nil {
-		log.WithError(err).Error("Unable to get previous state")
-	}
-	engine, transitionContext, err := ctx.deployableEntity.Install(previous)
-	if err != nil {
-		return err
-	}
+// getFunctionName gets the function name
+func getFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+}
 
-	return doTransition(ctx, engine, transitionContext)
+// getBaseNameFunction gets the function name, amputed from its path
+func getBaseNameFunction(i interface{}) string {
+	partOfFunction := strings.Split(getFunctionName(i), "/")
+	var basename string
+	if len(partOfFunction) > 0 {
+		basename = partOfFunction[len(partOfFunction)-1]
+		partOfFunction = strings.Split(basename, ")")
+		if len(partOfFunction) > 0 {
+			return partOfFunction[0]
+		}
+	}
+	return ""
+}
+
+func install(e *fsm.Event, ctx *Context) error {
+	return doTransition(e, ctx, ctx.deployableEntity.Install)
 }
 
 func uninstall(e *fsm.Event, ctx *Context) error {
-	// TODO switch on previous state
-	log.WithField("ctx", ctx).Debug("docker stop")
-	log.WithField("ctx", ctx).Debug("docker remove")
+	//return doTransition(e, ctx, ctx.deployableEntity.Uninstall)
 	return nil
 }
 
 func reinstall(e *fsm.Event, ctx *Context) error {
-	// TODO switch on previous state
-	log.WithField("ctx", ctx).Debug("docker stop")
-	log.WithField("ctx", ctx).Debug("docker remove")
-	log.WithField("ctx", ctx).Debug("docker pull")
-	log.WithField("ctx", ctx).Debug("docker create")
-	log.WithField("ctx", ctx).Debug("docker start")
+	//return doTransition(e, ctx, ctx.deployableEntity.Reinstall)
 	return nil
 }
 
 func start(e *fsm.Event, ctx *Context) error {
-	previous, err := getState(e.Src)
-	if err != nil {
-		log.WithError(err).Error("Unable to get previous state")
-	}
-	engine, transitionContext, err := ctx.deployableEntity.Start(previous)
-	if err != nil {
-		return err
-	}
-
-	return doTransition(ctx, engine, transitionContext)
+	return doTransition(e, ctx, ctx.deployableEntity.Start)
 }
 
 func stop(e *fsm.Event, ctx *Context) error {
-	// TODO switch on previous state
-	previous, err := getState(e.Src)
-	if err != nil {
-		log.WithError(err).Error("Unable to get previous state")
-	}
-	engine, transitionContext, err := ctx.deployableEntity.Stop(previous)
-	if err != nil {
-		return err
-	}
-
-	return doTransition(ctx, engine, transitionContext)
+	return doTransition(e, ctx, ctx.deployableEntity.Stop)
 }
 
 func restart(e *fsm.Event, ctx *Context) error {
-	// TODO switch on previous state
-	log.WithField("ctx", ctx).Debug("docker stop")
-	log.WithField("ctx", ctx).Debug("docker start")
+	//return doTransition(e, ctx, ctx.deployableEntity.Restart)
 	return nil
 }
 
 func remove(e *fsm.Event, ctx *Context) error {
-	// TODO switch on previous state
-	log.WithField("ctx", ctx).Debug("delete on mongo")
+	//return doTransition(e, ctx, ctx.deployableEntity.Remove)
 	return nil
 }

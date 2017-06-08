@@ -4,22 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"reflect"
-	"runtime"
-	"strings"
-
-	"github.com/fatih/color"
 )
 
 const (
 	processInProgress = "Process: In progress..."
-	processok         = "Process: ===== OK ====="
-	processko         = "Process: ===== KO ====="
-	processaborted    = "Process: == Aborted ==="
+	processOK         = "Process: ===== OK ====="
+	processKO         = "Process: ===== KO ====="
+	processCanceled   = "Process: == Canceled =="
 	rewindInProgress  = "Rewind : In progress..."
-	rewindok          = "Rewind : ===== OK ====="
-	rewindko          = "Rewind : ===== KO ====="
-	rewindaborted     = "Reweind: == Aborted ==="
+	rewindOK          = "Rewind : ===== OK ====="
+	rewindKO          = "Rewind : ===== KO ====="
+	rewindCanceled    = "Rewind : == Canceled =="
 )
 
 // ChainEngine allows to chain "up" steps
@@ -31,39 +26,35 @@ type ChainEngine struct {
 	workflows map[string]chainStep
 }
 
-// ErrOperationAborted is an error when an operation has been aborted
-// It can be an cancelled error, and timeout error and so on
-type ErrOperationAborted struct {
-	typ    string // Process, rewind
+// ErrOperationCanceled is an error when an operation has been canceled
+// Cancel occurs because of a manual operation by user, or by a reached timeout
+type ErrOperationCanceled struct {
 	reason string // Cancelling, Timeout and so on
 }
 
-func (err *ErrOperationAborted) Error() string {
-	if err.reason != "" && err.typ != "" {
-		return fmt.Sprintf("%v operation has been aborted because %v", err.typ, err.reason)
-	}
+func (err *ErrOperationCanceled) Error() string {
+	var reason = "Unknown"
 	if err.reason != "" {
-		return fmt.Sprintf("Operation has been aborted because %v", err.reason)
+		reason = err.reason
 	}
-	if err.typ != "" {
-		return fmt.Sprintf("%v operation has been aborted", err.typ)
-	}
-	return "Operation has been aborted"
+	return fmt.Sprintf("Operation has been canceled, reason: %q", reason)
 }
 
-func isAborted(err error) bool {
+func isCanceled(err error) bool {
 	switch err.(type) {
-	case *ErrOperationAborted:
+	case *ErrOperationCanceled:
 		return true
 	}
 	return false
 }
 
 // Operate is a function run in upstream or downstream process, such as a forward or a rollback action
-type Operate func(abortContext context.Context, ctx *ChainerContext) (string, error)
+// cancelContext is a golang context used to handle a cancel during the operation
+// ctx is the chaine context, containing the data needed to perform the operation
+type Operate func(cancelContext context.Context, ctx *ChainerContext) (string, error)
 
 // Step defines a step in a list of chained processes
-// It has to define a up and a down function. The classical use is a a chain of traitement that can rollback
+// It has to define a up and a down function. The classical use is a chain of traitement that can rollback
 // Each up function of step is the "commit" behaviour, when each down function is the reverse, aka the "rollback"
 // Example :
 // _ Everything OK : A -> B -> C
@@ -80,19 +71,42 @@ type chainStep struct {
 	running bool
 }
 
-// Operation is a type of operation
-// It containers an error and a status channel to communicate information about the operation
-type Operation struct {
-	Errors chan error
-	Status chan string
+// StepNotifier is a channel used to receive notifications from a chainer step
+type StepNotifier chan StepNotif
+
+// StepStatus is the status of step
+// Can be OK, KO, In progress...
+type StepStatus string
+
+const StepStatusOK StepStatus = "OK"
+const StepStatusKO StepStatus = "OK"
+const StepStatusInProgress StepStatus = "In progress..."
+const StepStatusCanceled StepStatus = "Canceled"
+
+// StepType is the type of a step
+// Can be either Process or Rewind
+type StepType string
+
+const StepTypeProcess StepType = "Process"
+const StepTypeRewind StepType = "Rewind"
+
+// StepNotif is an async notification to send while a step is executing
+// Notifications can be a message explaining the step is starting, or a message explaining the step is OK or KO
+type StepNotif struct {
+	StepNumber int     // The index in the chain. Start from 1.
+	TotalSteps int     // The total number of steps in the chain
+	Operate    Operate // the step operate, meaning the function to perform in a step
+	Message    string  // Message explaining the result of the step
+	Error      error   // When not nil, it means that step is returned in error
+	Type       StepType
+	Status     StepStatus
 }
 
 // ChainerContext defines all Data that could be used or modified across the steps
 type ChainerContext struct {
 	Data             map[string]interface{} // Data shared between steps
-	AbortEngine      chan struct{}          // A message to this channel will abort the step
+	Canceler         Cancelable             // A message to this channel will cancel the step
 	DeployableEntity DeployableEntity       // the entity that contains data needed for actions (e.g. container)
-	notifBus         NotificationBus        // A bus used to send notifications
 }
 
 // a simple result composed of a message and an error, both optional
@@ -102,7 +116,7 @@ type channelResult struct {
 	err     error
 }
 
-// NewChainEngine initialises an Engine
+// NewChainEngine initializes an Engine
 func NewChainEngine() *ChainEngine {
 	return &ChainEngine{
 		workflows: make(map[string]chainStep),
@@ -114,6 +128,7 @@ func (m *ChainEngine) Add(p string, steps ...Step) error {
 	if p == "" {
 		return errors.New("Workflow's name is empty")
 	}
+	// Return in error if existing workflow is already running
 	cs, ok := m.workflows[p]
 	if ok && cs.running {
 		return fmt.Errorf("Can't add workflow %v while it's already running", p)
@@ -144,22 +159,23 @@ func (m *ChainEngine) Remove(p string) error {
 // Each operation (up and down) contains a
 // - Error channel gives all the errors along the way until it closes
 // - Status channel gives all the message status along the way
-func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Operation, done chan bool) {
+func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier, done chan bool) {
 
 	defer func() {
-		close(upOp.Errors)
-		close(upOp.Status)
-		close(downOp.Errors)
-		close(downOp.Status)
 		done <- true
 	}()
 
 	w, ok := m.workflows[p]
 	if !ok {
-		upOp.Errors <- fmt.Errorf("Workflow named %v does not exist", p)
+		notifier <- StepNotif{
+			Error:  fmt.Errorf("Workflow named %v does not exist", p),
+			Status: StepStatusKO,
+			Type:   StepTypeProcess,
+		}
 		return
 	}
 
+	// Tells the chainer engine, that the workflow is currently running
 	w.running = true
 	m.workflows[p] = w
 	defer func() {
@@ -173,17 +189,33 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 	for i, s := range w.Steps {
 		if s.Up != nil {
 			message, err := doOperate(s.Up, c)
+			stepNumber := i + 1
+			numberOfSteps := len(w.Steps)
 			if err != nil {
-				var status = processko
-				if isAborted(err) {
-					status = processaborted
+				status := StepStatusKO
+				if isCanceled(err) {
+					status = StepStatusCanceled
 				}
-				upOp.Errors <- stepErrorf(s.Up, status, "%v", err)
+				notifier <- StepNotif{
+					Operate:    s.Up,
+					Type:       StepTypeProcess,
+					Status:     status,
+					Error:      err,
+					StepNumber: stepNumber,
+					TotalSteps: numberOfSteps,
+				}
 				iStep = i
 				errorHappened = true
 				break
-			} else {
-				upOp.Status <- stepSPrintf(s.Up, processok, "%v", message)
+			}
+
+			notifier <- StepNotif{
+				Operate:    s.Up,
+				Type:       StepTypeProcess,
+				Status:     StepStatusOK,
+				Message:    message,
+				StepNumber: stepNumber,
+				TotalSteps: numberOfSteps,
 			}
 		}
 	}
@@ -193,14 +225,30 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 			s := w.Steps[i]
 			if s.Down != nil {
 				message, err := doOperate(s.Down, c)
+				stepNumber := i + 1
+				numberOfSteps := len(w.Steps)
 				if err != nil {
-					var status = processko
-					if isAborted(err) {
-						status = processaborted
+					status := StepStatusKO
+					if isCanceled(err) {
+						status = StepStatusCanceled
 					}
-					downOp.Errors <- stepErrorf(s.Down, status, "%v", err)
+					notifier <- StepNotif{
+						StepNumber: stepNumber,
+						TotalSteps: numberOfSteps,
+						Operate:    s.Down,
+						Error:      err,
+						Status:     status,
+						Type:       StepTypeRewind,
+					}
 				} else {
-					downOp.Status <- stepSWarnf(s.Down, rewindok, "%v", message)
+					notifier <- StepNotif{
+						StepNumber: stepNumber,
+						TotalSteps: numberOfSteps,
+						Operate:    s.Down,
+						Message:    message,
+						Status:     StepStatusOK,
+						Type:       StepTypeRewind,
+					}
 				}
 			}
 		}
@@ -209,11 +257,11 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, upOp Operation, downOp Op
 }
 
 // doOperate execute the operate with the context of execution
-// It creates an abort cancel policy that is triggered when the AbortEngine channel receives a message
+// It creates an cancel policy that is triggered when the canceler channel receives a message
 // Only the current step will be canceled when signal is received
 func doOperate(op Operate, ctx *ChainerContext) (string, error) {
 
-	if ctx.AbortEngine == nil {
+	if ctx.Canceler == nil {
 		return op(nil, ctx)
 	}
 
@@ -221,47 +269,44 @@ func doOperate(op Operate, ctx *ChainerContext) (string, error) {
 	ctxCancelStep, cancelStep := context.WithCancel(context.Background())
 	defer cancelStep() // Release resources
 
-	// Run the abortable operation
-	// And wait for its termination or a abort signal
+	// Run the cancel operation
+	// And wait for its termination or an cancel signal
 	go func() {
-		msg, err := execAbortableOperate(ctxCancelStep, op, ctx)
+		msg, err := execCancelableOperate(ctxCancelStep, op, ctx)
 		c <- channelResult{message: msg, err: err}
 	}()
 	select {
-	case <-ctx.AbortEngine:
+	case <-ctx.Canceler:
 		cancelStep() // Send signal to Operate that the operation has te be cancelled
 		res := <-c   // Wait for Operate to return.
 		var reason = res.message
 		if res.err != nil {
 			reason = res.err.Error()
 		}
-		return "", &ErrOperationAborted{
-			typ:    getBaseNameFunction(op),
-			reason: reason,
-		}
+		return "", &ErrOperationCanceled{reason: reason}
 	case res := <-c:
-		// When nothing is cancel, operate ended successfully without abortinghe result is returned as is.
+		// When nothing is canceled, operate ended successfully. The result is returned as is.
 		return res.message, res.err
 	}
 }
 
-// execAbortableOperate is executing operate function, by handling abort context automatically
-// As a consequence, Operate implementation does not need to handle aborting, except if it has to do something particular with it
-// Basically, Operate implementation just need to pass the abort context through its third party calls and handle the eventual errors
-func execAbortableOperate(abortCtx context.Context, op Operate, ctx *ChainerContext) (string, error) {
+// execCancelableOperate is executing operate function, by handling cancel context automatically
+// As a consequence, Operate implementation does not need to handle canceling, except if it has to do something particular with it
+// Basically, Operate implementation just need to pass the cancel context through its third party calls and handle the eventual errors
+func execCancelableOperate(cancelCtx context.Context, op Operate, ctx *ChainerContext) (string, error) {
 
-	if abortCtx == nil {
+	if cancelCtx == nil {
 		return op(nil, ctx)
 	}
 
 	c := make(chan channelResult, 1)
 	go func() {
-		msg, err := op(abortCtx, ctx)
+		msg, err := op(cancelCtx, ctx)
 		c <- channelResult{message: msg, err: err}
 	}()
 
 	select {
-	case <-abortCtx.Done():
+	case <-cancelCtx.Done():
 		res := <-c // Wait for operate to return.
 		if res.err != nil {
 			return "", res.err
@@ -270,46 +315,4 @@ func execAbortableOperate(abortCtx context.Context, op Operate, ctx *ChainerCont
 	case res := <-c:
 		return res.message, res.err
 	}
-}
-
-func stepSInfof(s interface{}, status string, message string, interfaces ...interface{}) string {
-	blue := color.New(color.FgBlue).SprintFunc()
-	return fmt.Sprintf("[%v] %-45v > %v", blue(status), getBaseNameFunction(s), fmt.Sprintf(message, interfaces...))
-}
-
-// StepSWarnf prints a message prefixed by the step
-func stepSWarnf(s interface{}, status string, message string, interfaces ...interface{}) string {
-	yellow := color.New(color.FgYellow).SprintFunc()
-	return fmt.Sprintf("[%v] %-45v > %v", yellow(status), getBaseNameFunction(s), fmt.Sprintf(message, interfaces...))
-}
-
-// StepSPrintf prints a message prefixed by the step
-func stepSPrintf(s interface{}, status string, message string, interfaces ...interface{}) string {
-	green := color.New(color.FgGreen).SprintFunc()
-	return fmt.Sprintf("[%v] %-45v > %v", green(status), getBaseNameFunction(s), fmt.Sprintf(message, interfaces...))
-}
-
-// StepErrorf prints an error prefixed by the step
-func stepErrorf(s interface{}, status string, message string, interfaces ...interface{}) error {
-	red := color.New(color.FgRed).SprintFunc()
-	return fmt.Errorf("[%v] %-45v > %v", red(status), getBaseNameFunction(s), fmt.Sprintf(message, interfaces...))
-}
-
-// getFunctionName gets the function name
-func getFunctionName(i interface{}) string {
-	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
-}
-
-// getBaseNameFunction gets the function name, amputed from its path
-func getBaseNameFunction(i interface{}) string {
-	partOfFunction := strings.Split(getFunctionName(i), "/")
-	var basename string
-	if len(partOfFunction) > 0 {
-		basename = partOfFunction[len(partOfFunction)-1]
-		partOfFunction = strings.Split(basename, ")")
-		if len(partOfFunction) > 0 {
-			return partOfFunction[0]
-		}
-	}
-	return ""
 }

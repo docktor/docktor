@@ -11,8 +11,10 @@ import (
 	"github.com/looplab/fsm"
 	"github.com/orcaman/concurrent-map"
 	uuid "github.com/satori/go.uuid"
-	"github.com/spf13/viper"
 )
+
+// Default timeout for a transition
+const defaultTransitionTimeout = 2 * time.Hour
 
 // A concurrent map containing running engines, i.e. the ones that are currently in a transition
 // key: unique id of the deployable entity
@@ -42,32 +44,32 @@ type DeployableEntity interface {
 	// Name returns a name
 	Name() string
 	// Install will install the entity (e.g. container)
-	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Install(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// Start will start the entity (e.g. container)
-	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// Stop will stop the entity (e.g. container)
-	// State is the previous state, needed because all the actions needed to perform the transition may depend on the current state
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
-	// StoreMessage store the log in database
-	StoreMessage(message NotificationMessage) error
+	// StoreMessage stores the log in database
+	StoreMessage(notification StepNotif) error
 }
 
-// Abortable is channel handling aborting things
-type Abortable chan struct{}
+// Cancelable is channel handling canceling things
+type Cancelable chan string
 
-// Abort sends an abort signal. This signal has to be consumed for this function to return
-func (a Abortable) Abort() {
-	a <- struct{}{}
+// Cancel sends a cancel signal. This signal has to be consumed for this function to return
+func (a Cancelable) Cancel(reason string) {
+	a <- reason
 }
 
 // Context is the context used in an Docktor engine
 type Context struct {
 	id               uuid.UUID        // Unique ID of the engine
 	deployableEntity DeployableEntity // Can be a container, a stack and so on. It contains data needed to deploy it
-	abortEngine      Abortable        // Channel used to handle abort. One message on this channel will abort the current transition
-	notifBus         NotificationBus  // A notification bus. Every transition will eventually push messages in this channel
+	canceler         Cancelable       // Channel used to handle canceling the transition. One message on this channel will trigger rollback of the current transition
+	notifier         StepNotifier
 }
 
 func (ec Context) String() string {
@@ -167,13 +169,13 @@ func doAction(e *fsm.Event, action func(e *fsm.Event, ctx *Context) error) {
 // NewEngine creates a new engine to manage transitions of a deployable entity
 // A deployable entity is something that can be deployed/stop/start, like a container or a stack
 // It manages the lifecycle with transition that can be run with the Run function
-func NewEngine(deployableEntity DeployableEntity, notifBus NotificationBus) *Engine {
+// timeout is a global timeout for transitions, canceling a running transition when reached
+func NewEngine(deployableEntity DeployableEntity, timeout time.Duration) *Engine {
 
 	stateMachine := fsm.NewFSM(deployableEntity.GetInitialState().Name(), events, callbacks)
 
-	timeout := viper.GetDuration("engine-transitiontimeout")
 	if timeout <= 0 {
-		timeout = 2 * time.Hour
+		timeout = defaultTransitionTimeout
 	}
 
 	return &Engine{
@@ -181,7 +183,6 @@ func NewEngine(deployableEntity DeployableEntity, notifBus NotificationBus) *Eng
 		Context: Context{
 			id:               uuid.NewV4(),
 			deployableEntity: deployableEntity,
-			notifBus:         notifBus,
 		},
 		transitionTimeout: timeout,
 	}
@@ -207,18 +208,29 @@ func getEventContext(e *fsm.Event) (*Context, error) {
 }
 
 // Run launches the given transition on state machine for a given deployable entity.
-func (e *Engine) Run(transition Transition) error {
+func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
 
-	if e.notifBus == nil {
-		return errors.New("Notification bus should exist in engine context")
-	}
-	if _, ok := runningEngines.Get(e.deployableEntity.ID()); ok {
+	if e.IsRunning() {
 		return fmt.Errorf("Unable to make transition because another one is already running for given deployable entity")
 	}
 
-	// Initialise the abort engine for this transition
-	e.abortEngine = make(chan struct{})
-	defer close(e.abortEngine) // Release resources if transition completes without a cancel
+	if notifier == nil {
+		return errors.New("Notifier should not be nil")
+	}
+
+	e.Context.notifier = notifier
+	defer close(notifier)
+
+	go func() {
+		// Stores every notifications to database
+		for notif := range notifier {
+			e.deployableEntity.StoreMessage(notif)
+		}
+	}()
+
+	// Initialise the canceler for this transition
+	e.canceler = make(chan string)
+	defer close(e.canceler) // Release resources if transition completes without a cancel
 
 	// Tells Docktor that this deployable entity is currently running in a transition
 	runningEngines.Set(e.deployableEntity.ID(), e.id.String())
@@ -235,7 +247,8 @@ func (e *Engine) Run(transition Transition) error {
 
 	select {
 	case <-ctx.Done():
-		e.abortEngine.Abort() // Sending the signal to engine that the transition has to stop
+		// Sending the signal to engine that the transition has to stop
+		e.canceler.Cancel(fmt.Sprintf("Reached timeout (%s)", e.transitionTimeout.String()))
 		<-c
 		return fmt.Errorf("Transition has been canceled because it has reached the timeout of %s", e.transitionTimeout.String())
 	case err := <-c:
@@ -248,6 +261,12 @@ func (e *Engine) CurrentState() (State, error) {
 	return getState(e.stateMachine.Current())
 }
 
+// IsRunning returns true if the engine is currently in a transition
+func (e *Engine) IsRunning() bool {
+	_, ok := runningEngines.Get(e.deployableEntity.ID())
+	return ok
+}
+
 // Cancel cancels transition
 func (e *Engine) Cancel() {
 	defer func() {
@@ -255,8 +274,8 @@ func (e *Engine) Cancel() {
 			log.Errorf("Transition is already finished: %v", r)
 		}
 	}()
-	if e.abortEngine != nil {
+	if e.IsRunning() && e.canceler != nil {
 		// Send signal to engine that the transition has to cancel
-		e.abortEngine.Abort()
+		e.canceler.Cancel("Manual cancel by user")
 	}
 }

@@ -1,20 +1,28 @@
 package engine
 
 import "testing"
+import . "github.com/smartystreets/goconvey/convey"
 
-func TestGetState_ok(t *testing.T) {
-	state, err := getState("created") // existing state
-	if err != nil {
-		t.Fatal("State exists, it should not return any error")
-	}
-	if state.Name() != "created" {
-		t.Fatal("State exist and should be equal to the existing one")
-	}
-}
-
-func TestGetState_ko(t *testing.T) {
-	_, err := getState("wrong-state")
-	if err == nil {
-		t.Fatal("Wrong state, it should return an error")
-	}
+func TestGetState(t *testing.T) {
+	Convey("On a Docktor engine", t, func() {
+		Convey("Given an existing 'created' state as string'", func() {
+			existing := "created"
+			Convey("When I try to convert it as a real state", func() {
+				state, err := getState(existing)
+				Convey("Then I should get the real state 'created'", func() {
+					So(err, ShouldBeNil)
+					So(state, ShouldEqual, StateCreated)
+				})
+			})
+		})
+		Convey("Given an wrong state as string'", func() {
+			wrong := "wrong-state"
+			Convey("When I try to convert it as a real state", func() {
+				_, err := getState(wrong)
+				Convey("Then I should get an error", func() {
+					So(err, ShouldNotBeNil)
+				})
+			})
+		})
+	})
 }
