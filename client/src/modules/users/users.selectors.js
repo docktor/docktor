@@ -1,8 +1,11 @@
 import { transformFilterToObject, contains } from '../utils/utils';
 
 
+
 export const sortUsers = (u1, u2) => {
   let comp = 0;
+  // if comp = -1 -> u1 will be displayed before u2
+  // if comp = 1 -> u2 will be displayed before u1
   if (u1.role === 'admin' && (u2.role === 'supervisor' || u2.role === 'user')) {
     comp = -1;
   } else if (u1.role === 'supervisor' && u2.role === 'user') {
@@ -13,6 +16,7 @@ export const sortUsers = (u1, u2) => {
     comp = 1;
   }
   if (comp === 0) {
+    // if users have the same roles, sort them by full name
     return `${u1.lastName} ${u1.firstName}`.localeCompare(`${u2.lastName} ${u2.firstName}`);
   }
   return comp;
