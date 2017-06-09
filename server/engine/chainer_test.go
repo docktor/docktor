@@ -9,12 +9,12 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// Step Up is a generic method to generate an Operate, that will end in either OK (✔️), KO(✖️) or Canceled(🚫)
+// Step Up is a generic method to generate an Operation, that will end in either OK (✔️), KO(✖️) or Canceled(🚫)
 // The context is enriched with the given results, used for test assertion
 // namespace is used for context
 // typ is up or down
-// inError is true if operate has to terminate in error
-func StepTest(namespace string, typ string, inError bool) Operate {
+// inError is true if operation has to terminate in error
+func StepTest(namespace string, typ string, inError bool) Operation {
 	return func(abortCtx context.Context, ctx *ChainerContext) (string, error) {
 		do := func() channelResult {
 			steps := ctx.Data[namespace+"."+typ].([]string)
@@ -68,22 +68,22 @@ func StepTest(namespace string, typ string, inError bool) Operate {
 	}
 }
 
-func StepUpOK(namespace string) Operate {
+func StepUpOK(namespace string) Operation {
 	return StepTest(namespace, "up", false)
 }
-func StepUpKO(namespace string) Operate {
+func StepUpKO(namespace string) Operation {
 	return StepTest(namespace, "up", true)
 }
-func StepDownOK(namespace string) Operate {
+func StepDownOK(namespace string) Operation {
 	return StepTest(namespace, "down", false)
 }
-func StepDownKO(namespace string) Operate {
+func StepDownKO(namespace string) Operation {
 	return StepTest(namespace, "down", true)
 }
 
 // StepTestAbort is a generic method to generat an Operate waiting until a cancel signal arrives
 // It then should abort the process and enriched context with Aborted data (🚫)
-func StepTestAbort(namespace string, typ string) Operate {
+func StepTestAbort(namespace string, typ string) Operation {
 	return func(abortCtx context.Context, ctx *ChainerContext) (string, error) {
 
 		abortTo := ctx.Data[namespace+"."+typ+".abortTo"].(chan string)
@@ -118,10 +118,10 @@ func StepTestAbort(namespace string, typ string) Operate {
 
 	}
 }
-func StepUpAbort(namespace string) Operate {
+func StepUpAbort(namespace string) Operation {
 	return StepTestAbort(namespace, "up")
 }
-func StepDownAbort(namespace string) Operate {
+func StepDownAbort(namespace string) Operation {
 	return StepTestAbort(namespace, "down")
 }
 

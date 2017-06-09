@@ -280,7 +280,7 @@ func (e *Engine) IsRunningInTransition(transition Transition) bool {
 		return false // Engine is running, but a wrong type was in cache
 	}
 
-	return runningTransition == runningTransition
+	return runningTransition == transition
 }
 
 // Cancel cancels transition

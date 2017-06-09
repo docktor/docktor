@@ -6,17 +6,6 @@ import (
 	"fmt"
 )
 
-const (
-	processInProgress = "Process: In progress..."
-	processOK         = "Process: ===== OK ====="
-	processKO         = "Process: ===== KO ====="
-	processCanceled   = "Process: == Canceled =="
-	rewindInProgress  = "Rewind : In progress..."
-	rewindOK          = "Rewind : ===== OK ====="
-	rewindKO          = "Rewind : ===== KO ====="
-	rewindCanceled    = "Rewind : == Canceled =="
-)
-
 // ChainEngine allows to chain "up" steps
 // When one error occurs, the chain is stopped and down steps are run in the inverse
 // See examples in the unit tests
@@ -47,10 +36,10 @@ func isCanceled(err error) bool {
 	return false
 }
 
-// Operate is a function run in upstream or downstream process, such as a forward or a rollback action
+// Operation is a function run in upstream or downstream process, such as a forward or a rollback action
 // cancelContext is a golang context used to handle a cancel during the operation
 // ctx is the chaine context, containing the data needed to perform the operation
-type Operate func(cancelContext context.Context, ctx *ChainerContext) (string, error)
+type Operation func(cancelContext context.Context, ctx *ChainerContext) (string, error)
 
 // Step defines a step in a list of chained processes
 // It has to define a up and a down function. The classical use is a chain of traitement that can rollback
@@ -62,8 +51,8 @@ type Operate func(cancelContext context.Context, ctx *ChainerContext) (string, e
 //          C(KO)
 // A <- B <-
 type Step struct {
-	Up   Operate
-	Down Operate
+	Up   Operation
+	Down Operation
 }
 type chainStep struct {
 	Steps   []Step
@@ -77,26 +66,36 @@ type StepNotifier chan StepNotif
 // Can be OK, KO, In progress...
 type StepStatus string
 
+// StepStatusOK is the terminal status of a succeeded step
 const StepStatusOK StepStatus = "OK"
+
+// StepStatusKO is the terminal status of a failed step
 const StepStatusKO StepStatus = "OK"
+
+// StepStatusInProgress is the status of a step currently in progress, i.e. not terminated
 const StepStatusInProgress StepStatus = "In progress..."
+
+// StepStatusCanceled is the terminal status of a failed step, canceled by user or timeout
 const StepStatusCanceled StepStatus = "Canceled"
 
 // StepType is the type of a step
 // Can be either Process or Rewind
 type StepType string
 
+// StepTypeProcess is the up/forward/process type of step
 const StepTypeProcess StepType = "Process"
+
+// StepTypeRewind is the down/rollback/rewind type of step
 const StepTypeRewind StepType = "Rewind"
 
 // StepNotif is an async notification to send while a step is executing
 // Notifications can be a message explaining the step is starting, or a message explaining the step is OK or KO
 type StepNotif struct {
-	StepNumber int     // The index in the chain. Start from 1.
-	TotalSteps int     // The total number of steps in the chain
-	Operate    Operate // the step operate, meaning the function to perform in a step
-	Message    string  // Message explaining the result of the step
-	Error      error   // When not nil, it means that step is returned in error
+	StepNumber int       // The index in the chain. Start from 1.
+	TotalSteps int       // The total number of steps in the chain
+	Operate    Operation // the step operate, meaning the function to perform in a step
+	Message    string    // Message explaining the result of the step
+	Error      error     // When not nil, it means that step is returned in error
 	Type       StepType
 	Status     StepStatus
 }
@@ -158,7 +157,7 @@ func (m *ChainEngine) Remove(p string) error {
 // Each operation (up and down) contains a
 // - Error channel gives all the errors along the way until it closes
 // - Status channel gives all the message status along the way
-func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) {
+func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) { // nolint: gocyclo
 
 	defer close(notifier)
 
@@ -185,8 +184,46 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) {
 	var numberOfSteps = len(w.Steps)
 	//Up. Stops when an error occurs
 	for i, s := range w.Steps {
-		if s.Up != nil {
-			message, err := doOperate(s.Up, c)
+		if s.Up == nil {
+			continue
+		}
+		message, err := doOperate(s.Up, c)
+		stepNumber := i + 1
+		if err != nil {
+			status := StepStatusKO
+			if isCanceled(err) {
+				status = StepStatusCanceled
+			}
+			notifier <- StepNotif{
+				Operate:    s.Up,
+				Type:       StepTypeProcess,
+				Status:     status,
+				Error:      err,
+				StepNumber: stepNumber,
+				TotalSteps: numberOfSteps,
+			}
+			iStep = i
+			errorHappened = true
+			break
+		}
+
+		notifier <- StepNotif{
+			Operate:    s.Up,
+			Type:       StepTypeProcess,
+			Status:     StepStatusOK,
+			Message:    message,
+			StepNumber: stepNumber,
+			TotalSteps: numberOfSteps,
+		}
+	}
+	//Down, Continues even when errors occurs, but store them.
+	if errorHappened {
+		for i := iStep - 1; i >= 0; i-- {
+			s := w.Steps[i]
+			if s.Down == nil {
+				continue
+			}
+			message, err := doOperate(s.Down, c)
 			stepNumber := i + 1
 			if err != nil {
 				status := StepStatusKO
@@ -194,59 +231,24 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) {
 					status = StepStatusCanceled
 				}
 				notifier <- StepNotif{
-					Operate:    s.Up,
-					Type:       StepTypeProcess,
-					Status:     status,
-					Error:      err,
 					StepNumber: stepNumber,
 					TotalSteps: numberOfSteps,
+					Operate:    s.Down,
+					Error:      err,
+					Status:     status,
+					Type:       StepTypeRewind,
 				}
-				iStep = i
-				errorHappened = true
-				break
+			} else {
+				notifier <- StepNotif{
+					StepNumber: stepNumber,
+					TotalSteps: numberOfSteps,
+					Operate:    s.Down,
+					Message:    message,
+					Status:     StepStatusOK,
+					Type:       StepTypeRewind,
+				}
 			}
 
-			notifier <- StepNotif{
-				Operate:    s.Up,
-				Type:       StepTypeProcess,
-				Status:     StepStatusOK,
-				Message:    message,
-				StepNumber: stepNumber,
-				TotalSteps: numberOfSteps,
-			}
-		}
-	}
-	//Down, Continues even when errors occurs, but store them.
-	if errorHappened {
-		for i := iStep - 1; i >= 0; i-- {
-			s := w.Steps[i]
-			if s.Down != nil {
-				message, err := doOperate(s.Down, c)
-				stepNumber := i + 1
-				if err != nil {
-					status := StepStatusKO
-					if isCanceled(err) {
-						status = StepStatusCanceled
-					}
-					notifier <- StepNotif{
-						StepNumber: stepNumber,
-						TotalSteps: numberOfSteps,
-						Operate:    s.Down,
-						Error:      err,
-						Status:     status,
-						Type:       StepTypeRewind,
-					}
-				} else {
-					notifier <- StepNotif{
-						StepNumber: stepNumber,
-						TotalSteps: numberOfSteps,
-						Operate:    s.Down,
-						Message:    message,
-						Status:     StepStatusOK,
-						Type:       StepTypeRewind,
-					}
-				}
-			}
 		}
 	}
 
@@ -255,7 +257,7 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) {
 // doOperate execute the operate with the context of execution
 // It creates an cancel policy that is triggered when the canceler channel receives a message
 // Only the current step will be canceled when signal is received
-func doOperate(op Operate, ctx *ChainerContext) (string, error) {
+func doOperate(op Operation, ctx *ChainerContext) (string, error) {
 
 	if ctx.Canceler == nil {
 		return op(nil, ctx)
@@ -289,7 +291,7 @@ func doOperate(op Operate, ctx *ChainerContext) (string, error) {
 // execCancelableOperate is executing operate function, by handling cancel context automatically
 // As a consequence, Operate implementation does not need to handle canceling, except if it has to do something particular with it
 // Basically, Operate implementation just need to pass the cancel context through its third party calls and handle the eventual errors
-func execCancelableOperate(cancelCtx context.Context, op Operate, ctx *ChainerContext) (string, error) {
+func execCancelableOperate(cancelCtx context.Context, op Operation, ctx *ChainerContext) (string, error) {
 
 	if cancelCtx == nil {
 		return op(nil, ctx)

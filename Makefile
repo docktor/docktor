@@ -26,4 +26,4 @@ test:
 lint:
 	go get github.com/alecthomas/gometalinter
 	gometalinter --install
-	gometalinter --vendor --deadline=60m --fast --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
+	gometalinter --vendor --deadline=60m --fast --config=./gometalinter.json ./server/... ./cmd/... .
