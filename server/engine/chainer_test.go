@@ -129,7 +129,7 @@ func StepDownAbort(namespace string) Operation {
 func fetchNotifications(notifier StepNotifier) (nbUpOK int, nbUpKO int, nbDownOK int, nbDownKO int, errors []StepNotif) {
 	errors = []StepNotif{}
 	for msg := range notifier {
-		log.Infof("%+v", msg)
+		log.Debugf("%+v", msg)
 		if msg.Error != nil {
 			errors = append(errors, msg)
 			if msg.Type == StepTypeProcess {
