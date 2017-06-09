@@ -55,34 +55,24 @@ func doTransition(e *fsm.Event, ctx *Context, action func(previous State) (trans
 // It handles asynchronous returns from chainer engine
 func handleTransitionResult(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error { // nolint: gocyclo
 
-	done := make(chan bool)
-
 	if transitionCtx.Canceler == nil {
 		transitionCtx.Canceler = ctx.canceler
 	}
 
 	transitionCtx.DeployableEntity = ctx.deployableEntity
 
-	go transitionEngine.Run(ctx.deployableEntity.ID(), transitionCtx, ctx.notifier, done)
+	go transitionEngine.Run(ctx.deployableEntity.ID(), transitionCtx, ctx.notifier)
 
 	firstNotifInError := StepNotif{}
 	rollbackMessages := []StepNotif{}
-	run := true
-	for run {
-		select {
-		case <-done:
-			run = false
-		case message, ok := <-ctx.notifier:
-			if !ok {
-				break
-			}
-			if message.Error != nil {
-				switch message.Type {
-				case StepTypeProcess:
-					firstNotifInError = message
-				case StepTypeRewind:
-					rollbackMessages = append(rollbackMessages, message)
-				}
+
+	for message := range ctx.notifier {
+		if message.Error != nil {
+			switch message.Type {
+			case StepTypeProcess:
+				firstNotifInError = message
+			case StepTypeRewind:
+				rollbackMessages = append(rollbackMessages, message)
 			}
 		}
 	}

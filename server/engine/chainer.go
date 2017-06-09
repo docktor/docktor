@@ -33,11 +33,10 @@ type ErrOperationCanceled struct {
 }
 
 func (err *ErrOperationCanceled) Error() string {
-	var reason = "Unknown"
 	if err.reason != "" {
-		reason = err.reason
+		err.reason = "Unknown"
 	}
-	return fmt.Sprintf("Operation has been canceled, reason: %q", reason)
+	return fmt.Sprintf("Operation has been canceled, reason: %q", err.reason)
 }
 
 func isCanceled(err error) bool {
@@ -159,11 +158,9 @@ func (m *ChainEngine) Remove(p string) error {
 // Each operation (up and down) contains a
 // - Error channel gives all the errors along the way until it closes
 // - Status channel gives all the message status along the way
-func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier, done chan bool) {
+func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier) {
 
-	defer func() {
-		done <- true
-	}()
+	defer close(notifier)
 
 	w, ok := m.workflows[p]
 	if !ok {
@@ -185,12 +182,12 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier, do
 
 	var iStep int
 	var errorHappened bool
+	var numberOfSteps = len(w.Steps)
 	//Up. Stops when an error occurs
 	for i, s := range w.Steps {
 		if s.Up != nil {
 			message, err := doOperate(s.Up, c)
 			stepNumber := i + 1
-			numberOfSteps := len(w.Steps)
 			if err != nil {
 				status := StepStatusKO
 				if isCanceled(err) {
@@ -226,7 +223,6 @@ func (m *ChainEngine) Run(p string, c *ChainerContext, notifier StepNotifier, do
 			if s.Down != nil {
 				message, err := doOperate(s.Down, c)
 				stepNumber := i + 1
-				numberOfSteps := len(w.Steps)
 				if err != nil {
 					status := StepStatusKO
 					if isCanceled(err) {

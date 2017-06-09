@@ -18,7 +18,7 @@ const defaultTransitionTimeout = 2 * time.Hour
 
 // A concurrent map containing running engines, i.e. the ones that are currently in a transition
 // key: unique id of the deployable entity
-// value: simple bool
+// value: a transition
 var runningEngines = cmap.New()
 
 // CallbackEvent represents a callback of an event
@@ -211,6 +211,9 @@ func getEventContext(e *fsm.Event) (*Context, error) {
 func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
 
 	if e.IsRunning() {
+		if e.IsRunningInTransition(transition) {
+			return nil // The engine is already running in same transition, so we do nothing for fault tolerance
+		}
 		return fmt.Errorf("Unable to make transition because another one is already running for given deployable entity")
 	}
 
@@ -219,7 +222,6 @@ func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
 	}
 
 	e.Context.notifier = notifier
-	defer close(notifier)
 
 	go func() {
 		// Stores every notifications to database
@@ -233,7 +235,7 @@ func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
 	defer close(e.canceler) // Release resources if transition completes without a cancel
 
 	// Tells Docktor that this deployable entity is currently running in a transition
-	runningEngines.Set(e.deployableEntity.ID(), e.id.String())
+	runningEngines.Set(e.deployableEntity.ID(), transition)
 	defer runningEngines.Remove(e.deployableEntity.ID())
 
 	// With context.WithTimeout, the transition is automatically canceled when timeout has reached
@@ -267,13 +269,22 @@ func (e *Engine) IsRunning() bool {
 	return ok
 }
 
+// IsRunningInTransition returns true if the engine is currently running in given transition
+func (e *Engine) IsRunningInTransition(transition Transition) bool {
+	t, ok := runningEngines.Get(e.deployableEntity.ID())
+	if !ok {
+		return false // Engine is not running on given entity
+	}
+	runningTransition, ok := t.(Transition)
+	if !ok {
+		return false // Engine is running, but a wrong type was in cache
+	}
+
+	return runningTransition == runningTransition
+}
+
 // Cancel cancels transition
 func (e *Engine) Cancel() {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Errorf("Transition is already finished: %v", r)
-		}
-	}()
 	if e.IsRunning() && e.canceler != nil {
 		// Send signal to engine that the transition has to cancel
 		e.canceler.Cancel("Manual cancel by user")
