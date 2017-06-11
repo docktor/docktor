@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -46,12 +45,24 @@ type DeployableEntity interface {
 	// Install will install the entity (e.g. container)
 	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Install(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Reinstall will remove and install the entity from scratch (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
+	Reinstall(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// Start will start the entity (e.g. container)
 	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Restart will stop and start the entity (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
+	Restart(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// Stop will stop the entity (e.g. container)
 	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
 	Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Uninstall will remove the entity from machine, but keep it in Docktor (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
+	Uninstall(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
+	// Remove will remove the entity from Docktor (e.g. container)
+	// State is the previous state, needed because all the actions needed to perform the transition may depend on the previous state
+	Remove(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error)
 	// StoreMessage stores the log in database
 	StoreMessage(notification StepNotif) error
 }
@@ -69,7 +80,7 @@ type Context struct {
 	id               uuid.UUID        // Unique ID of the engine
 	deployableEntity DeployableEntity // Can be a container, a stack and so on. It contains data needed to deploy it
 	canceler         Cancelable       // Channel used to handle canceling the transition. One message on this channel will trigger rollback of the current transition
-	notifier         StepNotifier
+	StepNotifier     StepNotifier
 }
 
 func (ec Context) String() string {
@@ -209,26 +220,40 @@ func getEventContext(e *fsm.Event) (*Context, error) {
 
 // Run launches the given transition on state machine for a given deployable entity.
 func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
+	if notifier == nil {
+		return errors.New("Notifier is nil")
+	}
+	defer close(notifier)
 
+	ch := make(chan error, 1)
+	engineNotifs := make(StepNotifier)
+	go func() {
+		ch <- e.doRun(transition, engineNotifs)
+	}()
+
+	for notif := range engineNotifs {
+		err := e.deployableEntity.StoreMessage(notif)
+		if err != nil {
+			log.WithField("id", e.deployableEntity.ID()).WithError(err).Error("Unable to store log for deployable entity")
+		}
+		notifier <- notif
+	}
+
+	return <-ch
+}
+
+func (e *Engine) doRun(transition Transition, notifier StepNotifier) error {
+	if notifier == nil {
+		return errors.New("notifier should not be nil")
+	}
 	if e.IsRunning() {
+		close(notifier)
 		if e.IsRunningInTransition(transition) {
 			return nil // The engine is already running in same transition, so we do nothing for fault tolerance
 		}
 		return fmt.Errorf("Unable to make transition because another one is already running for given deployable entity")
 	}
-
-	if notifier == nil {
-		return errors.New("Notifier should not be nil")
-	}
-
-	e.Context.notifier = notifier
-
-	go func() {
-		// Stores every notifications to database
-		for notif := range notifier {
-			e.deployableEntity.StoreMessage(notif)
-		}
-	}()
+	e.Context.StepNotifier = notifier
 
 	// Initialise the canceler for this transition
 	e.canceler = make(chan string)
@@ -238,17 +263,14 @@ func (e *Engine) Run(transition Transition, notifier StepNotifier) error {
 	runningEngines.Set(e.deployableEntity.ID(), transition)
 	defer runningEngines.Remove(e.deployableEntity.ID())
 
-	// With context.WithTimeout, the transition is automatically canceled when timeout has reached
-	ctx, cancel := context.WithTimeout(context.Background(), e.transitionTimeout)
-	defer cancel() // Force the cancel even when transition has timed out or not
-
+	// Transition is automatically canceled when timeout has reached
 	c := make(chan error, 1)
 	go func() {
 		c <- e.stateMachine.Event(transition.Name(), &e.Context)
 	}()
 
 	select {
-	case <-ctx.Done():
+	case <-time.After(e.transitionTimeout):
 		// Sending the signal to engine that the transition has to stop
 		e.canceler.Cancel(fmt.Sprintf("Reached timeout (%s)", e.transitionTimeout.String()))
 		<-c

@@ -1,8 +1,6 @@
 package engine
 
 import (
-	"bytes"
-	"fmt"
 	"reflect"
 	"runtime"
 	"strings"
@@ -47,73 +45,11 @@ func doTransition(e *fsm.Event, ctx *Context, action func(previous State) (trans
 	if err != nil {
 		return err
 	}
-
-	return handleTransitionResult(ctx, engine, transitionContext)
-}
-
-// handleTransitionResult runs the transition process with the chainer engine
-// It handles asynchronous returns from chainer engine
-func handleTransitionResult(ctx *Context, transitionEngine *ChainEngine, transitionCtx *ChainerContext) error { // nolint: gocyclo
-
-	if transitionCtx.Canceler == nil {
-		transitionCtx.Canceler = ctx.canceler
+	if transitionContext.Canceler == nil {
+		transitionContext.Canceler = ctx.canceler
 	}
 
-	transitionCtx.DeployableEntity = ctx.deployableEntity
-
-	go transitionEngine.Run(ctx.deployableEntity.ID(), transitionCtx, ctx.notifier)
-
-	firstNotifInError := StepNotif{}
-	rollbackMessages := []StepNotif{}
-
-	for message := range ctx.notifier {
-		if message.Error != nil {
-			switch message.Type {
-			case StepTypeProcess:
-				firstNotifInError = message
-			case StepTypeRewind:
-				rollbackMessages = append(rollbackMessages, message)
-			}
-		}
-	}
-	if firstNotifInError.Error != nil {
-		if isCanceled(firstNotifInError.Error) {
-			return fmt.Errorf(
-				"Transition has been canceled while executing step %v (%v/%v) - %v",
-				getFunctionName(firstNotifInError.Operate),
-				firstNotifInError.StepNumber,
-				firstNotifInError.TotalSteps,
-				firstNotifInError.Error.Error(),
-			)
-		}
-
-		if len(rollbackMessages) > 0 {
-			var rollbackErrors bytes.Buffer
-			for _, message := range rollbackMessages {
-				rollbackErrors.WriteString(fmt.Sprintf("Rollback failed: step %v (%v/%v) - %v\n",
-					getFunctionName(firstNotifInError.Operate),
-					message.StepNumber,
-					message.TotalSteps,
-					message.Error.Error(),
-				))
-			}
-			return fmt.Errorf(
-				"Transition failed at step %v (%v/%v), but rollback was not OK though - %v. Rollback errors:\n%v",
-				getFunctionName(firstNotifInError.Operate),
-				firstNotifInError.StepNumber,
-				firstNotifInError.TotalSteps,
-				firstNotifInError.Error.Error(),
-				rollbackErrors.String(),
-			)
-		}
-		return fmt.Errorf("Transition failed at step %v (%v/%v) but rollback is OK - %v",
-			getFunctionName(firstNotifInError.Operate),
-			firstNotifInError.StepNumber,
-			firstNotifInError.TotalSteps,
-			firstNotifInError.Error.Error(),
-		)
-	}
-	return nil
+	return engine.Run(ctx.deployableEntity.ID(), transitionContext, ctx.StepNotifier)
 }
 
 // getFunctionName gets the function name
@@ -140,13 +76,11 @@ func install(e *fsm.Event, ctx *Context) error {
 }
 
 func uninstall(e *fsm.Event, ctx *Context) error {
-	//return doTransition(e, ctx, ctx.deployableEntity.Uninstall)
-	return nil
+	return doTransition(e, ctx, ctx.deployableEntity.Uninstall)
 }
 
 func reinstall(e *fsm.Event, ctx *Context) error {
-	//return doTransition(e, ctx, ctx.deployableEntity.Reinstall)
-	return nil
+	return doTransition(e, ctx, ctx.deployableEntity.Reinstall)
 }
 
 func start(e *fsm.Event, ctx *Context) error {
@@ -158,11 +92,9 @@ func stop(e *fsm.Event, ctx *Context) error {
 }
 
 func restart(e *fsm.Event, ctx *Context) error {
-	//return doTransition(e, ctx, ctx.deployableEntity.Restart)
-	return nil
+	return doTransition(e, ctx, ctx.deployableEntity.Restart)
 }
 
 func remove(e *fsm.Event, ctx *Context) error {
-	//return doTransition(e, ctx, ctx.deployableEntity.Remove)
-	return nil
+	return doTransition(e, ctx, ctx.deployableEntity.Remove)
 }

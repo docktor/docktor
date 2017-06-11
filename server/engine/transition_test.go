@@ -1,13 +1,18 @@
 package engine
 
 import (
-	_ "github.com/smartystreets/goconvey/convey"
+	"context"
+	"fmt"
+	. "github.com/smartystreets/goconvey/convey"
+	"sync"
+	"testing"
+	"time"
 )
 
-/*
 type MockTransitionDeployableEntity struct {
-	id   string
-	name string
+	id            string
+	name          string
+	notifications []StepNotif
 }
 
 func NewMockTransitionDeployableEntity(name string) MockTransitionDeployableEntity {
@@ -17,19 +22,19 @@ func NewMockTransitionDeployableEntity(name string) MockTransitionDeployableEnti
 	}
 }
 
-func (mock MockTransitionDeployableEntity) GetInitialState() State {
+func (mock *MockTransitionDeployableEntity) GetInitialState() State {
 	return StateInitial
 }
 
-func (mock MockTransitionDeployableEntity) ID() string {
+func (mock *MockTransitionDeployableEntity) ID() string {
 	return mock.id
 }
 
-func (mock MockTransitionDeployableEntity) Name() string {
+func (mock *MockTransitionDeployableEntity) Name() string {
 	return mock.name
 }
 
-func (mock MockTransitionDeployableEntity) Install(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+func (mock *MockTransitionDeployableEntity) Install(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
 
 	engine := NewChainEngine()
 	context := &ChainerContext{
@@ -65,85 +70,106 @@ func (mock MockTransitionDeployableEntity) Install(previous State) (transitionEn
 	return engine, context, nil
 }
 
-func (mock MockTransitionDeployableEntity) Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+func (mock *MockTransitionDeployableEntity) Start(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
 	return nil, nil, nil
 }
 
-func (mock MockTransitionDeployableEntity) Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+func (mock *MockTransitionDeployableEntity) Stop(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
 	return nil, nil, nil
 }
 
-func (mock MockTransitionDeployableEntity) StoreMessage(message NotificationMessage) error {
-	switch message.Level {
-	case "info":
-		log.Info(message.Message)
-	case "warning":
-		log.Warning(message.Message)
-	case "error":
-		log.Error(message.Message)
-	}
+func (mock *MockTransitionDeployableEntity) Uninstall(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	return nil, nil, nil
+}
+
+func (mock *MockTransitionDeployableEntity) Reinstall(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	return nil, nil, nil
+}
+
+func (mock *MockTransitionDeployableEntity) Remove(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	return nil, nil, nil
+}
+
+func (mock *MockTransitionDeployableEntity) Restart(previous State) (transitionEngine *ChainEngine, transitionCtx *ChainerContext, err error) {
+	return nil, nil, nil
+}
+
+func (mock *MockTransitionDeployableEntity) StoreMessage(notification StepNotif) error {
+	mock.notifications = append(mock.notifications, notification)
 	return nil
 }
 
 func pullImage(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(pullImage, processInProgress, "docker pull begins..."),
-	}, ctx.DeployableEntity)
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker pull begins...",
+		Operate: pullImage,
+		Status:  StepStatusInProgress,
+	}
 
-	return "docker image pulled", nil
+	return "docker pull done", nil
 }
 
 func createContainer(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(createContainer, processInProgress, "docker create begins..."),
-	}, ctx.DeployableEntity)
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker create begins...",
+		Operate: createContainer,
+		Status:  StepStatusInProgress,
+	}
 	return "docker create done", nil
 }
 
 func startContainer(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(startContainer, processInProgress, "docker start begins..."),
-	}, ctx.DeployableEntity)
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker start begins...",
+		Operate: startContainer,
+		Status:  StepStatusInProgress,
+	}
 	return "docker start done", nil
 }
 
 func removeImage(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(removeImage, processInProgress, "docker rmi begins..."),
-	}, ctx.DeployableEntity)
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker rmi begins...",
+		Operate: removeImage,
+		Status:  StepStatusInProgress,
+	}
 	return "docker rmi done", nil
 }
 
 func removeContainer(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(removeContainer, processInProgress, "docker remove begins..."),
-	}, ctx.DeployableEntity)
-	return "docker remove done", nil
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker rm begins...",
+		Operate: removeContainer,
+		Status:  StepStatusInProgress,
+	}
+	return "docker rm done", nil
 }
 
 func stopContainer(cancelContext context.Context, ctx *ChainerContext) (string, error) {
-	ctx.notifBus.Send(NotificationMessage{
-		Level:   log.InfoLevel.String(),
-		Message: stepSInfof(stopContainer, processInProgress, "docker stop begins..."),
-	}, ctx.DeployableEntity)
+	ctx.Notifier <- StepNotif{
+		Type:    StepTypeProcess,
+		Message: "docker stop begins...",
+		Operate: stopContainer,
+		Status:  StepStatusInProgress,
+	}
 	return "docker stop done", nil
 }
 
 func TestEngineTransitions(t *testing.T) {
 	var dummyTimeout time.Duration
 	Convey("On a Docktor engine", t, func() {
-		var notifs = make(NotificationBus)
+		var notifier = make(StepNotifier)
 		var logs = []string{}
 		var wg sync.WaitGroup
 		wg.Add(1)
 		go func() {
 			// Get the notifications from the engine
-			for msg := range notifs {
+			for msg := range notifier {
 				t.Log(msg)
 				logs = append(logs, msg.Message)
 			}
@@ -152,10 +178,9 @@ func TestEngineTransitions(t *testing.T) {
 
 		deployableEntity := NewMockTransitionDeployableEntity("test")
 		Convey("Given a deployable entity in 'initial state'", func() {
-			engine := NewEngine(deployableEntity, notifs, dummyTimeout)
+			engine := NewEngine(&deployableEntity, dummyTimeout)
 			Convey("When I try to run an 'install' transition", func() {
-				err := engine.Run(TransitionInstall)
-				close(notifs)
+				err := engine.Run(TransitionInstall, notifier)
 				wg.Wait()
 				Convey("Then I should be in a 'started' state", func() {
 					So(err, ShouldBeNil)
@@ -165,16 +190,23 @@ func TestEngineTransitions(t *testing.T) {
 				})
 				Convey("and notifications should contains logs from the steps", func() {
 					So(logs, ShouldHaveLength, 6)
-					So(logs[0], ShouldContainSubstring, "pull")
-					So(logs[1], ShouldContainSubstring, "pull")
-					So(logs[2], ShouldContainSubstring, "create")
-					So(logs[3], ShouldContainSubstring, "create")
-					So(logs[4], ShouldContainSubstring, "start")
-					So(logs[5], ShouldContainSubstring, "start")
+					So(logs[0], ShouldContainSubstring, "pull begins")
+					So(logs[1], ShouldContainSubstring, "pull done")
+					So(logs[2], ShouldContainSubstring, "create begins")
+					So(logs[3], ShouldContainSubstring, "create done")
+					So(logs[4], ShouldContainSubstring, "start begins")
+					So(logs[5], ShouldContainSubstring, "start done")
+				})
+				Convey("and notifications should have been stored", func() {
+					So(deployableEntity.notifications, ShouldHaveLength, 6)
+					So(deployableEntity.notifications[0].Message, ShouldContainSubstring, "pull begins")
+					So(deployableEntity.notifications[1].Message, ShouldContainSubstring, "pull done")
+					So(deployableEntity.notifications[2].Message, ShouldContainSubstring, "create begins")
+					So(deployableEntity.notifications[3].Message, ShouldContainSubstring, "create done")
+					So(deployableEntity.notifications[4].Message, ShouldContainSubstring, "start begins")
+					So(deployableEntity.notifications[5].Message, ShouldContainSubstring, "start done")
 				})
 			})
 		})
 	})
 }
-
-*/

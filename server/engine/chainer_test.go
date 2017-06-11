@@ -7,6 +7,7 @@ import (
 
 	"github.com/labstack/gommon/log"
 	. "github.com/smartystreets/goconvey/convey"
+	"sync"
 )
 
 // Step Up is a generic method to generate an Operation, that will end in either OK (✔️), KO(✖️) or Canceled(🚫)
@@ -262,14 +263,23 @@ func TestChainerEngineSimpleOKWorkflow(t *testing.T) {
 
 			Convey("When I run a workflow that does not exist", func() {
 				notifier := make(StepNotifier)
-				go chainer.Run("dontexist", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("dontexist", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, _ := fetchNotifications(notifier)
+				wg.Wait()
+				Convey("Then It exits in error saying that workflow does not exist", func() {
 
-				Convey("Then I get errors saying that workflow does not exist", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "does not exist")
 
-					Convey("and a single step has been executed and is KO", func() {
+					Convey("and no steps are executed", func() {
 						So(nbUpOK, ShouldEqual, 0)
-						So(nbUpKO, ShouldEqual, 1)
+						So(nbUpKO, ShouldEqual, 0)
 						So(nbDownOK, ShouldEqual, 0)
 						So(nbDownKO, ShouldEqual, 0)
 					})
@@ -278,7 +288,13 @@ func TestChainerEngineSimpleOKWorkflow(t *testing.T) {
 
 			Convey("But When I run an existing workflow, and try to add a new one while chain is executing", func() {
 				notifier := make(StepNotifier)
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 
 				var nbStepOK, nbStepDownAndErrors int
 				Convey("Then I get errors saying that I can't add a workflow while running", func() {
@@ -304,6 +320,8 @@ func TestChainerEngineSimpleOKWorkflow(t *testing.T) {
 							}
 						}
 					}
+
+					wg.Wait()
 
 					Convey("but every steps of the running engine end as OK", func() {
 						So(chainer.workflows["test"].running, ShouldBeFalse)
@@ -340,10 +358,21 @@ func TestChainerEngineRollback(t *testing.T) {
 					Step{Up: StepUpKO("test"), Down: StepDownOK("test")}, // The last step fails
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
+					So(runError.Error(), ShouldContainSubstring, "Error with up step")
+					So(runError.Error(), ShouldContainSubstring, "4/4")
 
 					Convey("with all up steps visited, the last one should be KO", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✔️", "✔️", "✖️"}) // All up steps should be visited
@@ -376,9 +405,20 @@ func TestChainerEngineRollback(t *testing.T) {
 					Step{Up: StepUpOK("test"), Down: StepDownOK("test")},
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
+					So(runError.Error(), ShouldContainSubstring, "Error with up step")
+					So(runError.Error(), ShouldContainSubstring, "2/4")
 					Convey("with first two up steps visited, the second one should be KO", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✖️"}) // Only first two steps should be visited
 						So(nbUpOK, ShouldEqual, 1)
@@ -411,9 +451,22 @@ func TestChainerEngineRollback(t *testing.T) {
 					Step{Up: StepUpOK("test"), Down: StepDownOK("test")},
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "rollback is KO")
+					So(runError.Error(), ShouldContainSubstring, "Error with up step")
+					So(runError.Error(), ShouldContainSubstring, "3/4")
+					So(runError.Error(), ShouldContainSubstring, "Error with down step")
+					So(runError.Error(), ShouldContainSubstring, "2/4")
 					Convey("with first 3 up steps visited, the 3d one should be KO", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✔️", "✖️"}) // Only first two steps should be visited
 						So(nbUpOK, ShouldEqual, 2)
@@ -448,10 +501,21 @@ func TestChainerEngineRollback(t *testing.T) {
 					Step{Up: StepUpOK("test"), Down: StepDownOK("test")},
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
+					So(runError.Error(), ShouldContainSubstring, "Error with up step")
+					So(runError.Error(), ShouldContainSubstring, "1/4")
 					Convey("with only first step visited and KO", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✖️"}) // Only first step should be visited
 						So(nbUpOK, ShouldEqual, 0)
@@ -467,7 +531,6 @@ func TestChainerEngineRollback(t *testing.T) {
 					})
 				})
 			})
-
 		})
 	})
 }
@@ -506,10 +569,20 @@ func TestChainerEngineWithCancel(t *testing.T) {
 					Step{Up: StepUpOK("test"), Down: StepDownOK("test")},
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "Operation has been canceled")
+					So(runError.Error(), ShouldContainSubstring, "3/4")
 					Convey("with the first 3 steps should be visited but the last one aborted", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✔️", "🚫"}) // The third step should receive an abort signal
 						So(nbUpOK, ShouldEqual, 2)
@@ -568,11 +641,22 @@ func TestChainerEngineWithCancel(t *testing.T) {
 					Step{Up: StepUpOK("test"), Down: StepDownOK("test")},
 				)
 
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 
 				Convey("Then the worklow should rollback to its inital state", func() {
-
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "Operation has been canceled")
+					So(runError.Error(), ShouldContainSubstring, "3/4")
+					So(runError.Error(), ShouldContainSubstring, "Rollback errors")
+					So(runError.Error(), ShouldContainSubstring, "2/4")
 					Convey("with the first 3 steps should be visited but the last one aborted", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✔️", "🚫"}) // The third step should receive an abort signal
 						So(nbUpOK, ShouldEqual, 2)
@@ -614,10 +698,20 @@ func TestChainerEngineWorkflowWithNoRollbacks(t *testing.T) {
 			)
 
 			Convey("When I run the workflow", func() {
-				go chainer.Run("test", context, notifier)
+				var runError error
+				var wg sync.WaitGroup
+				wg.Add(1)
+				go func() {
+					runError = chainer.Run("test", context, notifier)
+					wg.Done()
+				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
+				wg.Wait()
 
 				Convey("Then the worklow should rollback to its inital state", func() {
+					So(runError, ShouldNotBeNil)
+					So(runError.Error(), ShouldContainSubstring, "Error with up step")
+					So(runError.Error(), ShouldContainSubstring, "4/4")
 					Convey("with only all up steps visited, the last one KO", func() {
 						So(context.Data["test.up"], ShouldResemble, []string{"✔️", "✔️", "✔️", "✖️"}) // Only first two steps should be visited
 						So(nbUpOK, ShouldEqual, 3)

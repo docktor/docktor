@@ -36,3 +36,6 @@ deploy:
   file: "./docktor-${TRAVIS_TAG}.zip"
   on:
     tags: true
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
