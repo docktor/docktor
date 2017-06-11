@@ -21,6 +21,7 @@ test:
 	overalls -project=github.com/soprasteria/docktor -covermode=atomic -- -race -v
 	mkdir -p ./dist
 	go tool cover -html=overalls.coverprofile -o=dist/cover.html
+	cp overalls.coverprofile coverage.txt
 	rm -f ./*.coverprofile
 
 lint:
