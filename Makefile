@@ -21,9 +21,10 @@ test:
 	overalls -project=github.com/soprasteria/docktor -covermode=atomic -- -race -v
 	mkdir -p ./dist
 	go tool cover -html=overalls.coverprofile -o=dist/cover.html
+	cp overalls.coverprofile coverage.txt
 	rm -f ./*.coverprofile
 
 lint:
 	go get github.com/alecthomas/gometalinter
 	gometalinter --install
-	gometalinter --vendor --deadline=60m --fast --config=./gometalinter.json ./server/... ./model/... ./cmd/... .
+	gometalinter --vendor --deadline=60m --fast --config=./gometalinter.json ./server/... ./cmd/... .
