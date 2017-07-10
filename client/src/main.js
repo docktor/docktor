@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 
 // Components
@@ -34,25 +34,27 @@ ReactDOM.render(
     {/* Tell the Router to use our enhanced history */}
     <ConnectedRouter history={history}>
       <App>
-        <Route exact path='/' component={Home} />
-        <Route exact path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
-        <Route exact path='/daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
-        <Route exact path='/groups' component={requireAuthorization(GroupsPage)} />
-        <Route exact path='/groups/new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/groups/:id' component={requireAuthorization(GroupViewPage)} />
-        <Route exact path='/groups/:id/view' component={requireAuthorization(GroupViewPage)} />
-        <Route exact path='/groups/:id/edit' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/services' component={requireAuthorization(ServicesPage)} />
-        <Route exact path='/services/new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/services/:id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/users' component={requireAuthorization(UsersPage)} />
-        <Route exact path='/users/:id' component={requireAuthorization(UserPage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
-        <Route exact path='/settings' component={requireAuthorization(SettingsPage)} />
-        <Route exact path='/login' component={AuthPage} />
-        <Route exact path='/change_reset_password' component={ChangeResetPasswordPage} />
-        <Route exact path='/reset_password' component={ResetPasswordPage} />
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route exact path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+          <Route exact path='/daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+          <Route exact path='/groups' component={requireAuthorization(GroupsPage)} />
+          <Route exact path='/groups/new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/groups/:id' component={requireAuthorization(GroupViewPage)} />
+          <Route exact path='/groups/:id/view' component={requireAuthorization(GroupViewPage)} />
+          <Route exact path='/groups/:id/edit' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/services' component={requireAuthorization(ServicesPage)} />
+          <Route exact path='/services/new' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/services/:id' component={requireAuthorization(ServicePage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/users' component={requireAuthorization(UsersPage)} />
+          <Route exact path='/users/:id' component={requireAuthorization(UserPage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/tags' component={requireAuthorization(TagsPage, [AUTH_ADMIN_ROLE])} />
+          <Route exact path='/settings' component={requireAuthorization(SettingsPage)} />
+          <Route exact path='/login' component={AuthPage} />
+          <Route exact path='/change_reset_password' component={ChangeResetPasswordPage} />
+          <Route exact path='/reset_password' component={ResetPasswordPage} />
+        </Switch>
       </App>
     </ConnectedRouter>
   </Provider>,
