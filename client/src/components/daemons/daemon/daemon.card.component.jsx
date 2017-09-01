@@ -8,6 +8,7 @@ import classnames from 'classnames';
 
 // Components
 import DaemonsThunks from '../../../modules/daemons/daemons.thunks';
+import { getDaemonStatus } from '../../../modules/daemons/daemons.selectors';
 
 // Style
 import './daemon.card.component.scss';
@@ -20,27 +21,6 @@ class DaemonCard extends React.Component {
     if (daemon.active) {
       this.props.fetchInfo(daemon, false);
     }
-  }
-
-  getDaemonStatusColor = (info, daemon) => {
-    if (!info || !daemon.active) {
-      return 'grey';
-    } else if (info.status === 'UP') {
-      return 'green';
-    } else {
-      return 'red';
-    }
-  }
-
-  getDaemonStatusLabel = (info, daemon) => {
-    let daemonStatusTitle = 'UNKNOWN';
-    if (!daemon.active) {
-      daemonStatusTitle = 'N/A';
-    }
-    else if (info) {
-      daemonStatusTitle = info.status;
-    }
-    return daemonStatusTitle;
   }
 
   renderButtons = (nbImages, nbContainers) => {
@@ -86,15 +66,15 @@ class DaemonCard extends React.Component {
     const daemonStatusClasses = classnames({ disabled: isFetching || !daemon.active });
     const nbImages = parseInt(info && info.nbImages ? info.nbImages : '0');
     const nbContainers = parseInt(info && info.nbContainers ? info.nbContainers : '0');
-
+    const status = getDaemonStatus(info, daemon);
     return (
       <Card className='daemon-card'>
         <Card.Content>
           <Card.Header as={Link} to={'/daemons/' + daemon.id}>
             <Icon className='server' />{daemon.name}
           </Card.Header>
-          <Label attached='top right' title={info ? info.message : ''} color={this.getDaemonStatusColor(info, daemon)} className={daemonStatusClasses}>
-            {this.getDaemonStatusLabel(info, daemon)}
+          <Label attached='top right' title={info ? info.message : ''} color={status.color} className={daemonStatusClasses}>
+            {status.label}
           </Label>
           <Card.Meta>{site.title}</Card.Meta>
           <Card.Description>{daemon.description}</Card.Description>

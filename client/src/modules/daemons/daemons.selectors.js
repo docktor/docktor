@@ -1,10 +1,11 @@
 import { transformFilterToObject, contains } from '../utils/utils';
+import sortBy from 'lodash.sortby';
 
 export const getFilteredDaemons = (daemons, sites, filterValue) => {
   if (!filterValue || filterValue === '') {
-    return Object.values(daemons);
+    return sortBy(Object.values(daemons), d => d.name);
   } else {
-    return Object.values(daemons).filter(daemon => {
+    const ds = Object.values(daemons).filter(daemon => {
       let match = true;
       const query = transformFilterToObject(filterValue);
       Object.keys(query).forEach(key => {
@@ -33,6 +34,7 @@ export const getFilteredDaemons = (daemons, sites, filterValue) => {
       });
       return match;
     });
+    return sortBy(ds, d => d.name);
   }
 };
 
@@ -42,4 +44,32 @@ export const getDaemonsAsFSOptions = (daemons) => {
     .map(daemon => {
       return { value: daemon.id, name: daemon.name };
     });
+};
+
+const getDaemonStatusColor = (info, daemon) => {
+  if (!info || !daemon.active) {
+    return 'grey';
+  } else if (info.status === 'UP') {
+    return 'green';
+  } else {
+    return 'red';
+  }
+};
+
+const getDaemonStatusLabel = (info, daemon) => {
+  let daemonStatusTitle = 'UNKNOWN';
+  if (!daemon.active) {
+    daemonStatusTitle = 'N/A';
+  }
+  else if (info) {
+    daemonStatusTitle = info.status;
+  }
+  return daemonStatusTitle;
+};
+
+export const getDaemonStatus = (info, daemon) => {
+  return {
+    label: getDaemonStatusLabel(info, daemon),
+    color: getDaemonStatusColor(info, daemon)
+  };
 };
