@@ -17,7 +17,7 @@ class SigninPane extends React.Component {
 
   schema = Joi.object().keys({
     username: Joi.string().trim().alphanum().required().label('Username'),
-    password: Joi.string().trim().min(6).required().label('Password')
+    password: Joi.string().trim().required().label('Password')
   })
 
   componentWillMount = () => {
