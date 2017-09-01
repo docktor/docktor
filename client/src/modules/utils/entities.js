@@ -153,8 +153,11 @@ const itemsReducer = (csts) => (items = {}, action) => {
       return { [action.id]: { ...item, isFetching: true }, ...restState };
     }
     case csts.CONST_SAVE_ENTITY: {
-      const { [action.entity.id]: item, ...restState } = items;
-      return { [action.entity.id]: { ...item, isFetching: true }, ...restState };
+      if (action.entity.id) {
+        const { [action.entity.id]: item, ...restState } = items;
+        return { [action.entity.id]: { ...item, isFetching: true }, ...restState };
+      }
+      return items;
     }
     case csts.CONST_DELETE_ENTITY: {
       const { [action.id]: item, ...restState } = items;
@@ -282,7 +285,7 @@ export const generateEntitiesThunks = (entitiesName) => {
         });
     };
   };
-  const saveFunc = (form, postActionRedirect, postActionToast) => {
+  const saveFunc = (form, postActionRedirect, postActionToast, callback) => {
     let entity = { ...form };
     entity.created = entity.created ? new Date(entity.created) : new Date();
     const endpoint = entity.id || 'new';
@@ -306,6 +309,9 @@ export const generateEntitiesThunks = (entitiesName) => {
           dispatch(Actions.saved(normalizedResponse));
           postActionRedirect && dispatch(postActionRedirect(response.id));
           postActionToast && dispatch(postActionToast);
+          if (callback) {
+            callback();
+          }
         })
         .catch(error => {
           handleError(error, Actions.invalidSaveEntity(entity), dispatch);
