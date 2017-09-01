@@ -295,7 +295,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchSites: () => dispatch(SitesThunks.fetchAll()),
     fetchTags: () => dispatch(TagsThunks.fetchAll()),
     onSave: daemon => dispatch(
-      DaemonsThunks.save(daemon, (id) => push('/daemons/' + id), ToastsActions.confirmSave(`Daemon "${daemon.name}"`))
+      DaemonsThunks.save(daemon, (id) => push('/daemons/' + id), ToastsActions.confirmSave(`Daemon "${daemon.name}"`), function() {
+        dispatch(DaemonsThunks.fetchDaemonInfo(daemon, true));
+      })
     ),
     onDelete: daemon => {
       const callback = () => dispatch(DaemonsThunks.delete(daemon, () => push('/daemons')));
