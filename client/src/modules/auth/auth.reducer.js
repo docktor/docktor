@@ -16,6 +16,7 @@ const isFetching = (state = false, action) => {
     case AuthConstants.LOGIN_SUCCESS:
     case AuthConstants.LOGIN_INVALID_REQUEST:
     case AuthConstants.LOGIN_NOT_AUTHORIZED:
+    case AuthConstants.LOGIN_BAD_AUTH_TOKEN:
     case AuthConstants.LOGOUT_SUCCESS:
     case AuthConstants.PROFILE_SUCCESS:
     case AuthConstants.PROFILE_FAILURE:
@@ -46,6 +47,7 @@ const isAuthenticated = (state = initialAuthenticated, action) => {
     case AuthConstants.LOGIN_REQUEST:
     case AuthConstants.LOGIN_INVALID_REQUEST:
     case AuthConstants.LOGIN_NOT_AUTHORIZED:
+    case AuthConstants.LOGIN_BAD_AUTH_TOKEN:
     case AuthConstants.LOGOUT_SUCCESS:
     case AuthConstants.PROFILE_REQUEST:
     case AuthConstants.PROFILE_FAILURE:
@@ -66,6 +68,7 @@ const errorMessage = (state = '', action) => {
     case AuthConstants.REGISTER_SUCCESS:
     case AuthConstants.RESET_PASSWORD_SUCCESS:
     case AuthConstants.CHANGE_PASSWORD_SUCCESS:
+    case AuthConstants.LOGIN_BAD_AUTH_TOKEN:
       return '';
     case AuthConstants.LOGIN_INVALID_REQUEST:
     case AuthConstants.LOGIN_NOT_AUTHORIZED:
@@ -87,6 +90,7 @@ const user = (state = {}, action) => {
     case AuthConstants.LOGIN_REQUEST:
     case AuthConstants.LOGIN_INVALID_REQUEST:
     case AuthConstants.LOGIN_NOT_AUTHORIZED:
+    case AuthConstants.LOGIN_BAD_AUTH_TOKEN:
     case AuthConstants.LOGOUT_SUCCESS:
     case AuthConstants.REGISTER_REQUEST:
     case AuthConstants.REGISTER_INVALID_REQUEST:

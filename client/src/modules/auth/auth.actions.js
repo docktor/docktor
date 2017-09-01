@@ -69,6 +69,7 @@ export const AuthConstants = {
   LOGIN_SUCCESS : 'LOGIN_SUCCESS',
   LOGIN_INVALID_REQUEST : 'LOGIN_INVALID_REQUEST',
   LOGIN_NOT_AUTHORIZED : 'LOGIN_NOT_AUTHORIZED',
+  LOGIN_BAD_AUTH_TOKEN: 'LOGIN_BAD_AUTH_TOKEN',
   LOGOUT_REQUEST : 'LOGOUT_REQUEST',
   LOGOUT_SUCCESS : 'LOGOUT_SUCCESS',
   PROFILE_REQUEST : 'PROFILE_REQUEST',
@@ -136,6 +137,9 @@ const loginInvalidRequest = (error) => {
 
 // Action when user is not authorized to authenticate (bad password for example)
 const loginNotAuthorized = (error) => ({ type: AuthConstants.LOGIN_NOT_AUTHORIZED, error });
+
+// Action when auth token is wrong (invalid or expired)
+const loginBadAuthToken = () => ({ type: AuthConstants.LOGIN_BAD_AUTH_TOKEN });
 
 
 //=================================================
@@ -225,7 +229,7 @@ const switchFormAction = () => ({ type: AuthConstants.SWITCH_FORM });
 
 export default {
   requestRegister, receiveRegister, registerInvalidRequest, registerNotAuthorized,
-  requestLogin, receiveLogin, loginInvalidRequest, loginNotAuthorized,
+  requestLogin, receiveLogin, loginInvalidRequest, loginNotAuthorized, loginBadAuthToken,
   requestLogout, receiveLogout, requestProfile, receiveProfile,
   profileError, switchFormAction, requestChangePassword, receiveChangePassword,
   changePasswordInvalidRequest, changePasswordNotAuthorized, requestResetPassword,
