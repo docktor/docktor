@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Dimmer, Loader } from 'semantic-ui-react';
 
 import { isRoleAuthorized } from '../../modules/utils/utils';
 
@@ -31,17 +32,23 @@ export function requireAuthorization(Component, Roles) {
     }
 
     checkAuth = (isAuthenticated, userRole, isFetching) => {
+      if (isFetching) {
+        return;
+      }
       if (!isAuthenticated) {
         let redirectAfterLogin = this.props.loc.pathname;
         this.props.redirect('/login?next=' + redirectAfterLogin);
-      } else if (!isRoleAuthorized(Roles, userRole) && !isFetching) {
+      } else if (!isRoleAuthorized(Roles, userRole)) {
         this.props.redirect('/');
       }
     }
 
     render = () => {
-      const isAuthenticated = this.props.auth.isAuthenticated;
+      const { isAuthenticated, isFetching } = this.props.auth;
       const role = this.props.auth.user.role;
+      if (isFetching) {
+        return <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>;
+      }
       if (isAuthenticated && isRoleAuthorized(Roles, role)) {
         return <Component {...this.props} />;
       }

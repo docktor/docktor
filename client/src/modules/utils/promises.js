@@ -1,4 +1,5 @@
 import AuthActions from '../auth/auth.actions';
+import AuthThunk from '../auth/auth.thunk';
 import { push } from 'react-router-redux';
 
 // Throw error if http response is in error
@@ -23,11 +24,18 @@ export const parseText = response => {
 };
 
 const dispatchError = (status, action, text, dispatch) => {
-  if (status === 401 || status === 403) {
-    // When JWT Token expired or is invalid, redirect to auth
+  if (status === 401) {
+    // Unauthorized user, user will be logged out
+    // Happens when JWT Token expired or is invalid
+    // Redirecting him to login page
     localStorage.removeItem('id_token');
     dispatch(AuthActions.loginBadAuthToken());
     dispatch(push('/login'));
+  } else if (status === 403) {
+    // User does not have right to see the page
+    // Reload user properties from server and redirecting him to home page
+    dispatch(AuthThunk.profile());
+    dispatch(push('/'));
   } else {
     dispatch(action(text));
   }
@@ -42,7 +50,7 @@ export const handleError = (error, action, dispatch) => {
     const status = response.status;
     response.json()
       .then(json => dispatchError(status, action, json.message, dispatch ))
-      .catch(() => response.text().then(text => dispatchError(status, action, text, dispatch )));
+      .catch(() => dispatchError(status, action, response.statusText, dispatch ));
   } else {
     dispatch(action(error.message));
   }
