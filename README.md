@@ -163,7 +163,7 @@ Updating dependencies regularly is important to fix bugs and use latest features
 
 ## Back-end : Golang
 
-```
+```bash
 # Run govendor to update every Golang dependency from remote packages.
 govendor fetch +all
 # Build the application to check that application still compiles
@@ -174,7 +174,7 @@ npm run build
 
 Use of [NPM-Check-Updates](https://www.npmjs.com/package/npm-check-updates) is strongly recommended.
 
-```
+```bash
 # Install NPM Check Updates (aka ncu)
 [sudo] npm install -g npm-check-updates
 # List all updatable libraries
