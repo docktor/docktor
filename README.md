@@ -181,6 +181,7 @@ Use of [NPM-Check-Updates](https://www.npmjs.com/package/npm-check-updates) is s
 ncu
 # Upgrade package.json with latest stable and comaptible versions
 ncu -u
+npm install
 # Build the application to check that application is still working
 # For dev
 npm start
