@@ -21,7 +21,7 @@ import (
 
 	"gopkg.in/natefinch/lumberjack.v2"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

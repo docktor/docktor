@@ -6,11 +6,12 @@ import (
 	"net/mail"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
+	"strconv"
+
 	"github.com/matcornic/hermes"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gopkg.in/gomail.v2"
-	"strconv"
 )
 
 type smtpAuthentication struct {
