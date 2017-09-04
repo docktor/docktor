@@ -52,7 +52,7 @@ class UserCardComponent extends React.Component {
               <Link to={`/users/${user.id}`}>
                 {user.displayName}
               </Link>
-            :
+              :
               user.displayName
           }
           <Dropdown trigger={this.renderDropDown(user)} compact onChange={this.handleChange} options={options}

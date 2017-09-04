@@ -118,7 +118,7 @@ class UserComponent extends React.Component {
                     type='text' name='username' autoComplete='off' placeholder='Username'
                   />
                   <Form.Input required readOnly label='Email Address' value={user.email || ''} onChange={this.handleChange}
-                      type='text' name='email' autoComplete='off' placeholder='A valid email address'
+                    type='text' name='email' autoComplete='off' placeholder='A valid email address'
                   />
                 </Form.Group>
 
@@ -127,7 +127,7 @@ class UserComponent extends React.Component {
                     type='text' name='firstName' autoComplete='off' placeholder='First Name'
                   />
                   <Form.Input required readOnly label='Last Name' value={user.lastName || ''} onChange={this.handleChange}
-                      type='text' name='lastName' autoComplete='off' placeholder='Last Name'
+                    type='text' name='lastName' autoComplete='off' placeholder='Last Name'
                   />
                 </Form.Group>
 

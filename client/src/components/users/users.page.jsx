@@ -46,12 +46,12 @@ class Users extends React.Component {
         </div>
         <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center wrap user-list'>
-              {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
-              {users.map(user => {
-                return (
-                  <UserCard user={user} key={user.id} />
-                );
-              })}
+            {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
+            {users.map(user => {
+              return (
+                <UserCard user={user} key={user.id} />
+              );
+            })}
           </div>
         </Scrollbars>
       </div>

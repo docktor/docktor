@@ -49,12 +49,12 @@ class Services extends React.Component {
         </div>
         <Scrollbars autoHide className='flex ui dimmable'>
           <div className='flex layout horizontal center-center services-list wrap'>
-              {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
-              {services.map(service => {
-                return (
-                  <ServiceCard service={service} key={service.id} />
-                );
-              })}
+            {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
+            {services.map(service => {
+              return (
+                <ServiceCard service={service} key={service.id} />
+              );
+            })}
           </div>
         </Scrollbars>
       </div>

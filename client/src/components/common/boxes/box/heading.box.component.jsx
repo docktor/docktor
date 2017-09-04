@@ -34,7 +34,7 @@ class HeadingBox extends React.Component {
             <Icon name={icon} size='large'/>
             <span className='title'>{title}</span>
             <Header floated='right'>
-                <Icon link name={stackedIcon + ' square outline'} />
+              <Icon link name={stackedIcon + ' square outline'} />
             </Header>
           </Message.Header>
         </Message>

@@ -49,12 +49,12 @@ class Groups extends React.Component {
         </div>
         <Scrollbars autoHide className='flex'>
           <div className='flex layout horizontal center-center groups-list wrap'>
-              {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
-              {groups.map(group => {
-                return (
-                  <GroupCard group={group} key={group.id} />
-                );
-              })}
+            {isFetching && <Dimmer active><Loader size='large' content='Fetching'/></Dimmer>}
+            {groups.map(group => {
+              return (
+                <GroupCard group={group} key={group.id} />
+              );
+            })}
           </div>
         </Scrollbars>
       </div>

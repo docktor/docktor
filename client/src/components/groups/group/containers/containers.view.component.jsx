@@ -51,21 +51,21 @@ class ContainersView extends React.Component {
             const containerTags = container.tags || [];
             const serviceTags = service.tags || [] ;
             return (
-            <Table.Row key={container.id}>
-              <Table.Cell>{container.serviceTitle.toUpperCase() || service.title.toUpperCase() || 'Unknown'}</Table.Cell>
-              <Table.Cell>{container.name}</Table.Cell>
-              <Table.Cell>
-                {services.isFetching && <span><Icon loading name='notched circle' />Loading...</span>}
-                {containerTags.length === 0 && serviceTags.length === 0 && <span>No tag</span>}
-                <Label.Group>
-                {this.renderTags(serviceTags, tags, tagToFilter, colorTagCategories)}
-                {this.renderTags(containerTags, tags, tagToFilter, colorTagCategories)}
-                </Label.Group>
-              </Table.Cell>
-              <Table.Cell textAlign='center'>
-                <Button compact size='tiny' color='green' content='UP' labelPosition='right' icon='refresh' />
-              </Table.Cell>
-            </Table.Row>
+              <Table.Row key={container.id}>
+                <Table.Cell>{container.serviceTitle.toUpperCase() || service.title.toUpperCase() || 'Unknown'}</Table.Cell>
+                <Table.Cell>{container.name}</Table.Cell>
+                <Table.Cell>
+                  {services.isFetching && <span><Icon loading name='notched circle' />Loading...</span>}
+                  {containerTags.length === 0 && serviceTags.length === 0 && <span>No tag</span>}
+                  <Label.Group>
+                    {this.renderTags(serviceTags, tags, tagToFilter, colorTagCategories)}
+                    {this.renderTags(containerTags, tags, tagToFilter, colorTagCategories)}
+                  </Label.Group>
+                </Table.Cell>
+                <Table.Cell textAlign='center'>
+                  <Button compact size='tiny' color='green' content='UP' labelPosition='right' icon='refresh' />
+                </Table.Cell>
+              </Table.Row>
             );
           })
           }

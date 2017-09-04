@@ -66,7 +66,7 @@ const getTagIdsFromContainers = (containers) => {
 // Get tag ids from all containers (= services)
 const getTagsIdsFromServices = (containers, services) => {
   const containerServices = containers.map(container => services.items[container.serviceId])
-                                        .filter(service => Boolean(service));
+    .filter(service => Boolean(service));
   return getTagIdsFromEntities(containerServices);
 };
 
@@ -94,7 +94,7 @@ const otherTag = {
 
 // Get containers grouped by category
 const getContainersGroupedByCategory = (tagsFromCategory, allContainers, services) => {
-    // Iterate through all tags from given category
+  // Iterate through all tags from given category
   const containersByTag = tagsFromCategory.map(tag => {
     // Keep only containers with given tag
     const containersWithTag = allContainers.filter(container => {
@@ -103,8 +103,8 @@ const getContainersGroupedByCategory = (tagsFromCategory, allContainers, service
     });
     // Keep only services with given tag
     const servicesWithTag = allContainers.map(container => services.items[container.serviceId])
-                                          .filter(service => Boolean(service))
-                                          .filter(service => service.tags.includes(tag.id));
+      .filter(service => Boolean(service))
+      .filter(service => service.tags.includes(tag.id));
     // Keep only containers of a type of service containing given tag
     const containersFromServicesWithTags = allContainers.filter(
       container => servicesWithTag.filter( service => service.id === container.serviceId).length > 0

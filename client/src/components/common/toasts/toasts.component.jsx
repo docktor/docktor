@@ -67,8 +67,8 @@ const mapDispatchToNotificationsProps = (dispatch) => {
 
 // Redux container to Sites component
 const ToastsContainer = connect(
-    mapStateToNotificationsProps,
-    mapDispatchToNotificationsProps
+  mapStateToNotificationsProps,
+  mapDispatchToNotificationsProps
 )(Toasts);
 
 export default ToastsContainer;

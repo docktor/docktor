@@ -71,20 +71,20 @@ class ImageTab extends React.Component {
     const { images } = this.state;
     return (
       <div className='docker images padded layout vertical'>
-          {images && images.map((image, index) => {
-            return (
-              <ImageDetails
-                key={index}
-                image={image}
-                onCopy={() => this.onCopy(index)}
-                onRemove={() => this.onRemove(index)}
-                ref={(img) => this.images[index] = img}
-              />
-            );
-          })}
-          <div className='image-detail new layout horizontal justified'>
-            <Button content='Add Image' icon='plus' labelPosition='left' color='green' onClick={this.onAdd} />
-          </div>
+        {images && images.map((image, index) => {
+          return (
+            <ImageDetails
+              key={index}
+              image={image}
+              onCopy={() => this.onCopy(index)}
+              onRemove={() => this.onRemove(index)}
+              ref={(img) => this.images[index] = img}
+            />
+          );
+        })}
+        <div className='image-detail new layout horizontal justified'>
+          <Button content='Add Image' icon='plus' labelPosition='left' color='green' onClick={this.onAdd} />
+        </div>
       </div>
     );
   }

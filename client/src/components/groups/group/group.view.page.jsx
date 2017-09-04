@@ -64,8 +64,8 @@ class GroupViewComponent extends React.Component {
 
   getMembersEmail = (members, users) => {
     return members.map(member => users[member.user])
-                  .filter(member => Boolean(member))
-                  .map(member => member.email);
+      .filter(member => Boolean(member))
+      .map(member => member.email);
   }
 
   // Render the members of the group
@@ -80,10 +80,10 @@ class GroupViewComponent extends React.Component {
       return (
         <div className='members-list'>
           <div className='ui buttons'>
-              <a href={`mailto:${memberAddresses.join(',')}?subject=[Docktor] ${group.title}`} className='ui icon button'><Icon name='mail' />Email all</a>
-              <a href={`mailto:${moderatorAdresses.join(',')}?subject=[Docktor] For ${group.title} moderators`} className={mailtoModeratorAddressesClasses}>
-                <Icon name='mail' />Email moderators
-              </a>
+            <a href={`mailto:${memberAddresses.join(',')}?subject=[Docktor] ${group.title}`} className='ui icon button'><Icon name='mail' />Email all</a>
+            <a href={`mailto:${moderatorAdresses.join(',')}?subject=[Docktor] For ${group.title} moderators`} className={mailtoModeratorAddressesClasses}>
+              <Icon name='mail' />Email moderators
+            </a>
           </div>
           <div className='flex layout horizontal wrap'>
             {group.members.map(member => {
@@ -163,7 +163,7 @@ class GroupViewComponent extends React.Component {
                 <Form as={HeadingBox} stacked className='box-component' icon='users' title='Members'>
                   {this.renderMembers(group, users)}
                 </Form>
-                 <ContainersBox isFetching={isFetching} group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
+                <ContainersBox isFetching={isFetching} group={group} display={display} groupBy={groupBy} containers={group.containers || []} tags={tags || {}}  services={services || {}} daemons={daemons || []} />
               </Segment>
             </div>
           </div>

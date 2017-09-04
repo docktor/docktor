@@ -32,25 +32,25 @@ class Settings extends React.Component {
     const { user, isAuthenticated, isFetching, saveProfile, changePassword, deleteAccount } = this.props;
     if (isFetching) {
       return (
-          <div className='ui active inverted dimmer'>
-            <div className='ui text loader'>Fetching</div>
-          </div>
+        <div className='ui active inverted dimmer'>
+          <div className='ui text loader'>Fetching</div>
+        </div>
       );
     } else if (isAuthenticated) {
       return (
-      <TabForm selected={this.selectTab()}>
+        <TabForm selected={this.selectTab()}>
           <Profile
             link='profile' label='Profile' title='Edit your profile' submit='Save'
             user={user} onSave={saveProfile} onDelete={deleteAccount}
-            />
+          />
           <Details
             link='details' label='Details' title='View your details'
-            />
+          />
           <ChangePassword
             link='change-password' label='Password' title='Change your password' submit='Change password'
             user={user} onChangePassword={changePassword}
-            />
-      </TabForm>
+          />
+        </TabForm>
       );
     } else {
       return <div>Your are not authorized to see this page</div>;

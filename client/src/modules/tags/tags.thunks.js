@@ -32,15 +32,15 @@ const createTags = (form) => {
         body: JSON.stringify(tag)
       }));
       return fetch(request)
-      .then(checkHttpStatus)
-      .then(parseJSON)
-      .then(response => {
-        const normalizedResponse = normalize(response, entitySchema);
-        dispatch(TagsActions.saved(normalizedResponse));
-      })
-      .catch(error => {
-        handleError(error, TagsActions.invalidSaveEntity(tag), dispatch);
-      });
+        .then(checkHttpStatus)
+        .then(parseJSON)
+        .then(response => {
+          const normalizedResponse = normalize(response, entitySchema);
+          dispatch(TagsActions.saved(normalizedResponse));
+        })
+        .catch(error => {
+          handleError(error, TagsActions.invalidSaveEntity(tag), dispatch);
+        });
     };
 
     return Promise.all(

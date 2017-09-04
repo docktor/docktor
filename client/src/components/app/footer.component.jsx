@@ -6,9 +6,9 @@ import './footer.component.scss';
 
 // Footer Component
 const Footer = () => (
-    <div className='footer'>
+  <div className='footer'>
         Docktor 2016-2017. GNU General Public License 3.0 <a href='https://github.com/docktor/docktor'><i className='big black github icon' /></a>
-    </div>
+  </div>
 );
 
 export default Footer;

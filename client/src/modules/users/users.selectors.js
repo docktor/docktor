@@ -59,7 +59,7 @@ export const getFilteredUsers = (users, filterValue) => {
       });
       return match;
     })
-    .sort(sortUsers);
+      .sort(sortUsers);
   }
 };
 

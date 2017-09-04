@@ -31,7 +31,7 @@ const loginUser = (creds) => {
       .then (checkHttpStatus)
       .then(parseJSON)
       .then((user) =>  {
-          // When uer is authorized, add the JWT token in the localstorage for authentication purpose
+        // When uer is authorized, add the JWT token in the localstorage for authentication purpose
         localStorage.setItem('id_token', user.id_token);
         dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
@@ -98,7 +98,7 @@ const registerUser = (account) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then((user) =>  {
-          // When uer is authorized
+        // When uer is authorized
         localStorage.setItem('id_token', user.id_token);
         dispatch(AuthActions.receiveRegister(user));
       }).catch(error => {
@@ -213,7 +213,7 @@ const changePasswordAfterReset = (newPassword, token) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then((user) =>  {
-          // His password is now changed and he is automatically connected
+        // His password is now changed and he is automatically connected
         localStorage.setItem('id_token', user.id_token);
         dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
