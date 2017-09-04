@@ -6,10 +6,10 @@ import (
 
 	"errors"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/looplab/fsm"
 	"github.com/orcaman/concurrent-map"
 	uuid "github.com/satori/go.uuid"
+	log "github.com/sirupsen/logrus"
 )
 
 // Default timeout for a transition

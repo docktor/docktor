@@ -7,10 +7,10 @@ import (
 	"net/mail"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
-	"github.com/soprasteria/docktor/server/modules/auth"
+	log "github.com/sirupsen/logrus"
 	"github.com/soprasteria/docktor/server/models"
+	"github.com/soprasteria/docktor/server/modules/auth"
 	"github.com/soprasteria/docktor/server/modules/users"
 )
 

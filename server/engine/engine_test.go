@@ -3,7 +3,7 @@ package engine
 import (
 	"context"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	. "github.com/smartystreets/goconvey/convey"
 	"sync"
 	"testing"

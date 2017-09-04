@@ -1,7 +1,7 @@
 package models
 
 import (
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 
 	"strings"

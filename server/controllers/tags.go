@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
+	log "github.com/sirupsen/logrus"
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2/bson"

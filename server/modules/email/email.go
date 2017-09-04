@@ -6,7 +6,7 @@ import (
 	"net/mail"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/matcornic/hermes"
 	"github.com/spf13/viper"
 	"gopkg.in/gomail.v2"

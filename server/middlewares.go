@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
+	log "github.com/sirupsen/logrus"
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/modules/auth"
 	"github.com/soprasteria/docktor/server/modules/users"
