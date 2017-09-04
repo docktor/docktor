@@ -123,6 +123,7 @@ Be careful, new endpoints will not be taken account until you restart the debugg
 You can generate the binaries with:
 
 ```sh
+npm run build
 npm run package
 ```
 
