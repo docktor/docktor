@@ -11,10 +11,10 @@ Docktor is a platform for administrating and deploying SaaS services based on Do
 Tools and dependencies:
 * Golang 1.7+
   * [govendor](https://github.com/kardianos/govendor)
-* NodeJS 7.2.0
-  * npm
-  * [gulp](https://github.com/gulpjs/gulp)
+* NodeJS 8+
+  * npm 5+
 * Docker
+  * 1.11+
 
 Get the dependencies:
 
@@ -156,6 +156,40 @@ If you need to lint inplace your Javascript files afterwards, run:
 ```bash
 npm run client:fix
 ```
+
+# Updating dependencies
+
+Updating dependencies regularly is important to fix bugs and use latest features.
+
+## Back-end : Golang
+
+```
+# Run govendor to update every Golang dependency from remote packages.
+govendor fetch +all
+# Build the application to check that application still compiles
+npm run build
+```
+
+## Front-end : NPM
+
+Use of [NPM-Check-Updates](https://www.npmjs.com/package/npm-check-updates) is strongly recommended.
+
+```
+# Install NPM Check Updates (aka ncu)
+[sudo] npm install -g npm-check-updates
+# List all updatable libraries
+ncu
+# Upgrade package.json with latest stable and comaptible versions
+ncu -u
+# Build the application to check that application is still working
+# For dev
+npm start
+# For prod
+npm run build
+./docktor serve
+```
+
+To update dependencies with latest version (not necessarily compatible), use `ncu -a`
 
 ## License
 
