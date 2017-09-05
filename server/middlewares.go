@@ -59,12 +59,12 @@ func openLDAP(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if address == "" {
 			// Don't use LDAP, no problem
-			log.Info("No LDAP configured")
+			log.Debug("No LDAP configured")
 			return next(c)
 		}
 
 		// Enrich the echo context with LDAP configuration
-		log.Info("LDAP configured")
+		log.Debug("LDAP configured")
 
 		ldap := auth.NewLDAP(&auth.LDAPConf{
 			LdapServer:   address,
