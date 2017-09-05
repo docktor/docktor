@@ -12,7 +12,7 @@ build:
 
 run:
 	go get github.com/skelterjohn/rerun
-	rerun github.com/soprasteria/docktor serve
+	rerun github.com/soprasteria/docktor serve --level=debug
 
 test:
 	go get github.com/stretchr/testify

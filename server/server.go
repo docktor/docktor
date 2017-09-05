@@ -2,6 +2,8 @@ package server
 
 import (
 	"net/http"
+	"sort"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 	redis "gopkg.in/redis.v3"
@@ -167,6 +169,10 @@ func New() {
 
 	engine.GET("/*", GetIndex)
 	engine.HideBanner = true
+
+	if log.GetLevel() == log.DebugLevel {
+		displayAvailableRoutes(engine.Routes())
+	}
 	log.Info("Server started on port 8080")
 	if err := engine.Start(":8080"); err != nil {
 		log.WithError(err).Fatal("Can't start server")
@@ -184,4 +190,27 @@ func pong(c echo.Context) error {
 // GetIndex handler which render the index.html of mom
 func GetIndex(c echo.Context) error {
 	return c.File("client/dist/index.html")
+}
+
+func displayAvailableRoutes(routes []*echo.Route) {
+	sort.Sort(ByRoutePath(routes))
+	for _, r := range routes {
+		if strings.Contains(r.Name, "controllers") {
+			log.Debugf("Available API route - %-7v:%v", r.Method, r.Path)
+		}
+	}
+}
+
+// ByRoutePath is a sortable type meant to sort Echo routes by path, then by HTTP method
+type ByRoutePath []*echo.Route
+
+func (a ByRoutePath) Len() int      { return len(a) }
+func (a ByRoutePath) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByRoutePath) Less(i, j int) bool {
+	ai := a[i]
+	aj := a[j]
+	if ai.Path == aj.Path {
+		return ai.Method < aj.Method
+	}
+	return ai.Path < aj.Path
 }
