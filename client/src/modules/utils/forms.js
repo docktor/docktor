@@ -60,3 +60,18 @@ export const parseErrorArray = (error) => {
   });
   return { details, fields };
 };
+
+const objectToQueryString = (formData) => {
+  return Object.keys(formData)
+    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(formData[k])}`)
+    .join('&');
+};
+
+// Encode the form with its data to avoid problem with reserved characters
+export const encodeForm = (formData) => {
+  return {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: objectToQueryString(formData)
+  };
+};

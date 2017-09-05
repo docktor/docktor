@@ -1,6 +1,7 @@
 // Imports for fetch API
 import { withAuth } from '../utils/utils';
 import { checkHttpStatus, parseJSON, handleError } from '../utils/promises';
+import { encodeForm } from '../utils/forms';
 
 // Auth Actions
 import AuthActions from './auth.actions';
@@ -17,11 +18,7 @@ const switchForm = () => {
 // dispatches actions along the way
 const loginUser = (creds) => {
 
-  let config = {
-    method: 'POST',
-    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-    body: `username=${creds.username}&password=${creds.password}`
-  };
+  let config = encodeForm(creds);
 
   return dispatch => {
     // We dispatch requestLogin to kickoff the call to the API
@@ -31,7 +28,7 @@ const loginUser = (creds) => {
       .then (checkHttpStatus)
       .then(parseJSON)
       .then((user) =>  {
-        // When uer is authorized, add the JWT token in the localstorage for authentication purpose
+        // When user is authorized, add the JWT token in the localstorage for authentication purpose
         localStorage.setItem('id_token', user.id_token);
         dispatch(AuthActions.receiveLogin(user));
       }).catch(error => {
@@ -84,11 +81,7 @@ const profile = () => {
 // Register the user to the application
 const registerUser = (account) => {
 
-  let config = {
-    method: 'POST',
-    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-    body: `username=${account.username}&password=${account.password}&email=${account.email}&firstname=${account.firstname}&lastname=${account.lastname}`
-  };
+  let config = encodeForm(account);
 
   return dispatch => {
     // We dispatch requestLogin to kickoff the call to the API
@@ -98,7 +91,7 @@ const registerUser = (account) => {
       .then(checkHttpStatus)
       .then(parseJSON)
       .then((user) =>  {
-        // When uer is authorized
+        // When user is authorized
         localStorage.setItem('id_token', user.id_token);
         dispatch(AuthActions.receiveRegister(user));
       }).catch(error => {
@@ -162,11 +155,7 @@ const changePassword = (account) => {
 // Reset the password of user.
 const resetPassword = (username) => {
 
-  let config = {
-    method: 'POST',
-    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-    body: `username=${username}`
-  };
+  let config = encodeForm({ username });
 
   return dispatch => {
     dispatch(AuthActions.requestResetPassword());
@@ -198,11 +187,7 @@ const resetPassword = (username) => {
 // The user is automatically connected after setting a new password
 const changePasswordAfterReset = (newPassword, token) => {
 
-  let config = {
-    method: 'POST',
-    headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-    body: `newPassword=${newPassword}&token=${token}`
-  };
+  let config = encodeForm({ newPassword, token });
 
   return dispatch => {
     // We are using same action as login, because it's almost the same functional behavior on the client.
