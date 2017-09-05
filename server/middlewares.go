@@ -113,7 +113,7 @@ func getAuhenticatedUser(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 // hasRole is a middleware checking if the currently authenticated users has sufficient privileges to reach a route
-func hasRole(role types.Role) func(next echo.HandlerFunc) echo.HandlerFunc {
+func hasRole(expectedRole types.Role) func(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			// Get user from context
@@ -123,16 +123,12 @@ func hasRole(role types.Role) func(next echo.HandlerFunc) echo.HandlerFunc {
 			log.WithFields(log.Fields{
 				"username":     user.Username,
 				"userRole":     user.Role,
-				"requiredRole": role,
+				"expectedRole": expectedRole,
 			}).Info("Checking if user has correct privileges")
 
-			switch role {
+			switch expectedRole {
 			case types.AdminRole:
 				if user.Role == types.AdminRole {
-					return next(c)
-				}
-			case types.SupervisorRole:
-				if user.Role == types.AdminRole || user.Role == types.SupervisorRole {
 					return next(c)
 				}
 			case types.UserRole:

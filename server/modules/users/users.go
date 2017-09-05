@@ -34,11 +34,6 @@ func (u UserRest) IsAdmin() bool {
 	return u.Role == types.AdminRole
 }
 
-//IsSupervisor checks that the user is a supervisor, meaning he sees anything that sees an admin, but as read-only
-func (u UserRest) IsSupervisor() bool {
-	return u.Role == types.SupervisorRole
-}
-
 // IsNormalUser checks that the user is a classic one
 func (u UserRest) IsNormalUser() bool {
 	return u.Role == types.UserRole
@@ -46,7 +41,7 @@ func (u UserRest) IsNormalUser() bool {
 
 // HasValidRole checks the user has a known role
 func (u UserRest) HasValidRole() bool {
-	if u.Role != types.AdminRole && u.Role != types.SupervisorRole && u.Role != types.UserRole {
+	if u.Role != types.AdminRole && u.Role != types.UserRole {
 		return false
 	}
 

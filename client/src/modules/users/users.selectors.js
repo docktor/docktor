@@ -2,17 +2,14 @@ import { transformFilterToObject, contains } from '../utils/utils';
 
 
 
+// Sort users by role (admins first)
 export const sortUsers = (u1, u2) => {
   let comp = 0;
   // if comp = -1 -> u1 will be displayed before u2
   // if comp = 1 -> u2 will be displayed before u1
-  if (u1.role === 'admin' && (u2.role === 'supervisor' || u2.role === 'user')) {
+  if (u1.role === 'admin' && u2.role === 'user') {
     comp = -1;
-  } else if (u1.role === 'supervisor' && u2.role === 'user') {
-    comp = -1;
-  } else if (u1.role === 'supervisor' && u2.role === 'admin') {
-    comp = 1;
-  } else if (u1.role === 'user' && (u2.role === 'admin' || u2.role === 'supervisor')) {
+  } else if (u1.role === 'user' && u2.role === 'admin') {
     comp = 1;
   }
   if (comp === 0) {

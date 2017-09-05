@@ -12,15 +12,13 @@ type Role string
 const (
 	// AdminRole is an administrator role who can do anything
 	AdminRole Role = "admin"
-	// SupervisorRole is a role who can see anything as read-only but can not do more than a classical user
-	SupervisorRole Role = "supervisor"
 	// UserRole Classical user role
 	UserRole Role = "user"
 )
 
 // IsValid checks if a role is valid
 func (r Role) IsValid() bool {
-	return r == AdminRole || r == SupervisorRole || r == UserRole
+	return r == AdminRole || r == UserRole
 }
 
 // Provider determines origin of user (local user, LDAP user or any other protocol)

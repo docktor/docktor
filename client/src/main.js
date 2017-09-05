@@ -25,7 +25,7 @@ import ResetPasswordPage from './components/auth/auth.reset-password.page';
 import { requireAuthorization } from './components/auth/auth.isAuthorized';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from './modules/auth/auth.actions';
+import { AUTH_ADMIN_ROLE } from './modules/auth/auth.actions';
 
 import { store, history } from './store';
 
@@ -36,9 +36,9 @@ ReactDOM.render(
       <App>
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+          <Route exact path='/daemons' component={requireAuthorization(DaemonsPage, [AUTH_ADMIN_ROLE])} />
           <Route exact path='/daemons/new' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
-          <Route exact path='/daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE])} />
+          <Route exact path='/daemons/:id' component={requireAuthorization(DaemonPage, [AUTH_ADMIN_ROLE])} />
           <Route exact path='/groups' component={requireAuthorization(GroupsPage)} />
           <Route exact path='/groups/new' component={requireAuthorization(GroupEditPage, [AUTH_ADMIN_ROLE])} />
           <Route exact path='/groups/:id' component={requireAuthorization(GroupViewPage)} />

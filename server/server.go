@@ -102,10 +102,10 @@ func New() {
 			daemonAPI := daemonsAPI.Group("/:daemonID")
 			{
 				daemonAPI.Use(isValidID("daemonID"))
-				daemonAPI.GET("", daemonsC.Get, hasRole(types.SupervisorRole), daemons.RetrieveDaemon)
+				daemonAPI.GET("", daemonsC.Get, daemons.RetrieveDaemon)
 				daemonAPI.DELETE("", daemonsC.Delete, hasRole(types.AdminRole))
 				daemonAPI.PUT("", daemonsC.Save, hasRole(types.AdminRole))
-				daemonAPI.GET("/info", daemonsC.GetInfo, hasRole(types.SupervisorRole), redisCache(redisClient), daemons.RetrieveDaemon)
+				daemonAPI.GET("/info", daemonsC.GetInfo, redisCache(redisClient), daemons.RetrieveDaemon)
 			}
 		}
 

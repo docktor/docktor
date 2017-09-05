@@ -10,7 +10,7 @@ import ExportThunks from '../../modules/export/export.thunk';
 import { isRoleAuthorized } from '../../modules/utils/utils';
 
 // Constants
-import { AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE } from '../../modules/auth/auth.actions';
+import { AUTH_ADMIN_ROLE } from '../../modules/auth/auth.actions';
 
 // Style
 import './navBar.component.scss';
@@ -44,7 +44,7 @@ class NavBarComponent extends React.Component {
         </Menu.Item>
         {isAuthorized(
           <Menu.Item active={this.isActiveURL('/daemons')} as={Link} to='/daemons'>Daemons</Menu.Item>,
-          [AUTH_ADMIN_ROLE, AUTH_SUPERVISOR_ROLE]
+          [AUTH_ADMIN_ROLE]
         )}
         {isAuthorized(<Menu.Item active={this.isActiveURL('/services')} as={Link} to='/services'>Services</Menu.Item>)}
         {isAuthorized(<Menu.Item active={this.isActiveURL('/groups')} as={Link} to='/groups'>Groups</Menu.Item>)}

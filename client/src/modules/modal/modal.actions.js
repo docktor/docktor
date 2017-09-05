@@ -64,8 +64,7 @@ const tagRightsHelp = (
     <hr />
     For example :
     <ul>
-      <li>a user who is classical user can only add or remove a tag with 'user' role</li>
-      <li>a user who is supervisor can only add or remove a tag with 'user' or 'supervisor' role</li>
+      <li>a user who is simple user can only add or remove a tag with 'user' role</li>
       <li>a user who is admin can add or remove every type of tag</li>
     </ul>
   </div>
