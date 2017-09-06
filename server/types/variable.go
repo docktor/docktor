@@ -1,13 +1,20 @@
 package types
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"fmt"
+	"regexp"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
+const variableNamePattern = `^[a-zA-Z0-9_]{1,200}$`
 
 // Variable like environment variables (GID of user for example)
 type Variable struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	Name        string        `bson:"name" json:"name"`
 	Value       string        `bson:"value,omitempty" json:"value,omitempty"`
-	Description string        `bson:"description" json:"description"`
+	Description string        `bson:"description,omitempty" json:"description,omitempty"`
 }
 
 // Format prints a parameter container as a string like : key=value
@@ -27,8 +34,26 @@ func (v Variable) Equals(b Variable) bool {
 	return v.Name == b.Name
 }
 
+var variableNameRegex = regexp.MustCompile(variableNamePattern)
+
+func (v Variable) Validate() error {
+	if !variableNameRegex.MatchString(v.Name) {
+		return fmt.Errorf("Variable of Name %q does not match regex %q", v.Name, variableNamePattern)
+	}
+	return nil
+}
+
 // Variables is a slice of variables
 type Variables []Variable
+
+func (variables Variables) Validate() error {
+	for _, v := range variables {
+		if err := v.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 // Equals check that two slices of variables have the same content
 func (vs Variables) Equals(b Variables) bool {

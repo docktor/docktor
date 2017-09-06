@@ -23,6 +23,7 @@ type Session interface {
 
 //Client is the entrypoint of Docktor API
 type Client interface {
+	Collections() []IsCollection
 	Services() ServicesRepo
 	Groups() GroupsRepo
 	Daemons() DaemonsRepo
@@ -30,6 +31,15 @@ type Client interface {
 	Sites() SitesRepo
 	Tags() TagsRepo
 	Close()
+}
+
+type IsCollection interface {
+	GetCollectionName() string
+}
+
+type IsCollectionWithIndexes interface {
+	IsCollection
+	CreateIndexes() error
 }
 
 // Docktor is the implementation structure to use the API
@@ -125,4 +135,15 @@ func (dock *Docktor) Sites() SitesRepo {
 // Tags is the entrypoint for Tags API
 func (dock *Docktor) Tags() TagsRepo {
 	return dock.tags
+}
+
+func (dock *Docktor) Collections() []IsCollection {
+	return []IsCollection{
+		dock.daemons,
+		dock.services,
+		dock.groups,
+		dock.users,
+		dock.sites,
+		dock.tags,
+	}
 }

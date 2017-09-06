@@ -1,6 +1,10 @@
 package models
 
 import (
+	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -18,14 +22,16 @@ type DaemonsRepo interface {
 	FindByIDBson(id bson.ObjectId) (types.Daemon, error)
 	// Find get the first daemon with a given name
 	Find(name string) (types.Daemon, error)
+	// IsExist checks whether a daemon exists or not
+	IsAnotherExist(daemon types.Daemon) bool
 	// FindAllByHost gets all the daemons with a given name (representing the host)
 	FindAllByHost(host string) ([]types.Daemon, error)
 	// FindAllByHostRegex gets all the daemons with a name (representing the host) matching the regex
 	FindAllByHostRegex(hostregex string) ([]types.Daemon, error)
 	// FindAll get all daemons
 	FindAll() ([]types.Daemon, error)
-	// FindAllByIds get all daemons with ids
-	FindAllByIds(ids []bson.ObjectId) ([]types.Daemon, error)
+	// FindAllByIDs get all daemons with ids
+	FindAllByIDs(ids []bson.ObjectId) ([]types.Daemon, error)
 	// Drop drops the content of the collection
 	Drop() error
 	// RemoveTag remove a tag from a service
@@ -44,6 +50,23 @@ func NewDaemonsRepo(coll *mgo.Collection) DaemonsRepo {
 	return &DefaultDaemonsRepo{coll: coll}
 }
 
+// CreateIndexes creates Index
+func (r *DefaultDaemonsRepo) CreateIndexes() error {
+	err := r.coll.EnsureIndex(mgo.Index{
+		Key:    []string{"name"},
+		Unique: true,
+		Name:   "daemon_name_unique",
+	})
+	if err != nil {
+		return err
+	}
+	return r.coll.EnsureIndex(mgo.Index{
+		Key:    []string{"host", "port"},
+		Unique: true,
+		Name:   "daemon_host_port_unique",
+	})
+}
+
 // GetCollectionName gets the name of the collection
 func (r *DefaultDaemonsRepo) GetCollectionName() string {
 	return r.coll.FullName
@@ -52,6 +75,13 @@ func (r *DefaultDaemonsRepo) GetCollectionName() string {
 // Save a daemon into a database
 func (r *DefaultDaemonsRepo) Save(daemon types.Daemon) (types.Daemon, error) {
 	_, err := r.coll.UpsertId(daemon.ID, bson.M{"$set": daemon})
+	if mgo.IsDup(err) {
+		fmt.Println(err.Error())
+		if strings.Contains(err.Error(), "daemon_host_port_unique") {
+			return daemon, errors.New("Another daemon exists with same host and port")
+		}
+		return daemon, errors.New("Another daemon exists with same name")
+	}
 	return daemon, err
 }
 
@@ -75,11 +105,28 @@ func (r *DefaultDaemonsRepo) FindByIDBson(id bson.ObjectId) (types.Daemon, error
 	return result, err
 }
 
-// Find get the first daemon with a given name (representing the host)
+// Find get the first daemon with a given host
 func (r *DefaultDaemonsRepo) Find(host string) (types.Daemon, error) {
 	result := types.Daemon{}
 	err := r.coll.Find(bson.M{"host": host}).One(&result)
 	return result, err
+}
+
+// FindByName get the first daemon with the given name
+func (r *DefaultDaemonsRepo) FindByName(name string) (types.Daemon, error) {
+	result := types.Daemon{}
+	err := r.coll.Find(bson.M{"name": name}).One(&result)
+	return result, err
+}
+
+// IsAnotherExist checks that the daemon name already exists in database
+func (r *DefaultDaemonsRepo) IsAnotherExist(daemon types.Daemon) bool {
+	d, err := r.FindByName(daemon.Name)
+	if err != nil || d.ID.Hex() == "" {
+		return false
+	}
+	// Another daemon exists when found daemon is not the same
+	return d.ID != daemon.ID
 }
 
 // FindAllByHost gets all the daemons with a given name (representing the host)
@@ -103,8 +150,8 @@ func (r *DefaultDaemonsRepo) FindAll() ([]types.Daemon, error) {
 	return results, err
 }
 
-// FindAllByIds get all daemons with ids
-func (r *DefaultDaemonsRepo) FindAllByIds(ids []bson.ObjectId) ([]types.Daemon, error) {
+// FindAllByIDs get all daemons with ids
+func (r *DefaultDaemonsRepo) FindAllByIDs(ids []bson.ObjectId) ([]types.Daemon, error) {
 	results := []types.Daemon{}
 	err := r.coll.Find(bson.M{"_id": bson.M{"$in": ids}}).All(&results)
 	return results, err

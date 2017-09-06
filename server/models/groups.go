@@ -51,6 +51,9 @@ type GroupsRepo interface {
 	SaveContainer(types.Group, types.Container) error
 	// DeleteContainerByID deletes the container by its docker container ID. The group in which it is, is required
 	DeleteContainerByID(groupID bson.ObjectId, containerID string) error
+
+	// GetCollectionName returns the name of the collection
+	GetCollectionName() string
 }
 
 // DefaultGroupsRepo is the repository for groups
@@ -61,6 +64,11 @@ type DefaultGroupsRepo struct {
 // NewGroupsRepo instantiate new GroupsRepo
 func NewGroupsRepo(coll *mgo.Collection) GroupsRepo {
 	return &DefaultGroupsRepo{coll: coll}
+}
+
+// GetCollectionName gets the name of the collection
+func (r *DefaultGroupsRepo) GetCollectionName() string {
+	return r.coll.FullName
 }
 
 // Drop drops the content of the collection

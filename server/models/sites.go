@@ -22,6 +22,8 @@ type SitesRepo interface {
 	FindAll() ([]types.Site, error)
 	// Drop drops the content of the collection
 	Drop() error
+	// GetCollectionName returns the name of the collection
+	GetCollectionName() string
 }
 
 // DefaultSitesRepo is the repository for sites
@@ -32,6 +34,11 @@ type DefaultSitesRepo struct {
 // NewSitesRepo instantiate new SitesRepo
 func NewSitesRepo(coll *mgo.Collection) SitesRepo {
 	return &DefaultSitesRepo{coll: coll}
+}
+
+// GetCollectionName gets the name of the collection
+func (r *DefaultSitesRepo) GetCollectionName() string {
+	return r.coll.FullName
 }
 
 // Save a site into a database

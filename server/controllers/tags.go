@@ -85,3 +85,20 @@ func (s *Tags) Delete(c echo.Context) error {
 	}
 	return c.String(http.StatusOK, res.Hex())
 }
+
+// existingTags return tags filtered by existing ones
+// Checks wether the tag actually exists in database
+func existingTags(docktorAPI *models.Docktor, tagsIds []bson.ObjectId) []bson.ObjectId {
+
+	existingTagsIDs := []bson.ObjectId{}
+
+	// Get all real tags
+	existingTags, _ := docktorAPI.Tags().FindAllByIDs(tagsIds)
+
+	// Get their ids only
+	for _, tag := range existingTags {
+		existingTagsIDs = append(existingTagsIDs, tag.ID)
+	}
+
+	return existingTagsIDs
+}

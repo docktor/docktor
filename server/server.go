@@ -6,11 +6,13 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
+	validator "gopkg.in/go-playground/validator.v9"
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/soprasteria/docktor/server/controllers"
+	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/modules/auth"
 	"github.com/soprasteria/docktor/server/modules/daemons"
 	"github.com/soprasteria/docktor/server/modules/groups"
@@ -44,6 +46,7 @@ func New() {
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
 	engine.Use(middleware.Gzip())
+	engine.Validator = &CustomValidator{validator: validator.New()}
 
 	engine.GET("/ping", pong)
 
@@ -173,10 +176,31 @@ func New() {
 	if log.GetLevel() == log.DebugLevel {
 		displayAvailableRoutes(engine.Routes())
 	}
+
+	createIndexes()
+
 	log.Info("Server started on port 8080")
 	if err := engine.Start(":8080"); err != nil {
 		log.WithError(err).Fatal("Can't start server")
 		engine.Logger.Fatal(err.Error())
+	}
+}
+
+func createIndexes() {
+	dock, err := models.Get()
+	if err != nil {
+		log.WithError(err).Fatal("Can't ensure that indexes are created")
+		return
+	}
+	defer dock.Close()
+	for _, db := range dock.Collections() {
+		if dbWithIndex, ok := db.(models.IsCollectionWithIndexes); ok {
+			log.Debugf("Ensuring indexes creating for '%v' collection", db.GetCollectionName())
+			err := dbWithIndex.CreateIndexes()
+			if err != nil {
+				log.WithError(err).Error("Cannot create index")
+			}
+		}
 	}
 }
 
@@ -192,15 +216,6 @@ func GetIndex(c echo.Context) error {
 	return c.File("client/dist/index.html")
 }
 
-func displayAvailableRoutes(routes []*echo.Route) {
-	sort.Sort(ByRoutePath(routes))
-	for _, r := range routes {
-		if strings.Contains(r.Name, "controllers") {
-			log.Debugf("Available API route - %-7v:%v", r.Method, r.Path)
-		}
-	}
-}
-
 // ByRoutePath is a sortable type meant to sort Echo routes by path, then by HTTP method
 type ByRoutePath []*echo.Route
 
@@ -213,4 +228,23 @@ func (a ByRoutePath) Less(i, j int) bool {
 		return ai.Method < aj.Method
 	}
 	return ai.Path < aj.Path
+}
+
+func displayAvailableRoutes(routes []*echo.Route) {
+	sort.Sort(ByRoutePath(routes))
+	for _, r := range routes {
+		if strings.Contains(r.Name, "controllers") {
+			log.Debugf("Available API route - %-7v:%v", r.Method, r.Path)
+		}
+	}
+}
+
+// Validators
+
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
 }

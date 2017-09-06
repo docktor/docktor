@@ -117,7 +117,7 @@ func (s *Rest) GetUsersFromIds(ids []bson.ObjectId) ([]UserRest, error) {
 	if s.Docktor == nil {
 		return []UserRest{}, errors.New("Docktor API is not initialized")
 	}
-	users, err := s.Docktor.Users().FindAllByIds(ids)
+	users, err := s.Docktor.Users().FindAllByIDs(ids)
 	if err != nil {
 		return []UserRest{}, errors.New("Can't retrieve users")
 	}

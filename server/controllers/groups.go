@@ -61,7 +61,7 @@ func existingMembers(docktorAPI *models.Docktor, members types.Members) types.Me
 	var existingMembers types.Members
 
 	// Get all real users from members.
-	existingUsers, _ := docktorAPI.Users().FindAllByIds(members.GetUsers())
+	existingUsers, _ := docktorAPI.Users().FindAllByIDs(members.GetUsers())
 
 	// x*x Cardinality because no need to overoptimize with maps
 	// as we will not have millions of members in a group
@@ -166,7 +166,7 @@ func (g *Groups) GetDaemons(c echo.Context) error {
 		daemonIds = append(daemonIds, c.DaemonID)
 	}
 
-	daemons, err := docktorAPI.Daemons().FindAllByIds(daemonIds)
+	daemons, err := docktorAPI.Daemons().FindAllByIDs(daemonIds)
 	if err != nil {
 		log.WithError(err).WithField("group", group.ID).WithField("daemons.ids", daemonIds).Error("Can't get daemons of group")
 		return c.JSON(http.StatusInternalServerError, "Incorrect data. Contact your administrator")

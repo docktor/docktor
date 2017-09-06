@@ -3,12 +3,14 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/modules/daemons"
 	"github.com/soprasteria/docktor/server/types"
 	"github.com/soprasteria/docktor/server/utils"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -16,7 +18,7 @@ import (
 type Daemons struct {
 }
 
-//GetAll daemons from docktor
+// GetAll daemons from docktor
 func (d *Daemons) GetAll(c echo.Context) error {
 	docktorAPI := c.Get("api").(*models.Docktor)
 	daemons, err := docktorAPI.Daemons().FindAll()
@@ -31,15 +33,55 @@ func (d *Daemons) Save(c echo.Context) error {
 	docktorAPI := c.Get("api").(*models.Docktor)
 	var daemon types.Daemon
 	err := c.Bind(&daemon)
-
 	if err != nil {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding daemon: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Unable to parse Daemon received from client: %v", err))
 	}
 
-	// If the ID is empty, it's a creation, so generate an object ID
-	if daemon.ID.Hex() == "" {
+	// Update fields
+	id := c.Param("daemonID")
+	if daemon.ID.Hex() == "" && id == "" {
+		// New daemon to create
 		daemon.ID = bson.NewObjectId()
+		daemon.Created = time.Now()
+	} else {
+		// Existing daemon, search for it and update read-only fields
+		daemon.ID = bson.ObjectIdHex(id)
+		d, err := docktorAPI.Daemons().FindByIDBson(daemon.ID)
+		if err != nil {
+			if err == mgo.ErrNotFound {
+				return c.String(http.StatusBadRequest, fmt.Sprint("Daemon does not exist"))
+			}
+			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find daemon. Retry later : %s", err))
+		}
+		daemon.Created = d.Created
 	}
+	if daemon.Protocol == types.HTTPProtocol {
+		daemon.Ca = ""
+		daemon.Key = ""
+		daemon.Cert = ""
+	}
+	daemon.Updated = time.Now()
+
+	// Validate fields from validator tags for common types
+	if err = c.Validate(daemon); err != nil {
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Some fields of daemon are not valid: %v", err))
+	}
+
+	// Validate fields that cannot be validated by validator engine
+	if err = daemon.Validate(); err != nil {
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Some fields of daemon are not valid: %v", err))
+	}
+
+	// Check that daemon site exists
+	if _, err := docktorAPI.Sites().FindByIDBson(daemon.Site); err != nil {
+		if err == mgo.ErrNotFound {
+			return c.String(http.StatusBadRequest, fmt.Sprint("Site does not exist"))
+		}
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to check if site exist. Retry later : %s", err))
+	}
+
+	// Keep only existing tags
+	daemon.Tags = existingTags(docktorAPI, daemon.Tags)
 
 	res, err := docktorAPI.Daemons().Save(daemon)
 	if err != nil {

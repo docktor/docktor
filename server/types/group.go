@@ -47,18 +47,6 @@ func (members *Members) GetUsers() []bson.ObjectId {
 	return ids
 }
 
-func removeDuplicatesTags(tags []bson.ObjectId) []bson.ObjectId {
-	var result []bson.ObjectId
-	seen := map[bson.ObjectId]bool{}
-	for _, tag := range tags {
-		if _, ok := seen[tag]; !ok {
-			result = append(result, tag)
-			seen[tag] = true
-		}
-	}
-	return result
-}
-
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
 	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`

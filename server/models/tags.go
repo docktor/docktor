@@ -31,6 +31,8 @@ type TagsRepo interface {
 	FindAllByIDs([]bson.ObjectId) ([]types.Tag, error)
 	// Drop drops the content of the collection
 	Drop() error
+	// GetCollectionName returns the name of the collection
+	GetCollectionName() string
 }
 
 // DefaultTagsRepo is the repository for tags
@@ -41,6 +43,11 @@ type DefaultTagsRepo struct {
 // NewTagsRepo instantiate new RepoDaemons
 func NewTagsRepo(coll *mgo.Collection) TagsRepo {
 	return &DefaultTagsRepo{coll: coll}
+}
+
+// GetCollectionName gets the name of the collection
+func (r *DefaultTagsRepo) GetCollectionName() string {
+	return r.coll.FullName
 }
 
 // Save or create a tag into a database

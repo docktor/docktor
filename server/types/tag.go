@@ -81,3 +81,15 @@ type UseTags interface {
 	RemoveTag(id bson.ObjectId) (*mgo.ChangeInfo, error)
 	GetCollectionName() string
 }
+
+func removeDuplicatesTags(tags []bson.ObjectId) []bson.ObjectId {
+	var result []bson.ObjectId
+	seen := map[bson.ObjectId]bool{}
+	for _, tag := range tags {
+		if _, ok := seen[tag]; !ok {
+			result = append(result, tag)
+			seen[tag] = true
+		}
+	}
+	return result
+}

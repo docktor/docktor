@@ -20,12 +20,14 @@ type UsersRepo interface {
 	Find(username string) (types.User, error)
 	// FindAll get all users
 	FindAll() ([]types.User, error)
-	// FindAllByIds get all users filtered by their ids
-	FindAllByIds(ids []bson.ObjectId) ([]types.User, error)
+	// FindAllByIDs get all users filtered by their ids
+	FindAllByIDs(ids []bson.ObjectId) ([]types.User, error)
 	// FindAllByGroupID get all users by a group ID
 	FindAllByGroupID(id bson.ObjectId) ([]types.User, error)
 	// Drop drops the content of the collection
 	Drop() error
+	// GetCollectionName returns the name of the collection
+	GetCollectionName() string
 }
 
 // DefaultUsersRepo is the repository for users
@@ -36,6 +38,11 @@ type DefaultUsersRepo struct {
 // NewUsersRepo instantiate new UsersRepo
 func NewUsersRepo(coll *mgo.Collection) UsersRepo {
 	return &DefaultUsersRepo{coll: coll}
+}
+
+// GetCollectionName gets the name of the collection
+func (r *DefaultUsersRepo) GetCollectionName() string {
+	return r.coll.FullName
 }
 
 // Save a user into a database
@@ -84,8 +91,8 @@ func (r *DefaultUsersRepo) FindAll() ([]types.User, error) {
 	return results, err
 }
 
-// FindAllByIds get all users from a list of ids
-func (r *DefaultUsersRepo) FindAllByIds(ids []bson.ObjectId) ([]types.User, error) {
+// FindAllByIDs get all users from a list of ids
+func (r *DefaultUsersRepo) FindAllByIDs(ids []bson.ObjectId) ([]types.User, error) {
 	results := []types.User{}
 	err := r.coll.Find(bson.M{"_id": bson.M{"$in": ids}}).All(&results)
 	return results, err

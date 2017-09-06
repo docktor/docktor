@@ -48,8 +48,15 @@ export const handleError = (error, action, dispatch) => {
   const response = error.response;
   if (response) {
     const status = response.status;
-    response.json()
-      .then(json => dispatchError(status, action, json.message, dispatch ))
+    response.text()
+      .then(text => {
+        try {
+          const errResponse = JSON.parse(text);
+          dispatchError(status, action, errResponse.message, dispatch );
+        } catch(e) {
+          dispatchError(status, action, text, dispatch );
+        }
+      })
       .catch(() => dispatchError(status, action, response.statusText, dispatch ));
   } else {
     dispatch(action(error.message));
