@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/soprasteria/docktor/server/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -36,6 +38,15 @@ func NewSitesRepo(coll *mgo.Collection) SitesRepo {
 	return &DefaultSitesRepo{coll: coll}
 }
 
+// CreateIndexes creates Index
+func (r *DefaultSitesRepo) CreateIndexes() error {
+	return r.coll.EnsureIndex(mgo.Index{
+		Key:    []string{"title"},
+		Unique: true,
+		Name:   "site_title_unique",
+	})
+}
+
 // GetCollectionName gets the name of the collection
 func (r *DefaultSitesRepo) GetCollectionName() string {
 	return r.coll.FullName
@@ -44,6 +55,9 @@ func (r *DefaultSitesRepo) GetCollectionName() string {
 // Save a site into a database
 func (r *DefaultSitesRepo) Save(site types.Site) (types.Site, error) {
 	_, err := r.coll.UpsertId(site.ID, bson.M{"$set": site})
+	if mgo.IsDup(err) {
+		return site, errors.New("Another site exists with same title")
+	}
 	return site, err
 }
 

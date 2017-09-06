@@ -3,10 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/soprasteria/docktor/server/models"
 	"github.com/soprasteria/docktor/server/types"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -31,12 +34,32 @@ func (s *Sites) Save(c echo.Context) error {
 	err := c.Bind(&site)
 
 	if err != nil {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("Error while binding site: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Unable to parse Site received from client: %v", err))
 	}
 
-	// If the ID is empty, it's a creation, so generate an object ID
-	if site.ID.Hex() == "" {
+	// Update fields
+	id := c.Param("siteID")
+	if site.ID.Hex() == "" && id == "" {
+		// New site to create
 		site.ID = bson.NewObjectId()
+		site.Created = time.Now()
+	} else {
+		// Existing daemon, search for it and update read-only fields
+		site.ID = bson.ObjectIdHex(id)
+		d, err := docktorAPI.Sites().FindByIDBson(site.ID)
+		if err != nil {
+			if err == mgo.ErrNotFound {
+				return c.String(http.StatusBadRequest, fmt.Sprint("Site does not exist"))
+			}
+			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find site. Retry later : %s", err))
+		}
+		site.Created = d.Created
+	}
+	site.Updated = time.Now()
+
+	// Validate fields from validator tags for common types
+	if err = c.Validate(site); err != nil {
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Some fields of site are not valid: %v", err))
 	}
 
 	res, err := docktorAPI.Sites().Save(site)
@@ -50,7 +73,19 @@ func (s *Sites) Save(c echo.Context) error {
 //Delete site into docktor
 func (s *Sites) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*models.Docktor)
-	id := c.Param("id")
+	id := c.Param("siteID")
+
+	// Don't delete the site if it's already used in another daaemon.
+	daemons, err := docktorAPI.Daemons().FindAllWithSite(bson.ObjectIdHex(id))
+	if err != nil {
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find linked daemons. Retry later : %s", err))
+	}
+	if len(daemons) > 0 {
+		linkedDaemons := strings.Join(types.DaemonsName(daemons), "', '")
+		return c.String(http.StatusBadRequest,
+			fmt.Sprintf("Unable to remove site because it's already used in the following daemons: '%v'", linkedDaemons))
+	}
+
 	res, err := docktorAPI.Sites().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove site: %v", err))

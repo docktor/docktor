@@ -94,6 +94,10 @@ func (d *Daemons) Save(c echo.Context) error {
 func (d *Daemons) Delete(c echo.Context) error {
 	docktorAPI := c.Get("api").(*models.Docktor)
 	id := c.Param("daemonID")
+
+	// TODO: return error when daemon is already used in another service/container
+	// If it's used in a filesystem in a group, it's OK, it should be deleted when saving the group
+
 	res, err := docktorAPI.Daemons().Delete(bson.ObjectIdHex(id))
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error while remove daemon: %v", err))

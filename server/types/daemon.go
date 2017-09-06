@@ -87,3 +87,11 @@ func (d Daemon) Validate() error {
 
 	return nil
 }
+
+func DaemonsName(daemons []Daemon) []string {
+	res := []string{}
+	for _, d := range daemons {
+		res = append(res, d.Name)
+	}
+	return res
+}

@@ -1,12 +1,17 @@
 package server
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"sort"
 	"strings"
 
+	"github.com/go-playground/locales/en"
+	ut "github.com/go-playground/universal-translator"
 	log "github.com/sirupsen/logrus"
 	validator "gopkg.in/go-playground/validator.v9"
+	en_translations "gopkg.in/go-playground/validator.v9/translations/en"
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
@@ -46,7 +51,13 @@ func New() {
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
 	engine.Use(middleware.Gzip())
-	engine.Validator = &CustomValidator{validator: validator.New()}
+
+	en := en.New()
+	uni = ut.New(en, en)
+	trans, _ = uni.GetTranslator("en")
+	validate := validator.New()
+	en_translations.RegisterDefaultTranslations(validate, trans)
+	engine.Validator = &CustomValidator{validator: validate}
 
 	engine.GET("/ping", pong)
 
@@ -92,9 +103,9 @@ func New() {
 		{
 			sitesAPI.GET("", sitesC.GetAll)
 			sitesAPI.POST("/new", sitesC.Save, hasRole(types.AdminRole))
-			siteAPI := sitesAPI.Group("/:id")
+			siteAPI := sitesAPI.Group("/:siteID")
 			{
-				siteAPI.Use(isValidID("id"), hasRole(types.AdminRole))
+				siteAPI.Use(isValidID("siteID"), hasRole(types.AdminRole))
 				siteAPI.DELETE("", sitesC.Delete)
 				siteAPI.PUT("", sitesC.Save)
 			}
@@ -241,10 +252,30 @@ func displayAvailableRoutes(routes []*echo.Route) {
 
 // Validators
 
+var uni *ut.UniversalTranslator
+var trans ut.Translator
+
 type CustomValidator struct {
 	validator *validator.Validate
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {
-	return cv.validator.Struct(i)
+
+	err := cv.validator.Struct(i)
+	if err != nil {
+		errs := err.(validator.ValidationErrors)
+		var message string
+		var cpt int
+		translatedErrors := errs.Translate(trans)
+		for k, v := range translatedErrors {
+			message = fmt.Sprintf("%v %v=%v", message, k, v)
+			if len(translatedErrors) > 0 && cpt < len(translatedErrors)-1 {
+				message = fmt.Sprintf("%v and", message)
+			}
+			cpt++
+		}
+		return errors.New(message)
+	}
+	return nil
+
 }

@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/soprasteria/docktor/server/types"
@@ -32,6 +31,8 @@ type DaemonsRepo interface {
 	FindAll() ([]types.Daemon, error)
 	// FindAllByIDs get all daemons with ids
 	FindAllByIDs(ids []bson.ObjectId) ([]types.Daemon, error)
+	// FindAllWithSite gets all daemons with given site id
+	FindAllWithSite(siteID bson.ObjectId) ([]types.Daemon, error)
 	// Drop drops the content of the collection
 	Drop() error
 	// RemoveTag remove a tag from a service
@@ -76,7 +77,6 @@ func (r *DefaultDaemonsRepo) GetCollectionName() string {
 func (r *DefaultDaemonsRepo) Save(daemon types.Daemon) (types.Daemon, error) {
 	_, err := r.coll.UpsertId(daemon.ID, bson.M{"$set": daemon})
 	if mgo.IsDup(err) {
-		fmt.Println(err.Error())
 		if strings.Contains(err.Error(), "daemon_host_port_unique") {
 			return daemon, errors.New("Another daemon exists with same host and port")
 		}
@@ -154,6 +154,13 @@ func (r *DefaultDaemonsRepo) FindAll() ([]types.Daemon, error) {
 func (r *DefaultDaemonsRepo) FindAllByIDs(ids []bson.ObjectId) ([]types.Daemon, error) {
 	results := []types.Daemon{}
 	err := r.coll.Find(bson.M{"_id": bson.M{"$in": ids}}).All(&results)
+	return results, err
+}
+
+// FindAllWithSite gets all daemons with given site id
+func (r *DefaultDaemonsRepo) FindAllWithSite(siteID bson.ObjectId) ([]types.Daemon, error) {
+	results := []types.Daemon{}
+	err := r.coll.Find(bson.M{"site": siteID}).All(&results)
 	return results, err
 }
 
