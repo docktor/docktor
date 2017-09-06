@@ -1,17 +1,11 @@
 package server
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 	"sort"
 	"strings"
 
-	"github.com/go-playground/locales/en"
-	ut "github.com/go-playground/universal-translator"
 	log "github.com/sirupsen/logrus"
-	validator "gopkg.in/go-playground/validator.v9"
-	en_translations "gopkg.in/go-playground/validator.v9/translations/en"
 	redis "gopkg.in/redis.v3"
 
 	"github.com/labstack/echo"
@@ -51,13 +45,7 @@ func New() {
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recover())
 	engine.Use(middleware.Gzip())
-
-	en := en.New()
-	uni = ut.New(en, en)
-	trans, _ = uni.GetTranslator("en")
-	validate := validator.New()
-	en_translations.RegisterDefaultTranslations(validate, trans)
-	engine.Validator = &CustomValidator{validator: validate}
+	engine.Validator = newValidator() // Use custom validator to check field entities, base on tags
 
 	engine.GET("/ping", pong)
 
@@ -248,34 +236,4 @@ func displayAvailableRoutes(routes []*echo.Route) {
 			log.Debugf("Available API route - %-7v:%v", r.Method, r.Path)
 		}
 	}
-}
-
-// Validators
-
-var uni *ut.UniversalTranslator
-var trans ut.Translator
-
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-
-	err := cv.validator.Struct(i)
-	if err != nil {
-		errs := err.(validator.ValidationErrors)
-		var message string
-		var cpt int
-		translatedErrors := errs.Translate(trans)
-		for k, v := range translatedErrors {
-			message = fmt.Sprintf("%v %v=%v", message, k, v)
-			if len(translatedErrors) > 0 && cpt < len(translatedErrors)-1 {
-				message = fmt.Sprintf("%v and", message)
-			}
-			cpt++
-		}
-		return errors.New(message)
-	}
-	return nil
-
 }
