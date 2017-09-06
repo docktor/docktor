@@ -50,6 +50,11 @@ class ModalComponent extends React.Component {
   }
 
   handleChange = (_, { name, value }) => {
+    var number = Number(value);
+    if (!isNaN(number)) {
+      // Convert the string value of a number input into a real number
+      value = number;
+    }
     this.setState({ form: { ...this.state.form, [name]: value } });
   }
 
