@@ -1,0 +1,31 @@
+.user-card {
+  margin: 1em !important;
+  max-height: 100px;
+  .extra.content {
+    font-size: .9em;
+  }
+  .email {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ui.top.right.attached.button {
+    box-shadow: none !important;
+    left: auto;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    .ui.button {
+      margin: 0;
+    }
+  }
+  .ui.provider.label {
+    background-color: #3a6191;
+
+    color: white;
+  }
+}

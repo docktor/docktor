@@ -1,0 +1,236 @@
+$body-background-color: #28303a !default;
+$dimmer-background-color: rgba(40, 48, 58, .5) !default;
+
+$yellow-button-color: #d29c01 !default;
+$yellow-button-color-hover: #c79400 !default;
+$yellow-button-color-active: #ad8000 !default;
+
+$teal-button-color: #00948d !default;
+$teal-button-color-hover: #008c85 !default;
+$teal-button-color-active: #00827c !default;
+
+$main: #00948d;
+$main-light: lighten($main, 5%);
+$main-dark: darken($main, 5%);
+
+$bold: 600;
+
+body,
+html {
+  background-color: $body-background-color;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.root,
+.fill {
+  height: 100%;
+  width: 100%;
+}
+
+.ui.menu,
+.ui.tab,
+.ui.button,
+.ui.buttons,
+.ui.card,
+.ui.label,
+.ui.cards > .card
+.ui.card,
+.ui.menu .dropdown.item .menu,
+.ui.modal,
+.ui.modal > :last-child,
+.ui.modal > :first-child,
+.ui.message,
+.ui.segment,
+.ui.dropdown,
+.ui.dropdown .menu,
+textarea,
+input {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ui.styled.accordion {
+  border-radius: 0 !important;
+}
+
+.ui.error.message {
+  background-color: #f9d6d6 !important;
+}
+
+.ui.very.compact.table thead th {
+  padding-bottom: .5em !important;
+  padding-top: .5em !important;
+}
+
+.ui.form {
+  & .error {
+    ::-webkit-input-placeholder {
+      color: rgba(191, 191, 191, .87);
+    }
+    :focus::-webkit-input-placeholder {
+      color: rgba(115, 115, 115, .87);
+    }
+    ::-moz-placeholder {
+      color: rgba(191, 191, 191, .87);
+    }
+    :focus::-moz-placeholder {
+      color: rgba(115, 115, 115, .87);
+    }
+  }
+
+  .fields {
+    margin-bottom: 1em;
+    .field {
+      margin-bottom: 0;
+    }
+  }
+
+  .field {
+    label {
+      color: rgba(255, 255, 255, .5) !important;
+    }
+    label:after {
+      color: #00948d !important;
+    }
+    &.error {
+      input {
+        background-color: #f9d6d6 !important;
+        color: #9f3a38 !important;
+      }
+      label {
+        color: #ce8b8a !important;
+      }
+      label:after {
+        color: #db2828 !important;
+      }
+
+      ::-webkit-input-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-webkit-input-placeholder {
+        color: #ce8b8a;
+      }
+      ::-moz-placeholder {
+        color: #dca7a5;
+      }
+      :focus::-moz-placeholder {
+        color: #ce8b8a;
+      }
+      .ui.dropdown {
+        &,
+        .text {
+          background-color: #f9d6d6;
+          color: #dca7a5;
+        }
+      }
+    }
+  }
+}
+
+.ui.buttons {
+  margin: 0;
+  padding: 1px;
+  .button .icon {
+    margin-right: 2px;
+  }
+  .button {
+    padding-left: .8em;
+    padding-right: .8em;
+  }
+}
+
+.ui.yellow.button {
+  background-color: $yellow-button-color !important;
+}
+
+.ui.yellow.button:hover {
+  background-color: $yellow-button-color-hover !important;
+}
+
+.ui.yellow.button:active {
+  background-color: $yellow-button-color-active !important;
+}
+
+.ui.teal.button {
+  background-color: $teal-button-color !important;
+}
+
+.ui.teal.button:hover {
+  background-color: $teal-button-color-hover !important;
+}
+
+.ui.teal.button:active {
+  background-color: $teal-button-color-active !important;
+}
+
+.not-active {
+  cursor: default;
+  pointer-events: none;
+}
+
+.dropdown.optgroup .dropdown-divider {
+  &:hover {
+    background-color: transparent !important;
+  }
+  .divider {
+    border-top: none !important;
+    margin: 0;
+  }
+}
+
+[readonly] {
+  cursor: not-allowed;
+  background-color: #ccc !important;
+}
+
+.ui.active.dimmer {
+  background-color: $body-background-color;
+}
+
+.ui.page.modals.active.dimmer {
+  background-color: $dimmer-background-color;
+}
+
+.button-form {
+  .ui.button {
+    -moz-appearance: none; // Firefox
+    -webkit-appearance: none; // Safari and Chrome
+    appearance: none;
+    background: $main;
+    border: none;
+    border-radius: 0;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: $bold;
+    letter-spacing: .1em;
+    outline: none;
+    padding: 15px 0;
+    text-transform: uppercase;
+    transition: all.5s ease;
+    &:hover,
+    &:focus {
+      background: $main-dark;
+      color: white;
+    }
+  }
+}
+
+.ui.label.form-label {
+  background-color: #3a6191;
+  border-radius: 0;
+  color: white;
+  height: 38px;
+  line-height: 38px;
+  margin-top: 24px;
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: center;
+  width: 100%;
+  @media only screen and (max-width: 767px) {
+    margin-left: 25%;
+    margin-top: 0;
+    width: 50% !important;
+  }
+}

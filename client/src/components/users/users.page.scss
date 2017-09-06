@@ -1,0 +1,15 @@
+$users-bar-background-color: #2c3e50 !default;
+
+.users-page {
+
+  .users-bar {
+    background-color: $users-bar-background-color;
+    min-height: 3em;
+    padding: .5em 1em;
+  }
+
+  .users-list {
+    overflow-y: auto;
+    position: relative;
+  }
+}
