@@ -88,6 +88,7 @@ func (d Daemon) Validate() error {
 	return nil
 }
 
+// DaemonsName returns the name of given daemons in a slice
 func DaemonsName(daemons []Daemon) []string {
 	res := []string{}
 	for _, d := range daemons {

@@ -46,12 +46,12 @@ func (d *Daemons) Save(c echo.Context) error {
 	} else {
 		// Existing daemon, search for it and update read-only fields
 		daemon.ID = bson.ObjectIdHex(id)
-		d, err := docktorAPI.Daemons().FindByIDBson(daemon.ID)
-		if err != nil {
-			if err == mgo.ErrNotFound {
+		d, errr := docktorAPI.Daemons().FindByIDBson(daemon.ID)
+		if errr != nil {
+			if errr == mgo.ErrNotFound {
 				return c.String(http.StatusBadRequest, fmt.Sprint("Daemon does not exist"))
 			}
-			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find daemon. Retry later : %s", err))
+			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find daemon. Retry later : %s", errr))
 		}
 		daemon.Created = d.Created
 	}
@@ -73,7 +73,7 @@ func (d *Daemons) Save(c echo.Context) error {
 	}
 
 	// Check that daemon site exists
-	if _, err := docktorAPI.Sites().FindByIDBson(daemon.Site); err != nil {
+	if _, err = docktorAPI.Sites().FindByIDBson(daemon.Site); err != nil {
 		if err == mgo.ErrNotFound {
 			return c.String(http.StatusBadRequest, fmt.Sprint("Site does not exist"))
 		}

@@ -1,7 +1,22 @@
 {
-  "Disable": [
-    "gotype",
-    "gas"
+  "DisableAll": true,
+  "Enable": [
+    "gocyclo",
+    "goconst",
+    "gofmt",
+    "goimports",
+    "golint",
+    "ineffassign",
+    "misspell",
+    "vet",
+    "vetshadow",
+    "gas",
+    "varcheck",
+    "aligncheck",
+    "interfacer"
   ],
-  "Test": true
+  "Cyclo": 15,
+  "Test": true,
+  "Vendor": true,
+  "VendoredLinters": true
 }

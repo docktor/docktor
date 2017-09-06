@@ -36,6 +36,8 @@ func (v Variable) Equals(b Variable) bool {
 
 var variableNameRegex = regexp.MustCompile(variableNamePattern)
 
+// Validate validates that the variable has right content
+// For instance, the Name of a variable respects the '^[a-zA-Z0-9_]{1,200}$' regex pattern
 func (v Variable) Validate() error {
 	if !variableNameRegex.MatchString(v.Name) {
 		return fmt.Errorf("Variable of Name %q does not match regex %q", v.Name, variableNamePattern)
@@ -46,8 +48,10 @@ func (v Variable) Validate() error {
 // Variables is a slice of variables
 type Variables []Variable
 
-func (variables Variables) Validate() error {
-	for _, v := range variables {
+// Validate validates that all variables have right content
+// It exists in error when a variable is not valid
+func (vs Variables) Validate() error {
+	for _, v := range vs {
 		if err := v.Validate(); err != nil {
 			return err
 		}

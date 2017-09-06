@@ -12,6 +12,7 @@ const volumeNamePattern = `^[^\0]+$`
 // Rights defines the volume rights
 type Rights string
 
+// IsValid returns true if the rights are valid (is ro or rw)
 func (r Rights) IsValid() bool {
 	return r == ReadOnlyRights || r == ReadWriteRights
 }
@@ -52,6 +53,11 @@ func (v Volume) Equals(b Volume) bool {
 
 var volumeNameRegex = regexp.MustCompile(volumeNamePattern)
 
+// Validate checks that the volume is valid.
+// Volume is valid when :
+// Internal volume is not empty and does not contains the \0 character,
+// External does not contains the \0 character and
+// Rights are either ro or rw
 func (v Volume) Validate() error {
 
 	if !volumeNameRegex.MatchString(v.Internal) {
@@ -71,8 +77,10 @@ func (v Volume) Validate() error {
 // Volumes is a slice of volumes
 type Volumes []Volume
 
-func (volumes Volumes) Validate() error {
-	for _, v := range volumes {
+// Validate validates that all the volumes are valid
+// Returns in error when at the first invalid volume.
+func (vs Volumes) Validate() error {
+	for _, v := range vs {
 		if err := v.Validate(); err != nil {
 			return err
 		}
@@ -81,29 +89,29 @@ func (volumes Volumes) Validate() error {
 }
 
 // Equals check that two slices of volumes have the same content
-func (a Volumes) Equals(b Volumes) bool {
+func (vs Volumes) Equals(b Volumes) bool {
 
-	if a == nil && b == nil {
+	if vs == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if vs == nil || b == nil {
 		return false
 	}
 
-	if len(a) != len(b) {
+	if len(vs) != len(b) {
 		return false
 	}
 
-	var aMap = map[string]Volume{}
-	for _, v := range a {
+	var vsMap = map[string]Volume{}
+	for _, v := range vs {
 		key := v.Internal + ":" + string(v.Rights)
-		aMap[key] = v
+		vsMap[key] = v
 	}
 
 	for _, v := range b {
 		key := v.Internal + ":" + string(v.Rights)
-		_, ok := aMap[key]
+		_, ok := vsMap[key]
 		if !ok {
 			return false
 		}
@@ -113,17 +121,17 @@ func (a Volumes) Equals(b Volumes) bool {
 }
 
 // IsIncluded check that the first slice is included into the second
-func (a Volumes) IsIncluded(b Volumes) bool {
+func (vs Volumes) IsIncluded(b Volumes) bool {
 
-	if a == nil && b == nil {
+	if vs == nil && b == nil {
 		return true
 	}
 
-	if a == nil || b == nil {
+	if vs == nil || b == nil {
 		return false
 	}
 
-	if len(a) > len(b) {
+	if len(vs) > len(b) {
 		return false
 	}
 
@@ -133,7 +141,7 @@ func (a Volumes) IsIncluded(b Volumes) bool {
 		bMap[key] = v
 	}
 
-	for _, v := range a {
+	for _, v := range vs {
 		key := v.Internal + ":" + string(v.Rights)
 		_, ok := bMap[key]
 		if !ok {

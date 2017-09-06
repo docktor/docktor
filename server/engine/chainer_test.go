@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"testing"
 
+	"sync"
+
 	"github.com/labstack/gommon/log"
 	. "github.com/smartystreets/goconvey/convey"
-	"sync"
 )
 
 // Step Up is a generic method to generate an Operation, that will end in either OK (✔️), KO(✖️) or Canceled(🚫)
@@ -288,11 +289,10 @@ func TestChainerEngineSimpleOKWorkflow(t *testing.T) {
 
 			Convey("But When I run an existing workflow, and try to add a new one while chain is executing", func() {
 				notifier := make(StepNotifier)
-				var runError error
 				var wg sync.WaitGroup
 				wg.Add(1)
 				go func() {
-					runError = chainer.Run("test", context, notifier)
+					_ = chainer.Run("test", context, notifier)
 					wg.Done()
 				}()
 
@@ -368,7 +368,7 @@ func TestChainerEngineRollback(t *testing.T) {
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
 
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
 					So(runError.Error(), ShouldContainSubstring, "Error with up step")
@@ -414,7 +414,7 @@ func TestChainerEngineRollback(t *testing.T) {
 				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
 					So(runError.Error(), ShouldContainSubstring, "Error with up step")
@@ -460,7 +460,7 @@ func TestChainerEngineRollback(t *testing.T) {
 				}()
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "rollback is KO")
 					So(runError.Error(), ShouldContainSubstring, "Error with up step")
@@ -475,7 +475,7 @@ func TestChainerEngineRollback(t *testing.T) {
 						So(errors[0].StepNumber, ShouldEqual, 3)
 						So(errors[0].Error.Error(), ShouldContainSubstring, "Error with up step")
 					})
-					Convey("and rollback visited, even if an error occured", func() {
+					Convey("and rollback visited, even if an error occurred", func() {
 						So(nbDownOK, ShouldEqual, 1)
 						So(nbDownKO, ShouldEqual, 1)
 						So(context.Data["test.down"], ShouldResemble, []string{"✔️", "✖️"}) // rollback steps should have be visited
@@ -511,7 +511,7 @@ func TestChainerEngineRollback(t *testing.T) {
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
 
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "rollback is OK")
 					So(runError.Error(), ShouldContainSubstring, "Error with up step")
@@ -579,7 +579,7 @@ func TestChainerEngineWithCancel(t *testing.T) {
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
 
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "Operation has been canceled")
 					So(runError.Error(), ShouldContainSubstring, "3/4")
@@ -651,7 +651,7 @@ func TestChainerEngineWithCancel(t *testing.T) {
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
 
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "Operation has been canceled")
 					So(runError.Error(), ShouldContainSubstring, "3/4")
@@ -708,7 +708,7 @@ func TestChainerEngineWorkflowWithNoRollbacks(t *testing.T) {
 				nbUpOK, nbUpKO, nbDownOK, nbDownKO, errors := fetchNotifications(notifier)
 				wg.Wait()
 
-				Convey("Then the worklow should rollback to its inital state", func() {
+				Convey("Then the worklow should rollback to its initial state", func() {
 					So(runError, ShouldNotBeNil)
 					So(runError.Error(), ShouldContainSubstring, "Error with up step")
 					So(runError.Error(), ShouldContainSubstring, "4/4")

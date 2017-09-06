@@ -5,8 +5,8 @@ import (
 	"runtime"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/looplab/fsm"
+	log "github.com/sirupsen/logrus"
 )
 
 // Transition is the event that allows to go from a state to another by doing actions

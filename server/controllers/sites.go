@@ -46,12 +46,12 @@ func (s *Sites) Save(c echo.Context) error {
 	} else {
 		// Existing daemon, search for it and update read-only fields
 		site.ID = bson.ObjectIdHex(id)
-		d, err := docktorAPI.Sites().FindByIDBson(site.ID)
-		if err != nil {
-			if err == mgo.ErrNotFound {
+		d, errr := docktorAPI.Sites().FindByIDBson(site.ID)
+		if errr != nil {
+			if errr == mgo.ErrNotFound {
 				return c.String(http.StatusBadRequest, fmt.Sprint("Site does not exist"))
 			}
-			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find site. Retry later : %s", err))
+			return c.String(http.StatusInternalServerError, fmt.Sprintf("Unable to find site. Retry later : %s", errr))
 		}
 		site.Created = d.Created
 	}

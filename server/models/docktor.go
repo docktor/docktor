@@ -33,10 +33,12 @@ type Client interface {
 	Close()
 }
 
+// IsCollection defines a Mongo collection
 type IsCollection interface {
 	GetCollectionName() string
 }
 
+// IsCollectionWithIndexes defines a Mongo collection that needs indexes to be created
 type IsCollectionWithIndexes interface {
 	IsCollection
 	CreateIndexes() error
@@ -137,6 +139,7 @@ func (dock *Docktor) Tags() TagsRepo {
 	return dock.tags
 }
 
+// Collections returns all available collections in Docktor
 func (dock *Docktor) Collections() []IsCollection {
 	return []IsCollection{
 		dock.daemons,

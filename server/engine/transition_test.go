@@ -3,10 +3,11 @@ package engine
 import (
 	"context"
 	"fmt"
-	. "github.com/smartystreets/goconvey/convey"
 	"sync"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 type MockTransitionDeployableEntity struct {
