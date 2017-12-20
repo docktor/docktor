@@ -348,6 +348,9 @@ GroupSchema.statics.listSimplified = function () {
             '$project': {
                 '_id': 1,
                 'title': 1,
+                'description': 1,
+                'portminrange': 1,
+                'portminrange': 1,
                 'insensitive': {'$toLower': '$title'}
             }
         }, {

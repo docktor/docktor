@@ -13,7 +13,7 @@ module.exports = function (app) {
         .post(users.requiresLogin, groups.hasAdminAuthorization, groups.create);
 
     app.route('/groups/simplified')
-        .get(users.requiresLogin, groups.hasAdminAuthorization, groups.listSimplified);
+        .get(users.requiresLogin, groups.listSimplified);
 
     app.route('/groups/jobs')
         .get(users.requiresLogin, groups.hasAdminAuthorization, groups.getJobs);
