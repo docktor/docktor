@@ -6,7 +6,6 @@
         <thead>
         <th field-name="title" display-name="Title" enable-filtering="true"></th>
         <th field-name="description" display-name="Description" enable-filtering="true"></th>
-        <th field-name="daemon.name" display-name="Default Daemon" enable-filtering="true"></th>
         <th>
             <div class="tr-ng-title">
                 Ports
@@ -27,9 +26,6 @@
                 <div>
                     {{gridItem.portminrange}} - {{gridItem.portmaxrange}}
                 </div>
-            </td>
-            <td>
-                <div>{{gridItem.containers.length}}</div>
             </td>
         </tr>
         </tbody>

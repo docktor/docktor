@@ -71,10 +71,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.find = function () {
-            $scope.groups = Groups.query(function () {
-                $scope.groups.sortByProperty('title');
-            });
+        $scope.find = function() {
+            GroupsServices.getListSimplified()
+                .success(function (data, status, headers, config) {
+                    $scope.groups = data;
+                })
         };
 
         $scope.findForCreateOrEditGroup = function () {

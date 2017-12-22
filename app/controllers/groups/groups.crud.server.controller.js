@@ -289,6 +289,13 @@ exports.listSimplified = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+            // listSimplified returns all the groups, so in case the user
+            // is not an admin, only keep their own groups
+            if (req.user.role !== 'admin') {
+                groups = groups.filter(function(elt) {
+                    return req.user.groups.indexOf(elt._id) !== -1;
+                });
+            }
             res.jsonp(groups);
         }
     });
