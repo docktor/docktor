@@ -350,7 +350,7 @@ GroupSchema.statics.listSimplified = function () {
                 'title': 1,
                 'description': 1,
                 'portminrange': 1,
-                'portminrange': 1,
+                'portmaxrange': 1,
                 'insensitive': {'$toLower': '$title'}
             }
         }, {
