@@ -42,6 +42,13 @@ exports.createContainer = function (req, res) {
         Env: variables
     };
 
+    if (group.isSSO === true) {
+        containerParameters.Labels = {
+            'PROJECT_NAME': group.title,
+            'SERVICE_TYPE': container.serviceTitle
+        };
+    }
+
     container.parameters.forEach(function (parameter) {
         containerParameters[parameter.name] = parameter.value;
     });
@@ -56,8 +63,8 @@ exports.createContainer = function (req, res) {
         } else {
             var setToUpdate = {};
             setToUpdate['containers.$.containerId'] = containerCreated.id;
-            Group.update({_id: group._id, 'containers._id': container._id},
-                {$set: setToUpdate},
+            Group.update({ _id: group._id, 'containers._id': container._id },
+                { $set: setToUpdate },
                 function (err, numAffected) {
                     if (err || numAffected !== 1) {
                         return res.status(400).send({
@@ -99,7 +106,7 @@ exports.startContainer = function (req, res) {
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal) && _.isNumber(port.external)) {
             ports[port.internal + '/' + port.protocol] = [
-                {'HostPort': '' + port.external + ''}
+                { 'HostPort': '' + port.external + '' }
             ];
         }
     });
@@ -267,7 +274,7 @@ exports.topContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
 
-    dockerContainer.top({ps_args: 'aux'}, function (err, info) {
+    dockerContainer.top({ ps_args: 'aux' }, function (err, info) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -284,13 +291,13 @@ exports.logsContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
     var options =
-    {
-        'stderr': 1,
-        'stdout': 1,
-        'timestamps': 1,
-        'follow': 0,
-        'tail': 10
-    };
+        {
+            'stderr': 1,
+            'stdout': 1,
+            'timestamps': 1,
+            'follow': 0,
+            'tail': 10
+        };
 
     dockerContainer.logs(options, function (err, stream) {
         if (err) {
