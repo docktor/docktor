@@ -68,10 +68,23 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                         $scope.freePorts = freePorts;
                         var freeP = 0;
                         $scope.services.selectImage.ports.forEach(function (port) {
+                            if ($scope.group && $scope.group.isSSO) {
+                                // When using SSO, by default, only expose the container to the local host
+                                port.host = "127.0.0.1";
+                            }
                             port.external = freePorts[freeP];
                             freeP++;
                         });
                     });
+
+                if ($scope.group && $scope.group.isSSO) {
+                    $scope.services.selectImage.variables.push(
+                        {
+                            'name': 'ENABLE_SSO',
+                            'value': 'true'
+                        }
+                    );
+                }
             }
         };
 

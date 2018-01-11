@@ -25,6 +25,13 @@
                     </div>
                 </md-input-container>
             </div>
+            <div class="row">
+                <md-switch ng-model="group.isSSO" aria-label="Group is deployed with SSO ?">
+                    Group is deployed with SSO :
+                    <span ng-if="group.isSSO">Yes</span>
+                    <span ng-if="!group.isSSO">No</span>
+                </md-switch>
+            </div>
             <div class="row" layout-align="start start">
                 <div flex="10">Daemon</div>
                 <div flex>
@@ -36,11 +43,6 @@
                         </md-option>
                     </md-select>
                 </div>
-            </div>
-            <div class="row">
-                <md-checkbox ng-model="group.isSSO" aria-label="SSO">
-                    Group is deployed with SSO
-                </md-checkbox>
             </div>
             <div class="row" ng-show="group.selectDaemon">
                 <md-input-container>

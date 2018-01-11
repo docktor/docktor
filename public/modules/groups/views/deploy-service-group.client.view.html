@@ -56,8 +56,7 @@
             <div class="row">
                 <md-input-container class="long">
                     <label>Name</label>
-                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName"
-                           type="text" required md-maxlength="200">
+                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName" type="text" required md-maxlength="200">
 
                     <div ng-messages="deployForm.containerName.$error">
                         <div ng-message="required">This is required.</div>
@@ -71,8 +70,8 @@
             <div class="row">
                 <md-input-container class="long">
                     <label>Hostname</label>
-                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname"
-                           ng-pattern="patternHostname" type="text" required md-maxlength="200">
+                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname" ng-pattern="patternHostname" type="text"
+                        required md-maxlength="200">
 
                     <div ng-messages="deployForm.containerHostname.$error">
                         <div ng-message="required">This is required.</div>
@@ -83,23 +82,18 @@
                 <p>It is not recommanded to modify default value from Docktor</p>
             </div>
 
-            <parameters-directive with-title="true"
-                                  parameters="services.selectImage.parameters">
+            <parameters-directive with-title="true" parameters="services.selectImage.parameters">
             </parameters-directive>
-            <ports-directive with-title="true" ports="services.selectImage.ports"
-                             display-external-port="true">
+            <ports-directive with-title="true" ports="services.selectImage.ports" display-external-port="true" is-sso="{{group.isSSO}}">
             </ports-directive>
-            <variables-directive with-title="true"
-                                 variables="services.selectImage.variables">
+            <variables-directive with-title="true" variables="services.selectImage.variables">
             </variables-directive>
-            <volumes-directive with-title="true" volumes="services.selectImage.volumes"
-                               display-external-volume="true">
+            <volumes-directive with-title="true" volumes="services.selectImage.volumes" display-external-volume="true">
             </volumes-directive>
 
             <br>
 
-            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
-                       data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
+            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid" data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
                 Deploy Service
             </md-button>
         </form>

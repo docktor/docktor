@@ -60,6 +60,10 @@ var VariableContainerSchema = new Schema({
  * Port Schema, not useful outside Image
  */
 var PortContainerSchema = new Schema({
+    host: {
+        type: String,
+        trim: true
+    },
     internal: {
         type: Number,
         trim: true,
@@ -217,7 +221,8 @@ var GroupSchema = new Schema({
     },
     isSSO: {
         type: Boolean,
-        required: 'Is project SSO or not'
+        required: 'Is project SSO or not',
+        default: false,
     }
 });
 

@@ -100,13 +100,17 @@ exports.startContainer = function (req, res) {
 
     // PortBindings : {
     //    "80/tcp": [{ "HostPort": "80" }],
-    //    "22/tcp": [{ "HostPort": "22" }]
+    //    "22/tcp": [{ "HostPort": "22", "HostIP": "127.0.0.1" }]
     //   }
 
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+            var host = port.host || "0.0.0.0";
             ports[port.internal + '/' + port.protocol] = [
-                { 'HostPort': '' + port.external + '' }
+                {
+                    'HostPort': '' + port.external + '',
+                    'HostIP': '' + host + ''
+                }
             ];
         }
     });
