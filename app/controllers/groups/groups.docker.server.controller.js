@@ -80,6 +80,7 @@ exports.createContainer = function (req, res) {
 };
 
 exports.startContainer = function (req, res) {
+    var group = req.group;
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
@@ -124,7 +125,40 @@ exports.startContainer = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(containerStarted);
+            // Connect the container to the given network when needed
+            if (group.isSSO && container.networkName) {
+                daemonDocker.listNetworks({ "filters": `{ "name": ["${container.networkName}"] }` }, function (err, networks) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else {
+                        if (networks.length === 1) {
+                            var network = daemonDocker.getNetwork(networks[0].Id);
+                            network.connect({ Container: container.containerId }, function (err, d) {
+                                if (err) {
+                                    return res.status(400).send({
+                                        message: errorHandler.getErrorMessage(err)
+                                    });
+                                } else {
+                                    res.jsonp(containerStarted);
+                                }
+                            });
+                        } else if (networks.length == 0) {
+                            return res.status(400).send({
+                                message: `No network with name ${container.networkName}. Please create it and restart the container.`
+                            });
+                        } else {
+                            var networkNames = _.map(networks, function (n) { return n.Name });
+                            return res.status(400).send({
+                                message: `Multiple networks match the network name ${container.networkName} : ${networkNames}. Please use a more precise network name.`
+                            });
+                        }
+                    }
+                });
+            } else {
+                res.jsonp(containerStarted);
+            }
         }
     });
 };

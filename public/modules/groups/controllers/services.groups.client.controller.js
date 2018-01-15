@@ -6,6 +6,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
 
         $scope.patternName = /^[a-zA-Z0-9_\-/]{1,200}$/;
         $scope.patternHostname = /^[a-zA-Z0-9_\-]{1,200}$/;
+        $scope.patternNetworkName = /^[a-zA-Z0-9_\-]{1,200}$/;
 
         $scope.container = {};
 
@@ -122,6 +123,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             group.containers.push({
                 name: $scope.container.name,
                 hostname: $scope.container.hostname,
+                networkName: $scope.container.networkName,
                 image: image.name,
                 serviceTitle: $scope.services.select.title,
                 serviceId: $scope.services.select._id,

@@ -169,6 +169,10 @@ var ContainerSchema = new Schema({
         type: String,
         trim: true
     },
+    networkName: { // reference to optional network name
+        type: String,
+        trim: true,
+    },
     parameters: [ParameterContainerSchema],
     ports: [PortContainerSchema],
     variables: [VariableContainerSchema],

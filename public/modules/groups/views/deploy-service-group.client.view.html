@@ -61,7 +61,7 @@
                     <div ng-messages="deployForm.containerName.$error">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="md-maxlength">Max length of name : 200</div>
-                        <div ng-message="pattern">Name have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                        <div ng-message="pattern">Name has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
                 </md-input-container>
                 <p>It is not recommanded to modify default value from Docktor</p>
@@ -76,10 +76,26 @@
                     <div ng-messages="deployForm.containerHostname.$error">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="md-maxlength">Max length of hostname : 200</div>
-                        <div ng-message="pattern">Hostname have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                        <div ng-message="pattern">Hostname has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
                 </md-input-container>
                 <p>It is not recommanded to modify default value from Docktor</p>
+            </div>
+            <div ng-if="group.isSSO" class="row">
+                <md-input-container class="long">
+                    <label>Network name</label>
+                    <input name="containerNetworkName" id="containerNetworkName" ng-model="container.networkName" ng-pattern="patternNetworkName"
+                        type="text" md-maxlength="200">
+
+                    <div ng-messages="deployForm.containerNetworkName.$error">
+                        <div ng-message="md-maxlength">Max length of network name : 200</div>
+                        <div ng-message="pattern">Network name has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                    </div>
+                </md-input-container>
+                <p>When filled, the container will be attached to this network instead of default one. Network has to be created
+                    first on the daemon. Typically, the network could be named :
+                    <b>{{group.title}}-{{services.select.title}}-net</b>
+                </p>
             </div>
 
             <parameters-directive with-title="true" parameters="services.selectImage.parameters">
