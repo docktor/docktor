@@ -48,7 +48,7 @@ exports.infos = function (req, res) {
  * List containers of one docker daemon.
  */
 exports.listContainers = function (req, res) {
-    req.daemonDocker.listContainers({'all': 1}, function (err, data) {
+    req.daemonDocker.listContainers({ 'all': 1 }, function (err, data) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
