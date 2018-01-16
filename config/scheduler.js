@@ -63,7 +63,7 @@ module.exports.defineJob = function (jobName) {
                                 }
 
                                 Group.insertJob(group._id, containerFound._id, job);
-                            } else {
+                            } else if (!group.isSSO) {
                                 if (jobSchedule.attrs.data.type === 'url') {
                                     agenda.jobCheckUrl(jobSchedule, group, containerFound);
                                 } else {
@@ -139,7 +139,7 @@ module.exports.computeUrl = function (jobValue, container) {
             urlWithoutPort = jobValue.substr(pos, jobValue.length);
             if (!urlWithoutPort) urlWithoutPort = '';
         }
-        var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
+        var portMapping = _.where(container.ports, { 'internal': parseInt(portInContainer) });
         var portExternal = '';
         if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
@@ -247,7 +247,7 @@ module.exports.activateJob = function (job, serviceId, cbSuccess, cbError) {
 };
 
 module.exports.desactivateJob = function (jobId, cb) {
-    agenda.cancel({name: jobId}, function (err, numRemoved) {
+    agenda.cancel({ name: jobId }, function (err, numRemoved) {
         if (err) console.log(err);
         if (cb) cb(numRemoved);
     });
@@ -261,7 +261,7 @@ module.exports.reactivateJobsOnService = function (serviceId) {
     var mongoose = require('mongoose'), Group = mongoose.model('Group');
 
     var requestJobs = function (err, collection) {
-        collection.find({'data.serviceId': serviceId}).toArray(function (err, jobs) {
+        collection.find({ 'data.serviceId': serviceId }).toArray(function (err, jobs) {
 
             if (err) {
                 console.log('ERR reactivateJobsOnService');

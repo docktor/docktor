@@ -70,7 +70,7 @@
                                 Paused
                             </md-subheader>
                         </div>
-                        <div layout="row">
+                        <div ng-hide="group.isSSO" layout="row">
                             <div ng-repeat="job in container.jobsCompute" ng-click="showJob(job._id, job)">
                                 <md-button ng-if="job.status==='success'" class="job success">
                                     {{getDisplayJob(job.lastExecution)}}

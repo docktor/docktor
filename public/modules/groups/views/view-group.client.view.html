@@ -154,8 +154,13 @@
     <table ng-show="group.containers.length > 0" tr-ng-grid="" on-data-required="" items="group.containers" fields="" class="table">
         <thead>
             <tr>
-                <th field-name="serviceTitle" display-name="Service" enable-filtering="true"></th>
-                <th field-name="name" display-name="Container - Image" enable-filtering="true"></th>
+                <th field-name="name" display-name="Name" enable-filtering="true"></th>
+                <th field-name="container" display-name="Container"></th>
+                <th>
+                    <div class="tr-ng-title">
+                        Service
+                    </div>
+                </th>
                 <th>
                     <div class="tr-ng-title">
                         Status
@@ -175,13 +180,10 @@
         </thead>
         <tbody>
             <tr>
-                <td field-name="serviceTitle">
+                <td field-name="name">
                     <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
-                        <span ng-hide="gridItem.serviceTitle">Need Redeploy to
-                            <br>have a name here</span>
-                        {{gridItem.serviceTitle}}
+                        {{gridItem.name}}
                     </md-button>
-
                     <div ng-hide="group.isSSO">
                         <span ng-repeat="url in gridItem.urls">
                             <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
@@ -190,14 +192,15 @@
                         </span>
                     </div>
                 </td>
-                <td field-name="name">
-                    <div>
-                        {{gridItem.name}}
-                        <br>
-                        <small>{{gridItem.image}}</small>
-                        <br>
-                        <small>{{gridItem.containerId | limitTo:12}}</small>
-                    </div>
+                <td field-name="container">
+                    <small>{{gridItem.image}}</small>
+                    <br>
+                    <small>{{gridItem.containerId | limitTo:12}}</small>
+                </td>
+                <td>
+                    <span ng-hide="gridItem.serviceTitle">Need Redeploy to
+                        <br>have a name here</span>
+                    <span>{{gridItem.serviceTitle}}</span>
                 </td>
                 <td>
                     <div>
@@ -221,7 +224,7 @@
                                 </md-subheader>
                             </div>
                         </div>
-                        <div layout="row">
+                        <div ng-hide="group.isSSO" layout="row">
                             <div ng-repeat="job in gridItem.jobsCompute" ng-click="showJob(job._id, job)">
                                 <md-button ng-if="job.status==='success'" class="job success">
                                     {{getDisplayJob(job.lastExecution)}}
