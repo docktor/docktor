@@ -34,9 +34,10 @@
     <div class="row">
         <h4>
             <i class="fa fa-users"></i> Contacts</h4>
+        <p>Moderators are users who can add contacts to a group. Contact them when needed.</p>
         <span ng-repeat="u in group.users">
             <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
-                <i class="fa fa-envelope"></i> {{u.displayName}}
+                <i class="fa fa-envelope"></i> {{u.displayName}} {{ u.allowGrant ? '(Moderator)' : ''}}
             </md-button>
         </span>
 
@@ -182,7 +183,7 @@
             <tr>
                 <td field-name="name">
                     <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
-                        {{gridItem.name}}
+                        {{gridItem.name.length >= 1 ? gridItem.name.substring(1): ''}}
                     </md-button>
                     <div ng-hide="group.isSSO">
                         <span ng-repeat="url in gridItem.urls">

@@ -172,7 +172,7 @@ UserSchema.statics.getUsersOfOneGroup = function (idGroup) {
      }
      */
     return _this.aggregate([
-        {'$match': {'groups': {'$in': [idGroup]}}},
+        { '$match': { 'groups': { '$in': [idGroup] } } },
         {
             '$group': {
                 '_id': 0,
@@ -181,7 +181,8 @@ UserSchema.statics.getUsersOfOneGroup = function (idGroup) {
                         'id': '$_id',
                         'username': '$username',
                         'email': '$email',
-                        'displayName': '$displayName'
+                        'displayName': '$displayName',
+                        'allowGrant': '$allowGrant'
                     }
                 }
             }
