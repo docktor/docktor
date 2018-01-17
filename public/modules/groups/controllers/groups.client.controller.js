@@ -7,8 +7,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
         $scope.showAddRemoveContact = false;
         $scope.freePortRange = [];
-        $scope.contactAddSearchText = "";
-        $scope.contactRemoveSearchText = "";
+        $scope.contactAddSearchText = '';
+        $scope.contactRemoveSearchText = '';
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -77,7 +77,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             GroupsServices.getListSimplified()
                 .success(function (data, status, headers, config) {
                     $scope.groups = data;
-                })
+                });
         };
 
         $scope.findForCreateOrEditGroup = function () {
@@ -624,8 +624,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.showAddRemoveContact = false;
             $scope.contactToAdd = null;
             $scope.contactToRemove = null;
-            $scope.contactAddSearchText = "";
-            $scope.contactRemoveSearchText = "";
+            $scope.contactAddSearchText = '';
+            $scope.contactRemoveSearchText = '';
         };
 
         $scope.showJob = function (info, job) {
@@ -650,7 +650,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             var contacts = users || [];
             if (contactSearchText) {
                 return _.filter(contacts, function (o) {
-                    return o.displayName.toLowerCase().noAccent().indexOf(contactSearchText.toLowerCase().noAccent()) !== -1
+                    return o.displayName.toLowerCase().noAccent().indexOf(contactSearchText.toLowerCase().noAccent()) !== -1;
                 });
             }
 
@@ -675,6 +675,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
 
             return str;
-        }
+        };
     }
 ]);

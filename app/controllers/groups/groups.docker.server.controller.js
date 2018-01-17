@@ -106,7 +106,7 @@ exports.startContainer = function (req, res) {
 
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal) && _.isNumber(port.external)) {
-            var host = port.host || "0.0.0.0";
+            var host = port.host || '0.0.0.0';
             ports[port.internal + '/' + port.protocol] = [
                 {
                     'HostPort': '' + port.external + '',
@@ -127,7 +127,7 @@ exports.startContainer = function (req, res) {
         } else {
             // Connect the container to the given network when needed
             if (group.isSSO && container.networkName) {
-                daemonDocker.listNetworks({ "filters": `{ "name": ["${container.networkName}"] }` }, function (err, networks) {
+                daemonDocker.listNetworks({ 'filters': `{ "name": ["${container.networkName}"] }` }, function (err, networks) {
                     if (err) {
                         return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)
@@ -144,12 +144,12 @@ exports.startContainer = function (req, res) {
                                     res.jsonp(containerStarted);
                                 }
                             });
-                        } else if (networks.length == 0) {
+                        } else if (networks.length === 0) {
                             return res.status(400).send({
                                 message: `No network with name ${container.networkName}. Please create it and restart the container.`
                             });
                         } else {
-                            var networkNames = _.map(networks, function (n) { return n.Name });
+                            var networkNames = _.map(networks, function (n) { return n.Name; });
                             return res.status(400).send({
                                 message: `Multiple networks match the network name ${container.networkName} : ${networkNames}. Please use a more precise network name.`
                             });
