@@ -951,3 +951,8 @@ table.tr-ng-grid > tbody > tr > td > .tr-ng-cell {
     -ms-user-select: text !important;
     user-select: text !important;
 }
+
+md-autocomplete {
+    width: 300px;
+    margin: 10px 5px 10px 5px;
+}

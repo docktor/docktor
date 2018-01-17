@@ -7,6 +7,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
         $scope.showAddRemoveContact = false;
         $scope.freePortRange = [];
+        $scope.contactAddSearchText = "";
+        $scope.contactRemoveSearchText = "";
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -71,7 +73,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.find = function() {
+        $scope.find = function () {
             GroupsServices.getListSimplified()
                 .success(function (data, status, headers, config) {
                     $scope.groups = data;
@@ -120,7 +122,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
-                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase();});
+                $scope.group.containers = _.sortBy($scope.group.containers, function (c) { return c.name.toLocaleUpperCase(); });
 
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
@@ -200,7 +202,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.computeFsForGroup = function () {
             angular.forEach($scope.group.filesystems, function (fs, key) {
-                var found = _.where($scope.getDaemon(fs.daemon).statsCompute.filesystem, {'device': fs.partition});
+                var found = _.where($scope.getDaemon(fs.daemon).statsCompute.filesystem, { 'device': fs.partition });
                 if (found) fs.statsCompute = found[0];
             });
         };
@@ -423,7 +425,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $mdDialog.show({
                     controller: 'ContainerCmdDialogController',
                     templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
+                    locals: { title: title, results: results }
                 });
 
             }, $scope.callbackErrorInspect);
@@ -443,7 +445,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $mdDialog.show({
                     controller: 'ContainerCmdDialogController',
                     templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
+                    locals: { title: title, results: results }
                 });
 
             }, $scope.callbackErrorInspect);
@@ -470,7 +472,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.getDaemon = function (idDaemon) {
-            return _.where($scope.daemons.all, {'_id': idDaemon})[0];
+            return _.where($scope.daemons.all, { '_id': idDaemon })[0];
         };
 
         $scope.removeFilesystem = function (filesystem) {
@@ -510,7 +512,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     urlWithoutPort = url.url.substr(pos, url.url.length);
                     if (!urlWithoutPort) urlWithoutPort = '';
                 }
-                var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
+                var portMapping = _.where(container.ports, { 'internal': parseInt(portInContainer) });
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
@@ -532,12 +534,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 .success(function (users) {
                     // a role=admin can add himself, not for role=user
                     if ($scope.authentication.user.role !== 'admin') {
-                        $scope.users = _.reject(users, {'_id': $scope.authentication.user._id});
+                        $scope.users = _.reject(users, { '_id': $scope.authentication.user._id });
                     } else {
                         $scope.users = users;
                     }
                     angular.forEach($scope.group.users, function (user, key) {
-                        $scope.users = _.reject($scope.users, {'_id': user.id});
+                        $scope.users = _.reject($scope.users, { '_id': user.id });
                     });
 
                 });
@@ -559,7 +561,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.computeGroupFavorite = function () {
-            if (_.where($scope.authentication.user.favorites, {'_id': $scope.group._id}).length > 0) {
+            if (_.where($scope.authentication.user.favorites, { '_id': $scope.group._id }).length > 0) {
                 $scope.isGroupFavorite = true;
             } else {
                 $scope.isGroupFavorite = false;
@@ -622,13 +624,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.showAddRemoveContact = false;
             $scope.contactToAdd = null;
             $scope.contactToRemove = null;
+            $scope.contactAddSearchText = "";
+            $scope.contactRemoveSearchText = "";
         };
 
         $scope.showJob = function (info, job) {
             $mdDialog.show({
                 controller: 'JobDialogController',
                 templateUrl: 'modules/jobs/views/job.dialog.template.html',
-                locals: {currentJob: job, info: info}
+                locals: { currentJob: job, info: info }
             });
         };
 
@@ -639,5 +643,38 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 return '.';
             }
         };
+
+
+        $scope.getContactsFromText = function (users, contactSearchText) {
+
+            var contacts = users || [];
+            if (contactSearchText) {
+                return _.filter(contacts, function (o) {
+                    return o.displayName.toLowerCase().noAccent().indexOf(contactSearchText.toLowerCase().noAccent()) !== -1
+                });
+            }
+
+            return contacts;
+        };
+
+        String.prototype.noAccent = function () {
+            var accent = [
+                /[\300-\306]/g, /[\340-\346]/g, // A, a
+                /[\310-\313]/g, /[\350-\353]/g, // E, e
+                /[\314-\317]/g, /[\354-\357]/g, // I, i
+                /[\322-\330]/g, /[\362-\370]/g, // O, o
+                /[\331-\334]/g, /[\371-\374]/g, // U, u
+                /[\321]/g, /[\361]/g, // N, n
+                /[\307]/g, /[\347]/g, // C, c
+            ];
+            var noaccent = ['A', 'a', 'E', 'e', 'I', 'i', 'O', 'o', 'U', 'u', 'N', 'n', 'C', 'c'];
+
+            var str = this;
+            for (var i = 0; i < accent.length; i++) {
+                str = str.replace(accent[i], noaccent[i]);
+            }
+
+            return str;
+        }
     }
 ]);

@@ -55,29 +55,29 @@
 
             <div ng-show="showAddRemoveContact" layout="column">
                 <div layout="row">
-                    <md-select ng-model="contactToAdd">
-                        <md-select-label>
-                            {{ contactToAdd.displayName ? contactToAdd.displayName : 'choose a contact to add' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
+                    <md-autocomplete md-selected-item="contactToAdd" md-search-text="contactAddSearchText" md-items="user in getContactsFromText(users, contactAddSearchText) | orderBy:'displayName'"
+                        md-item-text="user.displayName" placeholder="Search for a contact to add...">
+                        <md-item-template>
+                            <span md-highlight-text="contactAddSearchText" md-highlight-flags="^i">{{user.displayName}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <span ng-if="getContactsFromText(users, contactAddSearchText).length === 0 && contactAddSearchText !== '' ">
+                        No matches found for "{{contactAddSearchText}}"
+                    </span>
                     <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd" ng-click="addContact()">
                         <i class="fa fa-save"></i> Add
                     </md-button>
                 </div>
                 <div layout="row">
-                    <md-select ng-model="contactToRemove">
-                        <md-select-label>
-                            {{ contactToRemove.displayName ? contactToRemove.displayName : 'choose a contact to remove' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in group.users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
+                    <md-autocomplete md-selected-item="contactToRemove" md-search-text="contactRemoveSearchText" md-items="user in getContactsFromText(group.users, contactRemoveSearchText) | orderBy:'displayName'"
+                        md-item-text="user.displayName" placeholder="Search for a contact to remove...">
+                        <md-item-template>
+                            <span md-highlight-text="contactRemoveSearchText" md-highlight-flags="^i">{{user.displayName}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <span ng-if="getContactsFromText(group.users, contactRemoveSearchText).length === 0 && contactRemoveSearchText !== '' ">
+                        No matches found for "{{contactRemoveSearchText}}"
+                    </span>
                     <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove" ng-click="removeContact()">Remove
                     </md-button>
                 </div>
