@@ -50,6 +50,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 $scope.services.selectImage.ports = _.union($scope.services.selectImage.ports, $scope.daemons.select.ports);
                 $scope.services.selectImage.variables = _.union($scope.services.selectImage.variables, $scope.daemons.select.variables);
                 $scope.services.selectImage.volumes = _.union($scope.services.selectImage.volumes, $scope.daemons.select.volumes);
+                $scope.services.selectImage.labels = [];
 
                 $scope.services.selectImage.volumes.forEach(function (volume) {
                     var internal = volume.value;
@@ -63,15 +64,23 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 });
 
                 $scope.container.name = '/' + $scope.group.title + '-' + $scope.services.select.title;
+                $scope.containerNameAlreadyUsed = false;
+                if ($scope.group.containers && $scope.container.name && _.filter($scope.group.containers, function (c) { return c.name === $scope.container.name; }).length !== 0) {
+                    $scope.containerNameAlreadyUsed = true;
+                }
 
                 GroupsServices.getFreePorts($scope.group._id)
                     .success(function (freePorts) {
                         $scope.freePorts = freePorts;
                         var freeP = 0;
-                        $scope.services.selectImage.ports.forEach(function (port) {
+                        $scope.services.selectImage.ports.forEach(function (port, i) {
                             if ($scope.group && $scope.group.isSSO) {
                                 // When using SSO, by default, only expose the container to the local host
                                 port.host = '127.0.0.1';
+                                // When using SSO, we add a label for each internal port in order to generate distinct URL
+                                $scope.services.selectImage.labels.push(
+                                    { name: '' + port.internal, value: `ui${i + 1}` }
+                                );
                             }
                             port.external = freePorts[freeP];
                             freeP++;
@@ -84,6 +93,11 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                             'name': 'ENABLE_SSO',
                             'value': 'true'
                         }
+                    );
+
+                    $scope.services.selectImage.labels.push(
+                        { name: 'PROJECT_NAME', value: $scope.group.title },
+                        { name: 'SERVICE_TYPE', value: $scope.services.select.title }
                     );
                 }
             }
@@ -120,6 +134,11 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 //}
             });
 
+            var labels = [];
+            image.labels.forEach(function (label) {
+                labels.push(label);
+            });
+
             group.containers.push({
                 name: $scope.container.name,
                 hostname: $scope.container.hostname,
@@ -131,6 +150,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 variables: variables,
                 ports: ports,
                 volumes: volumes,
+                labels: labels,
                 daemonId: daemon._id,
                 active: true
             });

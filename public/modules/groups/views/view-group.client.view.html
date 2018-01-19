@@ -157,6 +157,11 @@
             <tr>
                 <th field-name="name" display-name="Name" enable-filtering="true"></th>
                 <th field-name="container" display-name="Container"></th>
+                <th ng-if="group.isSSO && authentication.isAdmin">
+                    <div class="tr-ng-title">
+                        Network
+                    </div>
+                </th>
                 <th>
                     <div class="tr-ng-title">
                         Service
@@ -199,6 +204,9 @@
                     <small>{{gridItem.containerId | limitTo:12}}</small>
                 </td>
                 <td>
+                    <span>{{gridItem.networkName}}</span>
+                </td>
+                <td ng-if="group.isSSO && authentication.isAdmin">
                     <span ng-hide="gridItem.serviceTitle">Need Redeploy to
                         <br>have a name here</span>
                     <span>{{gridItem.serviceTitle}}</span>

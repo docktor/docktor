@@ -1,4 +1,4 @@
-<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+<section data-ng-controller="GroupsController" data-ng-init="fetchContainer()">
 
     <h3>
         <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
@@ -8,36 +8,12 @@
     </h3>
 
     <div class="row">
-        <h4>
-            <i class="fa fa-users"></i> Contacts</h4>
-        <span ng-repeat="u in group.users">
-            <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
-                <i class="fa fa-envelope"></i> {{u.displayName}}
-            </md-button>
-        </span>
-
-        <div>
-            <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
-                <i class="fa fa-envelope"></i> Mail All
-            </md-button>
-        </div>
-    </div>
-
-    <div class="row">
-        <h4>
-            <i class="fa fa-tachometer"></i> Monitoring</h4>
-        <i class="fa fa-bar-chart"></i>
-        <md-button class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
-            Monitoring CPU / RAM on this service.
-        </md-button>
-    </div>
-
-    <div class="row">
         <table class="table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Service - Image</th>
+                    <th ng-if="container.networkName">Network</th>
                     <th>Status</th>
                     <th>Daemon</th>
                 </tr>
@@ -57,6 +33,9 @@
                         <small>{{container.image}}</small>
                         <br>
                         <small>{{container.containerId | limitTo:12}}</small>
+                    </td>
+                    <td ng-if="container.networkName">
+                        {{container.networkName}}
                     </td>
                     <td>
                         <div ng-show="container.daemon.dockerStatusUp">
@@ -262,6 +241,22 @@
 
         <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
             <span>{{container.inspect.HostConfig.Binds | json}}</span>
+        </md-whiteframe>
+
+        <h4>Labels</h4>
+
+        <h5>From Docktor</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="label in container.labels">
+                -l {{label.name}}={{label.value}}
+            </div>
+        </md-whiteframe>
+
+        <h5>docker inspect</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <span>{{container.inspect.Config.Labels | json}}</span>
         </md-whiteframe>
     </div>
 

@@ -1,0 +1,40 @@
+<div>
+    <div ng-if="withTitle">
+        <h4>Labels</h4>
+    </div>
+    <p>
+        <i>docker [...] -l name=value</i>
+    </p>
+
+    <div ng-if="labels.length === 0">No label</div>
+
+    <ul data-ng-repeat="label in labels">
+        <li layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center">
+                <md-button aria-label="Ask Delete Label" ng-click="askDeleteLabel=true" ng-hide="askDeleteLabel">
+                    <i class="fa fa-trash-o" tooltip="Delete Label" stooltip-popup-delay='750'></i>
+                </md-button>
+                <md-button aria-label="Don't delete label" ng-click="askDeleteLabel=false" ng-show="askDeleteLabel" class="md-raised md-accent md-hue-3">
+                    No, I don't want to delete this.
+                    <i class="fa fa-reply"></i>
+                </md-button>
+                <md-button aria-label="Confirm delete label" data-ng-click="removeLabel(label);" ng-show="askDeleteLabel" class="md-raised md-warn">
+                    Yes, I confirm
+                    <i class="fa fa-exclamation-triangle"></i>
+                </md-button>
+                <md-input-container>
+                    <label>Name</label>
+                    <input ng-model="label.name" type="text" ng-required="true">
+                </md-input-container>
+                <md-input-container>
+                    <label>Value</label>
+                    <input ng-model="label.value" type="text" ng-required="true">
+                </md-input-container>
+            </div>
+        </li>
+    </ul>
+
+    <md-button aria-label="Add a label" ng-hide="displayFormLabel" ng-click="addLabel()">
+        <i class="fa fa-plus-square"></i> Add a label
+    </md-button>
+</div>

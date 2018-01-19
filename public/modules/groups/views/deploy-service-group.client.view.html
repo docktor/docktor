@@ -52,7 +52,9 @@
         <form name="deployForm" novalidate>
 
             <h4>Container</h4>
-
+            <p ng-if="containerNameAlreadyUsed" style="color:red">You want to deploy a new instance of the '{{services.select.title}}' service but another one already exist for
+                this group. In order to work properly, the configuration need to be changed to have unique values: container
+                name, hostname and volume bindings on host !</p>
             <div class="row">
                 <md-input-container class="long">
                     <label>Name</label>
@@ -106,6 +108,8 @@
             </variables-directive>
             <volumes-directive with-title="true" volumes="services.selectImage.volumes" display-external-volume="true">
             </volumes-directive>
+            <labels-directive with-title="true" labels="services.selectImage.labels">
+            </labels-directive>
 
             <br>
 

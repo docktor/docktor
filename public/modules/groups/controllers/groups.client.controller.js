@@ -110,7 +110,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.findOne = function () {
+        $scope._findContainer = function (callback) {
             $scope.daemons = {};
             $scope.daemons.all = [];
             $scope.daemons.ids = [];
@@ -149,8 +149,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                 });
                             }
                             $scope.prepareJobs(container);
-                            // feat : remove docker call for every container
-                            //$scope.inspect(container);
+                            if (callback) {
+                                callback(container);
+                            }
                         }
                     });
                 };
@@ -158,6 +159,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.prepareDaemonsAll(allDaemonsContainer, computeDaemon);
                 $scope.getUsersOnGroup();
                 $scope.computeGroupFavorite();
+            });
+        };
+
+        $scope.findOne = function () {
+            $scope._findContainer();
+        };
+
+        $scope.fetchContainer = function () {
+            $scope._findContainer(function (container) {
+                if (container) {
+                    $scope.inspect(container);
+                }
             });
         };
 

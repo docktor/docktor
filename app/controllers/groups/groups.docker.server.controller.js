@@ -19,6 +19,8 @@ exports.createContainer = function (req, res) {
 
     var ports = {};
     var variables = [];
+    var volumes = [];
+    var labels = {};
 
     // Env - A list of environment variables in the form of VAR=value
     container.variables.forEach(function (variable) {
@@ -42,16 +44,49 @@ exports.createContainer = function (req, res) {
         Env: variables
     };
 
-    if (group.isSSO === true) {
-        containerParameters.Labels = {
-            'PROJECT_NAME': group.title,
-            'SERVICE_TYPE': container.serviceTitle
-        };
-    }
+    container.labels.forEach(function (label) {
+        if (!_.isEmpty(label.name) && !_.isEmpty(label.value)) {
+            labels[label.name] = label.value;
+        }
+    });
+    containerParameters.Labels = labels;
 
     container.parameters.forEach(function (parameter) {
         containerParameters[parameter.name] = parameter.value;
     });
+
+    container.volumes.forEach(function (volume) {
+        if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
+            var vol = volume.external + ':' + volume.internal;
+            if (_.isString(volume.rights) && !_.isEmpty(volume.rights)) {
+                vol = vol + ':' + volume.rights;
+            }
+            volumes.push(vol);
+        }
+    });
+
+
+    // PortBindings : {
+    //    "80/tcp": [{ "HostPort": "80" }],
+    //    "22/tcp": [{ "HostPort": "22", "HostIP": "127.0.0.1" }]
+    //   }
+
+    container.ports.forEach(function (port) {
+        if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+            var host = port.host || '0.0.0.0';
+            ports[port.internal + '/' + port.protocol] = [
+                {
+                    'HostPort': '' + port.external + '',
+                    'HostIP': '' + host + ''
+                }
+            ];
+        }
+    });
+
+    containerParameters.HostConfig = {
+        Binds: volumes,
+        PortBindings: ports
+    };
 
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {
@@ -86,40 +121,7 @@ exports.startContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
 
-    var volumes = [];
-    var ports = {};
-
-    container.volumes.forEach(function (volume) {
-        if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
-            var vol = volume.external + ':' + volume.internal;
-            if (_.isString(volume.rights) && !_.isEmpty(volume.rights)) {
-                vol = vol + ':' + volume.rights;
-            }
-            volumes.push(vol);
-        }
-    });
-
-    // PortBindings : {
-    //    "80/tcp": [{ "HostPort": "80" }],
-    //    "22/tcp": [{ "HostPort": "22", "HostIP": "127.0.0.1" }]
-    //   }
-
-    container.ports.forEach(function (port) {
-        if (_.isNumber(port.internal) && _.isNumber(port.external)) {
-            var host = port.host || '0.0.0.0';
-            ports[port.internal + '/' + port.protocol] = [
-                {
-                    'HostPort': '' + port.external + '',
-                    'HostIP': '' + host + ''
-                }
-            ];
-        }
-    });
-
-    dockerContainer.start({
-        Binds: volumes,
-        PortBindings: ports
-    }, function (err, containerStarted) {
+    dockerContainer.start({}, function (err, containerStarted) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

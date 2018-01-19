@@ -137,6 +137,18 @@ var JobContainerSchema = new Schema({
     }
 });
 
+var LabelSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'value cannot be blank'
+    }
+});
 
 /**
  * Container Schema, not useful outside Group
@@ -178,6 +190,7 @@ var ContainerSchema = new Schema({
     variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],
     jobs: [JobContainerSchema],
+    labels: [LabelSchema],
     daemonId: { // TODO use Schema.ObjectId
         type: String,
         trim: true
