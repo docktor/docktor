@@ -17,7 +17,8 @@ exports.createContainer = function (req, res) {
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
-    var ports = {};
+    var exposedPorts = {};
+    var portBindings = {};
     var variables = [];
     var volumes = [];
     var labels = {};
@@ -32,7 +33,7 @@ exports.createContainer = function (req, res) {
     // example : ExposedPorts: {"80/tcp": {}, "22/tcp" : {}}
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal)) {
-            ports[port.internal + '/' + port.protocol] = {};
+            exposedPorts[port.internal + '/' + port.protocol] = {};
         }
     });
 
@@ -40,7 +41,7 @@ exports.createContainer = function (req, res) {
         Hostname: container.hostname,
         Image: container.image,
         name: container.name,
-        ExposedPorts: ports,
+        ExposedPorts: exposedPorts,
         Env: variables
     };
 
@@ -74,7 +75,7 @@ exports.createContainer = function (req, res) {
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal) && _.isNumber(port.external)) {
             var host = port.host || '0.0.0.0';
-            ports[port.internal + '/' + port.protocol] = [
+            portBindings[port.internal + '/' + port.protocol] = [
                 {
                     'HostPort': '' + port.external + '',
                     'HostIP': '' + host + ''
@@ -85,7 +86,7 @@ exports.createContainer = function (req, res) {
 
     containerParameters.HostConfig = {
         Binds: volumes,
-        PortBindings: ports
+        PortBindings: portBindings
     };
 
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
