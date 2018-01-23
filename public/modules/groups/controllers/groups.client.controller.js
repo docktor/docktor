@@ -660,7 +660,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
             // Labels
             container.labels.forEach(function(label) {
-                command.push(`-e ${label.name}='${label.value}'`);
+                command.push(`-l ${label.name}='${label.value}'`);
             });
 
             command.push(`--name ${container.name}`);
