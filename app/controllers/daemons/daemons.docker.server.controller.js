@@ -134,8 +134,14 @@ exports.killContainer = function (req, res) {
 exports.removeContainer = function (req, res) {
     req.containerDocker.remove({}, function (err, container) {
         if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+            req.containerDocker.remove({ force: true }, function (err, container) {
+                if (err) {
+                    return res.status(400).send({
+                        message: "Had to forced remove the container but an error occured anyway: " + errorHandler.getErrorMessage(err)
+                    });
+                } else {
+                    res.jsonp(container);
+                }
             });
         } else {
             res.jsonp(container);
