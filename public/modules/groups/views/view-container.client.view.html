@@ -212,6 +212,12 @@
 
         </div>
     </div>
+    <div ng-show="container.daemon.dockerStatusUp && !container.containerId"></div>
+    Execute the following command on daemon "{{container.daemon.name}}" to download the image:
+    <span>
+        <b>docker pull {{ container.image }}</b>
+    </span>
+    </div>
 
     <h4>Ports</h4>
 
