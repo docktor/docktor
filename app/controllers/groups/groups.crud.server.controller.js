@@ -62,8 +62,7 @@ exports.read = function (req, res) {
     // For every container running on the container,
     // push the container to the containerQueue
     var daemonWorker = function (daemon, callback) {
-        //console.log('Processing daemon ' + daemon.name);
-        if (daemon) {
+        if (daemon && daemon.active) {
             var daemonDocker = daemon.getDaemonDocker();
             //Call "docker ps"
             daemonDocker.listContainers(function (err, data) {
@@ -118,7 +117,7 @@ exports.read = function (req, res) {
 
     //drain function will be called when the last item from the queue has returned from the worker
     var drainQueues = function () {
-        //Waiting the last of the 2 workers queues to return de response
+        //Waiting the last of the 2 workers queues to return the response
         if (queueDaemons.idle() && queueContainers.idle()) {
             res.jsonp(group);
         }
@@ -139,7 +138,6 @@ exports.read = function (req, res) {
             if (err) {
                 console.log('Failed to find daemon : ' + daemonId);
             } else {
-                console.log(daemonId);
                 queueDaemons.push(daemon);
             }
         });

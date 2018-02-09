@@ -2,8 +2,7 @@
     <div flex>
         <md-input-container>
             <label>Name</label>
-            <input name="name" ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true"
-                   md-maxlength="200">
+            <input name="name" ng-model="daemon.name" type="text" ng-pattern="patternTitle" required="true" md-maxlength="200">
 
             <div ng-messages="daemonForm.name.$error">
                 <div ng-message="required">This is required.</div>
@@ -14,9 +13,17 @@
     </div>
 
     <div>
-        No space or special character in this field. <br>
-        The name is used to have default value for container's name.
+        No space or special character in this field.
+        <br> The name is used to have default value for container's name.
     </div>
+</div>
+
+<div layout="row" class="row">
+    <md-switch ng-model="daemon.active" aria-label="Daemon is active ?">
+        <span ng-if="daemon.active">Daemon is active, it's monitored and containers can be created on this daemon. Switch to disable the daemon</span>
+        <span ng-if="!daemon.active">Daemon is disabled, it's not monitored and containers can't be created on this daemon. Switch to enable the daemon
+        </span>
+    </md-switch>
 </div>
 
 <div layout="row" class="row">

@@ -40,37 +40,39 @@ angular.module('daemons').factory('Daemon', ['DaemonsDocker', 'Toasts',
                         daemon.machineInfo = infos.machineInfo;
 
                         daemon.statsCompute = {};
+                        if (daemon.active) {
+                            if (daemon.machineInfo) {
+                                DaemonsDocker.statsDaemon(daemon._id).
+                                    success(function (daemonInfo, status, headers, config) {
+                                        if (daemonInfo && daemonInfo.stats) {
+                                            var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
+                                            daemon.statsCompute = cur;
 
-                        if (daemon.machineInfo) {
-                            DaemonsDocker.statsDaemon(daemon._id).
-                                success(function (daemonInfo, status, headers, config) {
-                                    if (daemonInfo && daemonInfo.stats) {
-                                        var cur = daemonInfo.stats[daemonInfo.stats.length - 1];
-                                        daemon.statsCompute = cur;
+                                            angular.forEach(cur.filesystem, function (fs, key) {
+                                                fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
+                                                fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
+                                                fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
+                                            });
+                                        }
 
-                                        angular.forEach(cur.filesystem, function (fs, key) {
-                                            fs.usageInMB = Number(fs.usage / (1 << 30)).toFixed(2);
-                                            fs.capacityInMB = Number(fs.capacity / (1 << 30)).toFixed(2);
-                                            fs.usagePercent = Number(fs.usage / fs.capacity * 100).toFixed(2);
-                                        });
-                                    }
-
-                                    if (callback) callback();
-                                }).
-                                error(function (data, status, headers, config) {
-                                    console.log('Error:');
-                                    console.log(data);
-                                    Toasts.addToast(data, 'danger', 'Error retrieving info on cAdvisor for daemon ' + daemon.name);
-                                    if (callback) callback();
-                                });
-                        } else {
-                            // display error only if there is a cAdvisorApi attached to this daemon.
-                            if (daemon.cadvisorApi) {
-                                console.log('noMachineInfo for daemon ' + daemon._id);
-                                Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
+                                        if (callback) callback();
+                                    }).
+                                    error(function (data, status, headers, config) {
+                                        console.log('Error:');
+                                        console.log(data);
+                                        Toasts.addToast(data, 'danger', 'Error retrieving info on cAdvisor for daemon ' + daemon.name);
+                                        if (callback) callback();
+                                    });
+                            } else {
+                                // display error only if there is a cAdvisorApi attached to this daemon.
+                                if (daemon.cadvisorApi) {
+                                    console.log('noMachineInfo for daemon ' + daemon._id);
+                                    Toasts.addToast('noMachineInfo found', 'danger', 'Error with daemon' + daemon.name);
+                                }
+                                if (callback) callback();
                             }
-                            if (callback) callback();
                         }
+
                     })
                     .error(function (data, status, headers, config) {
                         daemon.dockerStatus = 'down';

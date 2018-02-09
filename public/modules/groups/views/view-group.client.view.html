@@ -185,7 +185,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr ng-show="gridItem.daemon.active || authentication.isAdmin">
                 <td field-name="name">
                     <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
                         {{gridItem.name.length >= 1 ? gridItem.name.substring(1): ''}}
@@ -213,6 +213,12 @@
                 </td>
                 <td>
                     <div>
+                        <div ng-if="!gridItem.daemon.active" layout="row">
+                            <div>
+                                <md-subheader class="docktor">Disabled</md-subheader>
+                                <small>Daemon disabled</small>
+                            </div>
+                        </div>
                         <div ng-switch="gridItem.daemon.dockerStatus">
                             <div ng-switch-when="checking">
                             </div>
@@ -233,7 +239,7 @@
                                 </md-subheader>
                             </div>
                         </div>
-                        <div ng-hide="group.isSSO" layout="row">
+                        <div ng-hide="group.isSSO || !gridItem.daemon.active" layout="row">
                             <div ng-repeat="job in gridItem.jobsCompute" ng-click="showJob(job._id, job)">
                                 <md-button ng-if="job.status==='success'" class="job success">
                                     {{getDisplayJob(job.lastExecution)}}
@@ -250,7 +256,6 @@
                 </td>
                 <td>
                     <div ng-switch="gridItem.daemon.dockerStatus">
-
                         <div ng-switch-when="checking">
                         </div>
                         <div ng-switch-when="down">
@@ -292,6 +297,16 @@
                     </div>
                 </td>
                 <td>
+                    <div ng-if="!gridItem.daemon.active">
+                        <span>
+                            <md-button ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                                {{gridItem.daemon.name}}
+                            </md-button>
+                            <span ng-hide="authentication.isAdmin" class="label">
+                                {{gridItem.daemon.name}}
+                            </span>
+                        </span>
+                    </div>
                     <div ng-switch="gridItem.daemon.dockerStatus">
                         <span ng-switch-when="checking" class="label label-default" layout="row" layout-align="center center">
                             <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">

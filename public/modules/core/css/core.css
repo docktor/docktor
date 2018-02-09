@@ -956,3 +956,7 @@ md-autocomplete {
     width: 300px;
     margin: 10px 5px 10px 5px;
 }
+
+.md-button.md-default-theme.md-white.docktor.md-fab {
+    background-color: white !important;
+}

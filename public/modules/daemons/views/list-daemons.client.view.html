@@ -11,8 +11,7 @@
 
     <div layout="row" data-ng-if="daemons.$resolved && daemons.length">
         <div flex="35">
-            <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px"
-                     width="320px"></leaflet>
+            <leaflet ng-if="daemonsInitialized" center="center" markers="markers" height="240px" width="320px"></leaflet>
         </div>
 
         <div flex="65" align="column">
@@ -26,15 +25,20 @@
                 <md-item ng-repeat="daemon in daemons | filter:searchDaemon">
                     <md-item-content>
                         <div class="md-tile-left">
+                            <div ng-if="!daemon.active" flex layout-align="center center">
+                                <div>
+                                    <md-button class="md-white docktor md-fab" layout="row" layout-align="center center">
+                                        <i class="fa fa-ban" tooltip="Daemon is disabled"></i>
+                                    </md-button>
+                                </div>
+                            </div>
                             <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
                                 <div ng-switch-when="checking" layout="row" layout-align="center">
-                                    <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
-                                                          md-mode="indeterminate">
+                                    <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                                     </md-progress-circular>
                                 </div>
                                 <div ng-switch-when="up">
-                                    <md-button class="md-primary docktor md-fab" layout="row"
-                                                  layout-align="center center">
+                                    <md-button class="md-primary docktor md-fab" layout="row" layout-align="center center">
                                         UP
                                     </md-button>
                                 </div>
@@ -46,29 +50,25 @@
                             </div>
                         </div>
                         <div class="md-tile-content">
-                            <h3><md-button href="/#!/admin/daemons/view/{{daemon._id}}">{{daemon.name}}</md-button > <small>{{daemon.dockerVersion.Version}} - {{daemon.site.title}}</small></h3>
+                            <h3>
+                                <md-button href="/#!/admin/daemons/view/{{daemon._id}}">{{daemon.name}}</md-button>
+                                <small>{{daemon.dockerVersion.Version}} - {{daemon.site.title}}</small>
+                            </h3>
 
                             <div layout="row">
                                 <div flex>
-                                    <md-button class="md-accent md-hue-3" ng-show="daemon.cadvisorApi"
-                                               href="{{daemon.cadvisorUrl}}">
+                                    <md-button class="md-accent md-hue-3" ng-show="daemon.cadvisorApi" href="{{daemon.cadvisorUrl}}">
                                         cAdvisor
-                                    </md-button>
-                                    <md-button class="md-accent md-hue-3"
-                                               href="{{grafanaUrl}}?groupName={{group.name}}">
-                                        Grafana
                                     </md-button>
                                 </div>
 
                                 <div flex>
-                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3"
-                                               href="/#!/admin/daemons/view/containers/{{daemon._id}}">
+                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3" href="/#!/admin/daemons/view/containers/{{daemon._id}}">
                                         {{daemon.dockerInfo.Containers}} containers
                                     </md-button>
                                 </div>
                                 <div flex>
-                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3"
-                                               href="/#!/admin/daemons/view/images/{{daemon._id}}">
+                                    <md-button ng-show="daemon.dockerStatusUp" class="md-accent md-hue-3" href="/#!/admin/daemons/view/images/{{daemon._id}}">
                                         {{daemon.dockerInfo.Images}} images
                                     </md-button>
                                 </div>

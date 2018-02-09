@@ -38,6 +38,11 @@
                         {{container.networkName}}
                     </td>
                     <td>
+                        <div ng-if="!container.daemon.active">
+                            <md-subheader class="docktor">
+                                Disabled
+                            </md-subheader>
+                        </div>
                         <div ng-show="container.daemon.dockerStatusUp">
                             <md-subheader ng-show="container.inspect.State.Running" class="docktor md-primary">
                                 Running
@@ -64,6 +69,16 @@
                         </div>
                     </td>
                     <td>
+                        <div ng-if="!container.daemon.active">
+                            <span>
+                                <md-button ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                                    {{container.daemon.name}}
+                                </md-button>
+                                <span ng-hide="authentication.isAdmin">
+                                    {{container.daemon.name}}
+                                </span>
+                            </span>
+                        </div>
                         <div ng-switch="container.daemon.dockerStatus">
                             <span ng-switch-when="checking" class="label label-default" layout="row" layout-align="center center">
                                 <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
@@ -117,6 +132,21 @@
     </md-whiteframe>
 
     <h4>Commands</h4>
+
+    <div ng-if="!container.daemon.active">
+        <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService" ng-click="askDeleteService=true">
+            <i class="fa fa-trash"></i>
+            Remove service from Group
+        </md-button>
+        <md-button class="md-raised md-accent md-hue-3" ng-click="askDeleteService=false" ng-show="askDeleteService">
+            No, I don't want to delete this.
+            <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService" class="md-raised md-warn">
+            Yes, I want to delete this service from this group
+            <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
+    </div>
 
     <div ng-show="container.daemon.dockerStatusUp">
 
