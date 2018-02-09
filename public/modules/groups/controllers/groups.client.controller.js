@@ -405,18 +405,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             if (container.daemon && container.daemon.active) {
                 GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
                     var title = 'Logs in container ' + container.name;
-                    var results = [];
-                    for (var value in data) {
-                        var s = '' + data[value];
-                        // display only line with date 20-...
-                        if (s.length > 2 && s.substring(0, 2) === '20') {
-                            results.push(s);
-                        }
-                    }
                     $mdDialog.show({
                         controller: 'ContainerCmdDialogController',
-                        templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                        locals: { title: title, results: results }
+                        templateUrl: 'modules/daemons/views/container.logs.dialog.template.html',
+                        locals: { title: title, results: data }
                     });
 
                 }, $scope.callbackErrorInspect);
