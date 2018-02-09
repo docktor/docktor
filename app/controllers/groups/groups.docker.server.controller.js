@@ -183,40 +183,6 @@ exports.stopContainer = function (req, res) {
     });
 };
 
-exports.pauseContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.pause({}, function (err, containerPaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerPaused);
-        }
-    });
-};
-
-exports.unpauseContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.unpause({}, function (err, containerUnpaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerUnpaused);
-        }
-    });
-};
-
 exports.removeContainerFromGroup = function (req, res) {
     var container = req.container;
     // DO not user this : group.containers.id(container._id).remove();
@@ -266,23 +232,6 @@ exports.removeContainer = function (req, res) {
             scheduler.reactivateJobsOnService(container.serviceId);
             Group.resetContainerId(group._id, container._id);
             res.jsonp(containerRemoved);
-        }
-    });
-};
-
-exports.killContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.kill(function (err, containerKilled) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerKilled);
         }
     });
 };

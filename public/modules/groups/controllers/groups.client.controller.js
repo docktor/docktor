@@ -360,46 +360,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.pauseContainer = function (container) {
-            if (container.daemon && container.daemon.active) {
-                var index = Toasts.addToast('Pausing service ' + container.serviceTitle + '...');
-                GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-            }
-        };
-
-        $scope.pauseContainers = function () {
-            var pauseOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect && container.inspect.State.Running && !container.inspect.State.Paused) {
-                    $scope.pauseContainer(container);
-                    pauseOne = true;
-                }
-            });
-            if (!pauseOne) {
-                Toasts.addToast('No service available to pause');
-            }
-        };
-
-        $scope.unpauseContainer = function (container) {
-            if (container.daemon && container.daemon.active) {
-                var index = Toasts.addToast('Unpausing service ' + container.serviceTitle + '...');
-                GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-            }
-        };
-
-        $scope.unpauseContainers = function () {
-            var unpauseOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect && container.inspect.State.Running && container.inspect.State.Paused) {
-                    $scope.unpauseContainer(container);
-                    unpauseOne = true;
-                }
-            });
-            if (!unpauseOne) {
-                Toasts.addToast('No service available to unpause');
-            }
-        };
-
         $scope.removeContainer = function (container) {
             if (container.daemon && container.daemon.active) {
                 var index = Toasts.addToast('Removing service ' + container.serviceTitle + '...');
@@ -418,26 +378,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
             if (!removeOne) {
                 Toasts.addToast('No service available to remove');
-            }
-        };
-
-        $scope.killContainer = function (container) {
-            if (container.daemon && container.daemon.active) {
-                var index = Toasts.addToast('Killing service ' + container.serviceTitle + '...');
-                GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-            }
-        };
-
-        $scope.killContainers = function () {
-            var killOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect && container.inspect.State.Running) {
-                    $scope.killContainer(container);
-                    killOne = true;
-                }
-            });
-            if (!killOne) {
-                Toasts.addToast('No service available to kill');
             }
         };
 

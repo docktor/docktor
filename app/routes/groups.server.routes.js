@@ -36,17 +36,8 @@ module.exports = function (app) {
     app.route('/groups/container/stop/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.stopContainer);
 
-    app.route('/groups/container/pause/:groupId/:containerId')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.pauseContainer);
-
-    app.route('/groups/container/unpause/:groupId/:containerId')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.unpauseContainer);
-
     app.route('/groups/container/remove/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.removeContainer);
-
-    app.route('/groups/container/kill/:groupId/:containerId')
-        .get(users.requiresLogin, groups.hasAuthorization, groups.killContainer);
 
     app.route('/groups/container/inspect/:groupId/:containerId')
         .get(users.requiresLogin, groups.hasAuthorization, groups.inspectContainer);

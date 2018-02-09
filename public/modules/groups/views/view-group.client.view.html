@@ -139,15 +139,6 @@
             <md-button class="md-raised" ng-click="stopContainers()">
                 <i class="fa fa-stop"></i> Stop All
             </md-button>
-            <md-button class="md-raised" ng-click="pauseContainers()">
-                <i class="fa fa-pause"></i> Pause All
-            </md-button>
-            <md-button class="md-raised" ng-click="unpauseContainers()">
-                <i class="fa fa-pause"></i> Unpause All
-            </md-button>
-            <md-button class="md-raised" ng-click="killContainers()">
-                <i class="fa fa-crosshairs"></i> Kill All
-            </md-button>
         </div>
 
     </div>
@@ -278,15 +269,6 @@
                                 <div ng-show="gridItem.inspect.State.Running">
                                     <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused" ng-click="stopContainer(gridItem)">
                                         <i class="fa fa-stop"></i> stop
-                                    </md-button>
-                                    <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused" ng-click="pauseContainer(gridItem)">
-                                        <i class="fa fa-pause"></i> pause
-                                    </md-button>
-                                    <md-button class="md-raised" ng-show="gridItem.inspect.State.Paused" ng-click="unpauseContainer(gridItem)">
-                                        <i class="fa fa-pause"></i> unpause
-                                    </md-button>
-                                    <md-button class="md-raised" ng-click="killContainer(gridItem)">
-                                        <i class="fa fa-crosshairs"></i> kill
                                     </md-button>
                                 </div>
                                 <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn" ng-click="removeContainer(gridItem)">

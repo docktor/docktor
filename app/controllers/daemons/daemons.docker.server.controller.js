@@ -95,42 +95,6 @@ exports.stopContainer = function (req, res) {
     });
 };
 
-exports.pauseContainer = function (req, res) {
-    req.containerDocker.pause({}, function (err, containerPaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerPaused);
-        }
-    });
-};
-
-exports.unpauseContainer = function (req, res) {
-    req.containerDocker.unpause({}, function (err, containerUnpaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerUnpaused);
-        }
-    });
-};
-
-exports.killContainer = function (req, res) {
-    req.containerDocker.kill({}, function (err, container) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(container);
-        }
-    });
-};
-
 exports.removeContainer = function (req, res) {
     req.containerDocker.remove({}, function (err, container) {
         if (err) {
@@ -145,18 +109,6 @@ exports.removeContainer = function (req, res) {
             });
         } else {
             res.jsonp(container);
-        }
-    });
-};
-
-exports.killContainer = function (req, res) {
-    req.containerDocker.kill(function (err, container) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.send(container);
         }
     });
 };

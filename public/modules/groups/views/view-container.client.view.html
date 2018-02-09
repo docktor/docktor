@@ -183,15 +183,6 @@
                 <md-button class="md-raised" ng-hide="container.inspect.State.Paused" ng-click="stopContainer(container)">
                     <i class="fa fa-stop"></i> Docker stop
                 </md-button>
-                <md-button class="md-raised" ng-hide="container.inspect.State.Paused" ng-click="pauseContainer(container)">
-                    <i class="fa fa-pause"></i> Docker pause
-                </md-button>
-                <md-button class="md-raised" ng-show="container.inspect.State.Paused" ng-click="unpauseContainer(container)">
-                    <i class="fa fa-pause"></i> Docker unpause
-                </md-button>
-                <md-button class="md-raised" ng-click="killContainer(container)">
-                    <i class="fa fa-crosshairs"></i> Docker kill
-                </md-button>
                 <md-button class="md-raised" ng-click="topContainer(container)">
                     <i class="fa fa-stethoscope"></i> Docker top
                 </md-button>
