@@ -33,7 +33,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             }
 
             return a;
-        }
+        };
 
         $scope.findOne = function () {
             Groups.get({
