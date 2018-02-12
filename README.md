@@ -10,7 +10,12 @@
 ## Roadmap
 See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 
+## Run locally
+
+Use `n` to switch to node version `4.8.7`: `sudo n 4.8.7`
+
 ## Run 
+
 See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
 
 ## Integration with Docktor Monitoring Stack

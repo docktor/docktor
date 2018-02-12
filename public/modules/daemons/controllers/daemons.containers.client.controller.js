@@ -63,24 +63,9 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             Containers.actionContainer('stop', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
-        $scope.pauseContainer = function (container) {
-            var index = Toasts.addToast('Pausing ' + container.inspect.Name);
-            Containers.actionContainer('pause', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
-        };
-
-        $scope.unpauseContainer = function (container) {
-            var index = Toasts.addToast('Unpausing ' + container.inspect.Name);
-            Containers.actionContainer('unpause', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
-        };
-
         $scope.removeContainer = function (container) {
             var index = Toasts.addToast('Removing ' + container.inspect.Name);
             Containers.actionContainer('remove', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.findOne, $scope.callbackError);
-        };
-
-        $scope.killContainer = function (container) {
-            var index = Toasts.addToast('Killing ' + container.inspect.Name);
-            Containers.actionContainer('kill', $scope.daemon._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackError);
         };
 
         $scope.topContainer = function (container) {
@@ -117,7 +102,7 @@ angular.module('daemons').controller('DaemonsContainersController', ['$scope', '
             $mdDialog.show({
                 controller: 'ContainerStatusDialogController',
                 templateUrl: 'modules/daemons/views/container.status.dialog.template.html',
-                locals: {currentContainer: container}
+                locals: { currentContainer: container }
             });
         };
     }

@@ -11,30 +11,27 @@
 
     <h4>Select a daemon :</h4>
 
-    <md-select ng-model="daemons.select" ng-change="changeDaemon()">
-        <md-select-label>
-            {{ daemons.select.name ? daemons.select.name : 'choose a daemon' }}
-        </md-select-label>
+    <md-autocomplete md-selected-item="daemons.select" md-no-cache="true" md-min-length="0" md-search-text="daemonSearchText"
+        md-selected-item-change="changeDaemon()" md-items="daemon in getDaemonsFromText(daemons.all, daemonSearchText) | orderBy:'name'"
+        md-item-text="daemon.name" placeholder="Search for a daemon...">
+        <md-item-template>
+            <span md-highlight-text="daemonSearchText" md-highlight-flags="^i">{{daemon.name}}</span>
+        </md-item-template>
+    </md-autocomplete>
 
-        <md-option ng-value="daemon" ng-repeat="daemon in daemons.all | orderBy:'name'">
-            {{ daemon.name }}
-        </md-option>
-    </md-select>
-
-    <div ng-show="daemons.select">
+    <div ng-show="daemons.select && daemons.select.name.toLowerCase() === daemonSearchText.toLowerCase()">
         <h4>Select a service :</h4>
 
-        <md-select ng-model="services.select" ng-required="true" ng-change="changeService()">
-            <md-select-label>
-                {{ services.select.title ? services.select.title : 'choose a service' }}
-            </md-select-label>
-            <md-option ng-value="service" ng-repeat="service in services.all | orderBy:'title'">
-                {{ service.title }}
-            </md-option>
-        </md-select>
+        <md-autocomplete ng-required="true" md-no-cache="true" md-min-length="0" md-selected-item="services.select" md-selected-item-change="changeService()"
+            md-search-text="serviceSearchText" md-items="service in getServicesFromText(services.all, serviceSearchText) | orderBy:'title'"
+            md-item-text="service.title" placeholder="Search for a service...">
+            <md-item-template>
+                <span md-highlight-text="serviceSearchText" md-highlight-flags="^i">{{service.title}}</span>
+            </md-item-template>
+        </md-autocomplete>
     </div>
 
-    <div ng-show="services.select">
+    <div ng-show="services.select && services.select.title.toLowerCase() === serviceSearchText.toLowerCase()">
         <h4>Select an image of service {{services.select.title}} :</h4>
 
         <md-select ng-model="services.selectImage" ng-change="changeImage()">
@@ -46,23 +43,31 @@
                 {{ image.name }}
             </md-option>
         </md-select>
+
+        <div ng-show="services.selectImage">
+            Execute the following command on daemon "{{daemons.select.name}}" to download the image:
+            <span>
+                <b>docker pull {{ services.selectImage.name }}</b>
+            </span>
+        </div>
     </div>
 
     <div ng-show="services.selectImage">
         <form name="deployForm" novalidate>
 
             <h4>Container</h4>
-
+            <p ng-if="containerNameAlreadyUsed" style="color:red">You want to deploy a new instance of the '{{services.select.title}}' service but another one already exist for
+                this group. In order to work properly, the configuration need to be changed to have unique values: container
+                name, hostname and volume bindings on host !</p>
             <div class="row">
                 <md-input-container class="long">
                     <label>Name</label>
-                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName"
-                           type="text" required md-maxlength="200">
+                    <input name='containerName' id='containerName' ng-model="container.name" ng-pattern="patternName" type="text" required md-maxlength="200">
 
                     <div ng-messages="deployForm.containerName.$error">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="md-maxlength">Max length of name : 200</div>
-                        <div ng-message="pattern">Name have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                        <div ng-message="pattern">Name has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
                 </md-input-container>
                 <p>It is not recommanded to modify default value from Docktor</p>
@@ -71,35 +76,48 @@
             <div class="row">
                 <md-input-container class="long">
                     <label>Hostname</label>
-                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname"
-                           ng-pattern="patternHostname" type="text" required md-maxlength="200">
+                    <input name="containerHostname" id="containerHostname" ng-model="container.hostname" ng-pattern="patternHostname" type="text"
+                        required md-maxlength="200">
 
                     <div ng-messages="deployForm.containerHostname.$error">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="md-maxlength">Max length of hostname : 200</div>
-                        <div ng-message="pattern">Hostname have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                        <div ng-message="pattern">Hostname has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
                 </md-input-container>
                 <p>It is not recommanded to modify default value from Docktor</p>
             </div>
+            <div ng-if="group.isSSO" class="row">
+                <md-input-container class="long">
+                    <label>Network name</label>
+                    <input name="containerNetworkName" id="containerNetworkName" ng-model="container.networkName" ng-pattern="patternNetworkName"
+                        type="text" md-maxlength="200">
 
-            <parameters-directive with-title="true"
-                                  parameters="services.selectImage.parameters">
+                    <div ng-messages="deployForm.containerNetworkName.$error">
+                        <div ng-message="md-maxlength">Max length of network name : 200</div>
+                        <div ng-message="pattern">Network name has to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
+                    </div>
+                </md-input-container>
+                <p>When filled, the container will be attached to this network instead of default one. Network has to be created
+                    first on the daemon. Typically, the network could be named :
+                    <b>{{group.title}}-{{services.select.title}}-net</b>
+                </p>
+            </div>
+
+            <parameters-directive with-title="true" parameters="services.selectImage.parameters">
             </parameters-directive>
-            <ports-directive with-title="true" ports="services.selectImage.ports"
-                             display-external-port="true">
+            <ports-directive with-title="true" ports="services.selectImage.ports" display-external-port="true" is-sso="{{group.isSSO}}">
             </ports-directive>
-            <variables-directive with-title="true"
-                                 variables="services.selectImage.variables">
+            <variables-directive with-title="true" variables="services.selectImage.variables">
             </variables-directive>
-            <volumes-directive with-title="true" volumes="services.selectImage.volumes"
-                               display-external-volume="true">
+            <volumes-directive with-title="true" volumes="services.selectImage.volumes" display-external-volume="true">
             </volumes-directive>
+            <labels-directive with-title="true" labels="services.selectImage.labels">
+            </labels-directive>
 
             <br>
 
-            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid"
-                       data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
+            <md-button class="md-raised md-primary" ng-disabled="deployForm.$invalid" data-ng-click="addImageToGroup(daemons.select, services.selectImage)">
                 Deploy Service
             </md-button>
         </form>

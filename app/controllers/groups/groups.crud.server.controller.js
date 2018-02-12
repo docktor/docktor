@@ -62,24 +62,23 @@ exports.read = function (req, res) {
     // For every container running on the container,
     // push the container to the containerQueue
     var daemonWorker = function (daemon, callback) {
-        //console.log('Processing daemon ' + daemon.name);
-        if (daemon) {
-	var daemonDocker = daemon.getDaemonDocker();
-        //Call "docker ps"
-        daemonDocker.listContainers(function (err, data) {
-            //For every container running ons this daemon
-            if (data && data.length !== 0) {
-                data.forEach(function (c) {
-                    queueContainers.push(c);
-                });
-            }
-            if (err) {
-                return callback(err);
-            }
+        if (daemon && daemon.active) {
+            var daemonDocker = daemon.getDaemonDocker();
+            //Call "docker ps"
+            daemonDocker.listContainers(function (err, data) {
+                //For every container running ons this daemon
+                if (data && data.length !== 0) {
+                    data.forEach(function (c) {
+                        queueContainers.push(c);
+                    });
+                }
+                if (err) {
+                    return callback(err);
+                }
+                return callback();
+            });
+        } else {
             return callback();
-        });
-        }else {
-		return callback();
         }
     };
 
@@ -118,7 +117,7 @@ exports.read = function (req, res) {
 
     //drain function will be called when the last item from the queue has returned from the worker
     var drainQueues = function () {
-        //Waiting the last of the 2 workers queues to return de response
+        //Waiting the last of the 2 workers queues to return the response
         if (queueDaemons.idle() && queueContainers.idle()) {
             res.jsonp(group);
         }
@@ -136,11 +135,10 @@ exports.read = function (req, res) {
         //Loading daemon from database
         Daemon.findById(daemonId).exec(function (err, daemon) {
             //Push the dameon to the queue and start the magic !
-            if (err){
-		console.log("Failed to find daemon : "+daemonId);
-	    } else {
-		console.log(daemonId);
-		queueDaemons.push(daemon);
+            if (err) {
+                console.log('Failed to find daemon : ' + daemonId);
+            } else {
+                queueDaemons.push(daemon);
             }
         });
     });
@@ -149,18 +147,18 @@ exports.read = function (req, res) {
 exports.getUsersOnGroup = function (req, res) {
     var group = req.group;
     User.getUsersOfOneGroup(group._id).exec(function (err, data) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            if (data[0] && data[0].users && data[0].users.length > 0) {
+                res.jsonp(data[0].users);
             } else {
-                if (data[0] && data[0].users && data[0].users.length > 0) {
-                    res.jsonp(data[0].users);
-                } else {
-                    res.jsonp([]);
-                }
+                res.jsonp([]);
             }
         }
+    }
     );
 };
 
@@ -240,25 +238,25 @@ exports.getFreePortsOnContainer = function (req, res) {
 
 exports.getFreePorts = function (req, res) {
     Group.getUsedPorts(req.group._id).exec(function (err, data) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                var freePorts = [];
-                if (_.isNumber(req.group.portminrange) && _.isNumber(req.group.portmaxrange)) {
-                    for (var port = req.group.portminrange; port <= req.group.portmaxrange; port++) {
-                        if (!data[0] || !data[0].usedPorts) {
-                            freePorts.push(port);
-                        } else if (!_.contains(data[0].usedPorts, port)) {
-                            freePorts.push(port);
-                        }
-
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var freePorts = [];
+            if (_.isNumber(req.group.portminrange) && _.isNumber(req.group.portmaxrange)) {
+                for (var port = req.group.portminrange; port <= req.group.portmaxrange; port++) {
+                    if (!data[0] || !data[0].usedPorts) {
+                        freePorts.push(port);
+                    } else if (!_.contains(data[0].usedPorts, port)) {
+                        freePorts.push(port);
                     }
+
                 }
-                res.jsonp(freePorts);
             }
+            res.jsonp(freePorts);
         }
+    }
     );
 };
 
@@ -266,7 +264,7 @@ exports.getFreePorts = function (req, res) {
  * List of Groups
  */
 exports.listGroups = function (req, res) {
-    var where = {'_id': {'$in': req.user.groups}};
+    var where = { '_id': { '$in': req.user.groups } };
     if (req.user.role === 'admin') {
         where = {};
     }
@@ -292,7 +290,7 @@ exports.listSimplified = function (req, res) {
             // listSimplified returns all the groups, so in case the user
             // is not an admin, only keep their own groups
             if (req.user.role !== 'admin') {
-                groups = groups.filter(function(elt) {
+                groups = groups.filter(function (elt) {
                     return req.user.groups.indexOf(elt._id) !== -1;
                 });
             }

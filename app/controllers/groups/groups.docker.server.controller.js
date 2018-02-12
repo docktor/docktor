@@ -17,8 +17,11 @@ exports.createContainer = function (req, res) {
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
-    var ports = {};
+    var exposedPorts = {};
+    var portBindings = {};
     var variables = [];
+    var volumes = [];
+    var labels = {};
 
     // Env - A list of environment variables in the form of VAR=value
     container.variables.forEach(function (variable) {
@@ -30,7 +33,7 @@ exports.createContainer = function (req, res) {
     // example : ExposedPorts: {"80/tcp": {}, "22/tcp" : {}}
     container.ports.forEach(function (port) {
         if (_.isNumber(port.internal)) {
-            ports[port.internal + '/' + port.protocol] = {};
+            exposedPorts[port.internal + '/' + port.protocol] = {};
         }
     });
 
@@ -38,13 +41,53 @@ exports.createContainer = function (req, res) {
         Hostname: container.hostname,
         Image: container.image,
         name: container.name,
-        ExposedPorts: ports,
+        ExposedPorts: exposedPorts,
         Env: variables
     };
+
+    container.labels.forEach(function (label) {
+        if (!_.isEmpty(label.name) && !_.isEmpty(label.value)) {
+            labels[label.name] = label.value;
+        }
+    });
+    containerParameters.Labels = labels;
 
     container.parameters.forEach(function (parameter) {
         containerParameters[parameter.name] = parameter.value;
     });
+
+    container.volumes.forEach(function (volume) {
+        if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
+            var vol = volume.external + ':' + volume.internal;
+            if (_.isString(volume.rights) && !_.isEmpty(volume.rights)) {
+                vol = vol + ':' + volume.rights;
+            }
+            volumes.push(vol);
+        }
+    });
+
+
+    // PortBindings : {
+    //    "80/tcp": [{ "HostPort": "80" }],
+    //    "22/tcp": [{ "HostPort": "22", "HostIP": "127.0.0.1" }]
+    //   }
+
+    container.ports.forEach(function (port) {
+        if (_.isNumber(port.internal) && _.isNumber(port.external)) {
+            var host = port.host || '0.0.0.0';
+            portBindings[port.internal + '/' + port.protocol] = [
+                {
+                    'HostPort': '' + port.external + '',
+                    'HostIP': '' + host + ''
+                }
+            ];
+        }
+    });
+
+    containerParameters.HostConfig = {
+        Binds: volumes,
+        PortBindings: portBindings
+    };
 
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {
@@ -56,8 +99,8 @@ exports.createContainer = function (req, res) {
         } else {
             var setToUpdate = {};
             setToUpdate['containers.$.containerId'] = containerCreated.id;
-            Group.update({_id: group._id, 'containers._id': container._id},
-                {$set: setToUpdate},
+            Group.update({ _id: group._id, 'containers._id': container._id },
+                { $set: setToUpdate },
                 function (err, numAffected) {
                     if (err || numAffected !== 1) {
                         return res.status(400).send({
@@ -73,47 +116,52 @@ exports.createContainer = function (req, res) {
 };
 
 exports.startContainer = function (req, res) {
+    var group = req.group;
     var container = req.container;
     var daemonDocker = req.daemonDocker;
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
 
-    var volumes = [];
-    var ports = {};
-
-    container.volumes.forEach(function (volume) {
-        if (_.isString(volume.internal) && _.isString(volume.external) && !_.isEmpty(volume.internal) && !_.isEmpty(volume.external)) {
-            var vol = volume.external + ':' + volume.internal;
-            if (_.isString(volume.rights) && !_.isEmpty(volume.rights)) {
-                vol = vol + ':' + volume.rights;
-            }
-            volumes.push(vol);
-        }
-    });
-
-    // PortBindings : {
-    //    "80/tcp": [{ "HostPort": "80" }],
-    //    "22/tcp": [{ "HostPort": "22" }]
-    //   }
-
-    container.ports.forEach(function (port) {
-        if (_.isNumber(port.internal) && _.isNumber(port.external)) {
-            ports[port.internal + '/' + port.protocol] = [
-                {'HostPort': '' + port.external + ''}
-            ];
-        }
-    });
-
-    dockerContainer.start({
-        Binds: volumes,
-        PortBindings: ports
-    }, function (err, containerStarted) {
+    dockerContainer.start({}, function (err, containerStarted) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(containerStarted);
+            // Connect the container to the given network when needed
+            if (group.isSSO && container.networkName) {
+                daemonDocker.listNetworks({ 'filters': `{ "name": ["${container.networkName}"] }` }, function (err, networks) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else {
+                        if (networks.length === 1) {
+                            var network = daemonDocker.getNetwork(networks[0].Id);
+                            network.connect({ Container: container.containerId }, function (err, d) {
+                                if (err) {
+                                    return res.status(400).send({
+                                        message: errorHandler.getErrorMessage(err)
+                                    });
+                                } else {
+                                    res.jsonp(containerStarted);
+                                }
+                            });
+                        } else if (networks.length === 0) {
+                            return res.status(400).send({
+                                message: `No network with name ${container.networkName}. Please create it and restart the container.`
+                            });
+                        } else {
+                            var networkNames = _.map(networks, function (n) { return n.Name; });
+                            return res.status(400).send({
+                                message: `Multiple networks match the network name ${container.networkName} : ${networkNames}. Please use a more precise network name.`
+                            });
+                        }
+                    }
+                });
+            } else {
+                res.jsonp(containerStarted);
+            }
         }
     });
 };
@@ -131,40 +179,6 @@ exports.stopContainer = function (req, res) {
             });
         } else {
             res.jsonp(containerStopped);
-        }
-    });
-};
-
-exports.pauseContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.pause({}, function (err, containerPaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerPaused);
-        }
-    });
-};
-
-exports.unpauseContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.unpause({}, function (err, containerUnpaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerUnpaused);
         }
     });
 };
@@ -222,23 +236,6 @@ exports.removeContainer = function (req, res) {
     });
 };
 
-exports.killContainer = function (req, res) {
-    var container = req.container;
-    var daemonDocker = req.daemonDocker;
-
-    var dockerContainer = daemonDocker.getContainer(container.containerId);
-
-    dockerContainer.kill(function (err, containerKilled) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerKilled);
-        }
-    });
-};
-
 exports.inspectContainer = function (req, res) {
     var group = req.group;
     var container = req.container;
@@ -267,7 +264,7 @@ exports.topContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
 
-    dockerContainer.top({ps_args: 'aux'}, function (err, info) {
+    dockerContainer.top({ ps_args: 'aux' }, function (err, info) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -284,13 +281,13 @@ exports.logsContainer = function (req, res) {
 
     var dockerContainer = daemonDocker.getContainer(container.containerId);
     var options =
-    {
-        'stderr': 1,
-        'stdout': 1,
-        'timestamps': 1,
-        'follow': 0,
-        'tail': 10
-    };
+        {
+            'stderr': 1,
+            'stdout': 1,
+            'timestamps': 1,
+            'follow': 0,
+            'tail': 10
+        };
 
     dockerContainer.logs(options, function (err, stream) {
         if (err) {

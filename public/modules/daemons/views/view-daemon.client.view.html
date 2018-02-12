@@ -16,21 +16,20 @@
 
     <h2>Status</h2>
 
+    <div ng-if="!daemon.active">Daemon is disabled</div>
+
     <div>
 
         <div flex ng-switch="daemon.dockerStatus" layout-align="center center">
             <div ng-switch-when="checking" layout="row" layout-align="center">
-                <md-progress-circular class="md-accent md-hue-3" md-diameter="24"
-                                      md-mode="indeterminate">
+                <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
                 </md-progress-circular>
-                <md-subheader class="md-accent md-hue-3 docktor" layout="row"
-                              layout-align="center center">
+                <md-subheader class="md-accent md-hue-3 docktor" layout="row" layout-align="center center">
                     Checking...
                 </md-subheader>
             </div>
             <div ng-switch-when="up">
-                <md-subheader class="md-primary docktor" layout="row"
-                              layout-align="center center">
+                <md-subheader class="md-primary docktor" layout="row" layout-align="center center">
                     UP
                 </md-subheader>
             </div>

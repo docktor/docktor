@@ -22,11 +22,11 @@ if (config.cluster && cluster.isMaster) {
 
     // Code to run if we're in a worker process
 } else {
-    
+
     // Authorize Docktor to fetch HTTPS resources with self signed certificates (i.e. Docker daemon protected with TLS config)
     // Needed only when Docktor is itself hosted with HTTPS
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-    
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
     // Bootstrap db connection
     var db = mongoose.connect(config.db, function (err) {
         if (err) {
@@ -62,13 +62,13 @@ if (config.cluster && cluster.isMaster) {
 
         redirectApp.use(function requireHTTPS(req, res, next) {
             if (!req.secure) {
-                var host = req.headers.host || "localhost:" + config.httpPort
+                var host = req.headers.host || 'localhost:' + config.httpPort;
                 var hostSplit = host.split(':');
-                console.log('redirect to https://' + hostSplit[0] + ':' + config.httpsPort + req.url)
+                console.log('redirect to https://' + hostSplit[0] + ':' + config.httpsPort + req.url);
                 return res.redirect('https://' + hostSplit[0] + ':' + config.httpsPort + req.url);
             }
             next();
-        })
+        });
         redirectServer.listen(config.httpPort);
 
         https.createServer(credentials, app).listen(config.httpsPort);
