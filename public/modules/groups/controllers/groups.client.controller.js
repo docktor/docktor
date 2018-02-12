@@ -629,6 +629,45 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             return contacts;
         };
 
+
+        $scope.generateCommand = function(container) {
+            if (!container.containerId) {
+                return '';
+            }
+
+            var command = ['docker run -d'];
+
+            if (container.networkName) {
+                command.push(`--net ${container.networkName}`);
+            }
+
+            // The hostname is missing because I don't know how to get it
+
+            // Ports
+            container.ports.forEach(function(port) {
+                command.push(`-p ${port.host && (port.host + ':')}${port.external}:${port.internal}/${port.protocol}`);
+            });
+
+            // Variables
+            container.variables.forEach(function(variable) {
+                command.push(`-e ${variable.name}='${variable.value}'`);
+            });
+            
+            // Volumes
+            container.volumes.forEach(function(volume) {
+                command.push(`-v ${volume.external}:${volume.internal}${volume.rights && (':' + volume.rights)}`);
+            });
+
+            // Labels
+            container.labels.forEach(function(label) {
+                command.push(`-e ${label.name}='${label.value}'`);
+            });
+
+            command.push(`--name ${container.name}`);
+            command.push(container.image);
+            return command.join(' ');
+        };
+
         String.prototype.noAccent = function () {
             var accent = [
                 /[\300-\306]/g, /[\340-\346]/g, // A, a
