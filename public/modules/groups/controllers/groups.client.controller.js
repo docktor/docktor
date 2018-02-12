@@ -630,7 +630,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
 
-        $scope.generateCommand = function(container) {
+        $scope.generateCommand = function (container) {
             if (!container) {
                 return '';
             }
@@ -638,31 +638,31 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             var command = ['docker run -d'];
 
             if (container.networkName) {
-                command.push(`--net ${container.networkName}`);
+                command.push('--net ' + container.networkName);
             }
 
             // Ports
-            container.ports.forEach(function(port) {
-                command.push(`-p ${port.host ? (port.host + ':') : ''}${port.external}:${port.internal}/${port.protocol}`);
+            container.ports.forEach(function (port) {
+                command.push('-p ' + (port.host ? (port.host + ':') : '') + port.external + ':' + port.internal + '/' + port.protocol);
             });
 
             // Variables
-            container.variables.forEach(function(variable) {
-                command.push(`-e ${variable.name}='${variable.value}'`);
+            container.variables.forEach(function (variable) {
+                command.push('-e ' + variable.name + '=\'' + variable.value + '\'');
             });
-            
+
             // Volumes
-            container.volumes.forEach(function(volume) {
-                command.push(`-v ${volume.external}:${volume.internal}${volume.rights ? (':' + volume.rights) : ''}`);
+            container.volumes.forEach(function (volume) {
+                command.push('-v ' + volume.external + ':' + volume.internal + (volume.rights ? (':' + volume.rights) : ''));
             });
 
             // Labels
-            container.labels.forEach(function(label) {
-                command.push(`-l ${label.name}='${label.value}'`);
+            container.labels.forEach(function (label) {
+                command.push('-l ' + label.name + '=\'' + label.value + '\'');
             });
 
-            command.push(`-h ${container.hostname}`);
-            command.push(`--name ${container.name.slice(1)}`);
+            command.push('-h ' + container.hostname);
+            command.push('--name ' + container.name.slice(1));
             command.push(container.image);
             return command.join(' ');
         };
