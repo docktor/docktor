@@ -631,7 +631,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
 
         $scope.generateCommand = function(container) {
-            if (!container.containerId) {
+            console.log(container);
+            if (!container) {
                 return '';
             }
 
@@ -641,11 +642,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 command.push(`--net ${container.networkName}`);
             }
 
-            // The hostname is missing because I don't know how to get it
-
             // Ports
             container.ports.forEach(function(port) {
-                command.push(`-p ${port.host && (port.host + ':')}${port.external}:${port.internal}/${port.protocol}`);
+                command.push(`-p ${port.host ? (port.host + ':') : ''}${port.external}:${port.internal}/${port.protocol}`);
             });
 
             // Variables
@@ -655,7 +654,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             
             // Volumes
             container.volumes.forEach(function(volume) {
-                command.push(`-v ${volume.external}:${volume.internal}${volume.rights && (':' + volume.rights)}`);
+                command.push(`-v ${volume.external}:${volume.internal}${volume.rights ? (':' + volume.rights) : ''}`);
             });
 
             // Labels
@@ -663,7 +662,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 command.push(`-l ${label.name}='${label.value}'`);
             });
 
-            command.push(`--name ${container.name}`);
+            command.push(`-h ${container.hostname}`);
+            command.push(`--name ${container.name.slice(1)}`);
             command.push(container.image);
             return command.join(' ');
         };
