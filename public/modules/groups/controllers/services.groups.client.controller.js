@@ -33,7 +33,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
             }
 
             return a;
-        }
+        };
 
         $scope.findOne = function () {
             Groups.get({
@@ -105,8 +105,9 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                                 // When using SSO, by default, only expose the container to the local host
                                 port.host = '127.0.0.1';
                                 // When using SSO, we add a label for each internal port in order to generate distinct URL
+                                var labelValue = i + 1;
                                 $scope.services.selectImage.labels.push(
-                                    { name: '' + port.internal, value: `ui${i + 1}` }
+                                    { name: '' + port.internal, value: 'ui' + labelValue }
                                 );
                             }
                             port.external = freePorts[freeP];
