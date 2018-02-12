@@ -7,8 +7,33 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
         $scope.patternName = /^[a-zA-Z0-9_\-/]{1,200}$/;
         $scope.patternHostname = /^[a-zA-Z0-9_\-]{1,200}$/;
         $scope.patternNetworkName = /^[a-zA-Z0-9_\-]{1,200}$/;
+        $scope.daemonSearchText = '';
+        $scope.serviceSearchText = '';
 
         $scope.container = {};
+
+        $scope.getDaemonsFromText = function (daemons, daemonSearchText) {
+            return $scope.getObjFromText(daemons, daemonSearchText, function (o) {
+                return o.name;
+            });
+        };
+
+        $scope.getServicesFromText = function (services, serviceSearchText) {
+            return $scope.getObjFromText(services, serviceSearchText, function (o) {
+                return o.title;
+            });
+        };
+
+        $scope.getObjFromText = function (array, text, getPropertyFunc) {
+            var a = array || [];
+            if (text) {
+                return _.filter(a, function (o) {
+                    return getPropertyFunc(o).toLowerCase().indexOf(text.toLowerCase()) !== -1;
+                });
+            }
+
+            return a;
+        }
 
         $scope.findOne = function () {
             Groups.get({
@@ -24,6 +49,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     daemons.forEach(function (daemon) {
                         if (daemon._id === $scope.group.daemon._id) {
                             $scope.daemons.select = daemon;
+                            $scope.daemonSearchText = daemon.name;
                         }
                     });
                 });
@@ -33,6 +59,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
         $scope.changeDaemon = function () {
             $scope.services.select = null;
             $scope.services.selectImage = null;
+            $scope.serviceSearchText = '';
         };
 
         $scope.changeService = function () {
