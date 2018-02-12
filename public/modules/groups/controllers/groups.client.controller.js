@@ -631,7 +631,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
 
         $scope.generateCommand = function(container) {
-            console.log(container);
             if (!container) {
                 return '';
             }

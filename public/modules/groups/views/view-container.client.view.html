@@ -147,7 +147,7 @@
             <i class="fa fa-exclamation-triangle"></i>
         </md-button>
     </div>
-    <pre>{{ generateCommand(container) }}</pre>
+    <pre ng-if="authentication.isAdmin">{{generateCommand(container)}}</pre>
 
     <div ng-show="container.daemon.dockerStatusUp">
 
