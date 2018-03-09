@@ -22,6 +22,7 @@ exports.createContainer = function (req, res) {
     var variables = [];
     var volumes = [];
     var labels = {};
+    var extraHosts = [];
 
     // Env - A list of environment variables in the form of VAR=value
     container.variables.forEach(function (variable) {
@@ -88,6 +89,13 @@ exports.createContainer = function (req, res) {
         Binds: volumes,
         PortBindings: portBindings
     };
+
+    container.extraHosts.forEach(function (extraHost) {
+        if (!_.isEmpty(extraHost.host) && !_.isEmpty(extraHost.ip)) {
+            extraHosts.push(extraHost.host + ':' + extraHost.ip);
+        }
+    });
+    containerParameters.HostConfig.ExtraHosts = extraHosts;
 
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {

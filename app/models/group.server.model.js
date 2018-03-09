@@ -150,6 +150,19 @@ var LabelSchema = new Schema({
     }
 });
 
+var ExtraHostSchema = new Schema({
+    host: {
+        type: String,
+        trim: true,
+        required: 'host cannot be blank'
+    },
+    ip: {
+        type: String,
+        trim: true,
+        required: 'ip cannot be blank'
+    }
+});
+
 /**
  * Container Schema, not useful outside Group
  */
@@ -191,6 +204,7 @@ var ContainerSchema = new Schema({
     volumes: [VolumeContainerSchema],
     jobs: [JobContainerSchema],
     labels: [LabelSchema],
+    extraHosts: [ExtraHostSchema],
     daemonId: { // TODO use Schema.ObjectId
         type: String,
         trim: true

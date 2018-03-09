@@ -286,6 +286,16 @@
         <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
             <span>{{container.inspect.Config.Labels | json}}</span>
         </md-whiteframe>
+
+        <h4>Extra hosts</h4>
+
+        <h5>From Docktor</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="extraHosts in container.extraHosts">
+                --add-host {{extraHosts.host}}:{{extraHosts.ip}}
+            </div>
+        </md-whiteframe>
     </div>
 
 </section>

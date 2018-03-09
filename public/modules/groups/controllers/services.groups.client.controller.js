@@ -72,12 +72,13 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 var parameter = {};
                 $scope.container.hostname = $scope.group.title + '-' + $scope.services.select.title + '-' + $scope.daemons.select.name;
 
-                // add default grom Deamon
+                // add default grom Daemon
                 $scope.services.selectImage.parameters = _.union($scope.services.selectImage.parameters, $scope.daemons.select.parameters);
                 $scope.services.selectImage.ports = _.union($scope.services.selectImage.ports, $scope.daemons.select.ports);
                 $scope.services.selectImage.variables = _.union($scope.services.selectImage.variables, $scope.daemons.select.variables);
                 $scope.services.selectImage.volumes = _.union($scope.services.selectImage.volumes, $scope.daemons.select.volumes);
                 $scope.services.selectImage.labels = [];
+                $scope.services.selectImage.extraHosts = [];
 
                 $scope.services.selectImage.volumes.forEach(function (volume) {
                     var internal = volume.value;
@@ -167,6 +168,11 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 labels.push(label);
             });
 
+            var extraHosts = [];
+            image.extraHosts.forEach(function (extraHost) {
+                extraHosts.push(extraHost);
+            });
+
             group.containers.push({
                 name: $scope.container.name,
                 hostname: $scope.container.hostname,
@@ -179,6 +185,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 ports: ports,
                 volumes: volumes,
                 labels: labels,
+                extraHosts: extraHosts,
                 daemonId: daemon._id,
                 active: true
             });

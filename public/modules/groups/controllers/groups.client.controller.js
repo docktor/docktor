@@ -661,6 +661,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 command.push('-l ' + label.name + '=\'' + label.value + '\'');
             });
 
+            // ExtraHosts
+            container.extraHosts.forEach(function (extraHost) {
+                command.push('--add-host ' + extraHost.host + ':' + extraHost.ip);
+            });
+
             command.push('-h ' + container.hostname);
             command.push('--name ' + container.name.slice(1));
             command.push(container.image);

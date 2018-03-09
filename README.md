@@ -16,6 +16,7 @@ Use `n` to switch to node version `4.8.7`: `sudo n 4.8.7`
 
 ## Run 
 
+Use `npm start`, to launch grunt. Docktor will be available at port 3000.
 See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
 
 ## Integration with Docktor Monitoring Stack
