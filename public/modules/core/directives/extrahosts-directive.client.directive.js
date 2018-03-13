@@ -10,7 +10,7 @@ angular.module('core').directive('extraHostsDirective', [
                 withTitle: '='
             },
             controller: ['$scope', function ($scope) {
-                $scope.removeExtraHosts = function (extraHost) {
+                $scope.removeExtraHost = function (extraHost) {
                     $scope.extraHosts.splice($scope.extraHosts.indexOf(extraHost), 1);
                 };
 
