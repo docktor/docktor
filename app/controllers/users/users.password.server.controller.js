@@ -77,6 +77,10 @@ exports.forgot = function (req, res, next) {
                     res.send({
                         message: 'An email has been sent to ' + user.email + ' with further instructions.'
                     });
+                } else {
+                    return res.status(500).send({
+                        message: 'Unable to send mail'
+                    });
                 }
 
                 done(err);

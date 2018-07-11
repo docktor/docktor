@@ -14,6 +14,15 @@ See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 
 Use `n` to switch to node version `4.8.7`: `sudo n 4.8.7`
 
+## Environnement variable
+You should export environnement variable to configure SMTP host (for reset password):
+
+ * `MAILER_FROM`: Address used as "from" address in reset password mail
+ * `MAILER_HOST`: SMTP host
+ * `MAILER_PORT`: SMTP port
+ * `MAILER_EMAIL_ID`: User to authenticate to the SMTP host
+ * `MAILER_PASSWORD`: Password to authenticate to SMTP host
+
 ## Run 
 
 Use `npm start`, to launch grunt. Docktor will be available at port 3000.
