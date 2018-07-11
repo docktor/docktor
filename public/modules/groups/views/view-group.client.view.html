@@ -24,13 +24,20 @@
         </div>
     </div>
 
+    <p ng-if="group.isSSO">This group is configured for
+        <b>Single Sign On (SSO)</b>. It means that health check monitoring and urls are disabled as services are not accessible
+        via individual ports anymore. Use SSO homepage to access to the services. You can still use Docktor to restart them.
+    </p>
+
     <p data-ng-bind="group.description"></p>
 
     <div class="row">
-        <h4><i class="fa fa-users"></i> Contacts</h4>
+        <h4>
+            <i class="fa fa-users"></i> Contacts</h4>
+        <p>Moderators are users who can add contacts to a group. Contact them when needed.</p>
         <span ng-repeat="u in group.users">
             <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
-                <i class="fa fa-envelope"></i> {{u.displayName}}
+                <i class="fa fa-envelope"></i> {{u.displayName}} {{ u.allowGrant ? '(Moderator)' : ''}}
             </md-button>
         </span>
 
@@ -41,41 +48,43 @@
         </div>
         <div ng-show="authentication.isAdmin || authentication.user.allowGrant">
             <md-button aria-label="Add / Remove Contact" ng-hide="showAddRemoveContact" ng-click="prepareAddContact()">
-                <small><i class="fa fa-plus"></i> / <i class="fa fa-minus"></i></small>
+                <small>
+                    <i class="fa fa-plus"></i> /
+                    <i class="fa fa-minus"></i>
+                </small>
             </md-button>
 
             <div ng-show="showAddRemoveContact" layout="column">
                 <div layout="row">
-                    <md-select ng-model="contactToAdd">
-                        <md-select-label>
-                            {{ contactToAdd.displayName ? contactToAdd.displayName : 'choose a contact to add' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
-                    <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd"
-                               ng-click="addContact()"><i class="fa fa-save"></i> Add
+                    <md-autocomplete md-selected-item="contactToAdd" md-search-text="contactAddSearchText" md-items="user in getContactsFromText(users, contactAddSearchText) | orderBy:'displayName'"
+                        md-item-text="user.displayName" placeholder="Search for a contact to add...">
+                        <md-item-template>
+                            <span md-highlight-text="contactAddSearchText" md-highlight-flags="^i">{{user.displayName}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <span ng-if="getContactsFromText(users, contactAddSearchText).length === 0 && contactAddSearchText !== '' ">
+                        No matches found for "{{contactAddSearchText}}"
+                    </span>
+                    <md-button class="md-raised md-primary" aria-label="Add Contact" ng-show="contactToAdd" ng-click="addContact()">
+                        <i class="fa fa-save"></i> Add
                     </md-button>
                 </div>
                 <div layout="row">
-                    <md-select ng-model="contactToRemove">
-                        <md-select-label>
-                            {{ contactToRemove.displayName ? contactToRemove.displayName : 'choose a contact to remove' }}
-                        </md-select-label>
-
-                        <md-option ng-value="user" ng-repeat="user in group.users | orderBy:'displayName'">
-                            {{ user.displayName }}
-                        </md-option>
-                    </md-select>
-                    <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove"
-                               ng-click="removeContact()">Remove
+                    <md-autocomplete md-selected-item="contactToRemove" md-search-text="contactRemoveSearchText" md-items="user in getContactsFromText(group.users, contactRemoveSearchText) | orderBy:'displayName'"
+                        md-item-text="user.displayName" placeholder="Search for a contact to remove...">
+                        <md-item-template>
+                            <span md-highlight-text="contactRemoveSearchText" md-highlight-flags="^i">{{user.displayName}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <span ng-if="getContactsFromText(group.users, contactRemoveSearchText).length === 0 && contactRemoveSearchText !== '' ">
+                        No matches found for "{{contactRemoveSearchText}}"
+                    </span>
+                    <md-button class="md-raised md-primary" aria-label="Remove Contact" ng-show="contactToRemove" ng-click="removeContact()">Remove
                     </md-button>
                 </div>
                 <div>
-                    <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact"
-                               ng-click="cancelAddRemoveContact()"><i class="fa fa-save"></i> Cancel
+                    <md-button class="md-raised" aria-label="Cancel" ng-show="showAddRemoveContact" ng-click="cancelAddRemoveContact()">
+                        <i class="fa fa-save"></i> Cancel
                     </md-button>
                 </div>
             </div>
@@ -83,7 +92,8 @@
     </div>
 
     <div class="row">
-        <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
+        <h4>
+            <i class="fa fa-tachometer"></i> Monitoring</h4>
 
         <div ng-hide="group.filesystems" class="alert alert-danger">
             No filesystem attached to this group.
@@ -96,29 +106,24 @@
 
         <div ng-repeat="fs in group.filesystems" layout="row" layout-margin>
             <div flex>
-                <md-progress-linear class="md-warn" md-mode="determinate"
-                                    ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
+                <md-progress-linear class="md-warn" md-mode="determinate" ng-value="fs.statsCompute.usagePercent"></md-progress-linear>
             </div>
 
             <div flex>
-                <div><i class="fa fa-pie-chart"></i>
-                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb /
-                    {{fs.statsCompute.capacityInMB}} Gb
+                <div>
+                    <i class="fa fa-pie-chart"></i>
+                    {{getDaemon(fs.daemon).name}} - {{fs.partition}} : {{fs.statsCompute.usageInMB}} Gb / {{fs.statsCompute.capacityInMB}} Gb
                     ({{fs.statsCompute.usagePercent}}%)
                 </div>
-                <div><i>{{fs.description}}</i></div>
+                <div>
+                    <i>{{fs.description}}</i>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <i class="fa fa-bar-chart"></i>
-            <md-button aria-label="Monitoring All" class="md-accent md-hue-3"
-                       href="{{grafanaUrl}}?groupName={{group.title}}">
-                Monitoring CPU / RAM - All Services
-            </md-button>
         </div>
     </div>
     <div class="row">
-        <h4><i class="fa fa-cloud"></i> Services</h4>
+        <h4>
+            <i class="fa fa-cloud"></i> Services</h4>
 
         <div ng-show="group.containers.length === 0">
             No service deployed for this group.
@@ -134,198 +139,187 @@
             <md-button class="md-raised" ng-click="stopContainers()">
                 <i class="fa fa-stop"></i> Stop All
             </md-button>
-            <md-button class="md-raised" ng-click="pauseContainers()">
-                <i class="fa fa-pause"></i> Pause All
-            </md-button>
-            <md-button class="md-raised" ng-click="unpauseContainers()">
-                <i class="fa fa-pause"></i> Unpause All
-            </md-button>
-            <md-button class="md-raised" ng-click="killContainers()">
-                <i class="fa fa-crosshairs"></i> Kill All
-            </md-button>
         </div>
 
     </div>
 
     <table ng-show="group.containers.length > 0" tr-ng-grid="" on-data-required="" items="group.containers" fields="" class="table">
         <thead>
-        <tr>
-            <th field-name="serviceTitle" display-name="Service" enable-filtering="true"></th>
-            <th field-name="name" display-name="Container - Image" enable-filtering="true"></th>
-            <th>
-                <div class="tr-ng-title">
-                    Status
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Commands
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Daemon
-                </div>
-            </th>
-            <th>
-                <div class="tr-ng-title">
-                    Monitoring
-                </div>
-            </th>
-        </tr>
+            <tr>
+                <th field-name="name" display-name="Name" enable-filtering="true"></th>
+                <th field-name="container" display-name="Container"></th>
+                <th ng-if="group.isSSO && authentication.isAdmin">
+                    <div class="tr-ng-title">
+                        Network
+                    </div>
+                </th>
+                <th>
+                    <div class="tr-ng-title">
+                        Service
+                    </div>
+                </th>
+                <th>
+                    <div class="tr-ng-title">
+                        Status
+                    </div>
+                </th>
+                <th>
+                    <div class="tr-ng-title">
+                        Commands
+                    </div>
+                </th>
+                <th>
+                    <div class="tr-ng-title">
+                        Daemon
+                    </div>
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td field-name="serviceTitle">
-                <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
-                    <span ng-hide="gridItem.serviceTitle">Need Redeploy to <br>have a name here</span>
-                    {{gridItem.serviceTitle}}
-                </md-button>
-
-                <div>
-                <span ng-repeat="url in gridItem.urls">
-                    <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
-                        <i class="fa fa-link"></i> {{url.label}}
+            <tr ng-show="gridItem.daemon.active || authentication.isAdmin">
+                <td field-name="name">
+                    <md-button class="md-accent md-hue-3" href="#!/groups/{{group._id}}/{{gridItem._id}}">
+                        {{gridItem.name.length >= 1 ? gridItem.name.substring(1): ''}}
                     </md-button>
-                </span>
-                </div>
-            </td>
-            <td field-name="name">
-                <div>
-                    {{gridItem.name}}<br>
+                    <div ng-hide="group.isSSO">
+                        <span ng-repeat="url in gridItem.urls">
+                            <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
+                                <i class="fa fa-link"></i> {{url.label}}
+                            </md-button>
+                        </span>
+                    </div>
+                </td>
+                <td field-name="container">
                     <small>{{gridItem.image}}</small>
                     <br>
                     <small>{{gridItem.containerId | limitTo:12}}</small>
-                </div>
-            </td>
-            <td>
-                <div>
+                </td>
+                <td>
+                    <span>{{gridItem.networkName}}</span>
+                </td>
+                <td ng-if="group.isSSO && authentication.isAdmin">
+                    <span ng-hide="gridItem.serviceTitle">Need Redeploy to
+                        <br>have a name here</span>
+                    <span>{{gridItem.serviceTitle}}</span>
+                </td>
+                <td>
+                    <div>
+                        <div ng-if="!gridItem.daemon.active" layout="row">
+                            <div>
+                                <md-subheader class="docktor">Disabled</md-subheader>
+                                <small>Daemon disabled</small>
+                            </div>
+                        </div>
+                        <div ng-switch="gridItem.daemon.dockerStatus">
+                            <div ng-switch-when="checking">
+                            </div>
+                            <div ng-switch-when="down">
+                                <md-subheader class="docktor md-warn">Down</md-subheader>
+                                <small>Daemon Down</small>
+                            </div>
+
+                            <div ng-switch-when="up">
+                                <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused" class="docktor md-primary">
+                                    Running
+                                </md-subheader>
+                                <md-subheader ng-hide="gridItem.inspect.State.Running" class="docktor md-warn">
+                                    Stopped
+                                </md-subheader>
+                                <md-subheader ng-show="gridItem.inspect.State.Paused" class="docktor md-accent md-hue-3">
+                                    Paused
+                                </md-subheader>
+                            </div>
+                        </div>
+                        <div ng-hide="group.isSSO || !gridItem.daemon.active" layout="row">
+                            <div ng-repeat="job in gridItem.jobsCompute" ng-click="showJob(job._id, job)">
+                                <md-button ng-if="job.status==='success'" class="job success">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                                <md-button ng-if="job.status==='warning'" class="job warning">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                                <md-button ng-if="job.status==='error'" class="job error">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
                     <div ng-switch="gridItem.daemon.dockerStatus">
                         <div ng-switch-when="checking">
                         </div>
                         <div ng-switch-when="down">
-                            <md-subheader class="docktor md-warn">Down</md-subheader>
+                            No Command
+                            <br>
                             <small>Daemon Down</small>
                         </div>
 
                         <div ng-switch-when="up">
-                            <md-subheader ng-show="gridItem.inspect.State.Running && !gridItem.inspect.State.Paused"
-                                          class="docktor md-primary">
-                                Running
-                            </md-subheader>
-                            <md-subheader ng-hide="gridItem.inspect.State.Running" class="docktor md-warn">
-                                Stopped
-                            </md-subheader>
-                            <md-subheader ng-show="gridItem.inspect.State.Paused" class="docktor md-accent md-hue-3">
-                                Paused
-                            </md-subheader>
-                        </div>
-                    </div>
-                    <div layout="row">
-                        <div ng-repeat="job in gridItem.jobsCompute"
-                             ng-click="showJob(job._id, job)">
-                            <md-button ng-if="job.status==='success'" class="job success">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
-                            <md-button ng-if="job.status==='warning'" class="job warning">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
-                            <md-button ng-if="job.status==='error'" class="job error">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div ng-switch="gridItem.daemon.dockerStatus">
-
-                    <div ng-switch-when="checking">
-                    </div>
-                    <div ng-switch-when="down">
-                        No Command <br>
-                        <small>Daemon Down</small>
-                    </div>
-
-                    <div ng-switch-when="up">
-                        <md-button ng-hide="gridItem.containerId" class="md-raised md-primary"
-                                   ng-click="createContainer(gridItem)"><i class="fa fa-cogs"></i> create
-                        </md-button>
-
-                        <div ng-show="gridItem.containerId">
-
-                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-primary"
-                                       ng-click="startContainer(gridItem)">
-                                <i class="fa fa-play"></i> run
+                            <md-button ng-hide="gridItem.containerId" class="md-raised md-primary" ng-click="createContainer(gridItem)">
+                                <i class="fa fa-cogs"></i> create
                             </md-button>
 
-                            <div ng-show="gridItem.inspect.State.Running">
-                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="stopContainer(gridItem)">
-                                    <i class="fa fa-stop"></i> stop
+                            <div ng-show="gridItem.containerId">
+
+                                <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-primary" ng-click="startContainer(gridItem)">
+                                    <i class="fa fa-play"></i> run
                                 </md-button>
-                                <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused"
-                                           ng-click="pauseContainer(gridItem)">
-                                    <i class="fa fa-pause"></i> pause
-                                </md-button>
-                                <md-button class="md-raised" ng-show="gridItem.inspect.State.Paused"
-                                           ng-click="unpauseContainer(gridItem)">
-                                    <i class="fa fa-pause"></i> unpause
-                                </md-button>
-                                <md-button class="md-raised" ng-click="killContainer(gridItem)"><i
-                                        class="fa fa-crosshairs"></i> kill
+
+                                <div ng-show="gridItem.inspect.State.Running">
+                                    <md-button class="md-raised" ng-hide="gridItem.inspect.State.Paused" ng-click="stopContainer(gridItem)">
+                                        <i class="fa fa-stop"></i> stop
+                                    </md-button>
+                                </div>
+                                <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn" ng-click="removeContainer(gridItem)">
+                                    <i class="fa fa-trash"></i> remove
                                 </md-button>
                             </div>
-                            <md-button ng-hide="gridItem.inspect.State.Running" class="md-raised md-warn"
-                                       ng-click="removeContainer(gridItem)"><i class="fa fa-trash"></i> remove
-                            </md-button>
                         </div>
                     </div>
-                </div>
-            </td>
-            <td>
-                <div ng-switch="gridItem.daemon.dockerStatus">
-                    <span ng-switch-when="checking" class="label label-default" layout="row"
-                          layout-align="center center">
-                        <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
-                        </md-progress-circular>
-                        <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}" layout="row">
-                            <small>{{gridItem.daemon.name}} <br>checking...</small>
-                        </md-button>
-
-                        <span ng-hide="authentication.isAdmin">{{gridItem.daemon.name}} checking...</span>
-                    </span>
-                    <span ng-switch-when="down">
-                        <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}">
-                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
-                        </md-button>
-                        <span ng-hide="authentication.isAdmin" class="label label-danger">
-                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
-                        </span>
-                    </span>
-
-                    <div ng-switch-when="up">
-                        <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
-                                   href="#!/admin/daemons/view/{{gridItem.daemonId}}">
-                            {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
-                        </md-button>
-                        <span ng-hide="authentication.isAdmin" class="label label-success">
-                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
+                </td>
+                <td>
+                    <div ng-if="!gridItem.daemon.active">
+                        <span>
+                            <md-button ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                                {{gridItem.daemon.name}}
+                            </md-button>
+                            <span ng-hide="authentication.isAdmin" class="label">
+                                {{gridItem.daemon.name}}
+                            </span>
                         </span>
                     </div>
-                </div>
-            </td>
-            <td>
-                <div layout-align="center">
-                    <md-button class="md-fab" aria-label="Monitoring Container"
-                               href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{gridItem.name}}">
-                        <i class="fa fa-bar-chart"></i>
-                    </md-button>
-                </div>
-            </td>
-        </tr>
+                    <div ng-switch="gridItem.daemon.dockerStatus">
+                        <span ng-switch-when="checking" class="label label-default" layout="row" layout-align="center center">
+                            <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
+                            </md-progress-circular>
+                            <md-button class="md-warn" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}" layout="row">
+                                <small>{{gridItem.daemon.name}}
+                                    <br>checking...</small>
+                            </md-button>
+
+                            <span ng-hide="authentication.isAdmin">{{gridItem.daemon.name}} checking...</span>
+                        </span>
+                        <span ng-switch-when="down">
+                            <md-button class="md-warn" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
+                            </md-button>
+                            <span ng-hide="authentication.isAdmin" class="label label-danger">
+                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
+                            </span>
+                        </span>
+
+                        <div ng-switch-when="up">
+                            <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{gridItem.daemonId}}">
+                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
+                            </md-button>
+                            <span ng-hide="authentication.isAdmin" class="label label-success">
+                                {{gridItem.daemon.name}} {{gridItem.daemon.dockerStatus}}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 </section>

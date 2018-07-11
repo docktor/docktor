@@ -8,64 +8,52 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th>Id</th>
-            <th>Info</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Id</th>
+                <th>Info</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="container in containers">
-            <td class="table-small-text"><strong>{{container.Id | limitTo: 12}}</strong><br>
-                Image : {{container.Image}}<br>
-                Name : {{container.inspect.Name}}
-            </td>
-            <td>
-                <md-button ng-click="showInfo(container)"><i class="fa fa-eye"> </i> Infos</md-button>
-            </td>
-            <td>
-                <md-subheader ng-show="container.inspect.State.Running" class="md-primary docktor">
-                    Running
-                </md-subheader>
-                <md-subheader ng-hide="container.inspect.State.Running" class="md-warn docktor">
-                    Stopped
-                </md-subheader>
-                <md-subheader ng-show="container.inspect.State.Paused" class="md-accent md-hue-3 docktor">
-                    Paused
-                </md-subheader>
-            </td>
-            <td>
-                <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary"
-                           ng-click="startContainer(container)">
-                    <i class="fa fa-play"></i> Start
-                </md-button>
+            <tr ng-repeat="container in containers">
+                <td class="table-small-text">
+                    <strong>{{container.Id | limitTo: 12}}</strong>
+                    <br> Image : {{container.Image}}
+                    <br> Name : {{container.inspect.Name}}
+                </td>
+                <td>
+                    <md-button ng-click="showInfo(container)">
+                        <i class="fa fa-eye"> </i> Infos</md-button>
+                </td>
+                <td>
+                    <md-subheader ng-show="container.inspect.State.Running" class="md-primary docktor">
+                        Running
+                    </md-subheader>
+                    <md-subheader ng-hide="container.inspect.State.Running" class="md-warn docktor">
+                        Stopped
+                    </md-subheader>
+                    <md-subheader ng-show="container.inspect.State.Paused" class="md-accent md-hue-3 docktor">
+                        Paused
+                    </md-subheader>
+                </td>
+                <td>
+                    <md-button ng-hide="container.inspect.State.Running" class="md-raised md-primary" ng-click="startContainer(container)">
+                        <i class="fa fa-play"></i> Start
+                    </md-button>
 
                     <span ng-show="container.inspect.State.Running">
-                        <md-button ng-hide="container.inspect.State.Paused" class="md-raised"
-                                   ng-click="stopContainer(container)">
+                        <md-button ng-hide="container.inspect.State.Paused" class="md-raised" ng-click="stopContainer(container)">
                             <i class="fa fa-stop"></i> Stop
-                        </md-button>
-                        <md-button ng-hide="container.inspect.State.Paused" class="md-raised"
-                                   ng-click="pauseContainer(container)">
-                            <i class="fa fa-pause"></i> Pause
-                        </md-button>
-                        <md-button ng-show="container.inspect.State.Paused" class="md-raised"
-                                   ng-click="unpauseContainer(container)">
-                            <i class="fa fa-pause"></i> Unpause
-                        </md-button>
-                        <md-button class="md-raised" ng-click="killContainer(container)">
-                            <i class="fa fa-crosshairs"></i> Kill
                         </md-button>
                     </span>
 
-                <md-button ng-hide="container.inspect.State.Running" class="md-raised"
-                           ng-click="removeContainer(container)">
-                    <i class="fa fa-trash"></i> Remove
-                </md-button>
+                    <md-button ng-hide="container.inspect.State.Running" class="md-raised" ng-click="removeContainer(container)">
+                        <i class="fa fa-trash"></i> Remove
+                    </md-button>
 
-            </td>
-        </tr>
+                </td>
+            </tr>
         </tbody>
     </table>
 

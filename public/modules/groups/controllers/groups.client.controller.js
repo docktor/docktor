@@ -7,6 +7,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.patternTitle = /^[a-zA-Z0-9_]{1,200}$/;
         $scope.showAddRemoveContact = false;
         $scope.freePortRange = [];
+        $scope.contactAddSearchText = '';
+        $scope.contactRemoveSearchText = '';
 
         //TODO Grafana URL -> Admin Parameter
         // See https://github.com/docktor/docktor/issues/64
@@ -72,9 +74,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.find = function () {
-            $scope.groups = Groups.query(function () {
-                $scope.groups.sortByProperty('title');
-            });
+            GroupsServices.getListSimplified()
+                .success(function (data, status, headers, config) {
+                    $scope.groups = data;
+                });
         };
 
         $scope.findForCreateOrEditGroup = function () {
@@ -107,7 +110,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             });
         };
 
-        $scope.findOne = function () {
+        $scope._findContainer = function (callback) {
             $scope.daemons = {};
             $scope.daemons.all = [];
             $scope.daemons.ids = [];
@@ -119,7 +122,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.group = group;
                 var allDaemonsContainer = {};
 
-                $scope.group.containers = _.sortBy($scope.group.containers, function(c){return c.name.toLocaleUpperCase();});
+                $scope.group.containers = _.sortBy($scope.group.containers, function (c) { return c.name.toLocaleUpperCase(); });
 
                 $scope.group.containers.forEach(function (container) {
                     if (!$stateParams.containerId ||
@@ -146,8 +149,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                                 });
                             }
                             $scope.prepareJobs(container);
-                            // feat : remove docker call for every container
-                            //$scope.inspect(container);
+                            if (callback) {
+                                callback(container);
+                            }
                         }
                     });
                 };
@@ -155,6 +159,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 $scope.prepareDaemonsAll(allDaemonsContainer, computeDaemon);
                 $scope.getUsersOnGroup();
                 $scope.computeGroupFavorite();
+            });
+        };
+
+        $scope.findOne = function () {
+            $scope._findContainer();
+        };
+
+        $scope.fetchContainer = function () {
+            $scope._findContainer(function (container) {
+                if (container) {
+                    $scope.inspect(container);
+                }
             });
         };
 
@@ -199,7 +215,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
 
         $scope.computeFsForGroup = function () {
             angular.forEach($scope.group.filesystems, function (fs, key) {
-                var found = _.where($scope.getDaemon(fs.daemon).statsCompute.filesystem, {'device': fs.partition});
+                var found = _.where($scope.getDaemon(fs.daemon).statsCompute.filesystem, { 'device': fs.partition });
                 if (found) fs.statsCompute = found[0];
             });
         };
@@ -217,10 +233,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                             if ($scope.group.daemon && daemon._id === $scope.group.daemon._id) {
                                 $scope.group.selectDaemon = daemon;
                             }
-                            Daemon.getDetails(daemon, function () {
-                                $scope.computeFsForGroup();
-                            });
-
+                            if (daemon.active) {
+                                Daemon.getDetails(daemon, function () {
+                                    $scope.computeFsForGroup();
+                                });
+                            }
                             if (cb) cb(daemon);
                         });
                     }
@@ -284,8 +301,10 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.createContainer = function (container) {
-            var index = Toasts.addToast('Create service ' + container.serviceTitle);
-            GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            if (container.daemon && container.daemon.active) {
+                var index = Toasts.addToast('Create service ' + container.serviceTitle);
+                GroupsServices.action('create', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            }
         };
 
         $scope.createContainers = function () {
@@ -302,14 +321,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.startContainer = function (container) {
-            var index = Toasts.addToast('Starting service ' + container.serviceTitle + '...');
-            GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspectAfterStart, $scope.callbackErrorInspect);
+            if (container.daemon && container.daemon.active) {
+                var index = Toasts.addToast('Starting service ' + container.serviceTitle + '...');
+                GroupsServices.action('start', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspectAfterStart, $scope.callbackErrorInspect);
+            }
         };
 
         $scope.startContainers = function () {
             var startOne = false;
             $scope.group.containers.forEach(function (container) {
-                if (!container.inspect.State.Running) {
+                if (container.inspect && !container.inspect.State.Running) {
                     $scope.startContainer(container);
                     startOne = true;
                 }
@@ -320,14 +341,16 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.stopContainer = function (container) {
-            var index = Toasts.addToast('Stopping service ' + container.serviceTitle + '...');
-            GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            if (container.daemon && container.daemon.active) {
+                var index = Toasts.addToast('Stopping service ' + container.serviceTitle + '...');
+                GroupsServices.action('stop', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
+            }
         };
 
         $scope.stopContainers = function () {
             var stopOne = false;
             $scope.group.containers.forEach(function (container) {
-                if (container.inspect.State.Running && !container.inspect.State.Paused) {
+                if (container.inspect && container.inspect.State.Running && !container.inspect.State.Paused) {
                     $scope.stopContainer(container);
                     stopOne = true;
                 }
@@ -337,51 +360,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.pauseContainer = function (container) {
-            var index = Toasts.addToast('Pausing service ' + container.serviceTitle + '...');
-            GroupsServices.action('pause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-        };
-
-        $scope.pauseContainers = function () {
-            var pauseOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect.State.Running && !container.inspect.State.Paused) {
-                    $scope.pauseContainer(container);
-                    pauseOne = true;
-                }
-            });
-            if (!pauseOne) {
-                Toasts.addToast('No service available to pause');
-            }
-        };
-
-        $scope.unpauseContainer = function (container) {
-            var index = Toasts.addToast('Unpausing service ' + container.serviceTitle + '...');
-            GroupsServices.action('unpause', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-        };
-
-        $scope.unpauseContainers = function () {
-            var unpauseOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect.State.Running && container.inspect.State.Paused) {
-                    $scope.unpauseContainer(container);
-                    unpauseOne = true;
-                }
-            });
-            if (!unpauseOne) {
-                Toasts.addToast('No service available to unpause');
-            }
-        };
-
         $scope.removeContainer = function (container) {
-            var index = Toasts.addToast('Removing service ' + container.serviceTitle + '...');
-            GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackErrorInspect);
+            if (container.daemon && container.daemon.active) {
+                var index = Toasts.addToast('Removing service ' + container.serviceTitle + '...');
+                GroupsServices.action('remove', $scope.group._id, container, $scope.callbackSuccessRemove, index, $scope.inspect, $scope.callbackErrorInspect);
+            }
         };
 
         $scope.removeContainers = function () {
             var removeOne = false;
             $scope.group.containers.forEach(function (container) {
-                if (!container.inspect.State.Running) {
+                if (container.inspect && !container.inspect.State.Running) {
                     $scope.removeContainer(container);
                     removeOne = true;
                 }
@@ -392,73 +381,53 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             }
         };
 
-        $scope.killContainer = function (container) {
-            var index = Toasts.addToast('Killing service ' + container.serviceTitle + '...');
-            GroupsServices.action('kill', $scope.group._id, container, $scope.callbackSuccess, index, $scope.inspect, $scope.callbackErrorInspect);
-        };
+        $scope.topContainer = function (container) {
+            if (container.daemon && container.daemon.active) {
+                GroupsServices.action('top', $scope.group._id, container, function (container, data) {
+                    var title = 'top on container ' + container.name;
+                    var results = [];
+                    results.push(data.Titles);
+                    angular.forEach(data.Processes, function (value, key) {
+                        results.push(value);
+                    });
 
-        $scope.killContainers = function () {
-            var killOne = false;
-            $scope.group.containers.forEach(function (container) {
-                if (container.inspect.State.Running) {
-                    $scope.killContainer(container);
-                    killOne = true;
-                }
-            });
-            if (!killOne) {
-                Toasts.addToast('No service available to kill');
+                    $mdDialog.show({
+                        controller: 'ContainerCmdDialogController',
+                        templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
+                        locals: { title: title, results: results }
+                    });
+
+                }, $scope.callbackErrorInspect);
             }
         };
 
-        $scope.topContainer = function (container) {
-            GroupsServices.action('top', $scope.group._id, container, function (container, data) {
-                var title = 'top on container ' + container.name;
-                var results = [];
-                results.push(data.Titles);
-                angular.forEach(data.Processes, function (value, key) {
-                    results.push(value);
-                });
-
-                $mdDialog.show({
-                    controller: 'ContainerCmdDialogController',
-                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
-                });
-
-            }, $scope.callbackErrorInspect);
-        };
-
         $scope.logsContainer = function (container) {
-            GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
-                var title = 'Logs in container ' + container.name;
-                var results = [];
-                for (var value in data) {
-                    var s = '' + data[value];
-                    // display only line with date 20-...
-                    if (s.length > 2 && s.substring(0, 2) === '20') {
-                        results.push(s);
-                    }
-                }
-                $mdDialog.show({
-                    controller: 'ContainerCmdDialogController',
-                    templateUrl: 'modules/daemons/views/container.cmd.dialog.template.html',
-                    locals: {title: title, results: results}
-                });
+            if (container.daemon && container.daemon.active) {
+                GroupsServices.action('logs', $scope.group._id, container, function (container, data) {
+                    var title = 'Logs in container ' + container.name;
+                    $mdDialog.show({
+                        controller: 'ContainerCmdDialogController',
+                        templateUrl: 'modules/daemons/views/container.logs.dialog.template.html',
+                        locals: { title: title, results: data }
+                    });
 
-            }, $scope.callbackErrorInspect);
+                }, $scope.callbackErrorInspect);
+            }
         };
 
         $scope.doExec = function (container, command) {
-            var index = Toasts.addToast('command ' + command.exec + ' on container ' + container.name);
-            GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
-                .success(function (data, status, headers, config) {
-                    var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
-                    Toasts.addToast(data, 'success', title);
-                    Toasts.closeToast(index);
-                })
-                .error(function (err, status, headers, config) {
-                    $scope.callbackErrorInspect(container, err, index);
-                });
+            if (container.daemon && container.daemon.active) {
+                var index = Toasts.addToast('command ' + command.exec + ' on container ' + container.name);
+                GroupsServices.exec($scope.group._id, container._id, container.serviceId, command._id)
+                    .success(function (data, status, headers, config) {
+                        var title = 'Execution of command ' + command.exec + ' on container ' + container.name;
+                        Toasts.addToast(data, 'success', title);
+                        Toasts.closeToast(index);
+                    })
+                    .error(function (err, status, headers, config) {
+                        $scope.callbackErrorInspect(container, err, index);
+                    });
+            }
         };
 
         $scope.showFreePortRangeOnContainer = function () {
@@ -469,7 +438,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.getDaemon = function (idDaemon) {
-            return _.where($scope.daemons.all, {'_id': idDaemon})[0];
+            return _.where($scope.daemons.all, { '_id': idDaemon })[0];
         };
 
         $scope.removeFilesystem = function (filesystem) {
@@ -479,9 +448,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         $scope.changeDaemonFilesystem = function () {
             $scope.filesystem.currentFs = null;
             $scope.filesystem.pleaseWait = true;
-            Daemon.getDetails($scope.filesystem.selectDaemon, function () {
-                $scope.filesystem.pleaseWait = false;
-            });
+            if ($scope.filesystem.selectDaemon) {
+                var daemon = $scope.filesystem.selectDaemon;
+                if (daemon.active) {
+                    Daemon.getDetails(daemon, function () {
+                        $scope.filesystem.pleaseWait = false;
+                    });
+                }
+            }
+
         };
 
         $scope.addFilesystem = function () {
@@ -509,7 +484,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     urlWithoutPort = url.url.substr(pos, url.url.length);
                     if (!urlWithoutPort) urlWithoutPort = '';
                 }
-                var portMapping = _.where(container.ports, {'internal': parseInt(portInContainer)});
+                var portMapping = _.where(container.ports, { 'internal': parseInt(portInContainer) });
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
@@ -531,12 +506,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                 .success(function (users) {
                     // a role=admin can add himself, not for role=user
                     if ($scope.authentication.user.role !== 'admin') {
-                        $scope.users = _.reject(users, {'_id': $scope.authentication.user._id});
+                        $scope.users = _.reject(users, { '_id': $scope.authentication.user._id });
                     } else {
                         $scope.users = users;
                     }
                     angular.forEach($scope.group.users, function (user, key) {
-                        $scope.users = _.reject($scope.users, {'_id': user.id});
+                        $scope.users = _.reject($scope.users, { '_id': user.id });
                     });
 
                 });
@@ -558,7 +533,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
         };
 
         $scope.computeGroupFavorite = function () {
-            if (_.where($scope.authentication.user.favorites, {'_id': $scope.group._id}).length > 0) {
+            if (_.where($scope.authentication.user.favorites, { '_id': $scope.group._id }).length > 0) {
                 $scope.isGroupFavorite = true;
             } else {
                 $scope.isGroupFavorite = false;
@@ -621,13 +596,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             $scope.showAddRemoveContact = false;
             $scope.contactToAdd = null;
             $scope.contactToRemove = null;
+            $scope.contactAddSearchText = '';
+            $scope.contactRemoveSearchText = '';
         };
 
         $scope.showJob = function (info, job) {
             $mdDialog.show({
                 controller: 'JobDialogController',
                 templateUrl: 'modules/jobs/views/job.dialog.template.html',
-                locals: {currentJob: job, info: info}
+                locals: { currentJob: job, info: info }
             });
         };
 
@@ -637,6 +614,82 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
             } else {
                 return '.';
             }
+        };
+
+
+        $scope.getContactsFromText = function (users, contactSearchText) {
+
+            var contacts = users || [];
+            if (contactSearchText) {
+                return _.filter(contacts, function (o) {
+                    return o.displayName.toLowerCase().noAccent().indexOf(contactSearchText.toLowerCase().noAccent()) !== -1;
+                });
+            }
+
+            return contacts;
+        };
+
+
+        $scope.generateCommand = function (container) {
+            if (!container) {
+                return '';
+            }
+
+            var command = ['docker run -d'];
+
+            if (container.networkName) {
+                command.push('--net ' + container.networkName);
+            }
+
+            // Ports
+            container.ports.forEach(function (port) {
+                command.push('-p ' + (port.host ? (port.host + ':') : '') + port.external + ':' + port.internal + '/' + port.protocol);
+            });
+
+            // Variables
+            container.variables.forEach(function (variable) {
+                command.push('-e ' + variable.name + '=\'' + variable.value + '\'');
+            });
+
+            // Volumes
+            container.volumes.forEach(function (volume) {
+                command.push('-v ' + volume.external + ':' + volume.internal + (volume.rights ? (':' + volume.rights) : ''));
+            });
+
+            // Labels
+            container.labels.forEach(function (label) {
+                command.push('-l ' + label.name + '=\'' + label.value + '\'');
+            });
+
+            // ExtraHosts
+            container.extraHosts.forEach(function (extraHost) {
+                command.push('--add-host ' + extraHost.host + ':' + extraHost.ip);
+            });
+
+            command.push('-h ' + container.hostname);
+            command.push('--name ' + container.name.slice(1));
+            command.push(container.image);
+            return command.join(' ');
+        };
+
+        String.prototype.noAccent = function () {
+            var accent = [
+                /[\300-\306]/g, /[\340-\346]/g, // A, a
+                /[\310-\313]/g, /[\350-\353]/g, // E, e
+                /[\314-\317]/g, /[\354-\357]/g, // I, i
+                /[\322-\330]/g, /[\362-\370]/g, // O, o
+                /[\331-\334]/g, /[\371-\374]/g, // U, u
+                /[\321]/g, /[\361]/g, // N, n
+                /[\307]/g, /[\347]/g, // C, c
+            ];
+            var noaccent = ['A', 'a', 'E', 'e', 'I', 'i', 'O', 'o', 'U', 'u', 'N', 'n', 'C', 'c'];
+
+            var str = this;
+            for (var i = 0; i < accent.length; i++) {
+                str = str.replace(accent[i], noaccent[i]);
+            }
+
+            return str;
         };
     }
 ]);

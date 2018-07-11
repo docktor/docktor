@@ -32,15 +32,6 @@ module.exports = function (app) {
     app.route('/daemons/docker/container/stop/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.stopContainer);
 
-    app.route('/daemons/docker/container/pause/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.pauseContainer);
-
-    app.route('/daemons/docker/container/unpause/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.unpauseContainer);
-
-    app.route('/daemons/docker/container/kill/:daemonId/:containerDockerId')
-        .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.killContainer);
-
     app.route('/daemons/docker/container/remove/:daemonId/:containerDockerId')
         .get(users.requiresLogin, daemons.hasAdminAuthorization, daemons.removeContainer);
 

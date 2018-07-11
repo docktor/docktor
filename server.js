@@ -20,8 +20,12 @@ if (config.cluster && cluster.isMaster) {
         cluster.fork();
     }
 
-// Code to run if we're in a worker process
+    // Code to run if we're in a worker process
 } else {
+
+    // Authorize Docktor to fetch HTTPS resources with self signed certificates (i.e. Docker daemon protected with TLS config)
+    // Needed only when Docktor is itself hosted with HTTPS
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
     // Bootstrap db connection
     var db = mongoose.connect(config.db, function (err) {
@@ -39,13 +43,41 @@ if (config.cluster && cluster.isMaster) {
     // Bootstrap passport config
     require('./config/passport')();
 
-    // Start the app by listening on <port>
-    app.listen(config.port);
+    var http = require('http');
+
+    // Start the app using HTTPs if certifcate and private key are defined
+    if (!config.httpsPrivateKey || !config.httpsCertificate) {
+        http.createServer(app).listen(config.httpPort);
+        console.log('Docktor application started on HTTP port ' + config.httpPort + '. (no certificate or private key defined for HTTPS)');
+    } else {
+        var fs = require('fs');
+        var https = require('https');
+        var privateKey = config.httpsPrivateKey ? fs.readFileSync(config.httpsPrivateKey, 'utf8') : undefined;
+        var certificate = config.httpsCertificate ? fs.readFileSync(config.httpsCertificate, 'utf8') : undefined;
+        var credentials = { key: privateKey, cert: certificate };
+
+        var express = require('express');
+        var redirectApp = express();
+        var redirectServer = http.createServer(redirectApp);
+
+        redirectApp.use(function requireHTTPS(req, res, next) {
+            if (!req.secure) {
+                var host = req.headers.host || 'localhost:' + config.httpPort;
+                var hostSplit = host.split(':');
+                console.log('redirect to https://' + hostSplit[0] + ':' + config.httpsPort + req.url);
+                return res.redirect('https://' + hostSplit[0] + ':' + config.httpsPort + req.url);
+            }
+            next();
+        });
+        redirectServer.listen(config.httpPort);
+
+        https.createServer(credentials, app).listen(config.httpsPort);
+        console.log('Docktor application started on HTTPs port ' + config.httpsPort);
+
+    }
 
     // Expose app
     exports = module.exports = app;
 
-    // Logging initialization
-    console.log('Docktor application started on port ' + config.port);
 }
 

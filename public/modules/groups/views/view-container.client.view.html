@@ -1,4 +1,4 @@
-<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+<section data-ng-controller="GroupsController" data-ng-init="fetchContainer()">
 
     <h3>
         <md-button class="md-accent md-hue-3" href="#!/groups">My Groups</md-button>
@@ -8,121 +8,116 @@
     </h3>
 
     <div class="row">
-        <h4><i class="fa fa-users"></i> Contacts</h4>
-        <span ng-repeat="u in group.users">
-            <md-button class="md-accent md-hue-3" href="mailto:{{u.email}}">
-                <i class="fa fa-envelope"></i> {{u.displayName}}
-            </md-button>
-        </span>
-
-        <div>
-            <md-button class="md-accent md-hue-3" href="mailto:{{group.mailAllUsers}}">
-                <i class="fa fa-envelope"></i> Mail All
-            </md-button>
-        </div>
-    </div>
-
-    <div class="row">
-        <h4><i class="fa fa-tachometer"></i> Monitoring</h4>
-        <i class="fa fa-bar-chart"></i>
-        <md-button class="md-accent md-hue-3" href="{{grafanaUrl}}?groupName={{group.title}}&containerName={{container.name}}">
-            Monitoring CPU / RAM on this service.
-        </md-button>
-    </div>
-
-    <div class="row">
         <table class="table">
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Service - Image</th>
-                <th>Status</th>
-                <th>Daemon</th>
-            </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Service - Image</th>
+                    <th ng-if="container.networkName">Network</th>
+                    <th>Status</th>
+                    <th>Daemon</th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>
-                    <div>
-                        <span ng-hide="container.serviceTitle">Need Redeploy to <br>have a name here</span>
-                        {{container.serviceTitle}}
-                    </div>
-                </td>
-                <td>
-                    {{container.name}}<br>
-                    <small>{{container.image}}</small>
-                    <br>
-                    <small>{{container.containerId | limitTo:12}}</small>
-                </td>
-                <td>
-                    <div ng-show="container.daemon.dockerStatusUp">
-                        <md-subheader ng-show="container.inspect.State.Running" class="docktor md-primary">
-                            Running
-                        </md-subheader>
-                        <md-subheader ng-hide="container.inspect.State.Running" class="docktor md-warn">
-                            Stopped
-                        </md-subheader>
-                        <md-subheader ng-show="container.inspect.State.Paused" class="docktor md-accent md-hue-3">
-                            Paused
-                        </md-subheader>
-                    </div>
-                    <div layout="row">
-                        <div ng-repeat="job in container.jobsCompute" ng-click="showJob(job._id, job)">
-                            <md-button ng-if="job.status==='success'" class="job success">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
-                            <md-button ng-if="job.status==='warning'" class="job warning">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
-                            <md-button ng-if="job.status==='error'" class="job error">
-                                {{getDisplayJob(job.lastExecution)}}
-                            </md-button>
+                <tr>
+                    <td>
+                        <div>
+                            <span ng-hide="container.serviceTitle">Need Redeploy to
+                                <br>have a name here</span>
+                            {{container.serviceTitle}}
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div ng-switch="container.daemon.dockerStatus">
-                        <span ng-switch-when="checking" class="label label-default" layout="row"
-                              layout-align="center center">
-                            <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
-                            </md-progress-circular>
-                            <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                       href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
-                                <small>{{container.daemon.name}} <br>checking...</small>
-                            </md-button>
-
-                            <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
-                        </span>
-                        <span ng-switch-when="down">
-                            <md-button class="md-warn" ng-show="authentication.isAdmin"
-                                       href="#!/admin/daemons/view/{{container.daemonId}}">
-                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
-                            </md-button>
-                            <span ng-hide="authentication.isAdmin" class="label label-danger">
-                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                    </td>
+                    <td>
+                        {{container.name}}
+                        <br>
+                        <small>{{container.image}}</small>
+                        <br>
+                        <small>{{container.containerId | limitTo:12}}</small>
+                    </td>
+                    <td ng-if="container.networkName">
+                        {{container.networkName}}
+                    </td>
+                    <td>
+                        <div ng-if="!container.daemon.active">
+                            <md-subheader class="docktor">
+                                Disabled
+                            </md-subheader>
+                        </div>
+                        <div ng-show="container.daemon.dockerStatusUp">
+                            <md-subheader ng-show="container.inspect.State.Running" class="docktor md-primary">
+                                Running
+                            </md-subheader>
+                            <md-subheader ng-hide="container.inspect.State.Running" class="docktor md-warn">
+                                Stopped
+                            </md-subheader>
+                            <md-subheader ng-show="container.inspect.State.Paused" class="docktor md-accent md-hue-3">
+                                Paused
+                            </md-subheader>
+                        </div>
+                        <div ng-hide="group.isSSO" layout="row">
+                            <div ng-repeat="job in container.jobsCompute" ng-click="showJob(job._id, job)">
+                                <md-button ng-if="job.status==='success'" class="job success">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                                <md-button ng-if="job.status==='warning'" class="job warning">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                                <md-button ng-if="job.status==='error'" class="job error">
+                                    {{getDisplayJob(job.lastExecution)}}
+                                </md-button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div ng-if="!container.daemon.active">
+                            <span>
+                                <md-button ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                                    {{container.daemon.name}}
+                                </md-button>
+                                <span ng-hide="authentication.isAdmin">
+                                    {{container.daemon.name}}
+                                </span>
                             </span>
-                        </span>
-
-                        <div ng-switch-when="up">
-                            <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin"
-                                       href="#!/admin/daemons/view/{{container.daemonId}}">
-                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
-                            </md-button>
-                        <span ng-hide="authentication.isAdmin" class="label label-success">
-                                {{container.daemon.name}} {{container.daemon.dockerStatus}}
-                        </span>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                        <div ng-switch="container.daemon.dockerStatus">
+                            <span ng-switch-when="checking" class="label label-default" layout="row" layout-align="center center">
+                                <md-progress-circular class="md-accent md-hue-3" md-diameter="24" md-mode="indeterminate">
+                                </md-progress-circular>
+                                <md-button class="md-warn" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}" layout="row">
+                                    <small>{{container.daemon.name}}
+                                        <br>checking...</small>
+                                </md-button>
+
+                                <span ng-hide="authentication.isAdmin">{{container.daemon.name}} checking...</span>
+                            </span>
+                            <span ng-switch-when="down">
+                                <md-button class="md-warn" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                                    {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                                </md-button>
+                                <span ng-hide="authentication.isAdmin" class="label label-danger">
+                                    {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                                </span>
+                            </span>
+
+                            <div ng-switch-when="up">
+                                <md-button class="md-accent md-raised md-hue-3" ng-show="authentication.isAdmin" href="#!/admin/daemons/view/{{container.daemonId}}">
+                                    {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                                </md-button>
+                                <span ng-hide="authentication.isAdmin" class="label label-success">
+                                    {{container.daemon.name}} {{container.daemon.dockerStatus}}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <h4>Urls</h4>
+    <h4 ng-hide="group.isSSO">Urls</h4>
 
-    <div ng-hide="container.urls.length > 0" class="label label-info">No url attached to this srvice.</div>
-    <div ng-repeat="url in container.urls">
+    <div ng-hide="group.isSSO || container.urls.length > 0" class="label label-info">No url attached to this service.</div>
+    <div ng-hide="group.isSSO" ng-repeat="url in container.urls">
         <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
             <i class="fa fa-link"></i> {{url.label}}
         </md-button>
@@ -138,46 +133,56 @@
 
     <h4>Commands</h4>
 
-    <div ng-show="container.daemon.dockerStatusUp">
-
-        <md-button class="md-raised md-primary" ng-hide="container.containerId"
-                   ng-click="createContainer(container)"><i class="fa fa-cogs"></i> Docker create
-        </md-button>
-
-        <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService"
-                   ng-click="askDeleteService=true"><i class="fa fa-trash"></i>
+    <div ng-if="!container.daemon.active">
+        <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService" ng-click="askDeleteService=true">
+            <i class="fa fa-trash"></i>
             Remove service from Group
         </md-button>
         <md-button class="md-raised md-accent md-hue-3" ng-click="askDeleteService=false" ng-show="askDeleteService">
-            No, I don't want to delete this. <i class="fa fa-reply"></i>
+            No, I don't want to delete this.
+            <i class="fa fa-reply"></i>
         </md-button>
-        <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);"
-                   ng-show="askDeleteService"
-                   class="md-raised md-warn">
-            Yes, I want to delete this service from this group <i class="fa fa-exclamation-triangle"></i>
+        <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService" class="md-raised md-warn">
+            Yes, I want to delete this service from this group
+            <i class="fa fa-exclamation-triangle"></i>
         </md-button>
+    </div>
+    <pre ng-if="authentication.isAdmin">{{generateCommand(container)}}</pre>
+
+    <div ng-show="container.daemon.dockerStatusUp">
+
+        <md-button class="md-raised md-primary" ng-hide="container.containerId" ng-click="createContainer(container)">
+            <i class="fa fa-cogs"></i> Docker create
+        </md-button>
+
+        <md-button class="md-raised" ng-hide="!authentication.isAdmin || container.containerId || askDeleteService" ng-click="askDeleteService=true">
+            <i class="fa fa-trash"></i>
+            Remove service from Group
+        </md-button>
+        <md-button class="md-raised md-accent md-hue-3" ng-click="askDeleteService=false" ng-show="askDeleteService">
+            No, I don't want to delete this.
+            <i class="fa fa-reply"></i>
+        </md-button>
+        <md-button class="md-raised md-warn" data-ng-click="removeServiceFromGroup(container);" ng-show="askDeleteService" class="md-raised md-warn">
+            Yes, I want to delete this service from this group
+            <i class="fa fa-exclamation-triangle"></i>
+        </md-button>
+        <div ng-hide="container.containerId">
+            Execute the following command on daemon "{{container.daemon.name}}" to download the image:
+            <span>
+                <b>docker pull {{ container.image }}</b>
+            </span>
+        </div>
 
         <div ng-show="container.containerId">
 
-            <md-button class="md-raised md-primary" ng-hide="container.inspect.State.Running"
-                       ng-click="startContainer(container)"><i class="fa fa-play"></i> Docker run
+            <md-button class="md-raised md-primary" ng-hide="container.inspect.State.Running" ng-click="startContainer(container)">
+                <i class="fa fa-play"></i> Docker run
             </md-button>
 
             <div ng-show="container.inspect.State.Running">
-                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                           ng-click="stopContainer(container)">
+                <md-button class="md-raised" ng-hide="container.inspect.State.Paused" ng-click="stopContainer(container)">
                     <i class="fa fa-stop"></i> Docker stop
-                </md-button>
-                <md-button class="md-raised" ng-hide="container.inspect.State.Paused"
-                           ng-click="pauseContainer(container)">
-                    <i class="fa fa-pause"></i> Docker pause
-                </md-button>
-                <md-button class="md-raised" ng-show="container.inspect.State.Paused"
-                           ng-click="unpauseContainer(container)">
-                    <i class="fa fa-pause"></i> Docker unpause
-                </md-button>
-                <md-button class="md-raised" ng-click="killContainer(container)">
-                    <i class="fa fa-crosshairs"></i> Docker kill
                 </md-button>
                 <md-button class="md-raised" ng-click="topContainer(container)">
                     <i class="fa fa-stethoscope"></i> Docker top
@@ -199,8 +204,8 @@
                     </md-button>
                 </span>
             </div>
-            <md-button class="md-raised md-warn" ng-hide="!container.containerId || container.inspect.State.Running"
-                       ng-click="removeContainer(container)"><i class="fa fa-trash"></i> Docker remove
+            <md-button class="md-raised md-warn" ng-hide="!container.containerId || container.inspect.State.Running" ng-click="removeContainer(container)">
+                <i class="fa fa-trash"></i> Docker remove
             </md-button>
 
         </div>
@@ -212,7 +217,7 @@
 
     <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
         <div ng-repeat="port in container.ports">
-            -e {{port.external}}:{{port.internal}}/{{port.protocol}}
+            -e {{port.host ? port.host + ':' : ''}}{{port.external}}:{{port.internal}}/{{port.protocol}}
         </div>
     </md-whiteframe>
 
@@ -255,8 +260,8 @@
 
         <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
             <div ng-repeat="volume in container.volumes">
-                -v {{volume.external}}:{{volume.internal}}<span
-                    ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
+                -v {{volume.external}}:{{volume.internal}}
+                <span ng-if="volume.rights.length > 0">:{{volume.rights}}</span>
             </div>
         </md-whiteframe>
 
@@ -264,6 +269,32 @@
 
         <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
             <span>{{container.inspect.HostConfig.Binds | json}}</span>
+        </md-whiteframe>
+
+        <h4>Labels</h4>
+
+        <h5>From Docktor</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="label in container.labels">
+                -l {{label.name}}={{label.value}}
+            </div>
+        </md-whiteframe>
+
+        <h5>docker inspect</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <span>{{container.inspect.Config.Labels | json}}</span>
+        </md-whiteframe>
+
+        <h4>Extra hosts</h4>
+
+        <h5>From Docktor</h5>
+
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="left left">
+            <div ng-repeat="extraHosts in container.extraHosts">
+                --add-host {{extraHosts.host}}:{{extraHosts.ip}}
+            </div>
         </md-whiteframe>
     </div>
 

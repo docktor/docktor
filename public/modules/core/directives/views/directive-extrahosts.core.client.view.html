@@ -1,0 +1,41 @@
+<div>
+    <div ng-if="withTitle">
+        <h4>Extra hosts</h4>
+    </div>
+    <p>
+        <i>Add an entry in /etc/hosts, </i>
+        <i>docker [...] --add-host host:ip</i>
+    </p>
+
+    <div ng-if="extraHosts.length === 0">No extra Host</div>
+
+    <ul data-ng-repeat="extraHost in extraHosts">
+        <li layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center">
+                <md-button aria-label="Ask Delete Extra Host" ng-click="askDeleteExtraHost=true" ng-hide="askDeleteExtraHost">
+                    <i class="fa fa-trash-o" tooltip="Delete Extra Host" tooltip-popup-delay='750'></i>
+                </md-button>
+                <md-button aria-label="Don't delete extra Host" ng-click="askDeleteExtraHost=false" ng-show="askDeleteExtraHost" class="md-raised md-accent md-hue-3">
+                    No, I don't want to delete this.
+                    <i class="fa fa-reply"></i>
+                </md-button>
+                <md-button aria-label="Confirm delete extra Host" data-ng-click="removeExtraHost(extraHost);" ng-show="askDeleteExtraHost" class="md-raised md-warn">
+                    Yes, I confirm
+                    <i class="fa fa-exclamation-triangle"></i>
+                </md-button>
+                <md-input-container>
+                    <label>Host</label>
+                    <input ng-model="extraHost.host" type="text" ng-required="true">
+                </md-input-container>
+                <md-input-container>
+                    <label>Ip</label>
+                    <input ng-model="extraHost.ip" type="text" ng-required="true">
+                </md-input-container>
+            </div>
+        </li>
+    </ul>
+
+    <md-button aria-label="Add an extra Host" ng-click="addExtraHost()">
+        <i class="fa fa-plus-square"></i> Add an extra Host
+    </md-button>
+</div>

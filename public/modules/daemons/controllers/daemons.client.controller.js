@@ -17,7 +17,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
         $scope.sites = {};
         $scope.sites.all = Sites.query();
 
-        $scope.port = {'protocol': 'tcp'};
+        $scope.port = { 'protocol': 'tcp' };
         $scope.parameter = {};
         $scope.displayFormParameter = false;
         $scope.variable = {};
@@ -68,7 +68,9 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
                 }, function (daemon) {
                     $scope.daemon = daemon;
                     $scope.daemon.selectSite = $scope.daemon.site;
-                    Daemon.getDetails(daemon);
+                    if (daemon.active) {
+                        Daemon.getDetails(daemon);
+                    }
                 });
             } else {
                 $scope.daemon = new Daemons();
@@ -83,7 +85,10 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                    Daemon.isUp(daemon);
+                    if (daemon.active) {
+                        Daemon.isUp(daemon);
+                    }
+
                     if (!$scope.positions[daemon.site._id]) {
                         $scope.positions[daemon.site._id] = {};
                     }
@@ -105,7 +110,9 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
                 angular.forEach($scope.daemons, function (daemon, key) {
                     daemon.cadvisorUrl = Daemon.getcAdvisorUrl(daemon);
-                    Daemon.getDetails(daemon);
+                    if (daemon.active) {
+                        Daemon.getDetails(daemon);
+                    }
                     if (!$scope.positions[daemon.site._id]) {
                         $scope.positions[daemon.site._id] = {};
                     }
@@ -162,7 +169,7 @@ angular.module('daemons').controller('DaemonsController', ['$scope', '$statePara
 
         $scope.addPort = function () {
             $scope.daemon.ports.push($scope.port);
-            $scope.port = {'protocol': 'tcp'};
+            $scope.port = { 'protocol': 'tcp' };
             $scope.update(true);
         };
 

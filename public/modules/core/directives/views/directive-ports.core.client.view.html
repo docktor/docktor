@@ -3,7 +3,9 @@
     <div ng-if="withTitle">
         <h4>Ports</h4>
     </div>
-    <p><i>docker [...] -p externalPort:internalPort</i></p>
+    <p>
+        <i>docker [...] -p externalPort:internalPort</i>
+    </p>
 
     <div ng-if="ports.length === 0">No port</div>
 
@@ -13,17 +15,26 @@
                 <md-button aria-label="Delete Port" ng-click="askDeletePort=true" ng-hide="askDeletePort">
                     <i class="fa fa-trash-o" title="Delete Port"></i>
                 </md-button>
-                <md-button aria-label="Don't delete port" ng-click="askDeletePort=false" ng-show="askDeletePort"
-                           class="md-raised md-accent md-hue-3">
-                    No, I don't want to delete this. <i class="fa fa-reply"></i>
+                <md-button aria-label="Don't delete port" ng-click="askDeletePort=false" ng-show="askDeletePort" class="md-raised md-accent md-hue-3">
+                    No, I don't want to delete this.
+                    <i class="fa fa-reply"></i>
                 </md-button>
-                <md-button aria-label="Confirm delete port" data-ng-click="removePort(port);"
-                           ng-show="askDeletePort" class="md-raised md-warn">
-                    Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                <md-button aria-label="Confirm delete port" data-ng-click="removePort(port);" ng-show="askDeletePort" class="md-raised md-warn">
+                    Yes, I confirm
+                    <i class="fa fa-exclamation-triangle"></i>
                 </md-button>
             </div>
 
             <div layout="row" layout-align="start center">
+                <div ng-if="port.host">
+                    <div>
+                        <md-input-container>
+                            <label>Host</label>
+                            <input ng-model="port.host" type="string">
+                        </md-input-container>
+                    </div>
+                </div>
+                <div ng-if="port.host">:</div>
                 <div ng-if="displayExternalPort">
                     <div>
                         <md-input-container>

@@ -17,14 +17,20 @@
             <div class="row">
                 <md-input-container class="long long">
                     <label>Title</label>
-                    <input name="title" ng-model="group.title" type="text" ng-pattern="patternTitle" ng-required="true"
-                           md-maxlength="200">
+                    <input name="title" ng-model="group.title" type="text" ng-pattern="patternTitle" ng-required="true" md-maxlength="200">
 
                     <div ng-messages="groupForm.title.$error">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="pattern">Title have to match this pattern : [a-zA-Z0-9_]{1,200}.</div>
                     </div>
                 </md-input-container>
+            </div>
+            <div class="row">
+                <md-switch ng-model="group.isSSO" aria-label="Group is deployed with SSO ?">
+                    Group is deployed with SSO :
+                    <span ng-if="group.isSSO">Yes</span>
+                    <span ng-if="!group.isSSO">No</span>
+                </md-switch>
             </div>
             <div class="row" layout-align="start start">
                 <div flex="10">Daemon</div>
@@ -78,37 +84,34 @@
     <div class="row" ng-show="group.selectDaemon">
         <h4>Filesystems</h4>
 
-        <md-button aria-label="Add a filesystem to monitor" class="md-raised" ng-hide="displayFormFilesystem"
-                   ng-click="displayFormFilesystem=!displayFormFilesystem">
+        <md-button aria-label="Add a filesystem to monitor" class="md-raised" ng-hide="displayFormFilesystem" ng-click="displayFormFilesystem=!displayFormFilesystem">
             <i class="fa fa-plus-square"></i>
         </md-button>
 
         <div class="controls">
-            <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on
-                Docktor.</p>
+            <p>Monitoring filesystem is only available if selected daemon has cAdvisor deployed on it and configured on Docktor.
+            </p>
 
             <ul data-ng-repeat="filesystem in group.filesystems">
                 <li>{{getDaemon(filesystem.daemon).name}} : {{filesystem.partition}}
-                    <small><i>{{filesystem.description}}</i></small>
+                    <small>
+                        <i>{{filesystem.description}}</i>
+                    </small>
                     <a ng-click="askDeleteFilesystem=true" ng-hide="askDeleteFilesystem">
-                        <i class="fa fa-trash-o" tooltip="Delete Filesystem"
-                           tooltip-popup-delay='750'></i>
+                        <i class="fa fa-trash-o" tooltip="Delete Filesystem" tooltip-popup-delay='750'></i>
                     </a>
-                    <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem"
-                               class="md-raised md-accent md-hue-3">
-                        No, I don't want to delete this. <i class="fa fa-reply"></i>
+                    <md-button ng-click="askDeleteFilesystem=false" ng-show="askDeleteFilesystem" class="md-raised md-accent md-hue-3">
+                        No, I don't want to delete this.
+                        <i class="fa fa-reply"></i>
                     </md-button>
-                    <md-button data-ng-click="removeFilesystem(filesystem);"
-                               ng-show="askDeleteFilesystem"
-                               class="md-raised md-warn">
-                        Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+                    <md-button data-ng-click="removeFilesystem(filesystem);" ng-show="askDeleteFilesystem" class="md-raised md-warn">
+                        Yes, I confirm
+                        <i class="fa fa-exclamation-triangle"></i>
                     </md-button>
                 </li>
             </ul>
 
-            <form aria-label="Form Filesystem" ng-show="displayFormFilesystem" name="filesystemForm"
-                  id="filesystemForm" novalidate
-                  autocomplete="off">
+            <form aria-label="Form Filesystem" ng-show="displayFormFilesystem" name="filesystemForm" id="filesystemForm" novalidate autocomplete="off">
 
                 <div class="row">
                     <div flex="10">Daemon</div>
@@ -133,8 +136,7 @@
                 <div ng-hide="filesystem.pleaseWait">
                     <div class="row" ng-if="filesystem.selectDaemon.statsCompute.filesystem.length > 0">
                         <div flex="10">FileSystem</div>
-                        <md-select ng-model="filesystem.currentFs" style="min-width: 300px;"
-                                   ng-change="changeFilesystem()">
+                        <md-select ng-model="filesystem.currentFs" style="min-width: 300px;" ng-change="changeFilesystem()">
                             <md-select-label>
                                 {{ filesystem.currentFs.device ? filesystem.currentFs.device : 'choose a filesystem' }}
                             </md-select-label>
@@ -145,19 +147,18 @@
                     </div>
 
                     <div class="row" ng-if="filesystem.selectDaemon">
-                        <div ng-if="!filesystem.selectDaemon.statsCompute.filesystem">No filesystem found on
-                            {{filesystem.selectDaemon.name}}. Please check cAdvisor on it.
+                        <div ng-if="!filesystem.selectDaemon.statsCompute.filesystem">No filesystem found on {{filesystem.selectDaemon.name}}. Please check cAdvisor on it.
                         </div>
                     </div>
 
                     <div ng-show="filesystem.currentFs" class="row">
                         <div flex>
-                            <md-progress-linear class="md-warn" md-mode="determinate"
-                                                ng-value="filesystem.currentFs.usagePercent"></md-progress-linear>
+                            <md-progress-linear class="md-warn" md-mode="determinate" ng-value="filesystem.currentFs.usagePercent"></md-progress-linear>
                         </div>
 
                         <div ng-show="filesystem.currentFs" flex>
-                            <span>{{filesystem.currentFs.device}} : {{filesystem.currentFs.usageInMB}} Gb / {{filesystem.currentFs.capacityInMB}} Gb ({{filesystem.currentFs.usagePercent}}%)</span>
+                            <span>{{filesystem.currentFs.device}} : {{filesystem.currentFs.usageInMB}} Gb / {{filesystem.currentFs.capacityInMB}}
+                                Gb ({{filesystem.currentFs.usagePercent}}%)</span>
                         </div>
                     </div>
 
@@ -167,8 +168,7 @@
                             <input id="partitionDescriptio" ng-model="filesystem.description" type="text">
                         </md-input-container>
                     </div>
-                    <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary"
-                               data-ng-click="addFilesystem(); displayFormFilesystem=false">
+                    <md-button ng-disabled="filesystemForm.$invalid" class="md-raised md-primary" data-ng-click="addFilesystem(); displayFormFilesystem=false">
                         <i class="fa fa-plus"></i> Insert Filesystem
                     </md-button>
                     <md-button class="md-raised" data-ng-click="displayFormFilesystem=false">
@@ -199,16 +199,18 @@
             <i class="fa fa-trash-o"> </i> Delete Group
         </md-button>
         <md-button ng-click="askDeleteGroup=false" ng-show="askDeleteGroup" class="md-raised md-accent md-hue-3">
-            No, I don't want to delete this. <i class="fa fa-reply"></i>
+            No, I don't want to delete this.
+            <i class="fa fa-reply"></i>
         </md-button>
-        <md-button data-ng-click="remove();" ng-show="askDeleteGroup"
-                   class="md-raised md-warn">
-            Yes, I confirm <i class="fa fa-exclamation-triangle"></i>
+        <md-button data-ng-click="remove();" ng-show="askDeleteGroup" class="md-raised md-warn">
+            Yes, I confirm
+            <i class="fa fa-exclamation-triangle"></i>
         </md-button>
     </div>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-        <strong>{{alert.title}}</strong><br>
+        <strong>{{alert.title}}</strong>
+        <br>
 
         <div ng-repeat="msg in alert.msg track by $index">{{msg}}</div>
     </alert>

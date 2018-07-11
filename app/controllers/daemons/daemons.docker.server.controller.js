@@ -48,7 +48,7 @@ exports.infos = function (req, res) {
  * List containers of one docker daemon.
  */
 exports.listContainers = function (req, res) {
-    req.daemonDocker.listContainers({'all': 1}, function (err, data) {
+    req.daemonDocker.listContainers({ 'all': 1 }, function (err, data) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -95,62 +95,20 @@ exports.stopContainer = function (req, res) {
     });
 };
 
-exports.pauseContainer = function (req, res) {
-    req.containerDocker.pause({}, function (err, containerPaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerPaused);
-        }
-    });
-};
-
-exports.unpauseContainer = function (req, res) {
-    req.containerDocker.unpause({}, function (err, containerUnpaused) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(containerUnpaused);
-        }
-    });
-};
-
-exports.killContainer = function (req, res) {
-    req.containerDocker.kill({}, function (err, container) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(container);
-        }
-    });
-};
-
 exports.removeContainer = function (req, res) {
     req.containerDocker.remove({}, function (err, container) {
         if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+            req.containerDocker.remove({ force: true }, function (err, container) {
+                if (err) {
+                    return res.status(400).send({
+                        message: 'Had to forced remove the container but an error occured anyway: ' + errorHandler.getErrorMessage(err)
+                    });
+                } else {
+                    res.jsonp(container);
+                }
             });
         } else {
             res.jsonp(container);
-        }
-    });
-};
-
-exports.killContainer = function (req, res) {
-    req.containerDocker.kill(function (err, container) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.send(container);
         }
     });
 };

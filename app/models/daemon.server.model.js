@@ -171,7 +171,12 @@ var DaemonSchema = new Schema({
     variables: [VariableSchema],
     ports: [PortSchema],
     volumes: [VolumeSchema],
-    parameters: [ParameterSchema]
+    parameters: [ParameterSchema],
+    active: {
+        type: Boolean,
+        required: 'Active or not is required',
+        default: true,
+    }
 });
 
 DaemonSchema.methods.getDaemonDocker = function () {

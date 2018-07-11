@@ -10,7 +10,22 @@
 ## Roadmap
 See. [Roadmap](https://github.com/docktor/docktor/labels/roadmap)
 
+## Run locally
+
+Use `n` to switch to node version `4.8.7`: `sudo n 4.8.7`
+
+## Environnement variable
+You should export environnement variable to configure SMTP host (for reset password):
+
+ * `MAILER_FROM`: Address used as "from" address in reset password mail
+ * `MAILER_HOST`: SMTP host
+ * `MAILER_PORT`: SMTP port
+ * `MAILER_EMAIL_ID`: User to authenticate to the SMTP host
+ * `MAILER_PASSWORD`: Password to authenticate to SMTP host
+
 ## Run 
+
+Use `npm start`, to launch grunt. Docktor will be available at port 3000.
 See https://github.com/docktor/dockerfiles/blob/master/docker-docktor/README.md
 
 ## Integration with Docktor Monitoring Stack
@@ -27,6 +42,20 @@ Yes, you can, even if there is not yet a 1.0 version. It is a simple tool for de
 ![capture1](/screenshots/capture1.png)
 ![capture2](/screenshots/capture2.png)
 ![capture3](/screenshots/capture3.png)
+
+## How to run [Docktor](https://github.com/docktor/docktor) with Docker 
+
+```
+docker run -d --name docktormongodb  docktor/mongodb:latest
+
+docker run -d  -p 3000:3000 -p 3001:3001 --link mongo:db_1 docktor/docktor:latest
+```
+
+You can add `-v <pathOnYouHost>:/data` for mongoDB data.
+You can add `-v <pathOnYouHost>:/opt/backups` for mongoDB backups (collections of Docktor).
+
+
+Go to https://<ipOfYourContainer>:3001 to view Docktor
 
 ## License
 GNU GENERAL PUBLIC LICENSE 3

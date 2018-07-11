@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
  * Create a daemon
  */
 exports.create = function (req, res) {
+	console.log(req);
     var daemon = new Daemon(req.body);
     daemon.user = req.user;
     daemon.site = req.body.site;

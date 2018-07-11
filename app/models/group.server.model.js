@@ -60,6 +60,10 @@ var VariableContainerSchema = new Schema({
  * Port Schema, not useful outside Image
  */
 var PortContainerSchema = new Schema({
+    host: {
+        type: String,
+        trim: true
+    },
     internal: {
         type: Number,
         trim: true,
@@ -129,11 +133,35 @@ var JobContainerSchema = new Schema({
     },
     lastExecution: {
         type: Date,
-        default: Date.now,
-        required: 'lastExecution cannot be blank'
+        default: Date.now
     }
 });
 
+var LabelSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: 'name cannot be blank'
+    },
+    value: {
+        type: String,
+        trim: true,
+        required: 'value cannot be blank'
+    }
+});
+
+var ExtraHostSchema = new Schema({
+    host: {
+        type: String,
+        trim: true,
+        required: 'host cannot be blank'
+    },
+    ip: {
+        type: String,
+        trim: true,
+        required: 'ip cannot be blank'
+    }
+});
 
 /**
  * Container Schema, not useful outside Group
@@ -166,11 +194,17 @@ var ContainerSchema = new Schema({
         type: String,
         trim: true
     },
+    networkName: { // reference to optional network name
+        type: String,
+        trim: true,
+    },
     parameters: [ParameterContainerSchema],
     ports: [PortContainerSchema],
     variables: [VariableContainerSchema],
     volumes: [VolumeContainerSchema],
     jobs: [JobContainerSchema],
+    labels: [LabelSchema],
+    extraHosts: [ExtraHostSchema],
     daemonId: { // TODO use Schema.ObjectId
         type: String,
         trim: true
@@ -215,6 +249,11 @@ var GroupSchema = new Schema({
     user: {
         type: Schema.ObjectId,
         ref: 'User'
+    },
+    isSSO: {
+        type: Boolean,
+        required: 'Is project SSO or not',
+        default: false,
     }
 });
 
@@ -222,8 +261,8 @@ GroupSchema.statics.resetContainerId = function (idGroup, idContainer) {
     var _this = this;
     var setToUpdate = {};
     setToUpdate['containers.$.containerId'] = null;
-    _this.update({_id: idGroup, 'containers._id': idContainer},
-        {$set: setToUpdate},
+    _this.update({ _id: idGroup, 'containers._id': idContainer },
+        { $set: setToUpdate },
         function (err) {
             if (err) console.log('Erreur while updating container : ' + err);
         });
@@ -232,19 +271,19 @@ GroupSchema.statics.resetContainerId = function (idGroup, idContainer) {
 GroupSchema.statics.getUsedPorts = function (idGroup) {
     var _this = this;
     return _this.aggregate([
-        {'$match': {_id: idGroup}},
-        {'$unwind': '$containers'},
-        {'$unwind': '$containers.ports'},
-        {'$group': {_id: 0, 'usedPorts': {$addToSet: '$containers.ports.external'}}},
-        {'$project': {_id: 0, usedPorts: 1}}
+        { '$match': { _id: idGroup } },
+        { '$unwind': '$containers' },
+        { '$unwind': '$containers.ports' },
+        { '$group': { _id: 0, 'usedPorts': { $addToSet: '$containers.ports.external' } } },
+        { '$project': { _id: 0, usedPorts: 1 } }
     ]);
 };
 
 GroupSchema.statics.getJobs = function () {
     var _this = this;
     return _this.aggregate([
-        {'$unwind': '$containers'},
-        {'$unwind': '$containers.jobs'},
+        { '$unwind': '$containers' },
+        { '$unwind': '$containers.jobs' },
         {
             '$group': {
                 _id: {
@@ -255,7 +294,7 @@ GroupSchema.statics.getJobs = function () {
                     'name': '$containers.name',
                     'hostname': '$containers.hostname'
                 },
-                'jobs': {$push: '$containers.jobs'}
+                'jobs': { $push: '$containers.jobs' }
             }
         }
     ]);
@@ -277,9 +316,9 @@ GroupSchema.statics.getGroupsOfOneDaemon = function (idDaemon) {
      ]}
      */
     return _this.aggregate([
-        {'$unwind': '$containers'},
-        {'$group': {'_id': 0, 'groupIds': {'$addToSet': '$_id'}, 'daemonIds': {'$addToSet': '$containers.daemonId'}}},
-        {'$match': {'daemonIds': {'$in': [idDaemon]}}}
+        { '$unwind': '$containers' },
+        { '$group': { '_id': 0, 'groupIds': { '$addToSet': '$_id' }, 'daemonIds': { '$addToSet': '$containers.daemonId' } } },
+        { '$match': { 'daemonIds': { '$in': [idDaemon] } } }
     ]);
 };
 
@@ -296,9 +335,9 @@ GroupSchema.statics.getGroupsOfOneService = function (idService) {
      }
      */
     return _this.aggregate([
-        {'$unwind': '$containers'},
-        {'$match': {'containers.serviceId': {'$in': [idService]}}},
-        {'$group': {'_id': 0, 'groups': {'$addToSet': {'id': '$_id', 'title': '$title'}}}}
+        { '$unwind': '$containers' },
+        { '$match': { 'containers.serviceId': { '$in': [idService] } } },
+        { '$group': { '_id': 0, 'groups': { '$addToSet': { 'id': '$_id', 'title': '$title' } } } }
     ]);
 };
 
@@ -306,8 +345,8 @@ GroupSchema.statics.getContainersOfOneService = function (idService) {
     var _this = this;
 
     return _this.aggregate([
-        {'$unwind': '$containers'},
-        {'$match': {'containers.serviceId': {'$in': [idService]}}},
+        { '$unwind': '$containers' },
+        { '$match': { 'containers.serviceId': { '$in': [idService] } } },
         {
             '$group': {
                 '_id': 0,
@@ -326,12 +365,12 @@ GroupSchema.statics.getContainersOfOneService = function (idService) {
 GroupSchema.statics.insertJob = function (groupId, containerId, job) {
     var _this = this;
     _this.update(
-        {'_id': groupId, 'containers._id': containerId},
+        { '_id': groupId, 'containers._id': containerId },
         {
             '$push': {
                 'containers.$.jobs': {
                     '$each': [job],
-                    '$sort': {'lastExecution': 1},
+                    '$sort': { 'lastExecution': 1 },
                     '$slice': -10
                 }
             }
@@ -349,10 +388,13 @@ GroupSchema.statics.listSimplified = function () {
             '$project': {
                 '_id': 1,
                 'title': 1,
-                'insensitive': {'$toLower': '$title'}
+                'description': 1,
+                'portminrange': 1,
+                'portmaxrange': 1,
+                'insensitive': { '$toLower': '$title' }
             }
         }, {
-            $sort: {'insensitive': 1}
+            $sort: { 'insensitive': 1 }
         }]
     );
 };

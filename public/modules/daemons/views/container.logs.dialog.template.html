@@ -1,0 +1,14 @@
+<md-dialog>
+    <md-content>
+        <h2>{{title}}</h2>
+        <span ng-repeat="result in results">
+            {{ result}}
+            <br/>
+        </span>
+    </md-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="cancel()" class="md-primary">
+            Close
+        </md-button>
+    </div>
+</md-dialog>

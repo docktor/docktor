@@ -30,7 +30,7 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-    User.find().populate('groups').exec(function (err, users) {
+    User.find().exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -109,13 +109,28 @@ exports.addGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToAdd = req.group;
 
-    User.update({'_id': userToUpdate._id}, {'$push': {'groups': groupToAdd._id}}, function (err) {
+    User.getUsersOfOneGroup(groupToAdd._id).exec(function (err, users) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.status(200).send('OK');
+            // Add group on user 
+            var query = { '$push': { 'groups': groupToAdd._id } };
+            if (users && users.length === 0) {
+                // Allow grant on user when he's the first contact to be added in group. 
+                query.allowGrant = true;
+            }
+            User.update({ '_id': userToUpdate._id }, query, function (err) {
+                if (err) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                } else {
+                    res.status(200).send('OK');
+                }
+            });
+
         }
     });
 
@@ -124,7 +139,7 @@ exports.addGroup = function (req, res) {
 var removeFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToRemove = req.group;
-    User.update({'_id': userToUpdate._id}, {'$pull': {'favorites': groupToRemove._id}}, function (err) {
+    User.update({ '_id': userToUpdate._id }, { '$pull': { 'favorites': groupToRemove._id } }, function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -141,7 +156,7 @@ exports.removeGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToRemove = req.group;
 
-    User.update({'_id': userToUpdate._id}, {'$pull': {'groups': groupToRemove._id}}, function (err) {
+    User.update({ '_id': userToUpdate._id }, { '$pull': { 'groups': groupToRemove._id } }, function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -156,7 +171,7 @@ exports.addFavoriteGroup = function (req, res) {
     var userToUpdate = req.profile;
     var groupToAdd = req.group;
 
-    User.update({'_id': userToUpdate._id}, {'$push': {'favorites': groupToAdd._id}}, function (err) {
+    User.update({ '_id': userToUpdate._id }, { '$push': { 'favorites': groupToAdd._id } }, function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -180,7 +195,7 @@ exports.read = function (req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-    User.findOne({_id: req.user._id}).populate('favorites', 'title').exec(function (err, user) {
+    User.findOne({ _id: req.user._id }).populate('favorites', 'title').exec(function (err, user) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
