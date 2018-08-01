@@ -97,6 +97,8 @@ exports.createContainer = function (req, res) {
     });
     containerParameters.HostConfig.ExtraHosts = extraHosts;
 
+    containerParameters.HostConfig.NetworkMode = container.networkMode;
+
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {
             console.log('ERR createContainer');

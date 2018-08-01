@@ -4,9 +4,10 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
     function ($scope, $stateParams, $location, Authentication, Groups, Services, Daemons, GroupsServices) {
         $scope.authentication = Authentication;
 
-        $scope.patternName = /^[a-zA-Z0-9_\-/]{1,200}$/;
+        $scope.patternName = /^[a-zA-Z0-9_\.\-/]{1,200}$/;
         $scope.patternHostname = /^[a-zA-Z0-9_\-]{1,200}$/;
         $scope.patternNetworkName = /^[a-zA-Z0-9_\-]{1,200}$/;
+        $scope.patternNetworkMode = /^[a-zA-Z0-9_\-]{1,200}$/;
         $scope.daemonSearchText = '';
         $scope.serviceSearchText = '';
 
@@ -91,7 +92,8 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                     volume.external = internal;
                 });
 
-                $scope.container.name = '/' + $scope.group.title + '-' + $scope.services.select.title;
+                // Add .local domain for no proxy
+                $scope.container.name = '/' + $scope.group.title + '-' + $scope.services.select.title + '.local';
                 $scope.containerNameAlreadyUsed = false;
                 if ($scope.group.containers && $scope.container.name && _.filter($scope.group.containers, function (c) { return c.name === $scope.container.name; }).length !== 0) {
                     $scope.containerNameAlreadyUsed = true;
@@ -115,6 +117,16 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                             freeP++;
                         });
                     });
+
+                // find the no proxy varaibles
+                for (var i = 0; i < $scope.services.selectImage.variables.length; i++) {
+                    if ($scope.services.selectImage.variables[i].name.toLowerCase() === 'no_proxy'){
+                        // add the domain of the container
+                        $scope.services.selectImage.variables[i].value += ',.local,*.local';
+                    }
+                }
+
+                $scope.container.networkMode = $scope.group.isSSO ? $scope.group.title + '-' + $scope.group.title + '-net' : 'bridge';
 
                 if ($scope.group && $scope.group.isSSO) {
                     $scope.services.selectImage.variables.push(
@@ -186,6 +198,7 @@ angular.module('groups').controller('ServicesGroupsController', ['$scope', '$sta
                 volumes: volumes,
                 labels: labels,
                 extraHosts: extraHosts,
+                networkMode: $scope.container.networkMode,
                 daemonId: daemon._id,
                 active: true
             });
