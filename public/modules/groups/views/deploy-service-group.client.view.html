@@ -87,6 +87,21 @@
                 </md-input-container>
                 <p>It is not recommanded to modify default value from Docktor</p>
             </div>
+            <div class="row">
+                <md-input-container class="long">
+                    <label>Network mode</label>
+                    <input name="containerNetworkMode" id="containerNetworkMode" ng-model="container.networkMode" ng-pattern="patternNetworkMode"
+                        type="text" md-maxlength="200">
+
+                    <div ng-messages="deployForm.containerNetworkMode.$error">
+                        <div ng-message="md-maxlength">Max length of network mode : 200</div>
+                        <div ng-message="pattern">Network mode has to match this pattern : [a-zA-Z0-9_\.]{1,200}.</div>
+                    </div>
+                </md-input-container>
+                <p>When filled, the container will run on this network instead of bridge (which is the default docker network).
+                Network has to be created first on the daemon, if it's bridge you don't need it.
+                </p>
+            </div>
             <div ng-if="group.isSSO" class="row">
                 <md-input-container class="long">
                     <label>Network name</label>

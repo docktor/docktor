@@ -204,6 +204,11 @@ var ContainerSchema = new Schema({
     volumes: [VolumeContainerSchema],
     jobs: [JobContainerSchema],
     labels: [LabelSchema],
+    networkMode: {
+        type: String,
+        trim: true,
+        default: 'bridge'
+    },
     extraHosts: [ExtraHostSchema],
     daemonId: { // TODO use Schema.ObjectId
         type: String,
