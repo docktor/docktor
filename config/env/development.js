@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+	docktor_url: process.env.DOCKTOR_URL || 'http://localhost:3000',
 	db: 'mongodb://localhost/docktor-dev',
 	app: {
 		title: 'Docktor - Development Environment'
