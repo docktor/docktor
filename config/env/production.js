@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+    docktor_url: process.env.DOCKTOR_URL || 'https://docktor.cdk.corp.sopra',
     db: 'mongodb://db_1:27017/docktor',
     assets: {
         lib: {
