@@ -99,6 +99,19 @@ exports.createContainer = function (req, res) {
 
     containerParameters.HostConfig.NetworkMode = container.networkMode;
 
+    if (["bridge", "host", "none"].indexOf(container.networkMode) === -1) {
+        var endpointsConfig = {}
+        var alias = container.name.substring(1, container.name.length-6) // remove '/' at the beginning and '.local' at the end
+        alias = alias.replace(group.title, "") // remove group name prefix
+        alias = alias.substring(1, alias.length) // remove '-' that separates group name and service name
+        alias = alias.replace("[._]", "") // remove all dots and underscores
+        alias = alias.toLowerCase() + ".local" // all in lower case and put back '.local'
+        endpointsConfig[container.networkMode] = {Aliases: [alias]}
+        containerParameters.NetworkingConfig = {
+            EndpointsConfig: endpointsConfig
+        }
+    }
+
     daemonDocker.createContainer(containerParameters, function (err, containerCreated) {
         if (err) {
             console.log('ERR createContainer');
