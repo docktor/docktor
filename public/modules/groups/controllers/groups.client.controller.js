@@ -484,11 +484,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$stateParams
                     urlWithoutPort = url.url.substr(pos, url.url.length);
                     if (!urlWithoutPort) urlWithoutPort = '';
                 }
-                var portMapping = _.where(container.ports, { 'internal': parseInt(portInContainer) });
+                var portMapping = _.where(container.ports, { 'internal': parseInt(portInContainer), 'host': '' });
                 var portExternal = '';
                 if (portMapping && portMapping.length > 0) portExternal = ':' + portMapping[0].external;
 
-                if (!container.daemon) {
+                if (!container.daemon || portExternal === '') {
                     url.urlCompute = '';
                 } else {
                     url.urlCompute = 'http://' + container.daemon.host + portExternal + urlWithoutPort;

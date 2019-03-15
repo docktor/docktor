@@ -117,9 +117,9 @@
     <h4 ng-hide="group.isSSO">Urls</h4>
 
     <div ng-hide="group.isSSO || container.urls.length > 0" class="label label-info">No url attached to this service.</div>
-    <div ng-hide="group.isSSO" ng-repeat="url in container.urls">
+    <div ng-repeat="url in container.urls">
         <md-button class="md-accent md-hue-3" href={{url.urlCompute}}>
-            <i class="fa fa-link"></i> {{url.label}}
+            <em class="fa fa-link"></em> {{url.label}}
         </md-button>
     </div>
 
